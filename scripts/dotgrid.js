@@ -65,12 +65,6 @@ function Dotgrid(width,height,grid_x,grid_y)
 
   this.mouse_down = function(e)
   {
-    var pos = this.position_in_grid(e.clientX,e.clientY);
-    pos = this.position_on_grid(pos[0],pos[1]);
-    
-    if(from === null){ this.set_from(pos); }
-    else if(to === null){ this.set_to(pos); }
-    else{  }
   }
 
   this.mouse_move = function(e)
@@ -84,6 +78,12 @@ function Dotgrid(width,height,grid_x,grid_y)
 
   this.mouse_up = function(e)
   {
+    var pos = this.position_in_grid(e.clientX,e.clientY);
+    pos = this.position_on_grid(pos[0],pos[1]);
+    
+    if(from === null){ this.set_from(pos); }
+    else if(to === null){ this.set_to(pos); }
+    else{  }
     
   }
 
@@ -106,15 +106,9 @@ function Dotgrid(width,height,grid_x,grid_y)
   }
 
   // Draw
-
   this.draw_line = function()
   {
-    draw_line();
-  }
-
-  function draw_line()
-  {
-    console.log(vector_element);
+    if(from === null || to === null){ return; }
 
     var s = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     s.setAttribute('x1', -from[0]);
@@ -132,6 +126,8 @@ function Dotgrid(width,height,grid_x,grid_y)
 
   this.draw_arc = function(orientation)
   {
+    if(from === null || to === null){ return; }
+
     var s = document.createElementNS("http://www.w3.org/2000/svg", "path");
     s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A15,15 0 "+orientation+" "+(-to[0])+","+(to[1])+"");
     s.setAttribute('stroke', "#000000");
