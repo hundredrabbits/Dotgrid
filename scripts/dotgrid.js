@@ -1,4 +1,4 @@
-function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
+function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,linecap = "round", color = "#000000")
 {
   this.width = width;
   this.height = height;
@@ -6,6 +6,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.grid_y = grid_y;
   this.block_x = block_x;
   this.block_y = block_y;
+
+  this.thickness = thickness;
+  this.linecap = linecap;
+  this.color = color;
+
   this.element = null;
 
   this.grid_width = this.width/this.grid_x;
@@ -117,9 +122,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     s.setAttribute('y1', from[1]);
     s.setAttribute('x2', -to[0]);
     s.setAttribute('y2', to[1]);
-    s.setAttribute('stroke', "#000000");
-    s.setAttribute('stroke-width', "3");
-    s.setAttribute('stroke-linecap', "round");
+    s.setAttribute('stroke', this.color);
+    s.setAttribute('stroke-width', this.thickness);
+    s.setAttribute('stroke-linecap', this.linecap);
 
     vector_element.appendChild(s);
 
@@ -132,10 +137,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     var s = document.createElementNS("http://www.w3.org/2000/svg", "path");
     s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A"+(to[0] - from[0])+","+(to[1] - from[1])+" 0 "+orientation+" "+(-to[0])+","+(to[1])+"");
-    s.setAttribute('stroke', "#000000");
-    s.setAttribute('stroke-width', "3");
+    s.setAttribute('stroke', this.color);
+    s.setAttribute('stroke-width', this.thickness);
     s.setAttribute('fill', "none");
-    s.setAttribute('stroke-linecap', "round");
+    s.setAttribute('stroke-linecap', this.linecap);
     vector_element.appendChild(s);
 
     reset();

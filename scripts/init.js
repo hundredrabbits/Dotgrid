@@ -1,4 +1,5 @@
-dotgrid = new Dotgrid(300,300,31,31,5,5);
+// width,height,grid_x,grid_y,block_x,block_y,thickness,linecap, color
+dotgrid = new Dotgrid(300,300,31,31,5,5, 10,"square","#000000");
 dotgrid.install();
 
 var keyboard = new Keyboard();
