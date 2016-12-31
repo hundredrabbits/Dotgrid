@@ -1,4 +1,4 @@
-dotgrid = new Dotgrid(300,300,21,21);
+dotgrid = new Dotgrid(300,300,13,13,4,4);
 dotgrid.install();
 
 var keyboard = new Keyboard();

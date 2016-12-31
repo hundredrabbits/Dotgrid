@@ -1,9 +1,11 @@
-function Dotgrid(width,height,grid_x,grid_y)
+function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 {
   this.width = width;
   this.height = height;
   this.grid_x = grid_x;
   this.grid_y = grid_y;
+  this.block_x = block_x;
+  this.block_y = block_y;
   this.element = null;
 
   this.grid_width = this.width/this.grid_x;
@@ -30,7 +32,7 @@ function Dotgrid(width,height,grid_x,grid_y)
     for (var x = this.grid_x - 1; x >= 0; x--) {
       for (var y = this.grid_y - 1; y >= 0; y--) {
         var marker = document.createElement("div");
-        marker.setAttribute("class","marker");
+        marker.setAttribute("class",(x % this.block_x == 0 && y % this.block_y == 0 ? "marker block" : "marker"));
         marker.style.left = x * this.grid_width + (this.grid_width/2);
         marker.style.top = y * this.grid_height + (this.grid_height/2);
         this.element.appendChild(marker);
