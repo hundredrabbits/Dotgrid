@@ -13,11 +13,6 @@ function Dotgrid(width,height,grid_x,grid_y)
   var cursor_from = null;
   var cursor_to = null;
 
-  this.button_line = null;
-  this.button_arc_c = null;
-  this.button_arc_a = null;
-  this.button_reseter = null;
-
   var from = null;
   var to = null;
   var vector_element = null;
@@ -63,38 +58,6 @@ function Dotgrid(width,height,grid_x,grid_y)
     vector_element.style.width = this.width;
     vector_element.style.height = this.height;
     this.element.appendChild(vector_element);
-
-    // Options
-    this.button_line = document.getElementById("line")
-
-    this.button_arc_c = document.getElementById("arc_c")
-
-    this.button_arc_a = document.getElementById("arc_a")
-    this.button_reseter = document.getElementById("reseter")
-
-    if (this.button_line.addEventListener){ 
-      this.button_line.addEventListener("click", draw_line, false); }
-    else if (this.button_line.attachEvent){
-      this.button_line.attachEvent('onclick', draw_line);  
-    }
-
-    if (this.button_arc_c.addEventListener){ 
-      this.button_arc_c.addEventListener("click", draw_arc_c, false); }
-    else if (this.button_arc_c.attachEvent){
-      this.button_arc_c.attachEvent('onclick', draw_arc_c);  
-    }
-
-    if (this.button_arc_a.addEventListener){ 
-      this.button_arc_a.addEventListener("click", draw_arc_a, false); }
-    else if (this.button_arc_a.attachEvent){
-      this.button_arc_a.attachEvent('onclick', draw_arc_a);  
-    }
-
-    if (this.button_reseter.addEventListener){ 
-      this.button_reseter.addEventListener("click", reset, false); }
-    else if (this.button_reseter.attachEvent){
-      this.button_reseter.attachEvent('onclick', reset);  
-    }
   }
 
   // Cursor
@@ -158,7 +121,7 @@ function Dotgrid(width,height,grid_x,grid_y)
     s.setAttribute('y2', to[1]);
     s.setAttribute('stroke', "#000000");
     s.setAttribute('stroke-width', "5");
-    s.setAttribute('stroke-linecap', "square");
+    s.setAttribute('stroke-linecap', "round");
 
     vector_element.appendChild(s);
 
@@ -177,7 +140,7 @@ function Dotgrid(width,height,grid_x,grid_y)
     s.setAttribute('stroke', "#000000");
     s.setAttribute('stroke-width', "5");
     s.setAttribute('fill', "none");
-    s.setAttribute('stroke-linecap', "square");
+    s.setAttribute('stroke-linecap', "round");
     vector_element.appendChild(s);
 
     reset();
@@ -190,13 +153,12 @@ function Dotgrid(width,height,grid_x,grid_y)
 
   function draw_arc_a()
   {
-    
     var s = document.createElementNS("http://www.w3.org/2000/svg", "path");
     s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A15,15 0 1,0 "+(-to[0])+","+(to[1])+"");
     s.setAttribute('stroke', "#000000");
     s.setAttribute('stroke-width', "5");
     s.setAttribute('fill', "none");
-    s.setAttribute('stroke-linecap', "square");
+    s.setAttribute('stroke-linecap', "round");
     vector_element.appendChild(s);
 
     reset();
@@ -206,7 +168,7 @@ function Dotgrid(width,height,grid_x,grid_y)
   {
     reset();
   }
-  
+
   function reset()
   {
     from = null;
@@ -215,6 +177,16 @@ function Dotgrid(width,height,grid_x,grid_y)
     cursor_from.style.top = -100;
     cursor_to.style.left = -100;
     cursor_to.style.top = -100;
+  }
+
+  this.erase = function()
+  {
+    erase();
+  }
+
+  function erase()
+  {
+    vector_element.removeChild(vector_element.lastChild);
   }
 
   // Normalizers

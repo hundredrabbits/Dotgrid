@@ -6,3 +6,4 @@ body { background:#fff; padding:50px;}
 #dotgrid #cursor_from { width:6px; height:6px; background:black; margin-top:-3px; margin-left:-3px; position:absolute; z-index:25; border-radius:10px;}
 #dotgrid #cursor_to { width:6px; height:6px; background:black; margin-top:-3px; margin-left:-3px; position:absolute; z-index:25; border-radius:10px;}
 input { padding:2px 5px; border-radius:20px; margin:0px auto; display:none;}
+.vector { position:relative; z-index:900; }
