@@ -131,7 +131,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     if(from === null || to === null){ return; }
 
     var s = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A"+this.grid_width+","+this.grid_height+" 0 "+orientation+" "+(-to[0])+","+(to[1])+"");
+    s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A"+(to[0] - from[0])+","+(to[1] - from[1])+" 0 "+orientation+" "+(-to[0])+","+(to[1])+"");
     s.setAttribute('stroke', "#000000");
     s.setAttribute('stroke-width', "3");
     s.setAttribute('fill', "none");
@@ -158,11 +158,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.erase = function()
   {
-    erase();
-  }
-
-  function erase()
-  {
+    if(vector_element.lastChild === null){ return; }
     vector_element.removeChild(vector_element.lastChild);
   }
 
@@ -184,6 +180,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     x = parseInt(x/this.grid_width) * this.grid_width - (this.grid_width/2);
     y = parseInt(y/this.grid_height) * this.grid_height + (this.grid_height/2);
-    return [x,y];
+    return [parseInt(x),parseInt(y)];
   }
 }
