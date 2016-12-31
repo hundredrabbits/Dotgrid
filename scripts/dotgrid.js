@@ -33,8 +33,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       for (var y = this.grid_y - 1; y >= 0; y--) {
         var marker = document.createElement("div");
         marker.setAttribute("class",(x % this.block_x == 0 && y % this.block_y == 0 ? "marker block" : "marker"));
-        marker.style.left = x * this.grid_width + (this.grid_width/2);
-        marker.style.top = y * this.grid_height + (this.grid_height/2);
+        marker.style.left = parseInt(x * this.grid_width + (this.grid_width/2));
+        marker.style.top = parseInt(y * this.grid_height + (this.grid_height/2));
         this.element.appendChild(marker);
       }
     }
@@ -158,6 +158,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.erase = function()
   {
+    this.reset();
     if(vector_element.lastChild === null){ return; }
     vector_element.removeChild(vector_element.lastChild);
   }
