@@ -130,33 +130,10 @@ function Dotgrid(width,height,grid_x,grid_y)
     reset();
   }
 
-  this.draw_arc_c = function()
-  {
-    draw_arc_c();
-  }
-
-  draw_arc_c = function()
+  this.draw_arc = function(orientation)
   {
     var s = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A15,15 0 0,1 "+(-to[0])+","+(to[1])+"");
-    s.setAttribute('stroke', "#000000");
-    s.setAttribute('stroke-width', "5");
-    s.setAttribute('fill', "none");
-    s.setAttribute('stroke-linecap', "round");
-    vector_element.appendChild(s);
-
-    reset();
-  }
-
-  this.draw_arc_a = function()
-  {
-    draw_arc_a();
-  }
-
-  function draw_arc_a()
-  {
-    var s = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A15,15 0 1,0 "+(-to[0])+","+(to[1])+"");
+    s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A15,15 0 "+orientation+" "+(-to[0])+","+(to[1])+"");
     s.setAttribute('stroke', "#000000");
     s.setAttribute('stroke-width', "5");
     s.setAttribute('fill', "none");
