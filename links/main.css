@@ -1,8 +1,8 @@
-body { background:#eee; padding:50px;}
+body { background:#fff; padding:50px;}
 
 #dotgrid { margin:0px auto; position:relative; border:0px solid white; background:white; overflow: hidden}
 #dotgrid .marker { width:2px; height:2px; background:#999; position:absolute; margin-top:-1px; margin-left:-1px; border-radius:4px; z-index:50;}
 #dotgrid #cursor { width:6px; height:6px; background:red; margin-top:-3px; margin-left:-3px; position:absolute; z-index:25; border-radius:10px;}
 #dotgrid #cursor_from { width:6px; height:6px; background:black; margin-top:-3px; margin-left:-3px; position:absolute; z-index:25; border-radius:10px;}
 #dotgrid #cursor_to { width:6px; height:6px; background:black; margin-top:-3px; margin-left:-3px; position:absolute; z-index:25; border-radius:10px;}
-input { padding:2px 5px; border-radius:20px; }
+input { padding:2px 5px; border-radius:20px; margin:0px auto; display:none;}
