@@ -118,7 +118,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     s.setAttribute('x2', -to[0]);
     s.setAttribute('y2', to[1]);
     s.setAttribute('stroke', "#000000");
-    s.setAttribute('stroke-width', "5");
+    s.setAttribute('stroke-width', "3");
     s.setAttribute('stroke-linecap', "round");
 
     vector_element.appendChild(s);
@@ -131,9 +131,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     if(from === null || to === null){ return; }
 
     var s = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A15,15 0 "+orientation+" "+(-to[0])+","+(to[1])+"");
+    s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A"+this.grid_width+","+this.grid_height+" 0 "+orientation+" "+(-to[0])+","+(to[1])+"");
     s.setAttribute('stroke', "#000000");
-    s.setAttribute('stroke-width', "5");
+    s.setAttribute('stroke-width', "3");
     s.setAttribute('fill', "none");
     s.setAttribute('stroke-linecap', "round");
     vector_element.appendChild(s);
@@ -166,6 +166,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     vector_element.removeChild(vector_element.lastChild);
   }
 
+  this.export = function()
+  {
+    var w = window.open('about:blank','image from canvas');
+    w.document.write("<title>Export</title>");
+    w.document.appendChild(vector_element);
+  }
+
   // Normalizers
 
   this.position_in_grid = function(x,y)
@@ -176,7 +183,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.position_on_grid = function(x,y)
   {
     x = parseInt(x/this.grid_width) * this.grid_width - (this.grid_width/2);
-    y = parseInt(y/this.grid_height) * this.grid_height - (this.grid_height/2);
+    y = parseInt(y/this.grid_height) * this.grid_height + (this.grid_height/2);
     return [x,y];
   }
 }
