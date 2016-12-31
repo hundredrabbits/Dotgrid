@@ -114,6 +114,8 @@ function Dotgrid(width,height,grid_x,grid_y)
 
   function draw_line()
   {
+    console.log(vector_element);
+
     var s = document.createElementNS('http://www.w3.org/2000/svg', 'line');
     s.setAttribute('x1', -from[0]);
     s.setAttribute('y1', from[1]);
