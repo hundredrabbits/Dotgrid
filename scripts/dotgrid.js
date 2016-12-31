@@ -62,8 +62,15 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     vector_element.setAttribute("class","vector");
     vector_element.setAttribute("width",this.width+"px");
     vector_element.setAttribute("height",this.height+"px");
+    vector_element.setAttribute("xmlns","http://www.w3.org/2000/svg");
+    vector_element.setAttribute("baseProfile","full");
+    vector_element.setAttribute("version","1.1");
     vector_element.style.width = this.width;
     vector_element.style.height = this.height;
+    vector_element.style.stroke = this.color;
+    vector_element.style.strokeWidth = this.thickness;
+    vector_element.style.fill = "none";
+    vector_element.style.strokeLinecap = this.linecap;
     this.element.appendChild(vector_element);
   }
 
@@ -122,9 +129,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     s.setAttribute('y1', from[1]);
     s.setAttribute('x2', -to[0]);
     s.setAttribute('y2', to[1]);
-    s.setAttribute('stroke', this.color);
-    s.setAttribute('stroke-width', this.thickness);
-    s.setAttribute('stroke-linecap', this.linecap);
 
     vector_element.appendChild(s);
 
@@ -137,10 +141,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     var s = document.createElementNS("http://www.w3.org/2000/svg", "path");
     s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A"+(to[0] - from[0])+","+(to[1] - from[1])+" 0 "+orientation+" "+(-to[0])+","+(to[1])+"");
-    s.setAttribute('stroke', this.color);
-    s.setAttribute('stroke-width', this.thickness);
-    s.setAttribute('fill', "none");
-    s.setAttribute('stroke-linecap', this.linecap);
     vector_element.appendChild(s);
 
     reset();
