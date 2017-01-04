@@ -10,10 +10,11 @@ function Keyboard()
 
       case 81 : dotgrid.reset(); break;
       case 87 : dotgrid.erase(); break;
-      case 80 : dotgrid.export(); break;
+      case 69 : dotgrid.export(); break;
 
       case 90 : dotgrid.draw_dot(); break;
       case 88 : dotgrid.draw_circle(); break;
+      case 67 : dotgrid.draw_rect(); break;
     }
   }
 }

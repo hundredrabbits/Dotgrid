@@ -17,3 +17,11 @@ aA CLOCKWISE
 sS COUNTERWISE
 d  LINE
 ```
+
+## Shapes
+
+```
+z  DOT
+x  CIRCLE
+c  RECT
+```

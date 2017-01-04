@@ -160,10 +160,26 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.draw_circle = function()
   {
+    if(from === null || to === null){ return; }
+
     var s = document.createElementNS("http://www.w3.org/2000/svg", "circle");
     s.setAttribute("cx",-from[0]);
     s.setAttribute("cy",from[1]);
     s.setAttribute("r",(from[0] - to[0]));
+    vector_element.appendChild(s);
+
+    reset();
+  }
+
+  this.draw_rect = function()
+  {
+    if(from === null || to === null){ return; }
+
+    var s = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+    s.setAttribute("x",-from[0]);
+    s.setAttribute("y",from[1]);
+    s.setAttribute("width",Math.abs(to[0]) - Math.abs(from[0]));
+    s.setAttribute("height",Math.abs(to[1]) - Math.abs(from[1]));
     vector_element.appendChild(s);
 
     reset();
@@ -193,9 +209,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.export = function()
   {
-    var w = window.open('about:blank','image from canvas');
+    var w = window.open('about:blank');
     w.document.write("<title>Export</title>");
-    w.document.appendChild(vector_element);
+    w.document.body.innerText += vector_element.outerHTML;
   }
 
   // Normalizers
