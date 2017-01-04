@@ -146,6 +146,29 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     reset();
   }
 
+  this.draw_dot = function()
+  {
+    var s = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    s.setAttribute("cx",-from[0]);
+    s.setAttribute("cy",from[1]);
+    s.setAttribute("r","2");
+    s.setAttribute("fill","black");
+    vector_element.appendChild(s);
+
+    reset();
+  }
+
+  this.draw_circle = function()
+  {
+    var s = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+    s.setAttribute("cx",-from[0]);
+    s.setAttribute("cy",from[1]);
+    s.setAttribute("r",(from[0] - to[0]));
+    vector_element.appendChild(s);
+
+    reset();
+  }
+
   this.reset = function()
   {
     reset();

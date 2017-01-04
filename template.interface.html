@@ -1,0 +1,36 @@
+<html>
+  <head>
+    <script type="text/javascript" src="scripts/dotgrid.js"></script>
+    <script type="text/javascript" src="scripts/keyboard.js"></script>
+    
+    <link rel="stylesheet" type="text/css" href="links/reset.css"/>
+    <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
+    <link rel="stylesheet" type="text/css" href="links/main.css"/>
+    <title>Dotgrid(Interface)</title>
+  </head>
+  <body>
+    <pre>
+      q  <b>CLEAR</b>
+      w  <b>DELETE LAST</b>
+      e  <b>EXPORT</b>
+
+      aA <b>CLOCKWISE</b>
+      sS <b>COUNTERWISE</b>
+      d  <b>LINE</b>
+
+
+      z  <b>DOT</b>
+      x  <b>CIRCLE</b>
+      c  <b>--</b>
+    </pre>
+    <script>
+      dotgrid = new Dotgrid(320,568,31,61,6,6, 1,"square","#000000");
+      dotgrid.install();
+      var keyboard = new Keyboard();
+      document.onkeyup = function myFunction(){ keyboard.listen(event); };
+      document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
+      document.addEventListener('mousemove', function(e){ dotgrid.mouse_move(e); }, false);
+      document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);
+    </script>
+  </body>
+</html>

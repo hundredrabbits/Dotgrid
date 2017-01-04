@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="links/reset.css"/>
     <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
     <link rel="stylesheet" type="text/css" href="links/main.css"/>
-    <title>Dotgrid</title>
+    <title>Dotgrid(Interface)</title>
   </head>
   <body>
     <pre>
@@ -18,6 +18,14 @@
       sS <b>COUNTERWISE</b>
       d  <b>LINE</b>
     </pre>
-    <script type="text/javascript" src="scripts/init.js"></script>
+    <script>
+      dotgrid = new Dotgrid(300,300,31,31,5,5, 10,"square","#000000");
+      dotgrid.install();
+      var keyboard = new Keyboard();
+      document.onkeyup = function myFunction(){ keyboard.listen(event); };
+      document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
+      document.addEventListener('mousemove', function(e){ dotgrid.mouse_move(e); }, false);
+      document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);
+    </script>
   </body>
 </html>
