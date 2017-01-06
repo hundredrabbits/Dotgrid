@@ -8,4 +8,8 @@ body { background:#fff; padding:50px;}
 #dotgrid #cursor_to { width:6px; height:6px; background:white; margin-top:-5px; margin-left:-5px; position:absolute; z-index:25; border-radius:10px; left:-100px; border:2px solid black;}
 input { padding:2px 5px; border-radius:20px; margin:0px auto; display:none;}
 .vector { position:relative; z-index:900; }
-pre { font-family:courier; font-size:11px; position:fixed; left:0px; bottom:20px;}
+pre { font-family:courier; font-size:11px; color:#000; position:fixed; bottom:20px;}
+.reference { left:0; }
+.settings { right:20px; text-align:right; }
+.settings input { display:inline; background:#fff; width:4em; }
+.settings select { display:inline; background:#fff; }
