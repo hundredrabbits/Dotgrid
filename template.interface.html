@@ -27,7 +27,7 @@
       dotgrid = new Dotgrid(320,568,31,61,6,6, 1,"square","#000000");
       dotgrid.install();
       var keyboard = new Keyboard();
-      document.onkeyup = function myFunction(){ keyboard.listen(event); };
+      document.onkeyup = function myFunction(event){ keyboard.listen(event); };
       document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
       document.addEventListener('mousemove', function(e){ dotgrid.mouse_move(e); }, false);
       document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);
