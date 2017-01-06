@@ -33,6 +33,7 @@
         <option value="round">round</option>
         <option value="square">square</option>
       </select>
+      <b>COLOR</b> <input id="color" type="color" value="#000000" onchange="dotgrid.update_style('stroke', this.value);">
       
       
       <b>WIDTH</b> <input id="width" type="number" value="490" min="1" step="1">
@@ -43,15 +44,17 @@
     </pre>
     
     <script>
-      var new_grid = function() { return new Dotgrid(document.getElementById('width').value, 
-                            document.getElementById('height').value,
-                            Math.round( document.getElementById('width').value / document.getElementById('grid').value ),
-                            Math.round( document.getElementById('height').value / document.getElementById('grid').value ),
-                            document.getElementById('block').value,
-                            document.getElementById('block').value,
-                            document.getElementById('thickness').value, 
-                            document.getElementById('linecap').value,
-                            "#000000"); };
+      var new_grid = function() { 
+        return new Dotgrid(document.getElementById('width').value, 
+                           document.getElementById('height').value,
+                           Math.round( document.getElementById('width').value / document.getElementById('grid').value ),
+                           Math.round( document.getElementById('height').value / document.getElementById('grid').value ),
+                           document.getElementById('block').value,
+                           document.getElementById('block').value,
+                           document.getElementById('thickness').value, 
+                           document.getElementById('linecap').value,
+                           document.getElementById('color').value); 
+      };
       dotgrid = new_grid();
       dotgrid.install();
       var keyboard = new Keyboard();

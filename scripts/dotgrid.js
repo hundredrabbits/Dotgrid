@@ -237,6 +237,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
         break;
       case "strokeLinecap":
         vector_element.style.strokeLinecap = value;
+        break;
+      case "stroke":
+        vector_element.style.stroke = value;
     }
   }
 }
