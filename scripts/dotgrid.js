@@ -227,4 +227,19 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     y = parseInt(y/this.grid_height) * this.grid_height + (this.grid_height/2);
     return [parseInt(x),parseInt(y)];
   }
+  
+  // Settings
+  
+  this.update_style = function(attribute, value) {
+    switch(attribute) {
+      case "strokeWidth":
+        vector_element.style.strokeWidth = value;
+        break;
+      case "strokeLinecap":
+        vector_element.style.strokeLinecap = value;
+        break;
+      case "stroke":
+        vector_element.style.stroke = value;
+    }
+  }
 }

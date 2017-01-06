@@ -9,7 +9,7 @@
     <title>Dotgrid(Interface)</title>
   </head>
   <body>
-    <pre>
+    <pre class="reference">
       q  <b>CLEAR</b>
       w  <b>DELETE LAST</b>
       e  <b>EXPORT</b>
@@ -23,11 +23,42 @@
       x  <b>CIRCLE</b>
       c  <b>--</b>
     </pre>
+    
+    <pre class="settings">
+      <b>THICKNESS</b> <input id="thickness" type="number" value=5 min="0" step="0.1" 
+        oninput="dotgrid.update_style('strokeWidth', this.value);">
+      <b>LINECAP</b> <select id="linecap"
+        onchange="dotgrid.update_style('strokeLinecap', this.value);">
+        <option value="butt">butt</option>
+        <option value="round">round</option>
+        <option value="square">square</option>
+      </select>
+      <b>COLOR</b> <input id="color" type="color" value="#000000" onchange="dotgrid.update_style('stroke', this.value);">
+      
+      
+      <b>WIDTH</b> <input id="width" type="number" value="490" min="1" step="1">
+      <b>HEIGHT</b> <input id="height" type="number" value="490" min="1" step="1">
+      <b>GRID</b> <input id="grid" type="number" value="10" min="5" step="1">
+      <b>BLOCK</b> <input id="block" type="number" value="6" min="0" step="1">
+      <button onclick="document.body.removeChild(document.getElementById('dotgrid')); dotgrid = new_grid(); dotgrid.install();">NEW GRID</button>
+    </pre>
+    
     <script>
-      dotgrid = new Dotgrid(320,568,31,61,6,6, 1,"square","#000000");
+      var new_grid = function() { 
+        return new Dotgrid(document.getElementById('width').value, 
+                           document.getElementById('height').value,
+                           Math.round( document.getElementById('width').value / document.getElementById('grid').value ),
+                           Math.round( document.getElementById('height').value / document.getElementById('grid').value ),
+                           document.getElementById('block').value,
+                           document.getElementById('block').value,
+                           document.getElementById('thickness').value, 
+                           document.getElementById('linecap').value,
+                           document.getElementById('color').value); 
+      };
+      dotgrid = new_grid();
       dotgrid.install();
       var keyboard = new Keyboard();
-      document.onkeyup = function myFunction(){ keyboard.listen(event); };
+      document.onkeyup = function myFunction(event){ keyboard.listen(event); };
       document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
       document.addEventListener('mousemove', function(e){ dotgrid.mouse_move(e); }, false);
       document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);
