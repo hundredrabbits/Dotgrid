@@ -19,10 +19,18 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   var cursor = null;
   var cursor_from = null;
   var cursor_to = null;
+  var cursor_end = null;
 
   var from = null;
   var to = null;
-  var vector_element = null;
+  var end = null;
+
+  this.svg_el = null;
+
+  this.path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  this.segments = [];
+  this.interface = document.createElement("div");
+  this.interface.id = "interface";
 
   this.install = function()
   {
@@ -32,14 +40,15 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.element.style.width = this.width;
     this.element.style.height = this.height;
     document.body.appendChild(this.element);
+    document.body.appendChild(this.interface);
 
     // Markers
-    for (var x = this.grid_x - 1; x >= 0; x--) {
-      for (var y = this.grid_y - 1; y >= 0; y--) {
+    for (var x = this.grid_x; x >= 0; x--) {
+      for (var y = this.grid_y; y >= 0; y--) {
         var marker = document.createElement("div");
         marker.setAttribute("class",(x % this.block_x == 0 && y % this.block_y == 0 ? "marker block" : "marker"));
-        marker.style.left = parseInt(x * this.grid_width + (this.grid_width/2));
-        marker.style.top = parseInt(y * this.grid_height + (this.grid_height/2));
+        marker.style.left = parseInt(x * this.grid_width + (this.grid_width/2)) +5;
+        marker.style.top = parseInt(y * this.grid_height + (this.grid_height/2)) +5;
         this.element.appendChild(marker);
       }
     }
@@ -57,25 +66,30 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     cursor_to.id = "cursor_to";
     this.element.appendChild(cursor_to);
 
+    cursor_end = document.createElement("div");
+    cursor_end.id = "cursor_end";
+    this.element.appendChild(cursor_end);
+
     // Vector
-    vector_element = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    vector_element.setAttribute("class","vector");
-    vector_element.setAttribute("width",this.width+"px");
-    vector_element.setAttribute("height",this.height+"px");
-    vector_element.setAttribute("xmlns","http://www.w3.org/2000/svg");
-    vector_element.setAttribute("baseProfile","full");
-    vector_element.setAttribute("version","1.1");
-    vector_element.style.width = this.width;
-    vector_element.style.height = this.height;
-    vector_element.style.stroke = this.color;
-    vector_element.style.strokeWidth = this.thickness;
-    vector_element.style.fill = "none";
-    vector_element.style.strokeLinecap = this.linecap;
-    this.element.appendChild(vector_element);
+    this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this.svg_el.setAttribute("class","vector");
+    this.svg_el.setAttribute("width",this.width+"px");
+    this.svg_el.setAttribute("height",this.height+"px");
+    this.svg_el.setAttribute("xmlns","http://www.w3.org/2000/svg");
+    this.svg_el.setAttribute("baseProfile","full");
+    this.svg_el.setAttribute("version","1.1");
+    this.svg_el.style.width = this.width;
+    this.svg_el.style.height = this.height;
+    this.svg_el.style.stroke = this.color;
+    this.svg_el.style.strokeWidth = this.thickness;
+    this.svg_el.style.fill = "none";
+    this.svg_el.style.strokeLinecap = this.linecap;
+    this.element.appendChild(this.svg_el);
+
+    this.svg_el.appendChild(this.path);    
   }
 
   // Cursor
-
 
   this.mouse_down = function(e)
   {
@@ -94,11 +108,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     var pos = this.position_in_grid(e.clientX,e.clientY);
     pos = this.position_on_grid(pos[0],pos[1]);
+
+    pos = [pos[0]+10,pos[1]-10]
     
     if(from === null){ this.set_from(pos); }
     else if(to === null){ this.set_to(pos); }
-    else{  }
-    
+    else{ this.set_end(pos); }
+    this.draw();
   }
 
   // Setters
@@ -107,31 +123,80 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     from = pos;
 
-    cursor_from.style.left = -pos[0];
-    cursor_from.style.top = pos[1];
+    cursor_from.style.left = -pos[0] + 10;
+    cursor_from.style.top = pos[1] + 10;
   }
 
   this.set_to = function(pos)
   {
-    cursor_to.style.left = -pos[0];
-    cursor_to.style.top = pos[1];
+    cursor_to.style.left = -pos[0] + 10;
+    cursor_to.style.top = pos[1] + 10;
 
     to = pos;
   }
 
+  this.set_end = function(pos)
+  {
+    cursor_end.style.left = -pos[0] + 10;
+    cursor_end.style.top = pos[1] + 10;
+
+    end = pos;
+  }
+
+  this.mod_thickness = function(mod)
+  {
+    this.thickness += mod;
+    this.draw();
+  }
+
+  this.mod_linecap_index = 1;
+
+  this.mod_linecap = function(mod)
+  {
+    var a = ["butt","square","round"];
+    this.mod_linecap_index += 1;
+    this.linecap = a[this.mod_linecap_index % a.length];
+    this.draw();
+  }
+
+  this.mod_move = function(x,y)
+  {
+    if(!to && !end){
+      this.set_from([from[0]+(x*10),from[1]+(y*10)])
+    }
+    this.draw();
+  }
+
+  this.draw = function()
+  {
+    var d = "";
+    var prev = "";
+    for(id in this.segments){
+      var segment = this.segments[id];
+      d += segment.to_segment(prev)+" ";
+      prev = segment;
+    }
+
+    this.path.setAttribute("d",d);
+
+    this.svg_el.style.width = this.width;
+    this.svg_el.style.height = this.height;
+    this.svg_el.style.stroke = this.color;
+    this.svg_el.style.strokeLinecap = this.linecap;
+    this.svg_el.style.strokeWidth = this.thickness;
+
+    this.update_interface();
+  }
+
   // Draw
-  this.draw_line = function()
+  this.add_line = function()
   {
     if(from === null || to === null){ return; }
 
-    var s = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-    s.setAttribute('x1', -from[0]);
-    s.setAttribute('y1', from[1]);
-    s.setAttribute('x2', -to[0]);
-    s.setAttribute('y2', to[1]);
+    var end_point = end ? new Pos(end[0] * -1,end[1]) : null;
+    this.segments.push(new Path_Line(new Pos(from[0] * -1,from[1]),new Pos(to[0] * -1,to[1]),end_point));
 
-    vector_element.appendChild(s);
-
+    this.draw();
     reset();
   }
 
@@ -139,10 +204,20 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     if(from === null || to === null){ return; }
 
-    var s = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    s.setAttribute("d","M"+(-from[0])+","+(from[1])+" A"+(to[0] - from[0])+","+(to[1] - from[1])+" 0 "+orientation+" "+(-to[0])+","+(to[1])+"");
-    vector_element.appendChild(s);
+    var end_point = end ? new Pos(end[0] * -1,end[1]) : null;
+    this.segments.push(new Path_Arc(new Pos(from[0] * -1,from[1]),new Pos(to[0] * -1,to[1]),orientation,end_point));
 
+    this.draw();
+    reset();
+  }
+
+  this.draw_bezier = function()
+  {
+    if(from === null || to === null){ return; }  
+
+    this.segments.push(new Path_Bezier(new Pos(from[0] * -1,from[1]),new Pos(to[0] * -1,to[1]),new Pos(end[0] * -1,end[1])));
+
+    this.draw();
     reset();
   }
 
@@ -153,7 +228,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     s.setAttribute("cy",from[1]);
     s.setAttribute("r","2");
     s.setAttribute("fill","black");
-    vector_element.appendChild(s);
+    this.svg_el.appendChild(s);
 
     reset();
   }
@@ -166,7 +241,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     s.setAttribute("cx",-from[0]);
     s.setAttribute("cy",from[1]);
     s.setAttribute("r",(from[0] - to[0]));
-    vector_element.appendChild(s);
+    this.svg_el.appendChild(s);
 
     reset();
   }
@@ -180,7 +255,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     s.setAttribute("y",from[1]);
     s.setAttribute("width",Math.abs(to[0]) - Math.abs(from[0]));
     s.setAttribute("height",Math.abs(to[1]) - Math.abs(from[1]));
-    vector_element.appendChild(s);
+    this.svg_el.appendChild(s);
 
     reset();
   }
@@ -194,17 +269,20 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     from = null;
     to = null;
+    end = null;
     cursor_from.style.left = -100;
     cursor_from.style.top = -100;
     cursor_to.style.left = -100;
     cursor_to.style.top = -100;
+    cursor_end.style.left = -100;
+    cursor_end.style.top = -100;
   }
 
   this.erase = function()
   {
     this.reset();
-    if(vector_element.lastChild === null){ return; }
-    vector_element.removeChild(vector_element.lastChild);
+    this.segments.pop();
+    this.draw();
   }
 
   this.export = function()
@@ -212,7 +290,26 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var w = window.open('about:blank');
     w.document.write("<title>Export</title>");
     w.document.write("<body></body>");
-    w.document.body.innerText += vector_element.outerHTML;
+    w.document.body.innerText += this.svg_el.outerHTML;
+  }
+
+  this.update_interface = function()
+  {
+    var html = "";
+
+    html += "~"+this.thickness+" ";
+    html += "/"+this.linecap+" ";
+
+    if(from){ html += ">" }
+    if(to){ html += ">" }
+    if(end){ html += ">" }
+
+    html += " "
+
+    if(to){ html += "aA sS d f" }
+    if(end){ html += ">" }
+
+    this.interface.innerHTML = html;
   }
 
   // Normalizers
@@ -224,23 +321,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.position_on_grid = function(x,y)
   {
-    x = parseInt(x/this.grid_width) * this.grid_width - (this.grid_width/2);
-    y = parseInt(y/this.grid_height) * this.grid_height + (this.grid_height/2);
+    x = parseInt(x/this.grid_width) * this.grid_width - (this.grid_width/2) + 5;
+    y = parseInt(y/this.grid_height) * this.grid_height + (this.grid_height/2) +5;
     return [parseInt(x),parseInt(y)];
-  }
-  
-  // Settings
-  
-  this.update_style = function(attribute, value) {
-    switch(attribute) {
-      case "strokeWidth":
-        vector_element.style.strokeWidth = value;
-        break;
-      case "strokeLinecap":
-        vector_element.style.strokeLinecap = value;
-        break;
-      case "stroke":
-        vector_element.style.stroke = value;
-    }
   }
 }

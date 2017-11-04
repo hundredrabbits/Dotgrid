@@ -1,8 +1,11 @@
 <html>
   <head>
+    <script type="text/javascript" src="scripts/pos.js"></script>
+    <script type="text/javascript" src="scripts/path_line.js"></script>
+    <script type="text/javascript" src="scripts/path_arc.js"></script>
+    <script type="text/javascript" src="scripts/path_bezier.js"></script>
     <script type="text/javascript" src="scripts/dotgrid.js"></script>
     <script type="text/javascript" src="scripts/keyboard.js"></script>
-    
     <link rel="stylesheet" type="text/css" href="links/reset.css"/>
     <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
     <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -13,13 +16,12 @@
       q  <b>CLEAR</b>
       w  <b>DELETE LAST</b>
       e  <b>EXPORT</b>
-
       aA <b>CLOCKWISE</b>
       sS <b>COUNTERWISE</b>
       d  <b>LINE</b>
     </pre>
     <script>
-      dotgrid = new Dotgrid(300,300,31,31,5,5, 10,"square","#000000");
+      dotgrid = new Dotgrid(300,300,30,30,5,5, 10,"square","#000000");
       dotgrid.install();
       var keyboard = new Keyboard();
       document.onkeyup = function myFunction(event){ keyboard.listen(event); };

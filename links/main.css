@@ -1,15 +1,19 @@
-body { background:#fff; padding:50px;}
+body { background:#fff; padding:50px; font-family: 'input_mono_regular'}
 
-#dotgrid { margin:0px auto; position:relative; border:0px solid white; background:white; overflow: hidden}
-#dotgrid .marker { width:2px; height:2px; background:#ccc; position:absolute; margin-top:-1px; margin-left:-1px; border-radius:4px; z-index:50;}
+#dotgrid { margin:0px auto; position:relative; border:0px solid white; background:white; overflow: hidden; cursor: none; padding:10px;}
+#dotgrid .marker { width:2px; height:2px; background:#ddd; position:absolute; margin-top:-1px; margin-left:-1px; border-radius:4px; z-index:50;}
 #dotgrid .marker.block { background:black; }
-#dotgrid #cursor { width:6px; height:6px; background:red; margin-top:-3px; margin-left:-3px; position:absolute; z-index:25; border-radius:10px;}
-#dotgrid #cursor_from { width:6px; height:6px; background:white; margin-top:-5px; margin-left:-5px; position:absolute; z-index:25; border-radius:10px; left:-100px;border:2px solid black;}
-#dotgrid #cursor_to { width:6px; height:6px; background:white; margin-top:-5px; margin-left:-5px; position:absolute; z-index:25; border-radius:10px; left:-100px; border:2px solid black;}
+#dotgrid #cursor { width:8px; height:8px; margin-top:-5px; margin-left:-5px; position:absolute; z-index:25; border-radius:5px; border:1px solid black;}
+#dotgrid #cursor_from { width:4px; height:4px; background:white; margin-top:-3px; margin-left:-3px; position:absolute; z-index:2500; border-radius:10px; left:-100px;border:1px solid black;}
+#dotgrid #cursor_to { width:4px; height:4px; background:white; margin-top:-3px; margin-left:-3px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
+#dotgrid #cursor_end { width:4px; height:4px; background:white; margin-top:-3px; margin-left:-3px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
+
 input { padding:2px 5px; border-radius:20px; margin:0px auto; display:none;}
-.vector { position:relative; z-index:900; }
-pre { font-family:courier; font-size:11px; color:#000; position:fixed; bottom:20px;}
-.reference { left:0; }
-.settings { right:20px; text-align:right; }
+.vector { position:relative; z-index:900;}
+pre { font-size:11px; color:#000; position:fixed; bottom:20px; display: none}
+.reference { left:0; display: none }
+.settings { right:20px; text-align:right; display: none}
 .settings input { display:inline; background:#fff; width:4em; }
 .settings select { display:inline; background:#fff; }
+
+#interface { max-width: 295px;margin:0px auto;font-size: 11px;line-height: 30px; text-transform: uppercase;}
