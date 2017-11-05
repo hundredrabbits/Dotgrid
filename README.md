@@ -1,10 +1,12 @@
 # Dotgrid
 
-Dotgrid is a simple vector drawing application.
+Dotgrid is a simple vector drawing application. 
 
 <img src='https://raw.githubusercontent.com/hundredrabbits/Dotgrid/master/PREVIEW.jpg' width="600"/>
 
 ## Guide
+
+It works by adding control points and selecting a stroke type. So clicking the canvas a few times will place up to 3 control points. Clicking one of the icons, or pressing one of the shortcuts, will draw a stroke.
 
 ## Controls
 
