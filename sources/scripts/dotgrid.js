@@ -110,8 +110,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var pos = this.position_in_grid(e.clientX,e.clientY);
     pos = this.position_on_grid(pos[0],pos[1]);
 
-    this.cursor.style.left = -pos[0];
-    this.cursor.style.top = pos[1];
+    this.cursor.style.left = -pos[0] + 10;
+    this.cursor.style.top = pos[1] + 10;
   }
 
   this.mouse_up = function(e)
@@ -119,7 +119,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var pos = this.position_in_grid(e.clientX,e.clientY);
     pos = this.position_on_grid(pos[0],pos[1]);
 
-    pos = [pos[0]+10,pos[1]-10]
+    pos = [pos[0],pos[1]]
 
     if(pos[1] > 300){ return; }
     if(pos[0] < -300){ return; }
@@ -310,10 +310,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.export = function()
   {
-    var w = window.open('about:blank');
-    w.document.write("<title>Export</title>");
-    w.document.write("<body></body>");
-    w.document.body.innerText += this.svg_el.outerHTML;
+    dialog.showSaveDialog((fileName) => {
+      if (fileName === undefined){ return; }
+      fs.writeFile(fileName+".svg", dotgrid.svg_el.outerHTML, (err) => {
+        if(err){ alert("An error ocurred creating the file "+ err.message); return; }
+      });
+    }); 
   }
 
   this.update_interface = function()

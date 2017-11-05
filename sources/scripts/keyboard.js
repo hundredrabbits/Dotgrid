@@ -2,7 +2,7 @@ function Keyboard()
 {
   this.listen = function(event)
   { 
-    console.log(event.keyCode)
+    // console.log(event.keyCode)
     switch (event.keyCode) {
       case 65 : dotgrid.draw_arc(event.shiftKey ? "1,1" : "0,1"); break;
       case 83 : dotgrid.draw_arc(event.shiftKey ? "1,0" : "0,0"); break;

@@ -1,6 +1,6 @@
 body { background:#fff; padding:30px; font-family: 'input_mono_regular'; -webkit-user-select: none;-webkit-app-region: drag;}
 
-#dotgrid { margin:0px auto; position:relative; border:0px solid white; background:white; overflow: hidden; cursor: none; padding:10px;}
+#dotgrid { margin:0px auto; position:relative; border:0px solid white; background:white; overflow: hidden; padding:10px;}
 #dotgrid .marker { width:2px; height:2px; background:#ddd; position:absolute; margin-top:-1px; margin-left:-1px; border-radius:4px; z-index:50;}
 #dotgrid .marker.block { background:black; }
 #dotgrid #cursor { width:8px; height:8px; margin-top:-5px; margin-left:-5px; position:absolute; z-index:25; border-radius:5px; border:1px solid black;}
@@ -19,7 +19,7 @@ pre { font-size:11px; color:#000; position:fixed; bottom:20px; display: none}
 #interface { max-width: 295px;margin:0px auto;font-size: 11px;line-height: 30px; text-transform: uppercase; margin-top:20px;}
 
 .icon { width:25px; height:25px; margin-left:-5px; margin-right:0px; opacity: 0.5}
-.icon.right { float:right; opacity: 0.25}
+.icon.right { float:right;}
 .icon.inactive { opacity: 0.1 !important }
 
 .icon:hover { cursor: pointer; opacity: 1 }
