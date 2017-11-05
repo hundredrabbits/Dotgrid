@@ -1,5 +1,7 @@
 function Path_Bezier(from,to,end)
 {
+  this.name = "bezier";
+
   this.from = from;
   this.to = to;
   this.end = end;

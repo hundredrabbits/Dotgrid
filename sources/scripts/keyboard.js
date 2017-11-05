@@ -3,6 +3,7 @@ function Keyboard()
   this.listen = function(event)
   { 
     console.log(event.keyCode)
+
     switch (event.keyCode) {
       case 83 : dotgrid.draw_arc(event.shiftKey ? "1,1" : "0,1"); break;
       case 65 : dotgrid.draw_arc(event.shiftKey ? "1,0" : "0,0"); break;
@@ -18,10 +19,6 @@ function Keyboard()
       case 87 : dotgrid.erase(); break;
       case 8 : dotgrid.erase(); break;
       case 69 : dotgrid.export(); break;
-
-      case 90 : dotgrid.draw_dot(); break;
-      case 88 : dotgrid.draw_circle(); break;
-      case 67 : dotgrid.draw_rect(); break;
 
       case 38 : dotgrid.mod_move(0,-1); break;
       case 40 : dotgrid.mod_move(0,1); break;

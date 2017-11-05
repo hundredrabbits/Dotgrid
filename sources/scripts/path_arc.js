@@ -1,5 +1,7 @@
 function Path_Arc(from,to,orientation,end)
 {
+  this.name = "arc";
+
   this.from = from;
   this.to = to;
   this.orientation = orientation;

@@ -103,6 +103,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(o == "arc_c"){ this.draw_arc("0,1"); }
     if(o == "arc_r"){ this.draw_arc("0,0"); }
     if(o == "bezier"){ this.draw_bezier(); }
+    if(o == "close"){ this.draw_close(); }
     if(o == "export"){ this.export(); }
   }
 
@@ -248,49 +249,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.draw_close = function()
   {
     if(this.segments.length == 0){ return; }
+    if(this.segments[this.segments.length-1].name == "close"){ return; }
 
     this.segments.push(new Path_Close());
     
     this.draw();
-    reset();
-  }
-
-  this.draw_dot = function()
-  {
-    var s = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    s.setAttribute("cx",-from[0]);
-    s.setAttribute("cy",from[1]);
-    s.setAttribute("r","2");
-    s.setAttribute("fill","black");
-    this.svg_el.appendChild(s);
-
-    reset();
-  }
-
-  this.draw_circle = function()
-  {
-    if(from === null || to === null){ return; }
-
-    var s = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-    s.setAttribute("cx",-from[0]);
-    s.setAttribute("cy",from[1]);
-    s.setAttribute("r",(from[0] - to[0]));
-    this.svg_el.appendChild(s);
-
-    reset();
-  }
-
-  this.draw_rect = function()
-  {
-    if(from === null || to === null){ return; }
-
-    var s = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    s.setAttribute("x",-from[0]);
-    s.setAttribute("y",from[1]);
-    s.setAttribute("width",Math.abs(to[0]) - Math.abs(from[0]));
-    s.setAttribute("height",Math.abs(to[1]) - Math.abs(from[1]));
-    this.svg_el.appendChild(s);
-
     reset();
   }
 
@@ -355,6 +318,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     }
     else{
       html += "<img title='bezier' src='media/icons/bezier.svg' class='icon inactive'/>";
+    }
+
+    if(this.segments.length > 0 && this.segments[this.segments.length-1].name != "close"){
+      html += "<img data-operation='close' title='close' src='media/icons/close.svg' class='icon'/>";
+    }
+    else{
+      html += "<img title='close' src='media/icons/close.svg' class='icon inactive'/>";
     }
 
     if(this.segments.length > 0){

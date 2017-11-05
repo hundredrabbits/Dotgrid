@@ -1,5 +1,7 @@
 function Path_Line(from,to,end = null)
 {
+  this.name = "line";
+
   this.from = from;
   this.to = to;
   this.end = end;
