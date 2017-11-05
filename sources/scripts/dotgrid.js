@@ -26,6 +26,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   var end = null;
 
   this.svg_el = null;
+  this.mirror_el = null;
+
+  this.mirror = false;
 
   this.path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   this.segments = [];
@@ -70,6 +73,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     cursor_end.id = "cursor_end";
     this.element.appendChild(cursor_end);
 
+    this.mirror_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    this.mirror_path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.svg_el.setAttribute("class","vector");
@@ -85,8 +91,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.fill = "none";
     this.svg_el.style.strokeLinecap = this.linecap;
     this.element.appendChild(this.svg_el);
-
-    this.svg_el.appendChild(this.path);   
+    
+    this.svg_el.appendChild(this.path);
+    this.svg_el.appendChild(this.mirror_el);
+    this.mirror_el.appendChild(this.mirror_path);
 
     this.draw(); 
   }
@@ -104,6 +112,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(o == "arc_r"){ this.draw_arc("0,0"); }
     if(o == "bezier"){ this.draw_bezier(); }
     if(o == "close"){ this.draw_close(); }
+    if(o == "mirror"){ this.mirror = this.mirror == true ? false : true; this.draw(); }
     if(o == "export"){ this.export(); }
   }
 
@@ -209,6 +218,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.stroke = this.color;
     this.svg_el.style.strokeLinecap = this.linecap;
     this.svg_el.style.strokeWidth = this.thickness;
+
+    this.mirror_path.setAttribute("d",this.mirror ? d : '');
+    this.mirror_path.setAttribute("transform","translate(300,0),scale(-1,1)")
 
     this.update_interface();
   }
@@ -325,6 +337,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     }
     else{
       html += "<img title='close' src='media/icons/close.svg' class='icon inactive'/>";
+    }
+
+    if(this.segments.length > 0 && !this.mirror){
+      html += "<img data-operation='mirror' title='mirror' src='media/icons/mirror.svg' class='icon' style='margin-left:50px'/>";
+    }
+    else{
+      html += "<img data-operation='mirror' title='mirror' src='media/icons/mirror.svg' class='icon inactive' style='margin-left:50px'/>";
     }
 
     if(this.segments.length > 0){

@@ -2,7 +2,11 @@ function Keyboard()
 {
   this.listen = function(event)
   { 
-    console.log(event.keyCode)
+    // save
+    if(event.key == "s" && (event.ctrlKey || event.metaKey)){
+      dotgrid.export();
+      return;
+    }
 
     switch (event.keyCode) {
       case 83 : dotgrid.draw_arc(event.shiftKey ? "1,1" : "0,1"); break;
