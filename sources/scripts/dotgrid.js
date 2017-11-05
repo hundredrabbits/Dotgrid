@@ -86,13 +86,23 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.strokeLinecap = this.linecap;
     this.element.appendChild(this.svg_el);
 
-    this.svg_el.appendChild(this.path);    
+    this.svg_el.appendChild(this.path);   
+
+    this.draw(); 
   }
 
   // Cursor
 
   this.mouse_down = function(e)
   {
+    var o = e.target.getAttribute("data-operation");
+    if(!o){ return; }
+
+    if(o == "line"){ this.draw_line(); }
+    if(o == "arc_c"){ this.draw_arc("0,1"); }
+    if(o == "arc_r"){ this.draw_line("0,0"); }
+    if(o == "bezier"){ this.draw_line(); }
+    if(o == "export"){ this.export(); }
   }
 
   this.mouse_move = function(e)
@@ -110,6 +120,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     pos = this.position_on_grid(pos[0],pos[1]);
 
     pos = [pos[0]+10,pos[1]-10]
+
+    if(pos[1] > 300){ return; }
+    if(pos[0] < -300){ return; }
+    if(pos[0] > 0){ return; }
+    if(pos[1] < 0){ return; }
     
     if(from === null){ this.set_from(pos); }
     else if(to === null){ this.set_to(pos); }
@@ -163,7 +178,15 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     if(!to && !end){
       this.set_from([from[0]+(x*10),from[1]+(y*10)])
+      this.draw();
+      return;
     }
+    if(!end){
+      this.set_to([to[0]+(x*10),to[1]+(y*10)])
+      this.draw();
+      return;
+    }
+    this.set_end([end[0]+(x*10),end[1]+(y*10)])
     this.draw();
   }
 
@@ -189,7 +212,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   }
 
   // Draw
-  this.add_line = function()
+  this.draw_line = function()
   {
     if(from === null || to === null){ return; }
 
@@ -297,18 +320,31 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     var html = "";
 
-    html += "~"+this.thickness+" ";
-    html += "/"+this.linecap+" ";
+    if(from && to){
+      html += "<img data-operation='line' title='line' src='media/icons/line.svg' class='icon'/>";
+      html += "<img data-operation='arc_c' title='arc clockwise' src='media/icons/arc_clockwise.svg' class='icon'/>";
+      html += "<img data-operation='arc_r' title='arc reverse' src='media/icons/arc_reverse.svg' class='icon'/>";
+    }
+    else{
+      html += "<img title='line' src='media/icons/line.svg' class='icon inactive'/>";
+      html += "<img title='arc clockwise' src='media/icons/arc_clockwise.svg' class='icon inactive'/>";
+      html += "<img title='arc reverse' src='media/icons/arc_reverse.svg' class='icon inactive'/>";
+    }
 
-    if(from){ html += ">" }
-    if(to){ html += ">" }
-    if(end){ html += ">" }
+    if(from && to && end){
+      html += "<img data-operation='bezier' title='bezier' src='media/icons/bezier.svg' class='icon'/>";  
+    }
+    else{
+      html += "<img title='bezier' src='media/icons/bezier.svg' class='icon inactive'/>";
+    }
 
-    html += " "
-
-    if(to){ html += "aA sS d f" }
-    if(end){ html += ">" }
-
+    if(this.segments.length > 0){
+      html += "<img data-operation='export' title='export' src='media/icons/export.svg' class='icon right'/>";
+    }
+    else{
+      html += "<img title='export' src='media/icons/export.svg' class='icon right inactive'/>";
+    }
+    
     this.interface.innerHTML = html;
   }
 
