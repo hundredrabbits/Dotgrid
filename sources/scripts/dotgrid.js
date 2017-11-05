@@ -244,6 +244,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     reset();
   }
 
+  this.draw_close = function()
+  {
+    if(this.segments.length == 0){ return; }
+
+    this.segments.push(new Path_Close());
+    
+    this.draw();
+    reset();
+  }
+
   this.draw_dot = function()
   {
     var s = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -310,6 +320,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.export = function()
   {
+    if(this.segments.length == 0){ return; }
+    
     dialog.showSaveDialog((fileName) => {
       if (fileName === undefined){ return; }
       fs.writeFile(fileName+".svg", dotgrid.svg_el.outerHTML, (err) => {

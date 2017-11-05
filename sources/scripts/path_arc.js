@@ -13,11 +13,11 @@ function Path_Arc(from,to,orientation,end)
       html += "M"+this.from+" ";  
     }
     else if(prev){
-      if(prev.to.x != this.from.x && prev.to.y != this.from.y && !prev.end){
-        html += "M"+this.from+" ";  
+      if(prev.end && !prev.end.is_equal(this.from)){
+        html += "M"+this.from+" "; 
       }
-      else if(prev.end && prev.end.x != this.from.x && prev.end.y != this.from.y){
-        html += "M"+this.from+" ";  
+      else if(prev.to && !prev.to.is_equal(this.from)){
+        html += "M"+this.from+" "; 
       }
     }
 

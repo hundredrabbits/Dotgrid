@@ -1,4 +1,4 @@
-body { background:#fff; padding:30px; font-family: 'input_mono_regular'; -webkit-user-select: none;-webkit-app-region: drag;}
+body { background:#fff; padding:30px; font-family: 'input_mono_regular'; -webkit-user-select: none;-webkit-app-region: drag; overflow: hidden;}
 
 #dotgrid { margin:0px auto; position:relative; border:0px solid white; background:white; overflow: hidden; padding:10px;}
 #dotgrid .marker { width:2px; height:2px; background:#ddd; position:absolute; margin-top:-1px; margin-left:-1px; border-radius:4px; z-index:50;}
