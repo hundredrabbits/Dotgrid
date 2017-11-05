@@ -12,11 +12,15 @@ function Path_Bezier(from,to,end)
       html += "M"+this.from+" ";  
     }
     else if(prev){
-      if(prev.end && !prev.end.is_equal(this.from)){
-        html += "M"+this.from+" "; 
+      if(prev.end){
+        if(!prev.end.is_equal(this.from)){
+          html += "M"+this.from+" ";  
+        }         
       }
-      else if(prev.to && !prev.to.is_equal(this.from)){
-        html += "M"+this.from+" "; 
+      else if(prev.to){
+        if(!prev.to.is_equal(this.from)){
+          html += "M"+this.from+" "; 
+        }
       }
     }
 

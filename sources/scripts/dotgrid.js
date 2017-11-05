@@ -98,10 +98,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var o = e.target.getAttribute("data-operation");
     if(!o){ return; }
 
+    console.log(o)
     if(o == "line"){ this.draw_line(); }
     if(o == "arc_c"){ this.draw_arc("0,1"); }
-    if(o == "arc_r"){ this.draw_line("0,0"); }
-    if(o == "bezier"){ this.draw_line(); }
+    if(o == "arc_r"){ this.draw_arc("0,0"); }
+    if(o == "bezier"){ this.draw_bezier(); }
     if(o == "export"){ this.export(); }
   }
 
