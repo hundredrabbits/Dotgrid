@@ -8,7 +8,7 @@ function Path_Line(from,to,end = null)
   {
     var html = ""
 
-    if(!prev){
+    if(!prev || (!prev.to && !prev.end)){
       html += "M"+this.from+" ";  
     }
     else if(prev){

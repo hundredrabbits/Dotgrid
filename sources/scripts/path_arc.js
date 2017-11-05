@@ -9,7 +9,7 @@ function Path_Arc(from,to,orientation,end)
   {
     var html = ""
 
-    if(!prev){
+    if(!prev || (!prev.to && !prev.end)){
       html += "M"+this.from+" ";  
     }
     else if(prev){

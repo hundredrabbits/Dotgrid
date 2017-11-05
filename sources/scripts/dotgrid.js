@@ -314,8 +314,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.erase = function()
   {
-    this.reset();
-    this.segments.pop();
+    if(from || to || end){
+      this.reset();
+    }
+    else{
+      this.segments.pop();  
+    }
     this.draw();
   }
 

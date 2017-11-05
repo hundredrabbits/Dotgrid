@@ -8,7 +8,7 @@ function Path_Bezier(from,to,end)
   {
     var html = ""
 
-    if(!prev){
+    if(!prev || (!prev.to && !prev.end)){
       html += "M"+this.from+" ";  
     }
     else if(prev){
