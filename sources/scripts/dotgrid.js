@@ -248,12 +248,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
 	  if(from === null || to === null){ return; }
 
-	  to = new Pos(to[0] * -1, to[1])
-	  var end_point = end ? new Pos(end[0] * -1,end[1]) : to;
+	  to = new Pos(to[0] * -1, to[1]);
+
+	  var end_point = end ? new Pos(end[0] * -1,end[1]).sub(this.offset) : null;
 
 	  from = new Pos(from[0] * -1,from[1])
 
-	  this.segments.push(new Path_Line(from.sub(this.offset),to.sub(this.offset),end_point.sub(this.offset)));
+	  this.segments.push(new Path_Line(from.sub(this.offset),to.sub(this.offset),end_point));
 
 	  this.draw();
 	  reset();
@@ -263,8 +264,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     if(from === null || to === null){ return; }
 
-    var end_point = end ? new Pos(end[0] * -1,end[1]) : null;
-    this.segments.push(new Path_Arc(new Pos(from[0] * -1,from[1]).sub(this.offset),new Pos(to[0] * -1,to[1]).sub(this.offset),orientation,end_point.sub(this.offset)));
+    var end_point = end ? new Pos(end[0] * -1,end[1]).sub(this.offset) : null;
+
+    this.segments.push(new Path_Arc(new Pos(from[0] * -1,from[1]).sub(this.offset),new Pos(to[0] * -1,to[1]).sub(this.offset),orientation,end_point));
 
     this.draw();
     reset();
@@ -272,7 +274,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.draw_bezier = function()
   {
-    if(from === null || to === null){ return; }
+    if(from === null || to === null || end === null){ return; }
 
     this.segments.push(new Path_Bezier(new Pos(from[0] * -1,from[1]).sub(this.offset),new Pos(to[0] * -1,to[1]).sub(this.offset),new Pos(end[0] * -1,end[1]).sub(this.offset)));
 
