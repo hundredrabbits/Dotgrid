@@ -10,6 +10,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.thickness = thickness;
   this.linecap = linecap;
   this.color = color;
+  this.offset = new Pos(0,0);
 
   this.element = null;
 
@@ -73,6 +74,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     cursor_end.id = "cursor_end";
     this.element.appendChild(cursor_end);
 
+    this.offset_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
     this.mirror_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
     this.mirror_path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
@@ -91,8 +93,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.fill = "none";
     this.svg_el.style.strokeLinecap = this.linecap;
     this.element.appendChild(this.svg_el);
-    
-    this.svg_el.appendChild(this.path);
+
+    this.offset_el.appendChild(this.path)    
+    this.svg_el.appendChild(this.offset_el);
     this.svg_el.appendChild(this.mirror_el);
     this.mirror_el.appendChild(this.mirror_path);
 
@@ -187,17 +190,23 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.mod_move = function(x,y)
   {
-    if(!to && !end){
-      this.set_from([from[0]+(x*10),from[1]+(y*10)])
+    if(!to && !end && from){
+      this.set_from([from[0]-(x),from[1]+(y)])
       this.draw();
       return;
     }
-    if(!end){
-      this.set_to([to[0]+(x*10),to[1]+(y*10)])
+    if(!end && to){
+      this.set_to([to[0]-(x),to[1]+(y)])
       this.draw();
       return;
     }
-    this.set_end([end[0]+(x*10),end[1]+(y*10)])
+    if(end){
+      this.set_end([end[0]-(x),end[1]+(y)])
+      this.draw();
+      return;  
+    }
+    // Move offset
+    this.offset = this.offset.add(new Pos(x,y));
     this.draw();
   }
 
@@ -220,7 +229,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.strokeWidth = this.thickness;
 
     this.mirror_path.setAttribute("d",this.mirror ? d : '');
-    this.mirror_path.setAttribute("transform","translate(300,0),scale(-1,1)")
+    this.mirror_path.setAttribute("transform","translate("+(300 - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
+
+    this.offset_el.setAttribute("transform","translate("+(this.offset.x)+","+(this.offset.y)+")")
 
     this.update_interface();
   }
@@ -231,7 +242,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(from === null || to === null){ return; }
 
     var end_point = end ? new Pos(end[0] * -1,end[1]) : null;
-    this.segments.push(new Path_Line(new Pos(from[0] * -1,from[1]),new Pos(to[0] * -1,to[1]),end_point));
+
+    from = new Pos(from[0],from[1])
+
+    this.segments.push(new Path_Line(new Pos(from.x * -1,from.y).sub(this.offset),new Pos(to[0] * -1,to[1]).sub(this.offset),end_point.sub(this.offset)));
 
     this.draw();
     reset();
@@ -242,7 +256,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(from === null || to === null){ return; }
 
     var end_point = end ? new Pos(end[0] * -1,end[1]) : null;
-    this.segments.push(new Path_Arc(new Pos(from[0] * -1,from[1]),new Pos(to[0] * -1,to[1]),orientation,end_point));
+    this.segments.push(new Path_Arc(new Pos(from[0] * -1,from[1]).sub(this.offset),new Pos(to[0] * -1,to[1]).sub(this.offset),orientation,end_point.sub(this.offset)));
 
     this.draw();
     reset();
@@ -252,7 +266,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     if(from === null || to === null){ return; }  
 
-    this.segments.push(new Path_Bezier(new Pos(from[0] * -1,from[1]),new Pos(to[0] * -1,to[1]),new Pos(end[0] * -1,end[1])));
+    this.segments.push(new Path_Bezier(new Pos(from[0] * -1,from[1]).sub(this.offset),new Pos(to[0] * -1,to[1]).sub(this.offset),new Pos(end[0] * -1,end[1]).sub(this.offset)));
 
     this.draw();
     reset();

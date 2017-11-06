@@ -24,10 +24,10 @@ function Keyboard()
       case 8 : dotgrid.erase(); break; // 'Backspace'
       case 69 : dotgrid.export(); break; // 'e'
 
-      case 38 : dotgrid.mod_move(0,-1); break; // 'up'
-      case 40 : dotgrid.mod_move(0,1); break;  // 'down'
-      case 37 : dotgrid.mod_move(1,0); break;  // 'left'
-      case 39 : dotgrid.mod_move(-1,0); break; // 'right'
+      case 38 : dotgrid.mod_move(0,-10); break; // 'up'
+      case 40 : dotgrid.mod_move(0,10); break;  // 'down'
+      case 37 : dotgrid.mod_move(-10,0); break;  // 'left'
+      case 39 : dotgrid.mod_move(10,0); break; // 'right'
     }
     dotgrid.draw();
   }
