@@ -8,14 +8,6 @@ body { background:#fff; padding:30px; font-family: 'input_mono_regular'; -webkit
 #dotgrid #cursor_to { width:4px; height:4px; background:white; margin-top:-3px; margin-left:-3px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
 #dotgrid #cursor_end { width:4px; height:4px; background:white; margin-top:-3px; margin-left:-3px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
 
-input { padding:2px 5px; border-radius:20px; margin:0px auto; display:none;}
-.vector { position:relative; z-index:900;}
-pre { font-size:11px; color:#000; position:fixed; bottom:20px; display: none}
-.reference { left:0; display: none }
-.settings { right:20px; text-align:right; display: none}
-.settings input { display:inline; background:#fff; width:4em; }
-.settings select { display:inline; background:#fff; }
-
 #interface { max-width: 295px;margin:0px auto;font-size: 11px;line-height: 30px; text-transform: uppercase; margin-top:20px;-webkit-app-region: no-drag;}
 
 .icon { width:25px; height:25px; margin-left:-5px; margin-right:0px; opacity: 0.5}
@@ -23,3 +15,5 @@ pre { font-size:11px; color:#000; position:fixed; bottom:20px; display: none}
 .icon.inactive { opacity: 0.1 !important }
 
 .icon:hover { cursor: pointer; opacity: 1 }
+
+svg.vector { z-index: 1000;position: relative  }

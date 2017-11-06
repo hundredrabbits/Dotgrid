@@ -12,7 +12,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.color = color;
   this.offset = new Pos(0,0);
 
-  this.element = null;
+  // Dotgrid
+  this.element = document.createElement("div");
+  this.element.id = "dotgrid";
+  this.element.style.width = this.width;
+  this.element.style.height = this.height;
 
   this.grid_width = this.width/this.grid_x;
   this.grid_height = this.height/this.grid_y;
@@ -30,6 +34,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.mirror_el = null;
 
   this.mirror = false;
+  this.fill = false;
 
   this.path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   this.segments = [];
@@ -38,11 +43,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.install = function()
   {
-    // Dotgrid
-    this.element = document.createElement("div");
-    this.element.id = "dotgrid";
-    this.element.style.width = this.width;
-    this.element.style.height = this.height;
     document.body.appendChild(this.element);
     document.body.appendChild(this.interface);
 
@@ -90,7 +90,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.height = this.height;
     this.svg_el.style.stroke = this.color;
     this.svg_el.style.strokeWidth = this.thickness;
-    this.svg_el.style.fill = "none";
+    this.svg_el.style.fill = this.fill ? "black" : "none";
     this.svg_el.style.strokeLinecap = this.linecap;
     this.element.appendChild(this.svg_el);
 
@@ -210,6 +210,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.draw();
   }
 
+  this.toggle_fill = function()
+  {
+    dotgrid.fill = dotgrid.fill ? false : true;
+    this.draw();
+  }
+
   this.draw = function()
   {
     var d = "";
@@ -227,6 +233,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.stroke = this.color;
     this.svg_el.style.strokeLinecap = this.linecap;
     this.svg_el.style.strokeWidth = this.thickness;
+    this.svg_el.style.fill = this.fill ? "black" : "none";
 
     this.mirror_path.setAttribute("d",this.mirror ? d : '');
     this.mirror_path.setAttribute("transform","translate("+(300 - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
@@ -329,42 +336,42 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var html = "";
 
     if(from && to){
-      html += "<img data-operation='line' title='line' src='media/icons/line.svg' class='icon'/>";
-      html += "<img data-operation='arc_c' title='arc clockwise' src='media/icons/arc_clockwise.svg' class='icon'/>";
-      html += "<img data-operation='arc_r' title='arc reverse' src='media/icons/arc_reverse.svg' class='icon'/>";
+      html += "<img data-operation='line' title='line (d)' src='media/icons/line.svg' class='icon'/>";
+      html += "<img data-operation='arc_c' title='arc clockwise (s)' src='media/icons/arc_clockwise.svg' class='icon'/>";
+      html += "<img data-operation='arc_r' title='arc reverse (a)' src='media/icons/arc_reverse.svg' class='icon'/>";
     }
     else{
-      html += "<img title='line' src='media/icons/line.svg' class='icon inactive'/>";
-      html += "<img title='arc clockwise' src='media/icons/arc_clockwise.svg' class='icon inactive'/>";
-      html += "<img title='arc reverse' src='media/icons/arc_reverse.svg' class='icon inactive'/>";
+      html += "<img title='line (d)' src='media/icons/line.svg' class='icon inactive'/>";
+      html += "<img title='arc clockwise (s)' src='media/icons/arc_clockwise.svg' class='icon inactive'/>";
+      html += "<img title='arc reverse (a)' src='media/icons/arc_reverse.svg' class='icon inactive'/>";
     }
 
     if(from && to && end){
-      html += "<img data-operation='bezier' title='bezier' src='media/icons/bezier.svg' class='icon'/>";  
+      html += "<img data-operation='bezier' title='bezier (f)' src='media/icons/bezier.svg' class='icon'/>";  
     }
     else{
-      html += "<img title='bezier' src='media/icons/bezier.svg' class='icon inactive'/>";
+      html += "<img title='bezier (f)' src='media/icons/bezier.svg' class='icon inactive'/>";
     }
 
     if(this.segments.length > 0 && this.segments[this.segments.length-1].name != "close"){
-      html += "<img data-operation='close' title='close' src='media/icons/close.svg' class='icon'/>";
+      html += "<img data-operation='close (r)' title='close' src='media/icons/close.svg' class='icon'/>";
     }
     else{
-      html += "<img title='close' src='media/icons/close.svg' class='icon inactive'/>";
+      html += "<img title='close (r)' src='media/icons/close.svg' class='icon inactive'/>";
     }
 
     if(this.segments.length > 0 && !this.mirror){
-      html += "<img data-operation='mirror' title='mirror' src='media/icons/mirror.svg' class='icon' style='margin-left:50px'/>";
+      html += "<img data-operation='mirror' title='mirror (space)' src='media/icons/mirror.svg' class='icon' style='margin-left:35px'/>";
     }
     else{
-      html += "<img data-operation='mirror' title='mirror' src='media/icons/mirror.svg' class='icon inactive' style='margin-left:50px'/>";
+      html += "<img data-operation='mirror' title='mirror (space)' src='media/icons/mirror.svg' class='icon inactive' style='margin-left:35px'/>";
     }
 
     if(this.segments.length > 0){
-      html += "<img data-operation='export' title='export' src='media/icons/export.svg' class='icon right'/>";
+      html += "<img data-operation='export' title='export (e)' src='media/icons/export.svg' class='icon right'/>";
     }
     else{
-      html += "<img title='export' src='media/icons/export.svg' class='icon right inactive'/>";
+      html += "<img title='export (e)' src='media/icons/export.svg' class='icon right inactive'/>";
     }
     
     this.interface.innerHTML = html;
