@@ -14,13 +14,8 @@
   </head>
   <body>
     <script>
-      try{
-        const {dialog,app} = require('electron').remote;
-        const fs = require('fs');
-      }
-      catch(err){
-        console.log("standalone")
-      }
+      const {dialog,app} = require('electron').remote;
+      const fs = require('fs');
       
       dotgrid = new Dotgrid(300,300,30,30,5,5, 10,"square","#000000");
       dotgrid.install();
