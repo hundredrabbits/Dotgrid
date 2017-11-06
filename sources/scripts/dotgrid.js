@@ -94,12 +94,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.strokeLinecap = this.linecap;
     this.element.appendChild(this.svg_el);
 
-    this.offset_el.appendChild(this.path)    
+    this.offset_el.appendChild(this.path)
     this.svg_el.appendChild(this.offset_el);
     this.svg_el.appendChild(this.mirror_el);
     this.mirror_el.appendChild(this.mirror_path);
 
-    this.draw(); 
+    this.draw();
   }
 
   // Cursor
@@ -139,7 +139,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(pos[0] < -300){ return; }
     if(pos[0] > 0){ return; }
     if(pos[1] < 0){ return; }
-    
+
     if(from === null){ this.set_from(pos); }
     else if(to === null){ this.set_to(pos); }
     else{ this.set_end(pos); }
@@ -203,7 +203,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(end){
       this.set_end([end[0]-(x),end[1]+(y)])
       this.draw();
-      return;  
+      return;
     }
     // Move offset
     this.offset = this.offset.add(new Pos(x,y));
@@ -246,16 +246,17 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   // Draw
   this.draw_line = function()
   {
-    if(from === null || to === null){ return; }
+	  if(from === null || to === null){ return; }
 
-    var end_point = end ? new Pos(end[0] * -1,end[1]) : null;
+	  to = new Pos(to[0] * -1, to[1])
+	  var end_point = end ? new Pos(end[0] * -1,end[1]) : to;
 
-    from = new Pos(from[0],from[1])
+	  from = new Pos(from[0] * -1,from[1])
 
-    this.segments.push(new Path_Line(new Pos(from.x * -1,from.y).sub(this.offset),new Pos(to[0] * -1,to[1]).sub(this.offset),end_point.sub(this.offset)));
+	  this.segments.push(new Path_Line(from.sub(this.offset),to.sub(this.offset),end_point.sub(this.offset)));
 
-    this.draw();
-    reset();
+	  this.draw();
+	  reset();
   }
 
   this.draw_arc = function(orientation)
@@ -271,7 +272,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.draw_bezier = function()
   {
-    if(from === null || to === null){ return; }  
+    if(from === null || to === null){ return; }
 
     this.segments.push(new Path_Bezier(new Pos(from[0] * -1,from[1]).sub(this.offset),new Pos(to[0] * -1,to[1]).sub(this.offset),new Pos(end[0] * -1,end[1]).sub(this.offset)));
 
@@ -285,7 +286,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(this.segments[this.segments.length-1].name == "close"){ return; }
 
     this.segments.push(new Path_Close());
-    
+
     this.draw();
     reset();
   }
@@ -314,7 +315,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       this.reset();
     }
     else{
-      this.segments.pop();  
+      this.segments.pop();
     }
     this.draw();
   }
@@ -322,13 +323,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.export = function()
   {
     if(this.segments.length == 0){ return; }
-    
+
     dialog.showSaveDialog((fileName) => {
       if (fileName === undefined){ return; }
       fs.writeFile(fileName+".svg", dotgrid.svg_el.outerHTML, (err) => {
         if(err){ alert("An error ocurred creating the file "+ err.message); return; }
       });
-    }); 
+    });
   }
 
   this.update_interface = function()
@@ -347,7 +348,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     }
 
     if(from && to && end){
-      html += "<img data-operation='bezier' title='bezier (f)' src='media/icons/bezier.svg' class='icon'/>";  
+      html += "<img data-operation='bezier' title='bezier (f)' src='media/icons/bezier.svg' class='icon'/>";
     }
     else{
       html += "<img title='bezier (f)' src='media/icons/bezier.svg' class='icon inactive'/>";
@@ -373,7 +374,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     else{
       html += "<img title='export (e)' src='media/icons/export.svg' class='icon right inactive'/>";
     }
-    
+
     this.interface.innerHTML = html;
   }
 
