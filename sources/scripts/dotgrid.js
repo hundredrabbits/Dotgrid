@@ -174,7 +174,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.mod_thickness = function(mod)
   {
-    this.thickness += mod;
+    this.thickness = Math.max(this.thickness+mod,0);
     this.draw();
   }
 
