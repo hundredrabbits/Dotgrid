@@ -138,10 +138,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     pos = [pos[0],pos[1]]
 
-    if(pos[1] > 300){ return; }
-    if(pos[0] < -300){ return; }
-    if(pos[0] > 0){ return; }
-    if(pos[1] < 0){ return; }
+    if(pos[3]) return;
 
     if(from === null){ this.set_from(pos); }
     else if(to === null){ this.set_to(pos); }
@@ -394,11 +391,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     return [(window.innerWidth/2) - (this.width/2) - x,y - 50];
   }
 
-  this.position_on_grid = function(x,y)
+  this.position_on_grid = function(x,y) // rounds the mouse position to the nearest cell, and limits the coords to within the box
   {
-    x = parseInt(x/this.grid_width) * this.grid_width - (this.grid_width/2) + 5;
-    y = parseInt(y/this.grid_height) * this.grid_height + (this.grid_height/2) +5;
-    return [parseInt(x),parseInt(y)];
+    x = Math.round(x/this.grid_width)*this.grid_width
+    y = Math.round(y/this.grid_height)*this.grid_height+this.grid_height
+    off = (x<-this.width || x>0 || y>this.height || y<0)
+    if(off) { // change position so the cursor will not be seen
+      x = 50
+      y = -50
+    }
+    return [parseInt(x),parseInt(y),off];
   }
     
 }
