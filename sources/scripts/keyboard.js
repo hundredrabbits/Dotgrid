@@ -40,7 +40,7 @@ function Keyboard()
       case 87 : dotgrid.erase(); break; // 'W'
       case 8 : dotgrid.erase(); break; // 'Backspace'
       case 69 : dotgrid.export(); break; // 'e'
-      case 13 : dotgrid.export(); break; // 'e'
+      case 13 : dotgrid.export(); break; // 'Enter'
 
       case 9 : dotgrid.toggle_fill(); e.preventDefault(); break; // 'tab'
 
