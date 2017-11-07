@@ -1,5 +1,7 @@
 function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,linecap = "round", color = "#000000")
 {
+  this.theme = new Theme();
+
   this.width = width;
   this.height = height;
   this.grid_x = grid_x;
@@ -50,7 +52,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     for (var x = this.grid_x; x >= 0; x--) {
       for (var y = this.grid_y; y >= 0; y--) {
         var marker = document.createElement("div");
-        marker.setAttribute("class",(x % this.block_x == 0 && y % this.block_y == 0 ? "marker block" : "marker"));
+        marker.setAttribute("class",(x % this.block_x == 0 && y % this.block_y == 0 ? "marker bm" : "marker bl"));
         marker.style.left = parseInt(x * this.grid_width + (this.grid_width/2)) +5;
         marker.style.top = parseInt(y * this.grid_height + (this.grid_height/2)) +5;
         this.element.appendChild(marker);
@@ -80,7 +82,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    this.svg_el.setAttribute("class","vector");
+    this.svg_el.setAttribute("class","vector fh");
     this.svg_el.setAttribute("width",this.width+"px");
     this.svg_el.setAttribute("height",this.height+"px");
     this.svg_el.setAttribute("xmlns","http://www.w3.org/2000/svg");
@@ -100,6 +102,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.mirror_el.appendChild(this.mirror_path);
 
     this.draw();
+
+    this.theme.start();
   }
 
   // Cursor
@@ -393,4 +397,34 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     y = parseInt(y/this.grid_height) * this.grid_height + (this.grid_height/2) +5;
     return [parseInt(x),parseInt(y)];
   }
+    
 }
+
+window.addEventListener('dragover',function(e)
+{
+  e.preventDefault();
+  e.stopPropagation();
+  e.dataTransfer.dropEffect = 'copy';
+});
+
+window.addEventListener('drop', function(e)
+{
+  e.preventDefault();
+  e.stopPropagation();
+
+  var files = e.dataTransfer.files;
+
+  for(file_id in files){
+    var file = files[file_id];
+    if(file.name.indexOf(".thm") == -1){ console.log("skipped",file); continue; }
+
+    var path = file.path;
+    var reader = new FileReader();
+    reader.onload = function(e){
+      var o = JSON.parse(e.target.result);
+      dotgrid.theme.install(o);
+    };
+    reader.readAsText(file);
+    return;
+  }
+});

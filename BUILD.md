@@ -32,7 +32,9 @@ rm -r /xxiivv/Nataniev/public/public.projects/builds/Dotgrid-linux-x64/
 rm -r /xxiivv/Nataniev/public/public.projects/builds/Dotgrid-win32-x64/
 
 ~/butler status hundredrabbits/dotgrid
+
 ```
+
 
 ### Build Linux64 / Darwin64 / Windows64(Local)
 ```
