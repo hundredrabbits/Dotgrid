@@ -44,10 +44,10 @@ function Keyboard()
 
       case 9 : dotgrid.toggle_fill(); e.preventDefault(); break; // 'tab'
 
-      case 38 : dotgrid.mod_move(0,-10); break; // 'up'
-      case 40 : dotgrid.mod_move(0,10); break;  // 'down'
-      case 37 : dotgrid.mod_move(-10,0); break;  // 'left'
-      case 39 : dotgrid.mod_move(10,0); break; // 'right'
+      case 38 : dotgrid.mod_move(new Pos(0,-10)); break; // 'up'
+      case 40 : dotgrid.mod_move(new Pos(0,10)); break;  // 'down'
+      case 37 : dotgrid.mod_move(new Pos(-10,0)); break;  // 'left'
+      case 39 : dotgrid.mod_move(new Pos(10,0)); break; // 'right'
     }
     dotgrid.draw();
   }

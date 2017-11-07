@@ -124,19 +124,19 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.mouse_move = function(e)
   {
-    var pos = this.position_in_grid(e.clientX,e.clientY);
-    pos = this.position_on_grid(pos[0],pos[1]);
+    var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
+    pos = this.position_on_grid(pos);
 
-    this.cursor.style.left = -pos[0] + 10;
-    this.cursor.style.top = pos[1] + 10;
+    this.cursor.style.left = -pos.x + 10;
+    this.cursor.style.top = pos.y + 10;
   }
 
   this.mouse_up = function(e)
   {
-    var pos = this.position_in_grid(e.clientX,e.clientY);
-    pos = this.position_on_grid(pos[0],pos[1]);
-    
-    if(pos[2]) return;
+    var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
+    pos = this.position_on_grid(pos);
+
+    if(pos.x>0) return;
 
     if(from === null){ this.set_from(pos); }
     else if(to === null){ this.set_to(pos); }
@@ -150,22 +150,22 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     from = pos;
 
-    cursor_from.style.left = -pos[0] + 10;
-    cursor_from.style.top = pos[1] + 10;
+    cursor_from.style.left = -pos.x + 10;
+    cursor_from.style.top = pos.y + 10;
   }
 
   this.set_to = function(pos)
   {
-    cursor_to.style.left = -pos[0] + 10;
-    cursor_to.style.top = pos[1] + 10;
+    cursor_to.style.left = -pos.x + 10;
+    cursor_to.style.top = pos.y + 10;
 
     to = pos;
   }
 
   this.set_end = function(pos)
   {
-    cursor_end.style.left = -pos[0] + 10;
-    cursor_end.style.top = pos[1] + 10;
+    cursor_end.style.left = -pos.x + 10;
+    cursor_end.style.top = pos.y + 10;
 
     end = pos;
   }
@@ -186,25 +186,25 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.draw();
   }
 
-  this.mod_move = function(x,y)
+  this.mod_move = function(move)
   {
     if(!to && !end && from){
-      this.set_from([from[0]-(x),from[1]+(y)])
+      this.set_from(new Pos(from.x-(move.x),from.y+(move.y)))
       this.draw();
       return;
     }
     if(!end && to){
-      this.set_to([to[0]-(x),to[1]+(y)])
+      this.set_to(new Pos(to.x-(move.x),to.y+(move.y)))
       this.draw();
       return;
     }
     if(end){
-      this.set_end([end[0]-(x),end[1]+(y)])
+      this.set_end(new Pos(end.x-(move.x),end.y+(move.y)))
       this.draw();
       return;
     }
     // Move offset
-    this.offset = this.offset.add(new Pos(x,y));
+    this.offset = this.offset.add(new Pos(move.x,move.y));
     this.draw();
   }
 
@@ -246,9 +246,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     if(from === null || to === null){ return; }
 
-    to = new Pos(to[0] * -1, to[1]).sub(this.offset)
-    from = new Pos(from[0] * -1,from[1]).sub(this.offset)
-    end = end ? new Pos(end[0] * -1,end[1]).sub(this.offset) : null;
+    to = new Pos(to.x * -1, to.y).sub(this.offset)
+    from = new Pos(from.x * -1,from.y).sub(this.offset)
+    end = end ? new Pos(end.x * -1,end.y).sub(this.offset) : null;
 
     this.segments.push(new Path_Line(from,to,end));
 
@@ -260,9 +260,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     if(from === null || to === null){ return; }
 
-    to = new Pos(to[0] * -1, to[1]).sub(this.offset)
-    from = new Pos(from[0] * -1,from[1]).sub(this.offset)
-    end = end ? new Pos(end[0] * -1,end[1]).sub(this.offset) : null;
+    to = new Pos(to.x * -1, to.y).sub(this.offset)
+    from = new Pos(from.x * -1,from.y).sub(this.offset)
+    end = end ? new Pos(end.x * -1,end.y).sub(this.offset) : null;
 
     this.segments.push(new Path_Arc(from,to,orientation,end));
 
@@ -274,9 +274,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     if(from === null || to === null || end === null){ return; }
 
-    to = new Pos(to[0] * -1, to[1]).sub(this.offset)
-    from = new Pos(from[0] * -1,from[1]).sub(this.offset)
-    end = new Pos(end[0] * -1,end[1]).sub(this.offset)
+    to = new Pos(to.x * -1, to.y).sub(this.offset)
+    from = new Pos(from.x * -1,from.y).sub(this.offset)
+    end = new Pos(end.x * -1,end.y).sub(this.offset)
 
     this.segments.push(new Path_Bezier(from,to,end));
 
@@ -384,21 +384,21 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   // Normalizers
 
-  this.position_in_grid = function(x,y)
+  this.position_in_grid = function(pos)
   {
-    return [(window.innerWidth/2) - (this.width/2) - x,y - 50];
+    return new Pos((window.innerWidth/2) - (this.width/2) - pos.x,pos.y - 50)
   }
 
-  this.position_on_grid = function(x,y) // rounds the mouse position to the nearest cell, and limits the coords to within the box
+  this.position_on_grid = function(pos) // rounds the mouse position to the nearest cell, and limits the coords to within the box
   {
-    x = Math.round(x/this.grid_width)*this.grid_width
-    y = Math.round(y/this.grid_height)*this.grid_height+this.grid_height
+    x = Math.round(pos.x/this.grid_width)*this.grid_width
+    y = Math.round(pos.y/this.grid_height)*this.grid_height+this.grid_height
     off = (x<-this.width || x>0 || y>this.height || y<0)
     if(off) { // change position so the cursor will not be seen
       x = 50
       y = -50
     }
-    return [parseInt(x),parseInt(y),off];
+    return new Pos(x,y);
   }
     
 }
