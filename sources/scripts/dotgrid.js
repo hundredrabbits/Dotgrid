@@ -136,6 +136,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
     pos = this.position_on_grid(pos);
 
+    if(e.altKey){ dotgrid.delete_at(pos); return; }
     if(pos.x>0) return;
 
     if(from === null){ this.set_from(pos); }
@@ -168,6 +169,21 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     cursor_end.style.top = pos.y + 10;
 
     end = pos;
+  }
+
+  this.delete_at = function(pos)
+  {
+    var segs = [];
+
+    for(id in this.segments){
+      var s = this.segments[id];
+      if(s.from && s.from.is_equal(pos)){ continue; }
+      if(s.to && s.to.is_equal(pos)){ continue; }
+      if(s.end && s.end.is_equal(pos)){ continue; }
+      segs.push(s);
+    }
+    this.segments = segs;
+    this.draw();
   }
 
   this.mod_thickness = function(mod)
@@ -253,7 +269,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.segments.push(new Path_Line(from,to,end));
 
     this.draw();
-    reset();
+    this.reset();
   }
 
   this.draw_arc = function(orientation)
@@ -267,7 +283,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.segments.push(new Path_Arc(from,to,orientation,end));
 
     this.draw();
-    reset();
+    this.reset();
   }
 
   this.draw_bezier = function()
@@ -281,7 +297,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.segments.push(new Path_Bezier(from,to,end));
 
     this.draw();
-    reset();
+    this.reset();
   }
 
   this.draw_close = function()
@@ -292,15 +308,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.segments.push(new Path_Close());
 
     this.draw();
-    reset();
+    this.reset();
   }
 
   this.reset = function()
-  {
-    reset();
-  }
-
-  function reset()
   {
     from = null;
     to = null;
@@ -311,6 +322,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     cursor_to.style.top = -100;
     cursor_end.style.left = -100;
     cursor_end.style.top = -100;
+  }
+
+  this.clear = function()
+  {
+    this.reset();
+    this.segments = [];
+    this.thickness = 10
+    this.linecap = "square"
+    this.color = "#000000"
+    this.draw();
   }
 
   this.erase = function()

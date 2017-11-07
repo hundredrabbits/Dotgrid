@@ -27,11 +27,12 @@ cd /xxiivv/Nataniev/public/public.projects/builds/
 ~/butler push /xxiivv/Nataniev/public/public.projects/builds/Dotgrid-win32-x64/ hundredrabbits/dotgrid:windows-64
 ~/butler push /xxiivv/Nataniev/public/public.projects/builds/Dotgrid-darwin-x64/ hundredrabbits/dotgrid:osx-64
 
+~/butler status hundredrabbits/dotgrid
+
 rm -r /xxiivv/Nataniev/public/public.projects/builds/Dotgrid-darwin-x64/
 rm -r /xxiivv/Nataniev/public/public.projects/builds/Dotgrid-linux-x64/
 rm -r /xxiivv/Nataniev/public/public.projects/builds/Dotgrid-win32-x64/
 
-~/butler status hundredrabbits/dotgrid
 
 ```
 
@@ -52,3 +53,27 @@ electron-packager . Dotgrid --platform=linux --arch=x64 --out /Users/VillaMoirai
 cd /Users/VillaMoirai/Github/HundredRabbits/Dotgrid/
 electron-packager . Dotgrid --platform=win32 --arch=x64 --out /Users/VillaMoirai/Desktop/ --overwrite --electron-version=1.7.5 --icon=icon.ico
 ```
+
+### Build 
+```
+cd /Users/VillaMoirai/Desktop/
+rm -r /Users/VillaMoirai/Desktop/Dotgrid-darwin-x64/ 
+rm -r /Users/VillaMoirai/Desktop/Ronin-darwin-x64/ 
+rm -r /Users/VillaMoirai/Desktop/Left-darwin-x64/ 
+rm -r /Users/VillaMoirai/Desktop/Marabu-darwin-x64/ 
+
+cd /Users/VillaMoirai/Github/HundredRabbits/Dotgrid/
+electron-packager . Dotgrid --platform=darwin --arch=x64 --out /Users/VillaMoirai/Desktop/ --overwrite --electron-version=1.7.5 --icon=icon.icns
+
+cd /Users/VillaMoirai/Github/HundredRabbits/Ronin/
+electron-packager . Ronin --platform=darwin --arch=x64 --out /Users/VillaMoirai/Desktop/ --overwrite --electron-version=1.7.5 --icon=icon.icns
+
+cd /Users/VillaMoirai/Github/HundredRabbits/Left/
+electron-packager . Left --platform=darwin --arch=x64 --out /Users/VillaMoirai/Desktop/ --overwrite --electron-version=1.7.5 --icon=icon.icns
+
+cd /Users/VillaMoirai/Github/HundredRabbits/Marabu/
+electron-packager . Marabu --platform=darwin --arch=x64 --out /Users/VillaMoirai/Desktop/ --overwrite --electron-version=1.7.5 --icon=icon.icns
+```
+
+
+

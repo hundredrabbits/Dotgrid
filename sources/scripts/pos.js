@@ -20,6 +20,6 @@ function Pos(x,y)
 
   this.is_equal = function(pos2)
   {
-    return pos2.x == this.x && pos2.y == this.y;
+    return Math.abs(pos2.x) == Math.abs(this.x) && Math.abs(pos2.y) == Math.abs(this.y);
   }
 }

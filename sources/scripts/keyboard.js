@@ -14,6 +14,12 @@ function Keyboard()
       return;
     }
 
+    // new
+    if(e.key == "n" && (e.ctrlKey || e.metaKey)){
+      dotgrid.clear();
+      return;
+    }
+
     // Reset
     if((e.key == "Backspace" || e.key == "Delete") && e.ctrlKey && e.shiftKey){
       e.preventDefault();

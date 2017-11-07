@@ -30,6 +30,11 @@ It works by adding control points and selecting a stroke type. So clicking the c
 - `-` Reduce stroke size.
 - `/` Toggle linecap.
 
+### Shortcuts
+
+- `ctrl+n` New canvas.
+- `alt+click` Erase target stroke.
+
 ## License
 
 See the [LICENSE](LICENSE.md) file for license rights and limitations (CC).
