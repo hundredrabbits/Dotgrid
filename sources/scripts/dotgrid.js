@@ -135,10 +135,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     var pos = this.position_in_grid(e.clientX,e.clientY);
     pos = this.position_on_grid(pos[0],pos[1]);
-
-    pos = [pos[0],pos[1]]
-
-    if(pos[3]) return;
+    
+    if(pos[2]) return;
 
     if(from === null){ this.set_from(pos); }
     else if(to === null){ this.set_to(pos); }
