@@ -92,7 +92,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.height = this.height;
     this.svg_el.style.stroke = this.color;
     this.svg_el.style.strokeWidth = this.thickness;
-    this.svg_el.style.fill = this.fill ? "black" : "none";
+    this.svg_el.style.fill = this.fill ? "black" : "none !important";
     this.svg_el.style.strokeLinecap = this.linecap;
     this.element.appendChild(this.svg_el);
 
@@ -113,7 +113,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var o = e.target.getAttribute("data-operation");
     if(!o){ return; }
 
-    console.log(o)
     if(o == "line"){ this.draw_line(); }
     if(o == "arc_c"){ this.draw_arc("0,1"); }
     if(o == "arc_r"){ this.draw_arc("0,0"); }
@@ -250,27 +249,27 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   // Draw
   this.draw_line = function()
   {
-	  if(from === null || to === null){ return; }
+    if(from === null || to === null){ return; }
 
-	  to = new Pos(to[0] * -1, to[1]);
+    to = new Pos(to[0] * -1, to[1]).sub(this.offset)
+    from = new Pos(from[0] * -1,from[1]).sub(this.offset)
+    end = end ? new Pos(end[0] * -1,end[1]).sub(this.offset) : null;
 
-	  var end_point = end ? new Pos(end[0] * -1,end[1]).sub(this.offset) : null;
+    this.segments.push(new Path_Line(from,to,end));
 
-	  from = new Pos(from[0] * -1,from[1])
-
-	  this.segments.push(new Path_Line(from.sub(this.offset),to.sub(this.offset),end_point));
-
-	  this.draw();
-	  reset();
+    this.draw();
+    reset();
   }
 
   this.draw_arc = function(orientation)
   {
     if(from === null || to === null){ return; }
 
-    var end_point = end ? new Pos(end[0] * -1,end[1]).sub(this.offset) : null;
+    to = new Pos(to[0] * -1, to[1]).sub(this.offset)
+    from = new Pos(from[0] * -1,from[1]).sub(this.offset)
+    end = end ? new Pos(end[0] * -1,end[1]).sub(this.offset) : null;
 
-    this.segments.push(new Path_Arc(new Pos(from[0] * -1,from[1]).sub(this.offset),new Pos(to[0] * -1,to[1]).sub(this.offset),orientation,end_point));
+    this.segments.push(new Path_Arc(from,to,orientation,end));
 
     this.draw();
     reset();
@@ -280,7 +279,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     if(from === null || to === null || end === null){ return; }
 
-    this.segments.push(new Path_Bezier(new Pos(from[0] * -1,from[1]).sub(this.offset),new Pos(to[0] * -1,to[1]).sub(this.offset),new Pos(end[0] * -1,end[1]).sub(this.offset)));
+    to = new Pos(to[0] * -1, to[1]).sub(this.offset)
+    from = new Pos(from[0] * -1,from[1]).sub(this.offset)
+    end = new Pos(end[0] * -1,end[1]).sub(this.offset)
+
+    this.segments.push(new Path_Bezier(from,to,end));
 
     this.draw();
     reset();

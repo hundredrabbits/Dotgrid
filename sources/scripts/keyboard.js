@@ -1,22 +1,29 @@
 function Keyboard()
 {
-  this.listen = function(event)
+  this.listen = function(e)
   { 
     // save
-    if(event.key == "s" && (event.ctrlKey || event.metaKey)){
+    if(e.key == "s" && (e.ctrlKey || e.metaKey)){
       dotgrid.export();
       return;
     }
 
     // undo
-    if(event.key == "z" && (event.ctrlKey || event.metaKey)){
+    if(e.key == "z" && (e.ctrlKey || e.metaKey)){
       dotgrid.erase();
       return;
     }
 
-    switch (event.keyCode) {
-      case 83 : dotgrid.draw_arc(event.shiftKey ? "1,1" : "0,1"); break; // 'S'
-      case 65 : dotgrid.draw_arc(event.shiftKey ? "1,0" : "0,0"); break; // 'a'
+    // Reset
+    if((e.key == "Backspace" || e.key == "Delete") && e.ctrlKey && e.shiftKey){
+      e.preventDefault();
+      dotgrid.theme.reset();
+      return;
+    }
+
+    switch (e.keyCode) {
+      case 83 : dotgrid.draw_arc(e.shiftKey ? "1,1" : "0,1"); break; // 'S'
+      case 65 : dotgrid.draw_arc(e.shiftKey ? "1,0" : "0,0"); break; // 'a'
       case 68 : dotgrid.draw_line(); break; // 'd'
       case 70 : dotgrid.draw_bezier(); break; // 'f'
       case 82 : dotgrid.draw_close(); break; // 'r'
@@ -35,7 +42,7 @@ function Keyboard()
       case 69 : dotgrid.export(); break; // 'e'
       case 13 : dotgrid.export(); break; // 'e'
 
-      case 9 : dotgrid.toggle_fill(); event.preventDefault(); break; // 'tab'
+      case 9 : dotgrid.toggle_fill(); e.preventDefault(); break; // 'tab'
 
       case 38 : dotgrid.mod_move(0,-10); break; // 'up'
       case 40 : dotgrid.mod_move(0,10); break;  // 'down'
