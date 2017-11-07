@@ -262,7 +262,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     to = new Pos(to.x * -1, to.y).sub(this.offset)
     from = new Pos(from.x * -1,from.y).sub(this.offset)
-    end = end ? new Pos(end.y * -1,end.y).sub(this.offset) : null;
+    end = end ? new Pos(end.x * -1,end.y).sub(this.offset) : null;
 
     this.segments.push(new Path_Arc(from,to,orientation,end));
 
