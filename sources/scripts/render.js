@@ -3,7 +3,7 @@ function Render()
   this.el = document.createElement("canvas"); this.el.id = "render";
   this.img = document.createElement("img");
 
-  this.el.width = 300; this.el.height = 300;
+  this.el.width = 512; this.el.height = 512;
 
   this.draw = function()
   {
@@ -12,8 +12,8 @@ function Render()
     var b64Start = 'data:image/svg+xml;base64,';
     var image64 = b64Start + svg64;
     this.img.src = image64;
-    this.el.getContext('2d').clearRect(0, 0, 300, 300);
-    this.el.getContext('2d').drawImage(this.img, 0, 0);
+    this.el.getContext('2d').clearRect(0, 0, 512, 512);
+    this.el.getContext('2d').drawImage(this.img, 0, 0, 512, 512);
   }
 
   this.buffer = function()
