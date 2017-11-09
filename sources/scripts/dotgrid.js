@@ -38,6 +38,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.mirror = false;
   this.fill = false;
 
+  this.guide = new Guide();
+  this.render = new Render();
+
   this.path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   this.segments = [];
   this.interface = document.createElement("div");
@@ -47,17 +50,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     document.body.appendChild(this.element);
     document.body.appendChild(this.interface);
-
-    // Markers
-    for (var x = this.grid_x; x >= 0; x--) {
-      for (var y = this.grid_y; y >= 0; y--) {
-        var marker = document.createElement("div");
-        marker.setAttribute("class",(x % this.block_x == 0 && y % this.block_y == 0 ? "marker bm" : "marker bl"));
-        marker.style.left = parseInt(x * this.grid_width + (this.grid_width/2)) +5;
-        marker.style.top = parseInt(y * this.grid_height + (this.grid_height/2)) +5;
-        this.element.appendChild(marker);
-      }
-    }
+    document.body.appendChild(this.guide.el);
+    document.body.appendChild(this.render.el);
 
     // Cursors
     this.cursor = document.createElement("div");
@@ -104,6 +98,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.draw();
 
     this.theme.start();
+    this.guide.start();
   }
 
   // Cursor
@@ -254,6 +249,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.offset_el.setAttribute("transform","translate("+(this.offset.x)+","+(this.offset.y)+")")
 
+    this.render.draw();
     this.update_interface();
   }
 
@@ -354,6 +350,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       fs.writeFile(fileName+".svg", dotgrid.svg_el.outerHTML, (err) => {
         if(err){ alert("An error ocurred creating the file "+ err.message); return; }
       });
+      fs.writeFile(fileName+'.png', dotgrid.render.buffer());
     });
   }
 
