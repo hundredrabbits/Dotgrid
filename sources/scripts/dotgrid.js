@@ -58,6 +58,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.cursor.id = "cursor";
     this.element.appendChild(this.cursor);
 
+    this.cursor_coord = document.createElement("div");
+    this.cursor_coord.id = "cursor_coord";
+    this.cursor_coord.className = "fl"
+    this.cursor.appendChild(this.cursor_coord);
+
     cursor_from = document.createElement("div");
     cursor_from.id = "cursor_from";
     this.element.appendChild(cursor_from);
@@ -113,7 +118,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(o == "arc_r"){ this.draw_arc("0,0"); }
     if(o == "bezier"){ this.draw_bezier(); }
     if(o == "close"){ this.draw_close(); }
-    if(o == "mirror"){ this.mirror = this.mirror == true ? false : true; this.draw(); }
+    if(o == "mirror"){ this.mod_mirror(); }
     if(o == "export"){ this.export(); }
   }
 
@@ -124,6 +129,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.cursor.style.left = -pos.x + 10;
     this.cursor.style.top = pos.y + 10;
+    this.cursor_coord.className = -pos.x > 150 ? "fl left" : "fl"
+    this.cursor_coord.textContent = parseInt(-pos.x/10)+","+parseInt(pos.y/10);
   }
 
   this.mouse_up = function(e)
@@ -184,6 +191,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.mod_thickness = function(mod)
   {
     this.thickness = Math.max(this.thickness+mod,0);
+    this.cursor_coord.textContent = this.thickness;
     this.draw();
   }
 
@@ -219,6 +227,15 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.draw();
   }
 
+  this.mirror_index = 0;
+
+  this.mod_mirror = function()
+  {
+    this.mirror_index += 1; 
+    this.mirror_index = this.mirror_index > 3 ? 0 : this.mirror_index;
+    this.draw();
+  }
+
   this.toggle_fill = function()
   {
     dotgrid.fill = dotgrid.fill ? false : true;
@@ -244,8 +261,24 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.strokeWidth = this.thickness;
     this.svg_el.style.fill = this.fill ? "black" : "none";
 
-    this.mirror_path.setAttribute("d",this.mirror ? d : '');
-    this.mirror_path.setAttribute("transform","translate("+(300 - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
+    // Draw Mirror
+    if(this.mirror_index == 1){
+      this.mirror_path.setAttribute("d",d);
+      this.mirror_path.setAttribute("transform","translate("+(300 - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
+    }
+    else if(this.mirror_index == 2){
+      this.mirror_path.setAttribute("d",d);
+      this.mirror_path.setAttribute("transform","translate("+((this.offset.x))+","+(300 - (this.offset.y))+"),scale(1,-1)")
+
+    }
+    else if(this.mirror_index == 3){
+      this.mirror_path.setAttribute("d",d);
+      this.mirror_path.setAttribute("transform","translate("+(300 -(this.offset.x))+","+(300 - (this.offset.y))+"),scale(-1,-1)")
+    }
+    else{
+      this.mirror_path.setAttribute("d",'M0,0');
+      this.mirror_path.setAttribute("transform","")
+    }
 
     this.offset_el.setAttribute("transform","translate("+(this.offset.x)+","+(this.offset.y)+")")
 
@@ -383,7 +416,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       html += "<img title='close (r)' src='media/icons/close.svg' class='icon inactive'/>";
     }
 
-    if(this.segments.length > 0 && !this.mirror){
+    if(this.segments.length > 0 && this.mirror_index != 0){
       html += "<img data-operation='mirror' title='mirror (space)' src='media/icons/mirror.svg' class='icon' style='margin-left:35px'/>";
     }
     else{
@@ -418,7 +451,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     }
     return new Pos(x,y);
   }
-    
 }
 
 window.addEventListener('dragover',function(e)

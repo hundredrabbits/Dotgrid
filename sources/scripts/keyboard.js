@@ -39,7 +39,7 @@ function Keyboard()
       case 219 : dotgrid.mod_thickness(-1); break; // '['
       case 191 : dotgrid.mod_linecap(1); break; // '/'
       
-      case 32 : dotgrid.mirror = dotgrid.mirror == true ? false : true; dotgrid.draw(); break; // 'space'
+      case 32 : dotgrid.mod_mirror(); break; // 'space'
 
       case 81 : dotgrid.reset(); break; // 'Q'
       case 27 : dotgrid.reset(); break; // 'ESC'
