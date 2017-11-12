@@ -22,4 +22,9 @@ function Pos(x,y)
   {
     return Math.abs(pos2.x) == Math.abs(this.x) && Math.abs(pos2.y) == Math.abs(this.y);
   }
+
+  this.scale = function(a)
+  {
+    return new Pos(this.x*a,this.y*a)
+  }
 }
