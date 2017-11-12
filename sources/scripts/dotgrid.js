@@ -100,10 +100,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.appendChild(this.mirror_el);
     this.mirror_el.appendChild(this.mirror_path);
 
-    this.draw();
-
     this.theme.start();
     this.guide.start();
+
+    this.resize();
+    this.draw();
   }
 
   // Cursor
