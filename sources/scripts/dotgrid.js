@@ -135,7 +135,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.cursor.style.left = Math.floor(-(pos.x-this.grid_width));
     this.cursor.style.top = Math.floor(pos.y+this.grid_height);
-    this.cursor_coord.className = -pos.x > 150 ? "fl left" : "fl"
+    this.cursor_coord.className = -pos.x > this.width/2 ? "fl left" : "fl"
     this.cursor_coord.textContent = parseInt(-pos.x/this.grid_width)+","+parseInt(pos.y/this.grid_height);
   }
 
