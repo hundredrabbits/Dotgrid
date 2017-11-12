@@ -20,9 +20,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.element.style.width = this.width;
   this.element.style.height = this.height;
 
-  this.wrapper = document.createElement("div");
-  this.wrapper.id = "wrapper";
-
   this.grid_width = this.width/this.grid_x;
   this.grid_height = this.height/this.grid_y;
 
@@ -48,15 +45,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.segments = [];
   this.interface = document.createElement("div");
   this.interface.id = "interface";
-  this.scale = 1
 
   this.install = function()
   {
-    document.body.appendChild(this.wrapper);
-    this.wrapper.appendChild(this.element);
-    this.wrapper.appendChild(this.interface);
-    this.element.appendChild(this.guide.el);
-    this.wrapper.appendChild(this.render.el);
+    document.body.appendChild(this.element);
+    document.body.appendChild(this.interface);
+    document.body.appendChild(this.guide.el);
+    document.body.appendChild(this.render.el);
 
     // Cursors
     this.cursor = document.createElement("div");
@@ -132,10 +127,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
     pos = this.position_on_grid(pos);
 
-    this.cursor.style.left = Math.floor(-(pos.x-this.grid_width));
-    this.cursor.style.top = Math.floor(pos.y+this.grid_height);
+    this.cursor.style.left = -pos.x + 10;
+    this.cursor.style.top = pos.y + 10;
     this.cursor_coord.className = -pos.x > 150 ? "fl left" : "fl"
-    this.cursor_coord.textContent = parseInt(-pos.x/this.grid_width)+","+parseInt(pos.y/this.grid_height);
+    this.cursor_coord.textContent = parseInt(-pos.x/10)+","+parseInt(pos.y/10);
   }
 
   this.mouse_up = function(e)
@@ -146,9 +141,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(e.altKey){ dotgrid.delete_at(pos); return; }
     if(pos.x>0) return;
 
-    if(from === null){ this.set_from(pos.scale(1/this.scale)); }
-    else if(to === null){ this.set_to(pos.scale(1/this.scale)); }
-    else{ this.set_end(pos.scale(1/this.scale)); }
+    if(from === null){ this.set_from(pos); }
+    else if(to === null){ this.set_to(pos); }
+    else{ this.set_end(pos); }
     this.draw();
   }
 
@@ -158,22 +153,22 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     from = pos;
 
-    cursor_from.style.left = Math.floor(-pos.x*this.scale + this.grid_width);
-    cursor_from.style.top = Math.floor(pos.y*this.scale + this.grid_height);
+    cursor_from.style.left = -pos.x + 10;
+    cursor_from.style.top = pos.y + 10;
   }
 
   this.set_to = function(pos)
   {
-    cursor_to.style.left = Math.floor(-pos.x*this.scale + this.grid_width);
-    cursor_to.style.top = Math.floor(pos.y*this.scale + this.grid_height);
+    cursor_to.style.left = -pos.x + 10;
+    cursor_to.style.top = pos.y + 10;
 
     to = pos;
   }
 
   this.set_end = function(pos)
   {
-    cursor_end.style.left = Math.floor(-pos.x*this.scale + this.grid_width);
-    cursor_end.style.top = Math.floor(pos.y*this.scale + this.grid_height);
+    cursor_end.style.left = -pos.x + 10;
+    cursor_end.style.top = pos.y + 10;
 
     end = pos;
   }
@@ -247,7 +242,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.draw();
   }
 
-  this.draw = function(exp = false)
+  this.draw = function()
   {
     var d = "";
     var prev = "";
@@ -263,31 +258,29 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.height = this.height;
     this.svg_el.style.stroke = this.color;
     this.svg_el.style.strokeLinecap = this.linecap;
-    this.svg_el.style.strokeWidth = this.thickness*this.scale;
+    this.svg_el.style.strokeWidth = this.thickness;
     this.svg_el.style.fill = this.fill ? "black" : "none";
-
-    //console.log(this.svg_el)
 
     // Draw Mirror
     if(this.mirror_index == 1){
       this.mirror_path.setAttribute("d",d);
-      this.mirror_path.setAttribute("transform","translate("+(this.width - (this.offset.x*this.scale))+","+(this.offset.y*this.scale)+"),scale(-1,1)")
+      this.mirror_path.setAttribute("transform","translate("+(300 - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
     }
     else if(this.mirror_index == 2){
       this.mirror_path.setAttribute("d",d);
-      this.mirror_path.setAttribute("transform","translate("+((this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(1,-1)")
+      this.mirror_path.setAttribute("transform","translate("+((this.offset.x))+","+(300 - (this.offset.y))+"),scale(1,-1)")
 
     }
     else if(this.mirror_index == 3){
       this.mirror_path.setAttribute("d",d);
-      this.mirror_path.setAttribute("transform","translate("+(this.width -(this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(-1,-1)")
+      this.mirror_path.setAttribute("transform","translate("+(300 -(this.offset.x))+","+(300 - (this.offset.y))+"),scale(-1,-1)")
     }
     else{
       this.mirror_path.setAttribute("d",'M0,0');
       this.mirror_path.setAttribute("transform","")
     }
 
-    this.offset_el.setAttribute("transform","translate("+(this.offset.x*this.scale)+","+(this.offset.y*this.scale)+")")
+    this.offset_el.setAttribute("transform","translate("+(this.offset.x)+","+(this.offset.y)+")")
 
     this.render.draw();
     this.update_interface();
@@ -384,15 +377,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.export = function()
   {
     if(this.segments.length == 0){ return; }
-    this.scale = 1
-    this.width = 300
-    this.height = 300
-    this.draw()
-    var svg = this.svg_el.outerHTML
 
     dialog.showSaveDialog((fileName) => {
       if (fileName === undefined){ return; }
-      fs.writeFile(fileName+".svg", svg, (err) => {
+      fs.writeFile(fileName+".svg", dotgrid.svg_el.outerHTML, (err) => {
         if(err){ alert("An error ocurred creating the file "+ err.message); return; }
       });
       fs.writeFile(fileName+'.png', dotgrid.render.buffer());
@@ -449,49 +437,19 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.position_in_grid = function(pos)
   {
-    return new Pos((window.innerWidth/2) - (this.width/2) - pos.x,pos.y - (30+10*(this.scale)))
+    return new Pos((window.innerWidth/2) - (this.width/2) - pos.x,pos.y - 50)
   }
 
   this.position_on_grid = function(pos) // rounds the mouse position to the nearest cell, and limits the coords to within the box
   {
     x = Math.round(pos.x/this.grid_width)*this.grid_width
-    y = Math.round(pos.y/this.grid_height)*this.grid_height
+    y = Math.round(pos.y/this.grid_height)*this.grid_height+this.grid_height
     off = (x<-this.width || x>0 || y>this.height || y<0)
     if(off) { // change position so the cursor will not be seen
       x = 50
       y = -50
     }
     return new Pos(x,y);
-  }
-
-  this.resize = function() 
-  {
-    this.scale = Math.min((window.innerWidth-90)/300,(window.innerHeight-100)/320)
-    this.width = dotgrid.scale*300
-    this.height = dotgrid.scale*300
-    this.element.style.width = this.width
-    this.element.style.height = this.height
-    this.element.style.padding = Math.floor(10*this.scale)+"px"
-    this.svg_el.setAttribute("width",this.width+"px");
-    this.svg_el.setAttribute("height",this.height+"px");
-    this.grid_width = dotgrid.width/dotgrid.grid_x;
-    this.grid_height = dotgrid.height/dotgrid.grid_y;
-    this.guide.update()
-
-    //cursor updates
-
-    if(from) {
-      cursor_from.style.left = Math.floor(-from.x*this.scale + this.grid_width);
-      cursor_from.style.top = Math.floor(from.y*this.scale + this.grid_height);
-    }
-    if(to) {
-      cursor_to.style.left = Math.floor(-to.x*this.scale + this.grid_width);
-      cursor_to.style.top = Math.floor(to.y*this.scale + this.grid_height);
-    }
-    if(end) {
-      cursor_end.style.left = Math.floor(-end.x*this.scale + this.grid_width);
-      cursor_end.style.top = Math.floor(end.y*this.scale + this.grid_height);
-    }
   }
 }
 
@@ -501,12 +459,6 @@ window.addEventListener('dragover',function(e)
   e.stopPropagation();
   e.dataTransfer.dropEffect = 'copy';
 });
-
-window.addEventListener('resize', function(e)
-{
-  dotgrid.resize()
-  dotgrid.draw()
-}, false);
 
 window.addEventListener('drop', function(e)
 {

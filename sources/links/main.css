@@ -1,15 +1,14 @@
-body { background:#fff; padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: none; overflow: hidden;}
+body { background:#fff; padding:30px; font-family: 'input_mono_regular'; -webkit-user-select: none;-webkit-app-region: drag; overflow: hidden;}
 
-#wrapper { width: calc(100% - 50px); height: calc(100% - 50px); padding: 25px; background: inherit; -webkit-app-region: drag;}
 #dotgrid { margin:0px auto; position:relative; overflow: hidden; padding:10px;-webkit-app-region: no-drag;}
 #cursor { width:8px; height:8px; margin-top:-5px; margin-left:-5px; position:absolute; z-index:25; border-radius:5px; border:1px solid black;}
-#cursor_coord { font-size:10px; z-index: 10000; margin-left:15px; margin-top:-2px;}
+#cursor_coord { font-size:10px; z-index: 10000; margin-left:15px; margin-top:-2px;} 
 #cursor_coord.left { margin-left:-110px; text-align: right; width:100px; }
 #cursor_from { width:4px; height:4px; background:white; margin-top:-3px; margin-left:-3px; position:absolute; z-index:2500; border-radius:10px; left:-100px;border:1px solid black;}
 #cursor_to { width:4px; height:4px; background:white; margin-top:-3px; margin-left:-3px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
 #cursor_end { width:4px; height:4px; background:white; margin-top:-3px; margin-left:-3px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
 #interface { max-width: 295px;margin:0px auto;font-size: 11px;line-height: 30px; text-transform: uppercase; margin-top:20px;-webkit-app-region: no-drag;}
-#guide { position: absolute;top: 0px;left: 0px;padding: 10px; width: 300px;height: 300px;}
+#guide { position: absolute;top: 30px;left: calc(50vw - 160px);padding: 10px;     width: 300px;height: 300px;}
 #guide .marker { width:2px; height:2px; position:absolute; margin-top:-1px; margin-left:-1px; border-radius:4px; z-index:50;}
 #render { display: none }
 

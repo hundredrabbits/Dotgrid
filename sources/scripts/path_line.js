@@ -11,25 +11,25 @@ function Path_Line(from,to,end = null)
     var html = ""
 
     if(!prev || (!prev.to && !prev.end)){
-      html += "M"+this.from.scale(dotgrid.scale)+" ";  
+      html += "M"+this.from+" ";  
     }
     else if(prev){
       if(prev.end){
-        if(!prev.end.is_equal(this.from.scale(dotgrid.scale))){
-          html += "M"+this.from.scale(dotgrid.scale)+" ";  
+        if(!prev.end.is_equal(this.from)){
+          html += "M"+this.from+" ";  
         }         
       }
       else if(prev.to){
-        if(!prev.to.is_equal(this.from.scale(dotgrid.scale))){
-          html += "M"+this.from.scale(dotgrid.scale)+" "; 
+        if(!prev.to.is_equal(this.from)){
+          html += "M"+this.from+" "; 
         }
       }
     }
 
-    html += "L"+this.to.scale(dotgrid.scale)+" "
+    html += "L"+this.to+" "
 
     if(this.end){
-      html += "L"+this.end.scale(dotgrid.scale)+" "
+      html += "L"+this.end+" "
     }
 
     return html

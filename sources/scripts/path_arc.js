@@ -12,25 +12,25 @@ function Path_Arc(from,to,orientation,end)
     var html = ""
 
     if(!prev || (!prev.to && !prev.end)){
-      html += "M"+this.from.scale(dotgrid.scale)+" ";  
+      html += "M"+this.from+" ";  
     }
     else if(prev){
       if(prev.end){
         if(!prev.end.is_equal(this.from)){
-          html += "M"+this.from.scale(dotgrid.scale)+" ";  
+          html += "M"+this.from+" ";  
         }         
       }
       else if(prev.to){
         if(!prev.to.is_equal(this.from)){
-          html += "M"+this.from.scale(dotgrid.scale)+" "; 
+          html += "M"+this.from+" "; 
         }
       }
     }
 
-    html += "A"+this.to.sub(this.from).scale(dotgrid.scale)+" 0 "+orientation+" "+this.to.scale(dotgrid.scale)+" ";
+    html += "A"+this.to.sub(this.from)+" 0 "+orientation+" "+this.to+" ";
 
     if(this.end){
-      html += "A"+this.end.sub(this.to).scale(dotgrid.scale)+" 0 "+orientation+" "+this.end.scale(dotgrid.scale)+" ";
+      html += "A"+this.end.sub(this.to)+" 0 "+orientation+" "+this.end+" ";
     }
 
     return html 
