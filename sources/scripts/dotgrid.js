@@ -196,6 +196,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     }
 
     dotgrid.translation = null;
+    dotgrid.reset();
+
     dotgrid.draw();
   }
 
