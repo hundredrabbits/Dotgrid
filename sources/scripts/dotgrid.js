@@ -201,26 +201,26 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.set_from = function(pos)
   {
-    from = pos;
+    from = pos.mirror().clamp(0,300).mirror();
 
-    cursor_from.style.left = Math.floor(-pos.x*this.scale + this.grid_width);
-    cursor_from.style.top = Math.floor(pos.y*this.scale + this.grid_height);
+    cursor_from.style.left = Math.floor(-from.x*this.scale + this.grid_width);
+    cursor_from.style.top = Math.floor(from.y*this.scale + this.grid_height);
   }
 
   this.set_to = function(pos)
   {
-    cursor_to.style.left = Math.floor(-pos.x*this.scale + this.grid_width);
-    cursor_to.style.top = Math.floor(pos.y*this.scale + this.grid_height);
+    to = pos.mirror().clamp(0,300).mirror();
 
-    to = pos;
+    cursor_to.style.left = Math.floor(-to.x*this.scale + this.grid_width);
+    cursor_to.style.top = Math.floor(to.y*this.scale + this.grid_height);
   }
 
   this.set_end = function(pos)
   {
-    cursor_end.style.left = Math.floor(-pos.x*this.scale + this.grid_width);
-    cursor_end.style.top = Math.floor(pos.y*this.scale + this.grid_height);
+    end = pos.mirror().clamp(0,300).mirror();
 
-    end = pos;
+    cursor_end.style.left = Math.floor(-end.x*this.scale + this.grid_width);
+    cursor_end.style.top = Math.floor(end.y*this.scale + this.grid_height);
   }
 
   this.delete_at = function(pos)
@@ -435,7 +435,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.height = 300
     this.draw()
     var svg = this.svg_el.outerHTML
-
 
     dotgrid.resize()
     dialog.showSaveDialog((fileName) => {

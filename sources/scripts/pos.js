@@ -27,4 +27,16 @@ function Pos(x,y)
   {
     return new Pos(this.x*a,this.y*a)
   }
+
+  this.mirror = function(x = -1,y = 1)
+  {
+    return new Pos(this.x * x,this.y * y);
+  }
+
+  this.clamp = function(min,max)
+  {
+    return new Pos(clamp(this.x,min,max),clamp(this.y,min,max));
+  }
+
+  function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }

@@ -20,12 +20,12 @@
       const {dialog,app} = require('electron').remote;
       const fs = require('fs');
       
-      dotgrid = new Dotgrid(300,300,30,30,5,5, 10,"square","#000000");
+      dotgrid = new Dotgrid(300,300,20,20,4,4, 10,"square","#000000");
       dotgrid.install();
 
       var keyboard = new Keyboard();
 
-      document.onkeydown = function myFunction(event){ keyboard.listen(event); };
+      document.onkeyup = function myFunction(event){ keyboard.listen(event); };
       document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
       document.addEventListener('mousemove', function(e){ dotgrid.mouse_move(e); }, false);
       document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);

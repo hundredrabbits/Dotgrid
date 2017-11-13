@@ -32,8 +32,6 @@ cd /xxiivv/Nataniev/public/public.projects/builds/
 rm -r /xxiivv/Nataniev/public/public.projects/builds/Dotgrid-darwin-x64/
 rm -r /xxiivv/Nataniev/public/public.projects/builds/Dotgrid-linux-x64/
 rm -r /xxiivv/Nataniev/public/public.projects/builds/Dotgrid-win32-x64/
-
-
 ```
 
 
