@@ -6,4 +6,9 @@ function Path_Close()
   {
     return "Z ";
   }
+
+  this.handles = function()
+  {
+    return [];
+  }
 }

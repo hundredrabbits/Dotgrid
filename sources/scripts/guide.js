@@ -29,7 +29,7 @@ function Guide()
 
   this.clear = function()
   {
-    this.widgets.getContext('2d').clearRect(0, 0, 600, 600);
+    this.widgets.getContext('2d').clearRect(0, 0, 1280, 1280);
   }
 
   this.update = function()

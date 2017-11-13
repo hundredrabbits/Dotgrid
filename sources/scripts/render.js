@@ -12,7 +12,7 @@ function Render()
     var b64Start = 'data:image/svg+xml;base64,';
     var image64 = b64Start + svg64;
     this.img.src = image64;
-    this.el.getContext('2d').clearRect(0, 0, 512, 512);
+    this.el.getContext('2d').clearRect(0, 0, 1280, 1280);
     this.el.getContext('2d').drawImage(this.img, 0, 0, 512, 512);
   }
 

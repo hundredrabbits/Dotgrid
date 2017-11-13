@@ -19,3 +19,8 @@ body { background:#fff; padding: 5px; font-family: 'input_mono_regular'; -webkit
 .icon:hover { cursor: pointer; opacity: 1 }
 
 svg.vector { z-index: 1000;position: relative  }
+
+#dotgrid #guide { opacity: 0; transition: all 500ms; }
+#dotgrid #widgets { opacity: 0; transition: all 150ms;  }
+#dotgrid:hover #guide { opacity: 1 }
+#dotgrid:hover #widgets { opacity: 1 }

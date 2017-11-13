@@ -6,37 +6,40 @@ Dotgrid is a simple vector drawing application.
 
 ## Guide
 
-It works by adding control points and selecting a stroke type. So clicking the canvas a few times will place up to 3 control points. Clicking one of the icons, or pressing one of the shortcuts, will draw a stroke.
+Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved with the arrows. Clicking one of the path icons, or pressing one of the shortcuts, will draw a stroke between them. The newly created segment's handles can be moved by clicking and dragging them.
 
 ## Controls
 
-### Layer 1
-
-- `q` Erase control points.
-- `w` Erase last segment.
-- `e` Export SVG file.
-- `r` Close Path.
-
-### Layer 2
+### Segments
 
 - `a` Draw Arc(counter-clockwise).
 - `s` Draw Arc(clockwise).
 - `d` Draw Line.
 - `f` Draw Bezier.
+- `g` Close Path.
 
 ### Parametric
 
-- `+` Increase stroke size.
-- `-` Reduce stroke size.
+- `]` Increase stroke size.
+- `[` Reduce stroke size.
 - `/` Toggle linecap.
+
+### Commands
+
+- `space` Mirror.
+- `escape` Remove control points.
+- `arrows` Move last control point.
 
 ### Shortcuts
 
 - `ctrl+n` New canvas.
+- `ctrl+s` Export canvas.
+- `ctrl+z` Delete last segment.
 
-- `ctrl+enter` Toggle Fullscreen.
-- `alt+click` Erase target control point.
-- `ctrl+click` Translate target control point.
+## Mouse
+
+- `click/drag` Translate target control point.
+- `click+alt` Erase target control point.
 
 ## License
 
