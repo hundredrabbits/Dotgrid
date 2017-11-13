@@ -9,8 +9,8 @@ body { background:#fff; padding: 5px; font-family: 'input_mono_regular'; -webkit
 #cursor_to { width:4px; height:4px; background:white; margin-top:-3px; margin-left:-3px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
 #cursor_end { width:4px; height:4px; background:white; margin-top:-3px; margin-left:-3px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
 #interface { max-width: 295px;margin:0px auto;font-size: 11px;line-height: 30px; text-transform: uppercase; margin-top:20px;-webkit-app-region: no-drag;}
-#guide { position: absolute;top: 0px;left: 0px;padding: 10px; width: 300px;height: 300px;}
-#guide .marker { width:2px; height:2px; position:absolute; margin-top:-1px; margin-left:-1px; border-radius:4px; z-index:50;}
+#guide,#widgets { position: absolute;top: 0px;left: 0px; width: 300px;height: 300px;}
+#widgets { z-index: 9000 }
 #render { display: none }
 
 .icon { width:25px; height:25px; margin-left:-5px; margin-right:0px; opacity: 0.5}

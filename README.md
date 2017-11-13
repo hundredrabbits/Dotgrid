@@ -33,8 +33,10 @@ It works by adding control points and selecting a stroke type. So clicking the c
 ### Shortcuts
 
 - `ctrl+n` New canvas.
-- `alt+click` Erase target stroke.
+
 - `ctrl+enter` Toggle Fullscreen.
+- `alt+click` Erase target control point.
+- `ctrl+click` Translate target control point.
 
 ## License
 

@@ -28,4 +28,13 @@ function Path_Bezier(from,to,end)
 
     return html += "Q"+this.to.scale(dotgrid.scale)+" "+this.end.scale(dotgrid.scale)+" "
   }
+
+  this.handles = function()
+  {
+    var a = [];
+    if(this.from){ a.push(this.from); }
+    if(this.to){ a.push(this.to); }
+    if(this.end){ a.push(this.end); }
+    return a;
+  }
 }

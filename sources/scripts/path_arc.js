@@ -35,4 +35,13 @@ function Path_Arc(from,to,orientation,end)
 
     return html 
   }
+
+  this.handles = function()
+  {
+    var a = [];
+    if(this.from){ a.push(this.from); }
+    if(this.to){ a.push(this.to); }
+    if(this.end){ a.push(this.end); }
+    return a;
+  }
 }

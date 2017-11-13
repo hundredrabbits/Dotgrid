@@ -56,6 +56,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.wrapper.appendChild(this.element);
     this.wrapper.appendChild(this.interface);
     this.element.appendChild(this.guide.el);
+    this.element.appendChild(this.guide.widgets);
     this.wrapper.appendChild(this.render.el);
 
     // Cursors
@@ -114,9 +115,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   // Cursor
 
+  this.translation = null;
+
   this.mouse_down = function(e)
   {
     var o = e.target.getAttribute("data-operation");
+
+    var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
+    pos = this.position_on_grid(pos);
+    if(e.ctrlKey){ dotgrid.translation = {from:pos,to:pos}; }
+
     if(!o){ return; }
 
     if(o == "line"){ this.draw_line(); }
@@ -133,10 +141,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
     pos = this.position_on_grid(pos);
 
+    if(e.ctrlKey && dotgrid.translation){ dotgrid.translation.to = pos; }
+
     this.cursor.style.left = Math.floor(-(pos.x-this.grid_width));
     this.cursor.style.top = Math.floor(pos.y+this.grid_height);
     this.cursor_coord.className = -pos.x > this.width/2 ? "fl left" : "fl"
     this.cursor_coord.textContent = parseInt(-pos.x/this.grid_width)+","+parseInt(pos.y/this.grid_height);
+
+    dotgrid.guide.update();
   }
 
   this.mouse_up = function(e)
@@ -144,6 +156,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
     pos = this.position_on_grid(pos);
 
+    if(dotgrid.translation){
+      dotgrid.translate(dotgrid.translation);
+      return;
+    }
+    
     if(e.altKey){ dotgrid.delete_at(pos); return; }
     if(pos.x>0) return;
 
@@ -151,6 +168,19 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     else if(to === null){ this.set_to(pos.scale(1/this.scale)); }
     else{ this.set_end(pos.scale(1/this.scale)); }
     this.draw();
+  }
+
+  this.translate = function(t)
+  {
+    for(id in dotgrid.segments){
+      var segment = dotgrid.segments[id];
+      if(segment.from && segment.from.is_equal(dotgrid.translation.from)){ segment.from = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
+      if(segment.to && segment.to.is_equal(dotgrid.translation.from)){ segment.to = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
+      if(segment.end && segment.end.is_equal(dotgrid.translation.from)){ segment.end = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
+    }
+
+    dotgrid.translation = null;
+    dotgrid.draw();
   }
 
   // Setters
@@ -229,7 +259,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       return;
     }
     // Move offset
-    this.offset = this.offset.add(new Pos(move.x,move.y));
+    // this.offset = this.offset.add(new Pos(move.x,move.y));
     this.draw();
   }
 
@@ -292,6 +322,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.render.draw();
     this.update_interface();
+    this.guide.update();
   }
 
   // Draw
@@ -456,12 +487,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     return new Pos((window.innerWidth/2) - (this.width/2) - pos.x,pos.y - (30+10*(this.scale)))
   }
 
-  this.position_on_grid = function(pos) // rounds the mouse position to the nearest cell, and limits the coords to within the box
+  this.position_on_grid = function(pos)
   {
     x = Math.round(pos.x/this.grid_width)*this.grid_width
     y = Math.round(pos.y/this.grid_height)*this.grid_height
     off = (x<-this.width || x>0 || y>this.height || y<0)
-    if(off) { // change position so the cursor will not be seen
+    if(off) {
       x = 50
       y = -50
     }
