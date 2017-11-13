@@ -160,10 +160,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     if(e.altKey){ return; }
 
-    if(dotgrid.translation){
+    if(dotgrid.translation && !dotgrid.translation.to.is_equal(dotgrid.translation.from)){
       dotgrid.translate(dotgrid.translation);
       return;
     }
+
+    dotgrid.translation = null;
     
     if(pos.x>0) return;
 
