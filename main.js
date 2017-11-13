@@ -6,7 +6,7 @@ let win
 
 app.on('ready', () => 
 {
-  win = new BrowserWindow({width: 390, height: 420, minWidth: 390, minHeight: 420, backgroundColor:"#000", frame:false, autoHideMenuBar: true, icon: __dirname + '/icon.ico'})
+  win = new BrowserWindow({width: 900, height: 420, minWidth: 390, minHeight: 420, backgroundColor:"#000", frame:false, autoHideMenuBar: true, icon: __dirname + '/icon.ico'})
 
   win.loadURL(`file://${__dirname}/sources/index.html`)
 
@@ -56,7 +56,7 @@ app.on('ready', () =>
     is_shown = true;
   })
   // Open the DevTools.
-  // win.webContents.openDevTools()
+  win.webContents.openDevTools()
 })
 
 app.on('window-all-closed', () => 

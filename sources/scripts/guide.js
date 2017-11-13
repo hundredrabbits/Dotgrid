@@ -1,33 +1,44 @@
 function Guide()
 {
-  this.el = document.createElement("div");
-
-  // Guide
+  this.el = document.createElement("canvas");
   this.el.id = "guide";
+  this.el.width = 600;
+  this.el.height = 600;
+  this.el.style.width = "300px";
+  this.el.style.height = "300px";
   this.markers;
+
   this.start = function()
   {
-    // Markers
-    this.markers = JSON.parse("["+"[],".repeat(dotgrid.grid_x)+"[]"+"]")
+    this.update();
+  }
+
+  this.clear = function()
+  {
+    this.el.getContext('2d').clearRect(0, 0, 600, 600);
+  }
+
+  this.update = function()
+  {
+    this.clear();
+
     for (var x = dotgrid.grid_x; x >= 0; x--) {
       for (var y = dotgrid.grid_y; y >= 0; y--) {
-        let marker = document.createElement("div");
-        marker.setAttribute("class",(x % dotgrid.block_x == 0 && y % dotgrid.block_y == 0 ? "marker bm" : "marker bl"));
-        marker.style.left = parseInt(x * dotgrid.grid_width + (dotgrid.grid_width/2)) ;
-        marker.style.top = parseInt(y * dotgrid.grid_height + (dotgrid.grid_height/2)) ;
-        this.el.appendChild(marker);
-        this.markers[x][y] = marker
+        var pos_x = parseInt(x * dotgrid.grid_width) ;
+        var pos_y = parseInt(y * dotgrid.grid_height) ;
+        var is_step = x % dotgrid.block_x == 0 && y % dotgrid.block_y == 0;
+        var radius = is_step ? 1.5 : 0.5;
+        dotgrid.guide.draw_marker({x:pos_x * 2,y:pos_y * 2},radius,is_step);
       }
     }
   }
-  this.update = function() // it's less than ideal to reuse this much code, but I couldn't find a way to reuse the function that wouldn't mess with the architecture
+
+  this.draw_marker = function(pos,radius = 1,step)
   {
-    for (var x = dotgrid.grid_x; x >= 0; x--) {
-      for (var y = dotgrid.grid_y; y >= 0; y--) {
-        let marker = this.markers[x][y]
-        marker.style.left = parseInt(x * dotgrid.grid_width + (dotgrid.grid_width/2) +(5*dotgrid.scale));
-        marker.style.top = parseInt(y * dotgrid.grid_height + (dotgrid.grid_height/2) +(5*dotgrid.scale));
-      }
-    }
+    var ctx = this.el.getContext('2d');
+    ctx.beginPath();
+    ctx.arc(pos.x, pos.y, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = step ? 'green' : 'red';
+    ctx.fill();
   }
 }
