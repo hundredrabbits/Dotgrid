@@ -90,13 +90,15 @@ function Guide()
     var from = dotgrid.translation.from;
     var to = dotgrid.translation.to;
 
-    ctx.beginPath();
-    ctx.moveTo((from.x * -2)+20,(from.y * 2)+20);
-    ctx.lineTo((to.x * -2)+20,(to.y * 2)+20);
-    ctx.lineCap="round";
-    ctx.lineWidth = 5;
-    ctx.strokeStyle = dotgrid.theme.active.f_high;
-    ctx.stroke();
-    ctx.closePath();
+    if(to.x<=0) {
+      ctx.beginPath();
+      ctx.moveTo((from.x * -2)+20,(from.y * 2)+20);
+      ctx.lineTo((to.x * -2)+20,(to.y * 2)+20);
+      ctx.lineCap="round";
+      ctx.lineWidth = 5;
+      ctx.strokeStyle = dotgrid.theme.active.f_high;
+      ctx.stroke();
+      ctx.closePath();
+    }
   }
 }

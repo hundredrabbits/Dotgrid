@@ -145,12 +145,22 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     if(dotgrid.translation){ dotgrid.translation.to = pos; }
 
-    this.cursor.style.left = Math.floor(-(pos.x-this.grid_width));
-    this.cursor.style.top = Math.floor(pos.y+this.grid_height);
-    this.cursor_coord.className = -pos.x > this.width/2 ? "fl left" : "fl"
-    this.cursor_coord.textContent = parseInt(-pos.x/this.grid_width)+","+parseInt(pos.y/this.grid_height);
+    if(pos.x>0) {
+      this.cursor.style.visibility = "hidden"
+    } else {
+      if(this.cursor.style.visibility == "hidden") {
+        this.cursor.style.transition = "initial"
+      }
+      this.cursor.style.visibility = "visible"
+      this.cursor.style.left = Math.floor(-(pos.x-this.grid_width));
+      this.cursor.style.top = Math.floor(pos.y+this.grid_height);
+      this.cursor_coord.className = -pos.x > this.width/2 ? "fl left" : "fl"
+      this.cursor_coord.textContent = parseInt(-pos.x/this.grid_width)+","+parseInt(pos.y/this.grid_height);
+      window.setTimeout(() => dotgrid.cursor.style.transition = "all 50ms", 17 /*one frame*/)
+    }
 
     dotgrid.guide.update();
+
   }
 
   this.mouse_up = function(e)
@@ -160,14 +170,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     if(e.altKey){ return; }
 
-    if(dotgrid.translation && !dotgrid.translation.to.is_equal(dotgrid.translation.from)){
+    if(pos.x>0) { dotgrid.translation = null; return; }
+
+    if(dotgrid.translation && !dotgrid.translation.to.is_equal(dotgrid.translation.from) ){
       dotgrid.translate(dotgrid.translation);
       return;
     }
 
     dotgrid.translation = null;
-    
-    if(pos.x>0) return;
 
     if(from === null){ this.set_from(pos.scale(1/this.scale)); }
     else if(to === null){ this.set_to(pos.scale(1/this.scale)); }
