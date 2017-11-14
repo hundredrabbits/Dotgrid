@@ -4,7 +4,7 @@ function Theme()
   this.active = null;
 
   this.collection = {};
-  this.collection.blanc = { background:"#eee",f_high:"#111",f_med:"#999",f_low:"#bbb",f_inv:"#fff",f_inv:"#000",b_high:"#000",b_med:"#999",b_low:"#ddd",b_inv:"#999",b_inv:"#72dec2" };
+  this.collection.blanc = { background:"#eee",f_high:"#111",f_med:"#999",f_low:"#ddd",f_inv:"#fff",f_inv:"#000",b_high:"#000",b_med:"#999",b_low:"#ddd",b_inv:"#999",b_inv:"#72dec2" };
 
   this.start = function()
   {

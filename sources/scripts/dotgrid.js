@@ -1,6 +1,7 @@
 function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,linecap = "round", color = "#000000")
 {
   this.theme = new Theme();
+  this.interface = new Interface();
 
   this.width = width;
   this.height = height;
@@ -46,15 +47,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   this.segments = [];
-  this.interface = document.createElement("div");
-  this.interface.id = "interface";
   this.scale = 1
 
   this.install = function()
   {
     document.body.appendChild(this.wrapper);
     this.wrapper.appendChild(this.element);
-    this.wrapper.appendChild(this.interface);
     this.element.appendChild(this.guide.el);
     this.element.appendChild(this.guide.widgets);
     this.wrapper.appendChild(this.render.el);
@@ -85,22 +83,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.mirror_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
     this.mirror_path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
-    // Interface
-    var html = ""
-    var path_arr = [
-      ["line","line (d)","M50,50 L250,250 ",""],
-      ["arc_c","arc clockwise (s)","M50,50 A200,200 0 0,1 250,250 ",""],
-      ["arc_r","arc reverse (a)","M50,50 A200,200 0 0,0 250,250 ",""],
-      ["bezier","bezier (f)","M50,50 Q50,150 150,150 Q250,150 250,250 ",""],
-      ["close","close (r)","M50,50 L120,120 M250,250 L180,180 ",""],
-      ["mirror","mirror (space)","M144,50 L144,250 M48,144 L96,144 M192,144 L240,144 ","margin-left:35px"],// these values are almost all multiples of 12, to get pixel alignment.
-      ["export","export (ctrl s)","M150,50 L50,150 L150,250 L250,150 L150,50 ","float:right"]
-    ]
-    path_arr.forEach(function(a) {
-      html+='<svg id="'+a[0]+'" ar="'+a[0]+'" title="hello" class="icon" viewBox="0 0 300 300" style="'+a[3]+'"><path class="icon_path" d="'+a[2]+'" stroke-linecap: square; stroke-width="24px" fill="none" /><rect ar="'+a[0]+'" width="300" height="300" opacity="0"><title>'+a[1]+'</title></rect></svg>'
-    }, this);
-    this.interface.innerHTML = html
-
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.svg_el.setAttribute("class","vector fh");
@@ -124,6 +106,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.theme.start();
     this.guide.start();
+    this.interface.start();
 
     this.resize();
     this.draw();
@@ -150,6 +133,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(o == "arc_r"){ this.draw_arc("0,0"); }
     if(o == "bezier"){ this.draw_bezier(); }
     if(o == "close"){ this.draw_close(); }
+
+    if(o == "thickness"){ this.mod_thickness(); }
+    if(o == "linecap"){ this.mod_linecap(); }
     if(o == "mirror"){ this.mod_mirror(); }
     if(o == "export"){ this.export(); }
   }
@@ -270,6 +256,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.mod_thickness = function(mod)
   {
+    if(!mod){ mod = 1; this.thickness = this.thickness > 30 ? 1 : this.thickness }
+
     this.thickness = Math.max(this.thickness+mod,0);
     this.cursor_coord.textContent = this.thickness;
     this.draw();
@@ -302,8 +290,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       this.draw();
       return;
     }
-    // Move offset
-    // this.offset = this.offset.add(new Pos(move.x,move.y));
     this.draw();
   }
 
@@ -365,7 +351,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.offset_el.setAttribute("transform","translate("+(this.offset.x*this.scale)+","+(this.offset.y*this.scale)+")")
 
     this.render.draw();
-    this.update_interface();
+    this.interface.update();
     this.guide.update();
   }
 
@@ -481,40 +467,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     });
   }
 
-  this.update_interface = function()
-  {
-    if(from && to){
-      document.getElementById("line").className.baseVal = "icon";
-      document.getElementById("arc_c").className.baseVal = "icon";
-      document.getElementById("arc_r").className.baseVal = "icon";
-    } else {
-      document.getElementById("line").className.baseVal = "icon inactive";
-      document.getElementById("arc_c").className.baseVal = "icon inactive";
-      document.getElementById("arc_r").className.baseVal = "icon inactive";
-    }
-
-    if(from && to && end){
-      document.getElementById("bezier").className.baseVal = "icon";
-    } else {
-      document.getElementById("bezier").className.baseVal = "icon inactive";
-    }
-
-    let prev = this.segments[this.segments.length-1]
-    if(this.segments.length > 0 && prev.name != "close" && (prev.name != "line" || prev.end)){
-      document.getElementById("close").className.baseVal = "icon";
-    } else {
-      document.getElementById("close").className.baseVal = "icon inactive";
-    }
-
-    if(this.segments.length > 0) {
-      document.getElementById("mirror").className.baseVal = "icon";
-      document.getElementById("export").className.baseVal = "icon";
-    } else {
-      document.getElementById("mirror").className.baseVal = "icon inactive";
-      document.getElementById("export").className.baseVal = "icon inactive";
-    }
-  }
-
   // Normalizers
 
   this.position_in_grid = function(pos)
@@ -562,6 +514,23 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       cursor_end.style.left = Math.floor(-end.x*this.scale + this.grid_width);
       cursor_end.style.top = Math.floor(end.y*this.scale + this.grid_height);
     }
+  }
+
+  // To Clean
+
+  this.from = function()
+  {
+    return from;
+  }
+
+  this.to = function()
+  {
+    return to;
+  }
+
+  this.end = function()
+  {
+    return end;
   }
 }
 
