@@ -29,6 +29,7 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 - `space` Mirror.
 - `escape` Remove control points.
 - `arrows` Move last control point.
+- `tab` Toggle interface.
 
 ### Shortcuts
 

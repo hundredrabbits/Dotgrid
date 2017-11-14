@@ -1,7 +1,7 @@
 body { background:#fff; padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: none; overflow: hidden;}
 
-#wrapper { width: calc(100% - 50px); height: calc(100% - 50px); padding: 25px; background: inherit; -webkit-app-region: drag;}
-#dotgrid { margin:0px auto; position:relative; overflow: hidden; padding:10px;-webkit-app-region: no-drag; width:310px !important; height:310px !important;}
+#wrapper { width: calc(100% - 50px); height: calc(100% - 50px); padding: 25px; background: inherit;-webkit-app-region: drag;}
+#dotgrid { margin:0px auto; position:fixed; overflow: hidden; padding:10px;-webkit-app-region: no-drag; width:310px !important; height:310px !important; left:35px; top:35px;}
 #cursor { opacity: 1; transition: all 50ms; width:8px; height:8px; margin-top:-5px; margin-left:-5px; position:absolute; z-index:25; border-radius:5px; border:1px solid black;}
 #cursor_coord { font-size:10px; z-index: 10000; margin-left:15px; margin-top:-2px;}
 #cursor_coord.left { margin-left:-110px; text-align: right; width:100px; }
@@ -16,13 +16,16 @@ body { background:#fff; padding: 5px; font-family: 'input_mono_regular'; -webkit
 .icon { width:25px; height:25px; margin-right:5px; opacity: 1}
 .icon:hover { cursor: pointer; opacity: 1 }
 
-svg.vector { z-index: 1000;position: relative; left:5px; top:5px; }
+svg.vector { z-index: 1000;position: relative; left:5px; top:5px; width:300px !important; height:300px !important; }
 
 #dotgrid #guide { opacity: 0; transition: all 500ms; }
 #dotgrid #widgets { opacity: 0; transition: all 150ms; left: 5px;top: 5px; }
 #dotgrid:hover #guide { opacity: 1 }
 #dotgrid:hover #widgets { opacity: 1 }
 
-#interface { max-width: 295px;margin: 0px auto;font-size: 11px;line-height: 30px;text-transform: uppercase;margin-top: 15px;-webkit-app-region: no-drag;position: fixed;bottom: 25px;left: 45px;}
+#interface { max-width: 295px;margin: 0px auto;font-size: 11px;line-height: 30px;text-transform: uppercase;margin-top: 15px;-webkit-app-region: no-drag;position: fixed;bottom: 25px;left: 45px; transition: all 50ms;}
 #interface svg.inactive { opacity: 0.2 }
 #interface svg:hover { opacity: 0.5 }
+
+#interface.hidden { display: none;opacity: 0 }
+#interface.visible { display: block; opacity: 1 }

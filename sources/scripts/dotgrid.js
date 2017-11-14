@@ -327,8 +327,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.strokeWidth = this.thickness*this.scale;
     this.svg_el.style.fill = this.fill ? "black" : "none";
 
-    //console.log(this.svg_el)
-
     // Draw Mirror
     if(this.mirror_index == 1){
       this.mirror_path.setAttribute("d",d);
@@ -476,6 +474,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.position_on_grid = function(pos)
   {
+    pos.y = pos.y - 7.5
     x = Math.round(pos.x/this.grid_width)*this.grid_width
     y = Math.round(pos.y/this.grid_height)*this.grid_height
     off = (x<-this.width || x>0 || y>this.height || y<0)
@@ -488,6 +487,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.resize = function() 
   {
+    return;
     this.scale = Math.min((window.innerWidth-90)/300,(window.innerHeight-100)/320)
     this.width = dotgrid.scale*300
     this.height = dotgrid.scale*300
