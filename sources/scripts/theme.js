@@ -54,6 +54,8 @@ function Theme()
     html += ".bl { background:"+theme.b_low+" !important ; fill:"+theme.b_low+" !important }\n";
     html += ".b_inv { background:"+theme.b_inv+" !important ; fill:"+theme.b_inv+" !important }\n";
 
+    html += ".icon { color:"+theme.f_high+" !important; stroke:"+theme.f_high+" !important }\n";
+
     html += "#dotgrid svg.vector { fill:"+theme.f_high+" }\n";
     html += "#dotgrid #cursor { border-color:"+theme.f_med+"}\n";
     html += "#dotgrid #cursor_from { background:"+theme.f_low+"; border-color:"+theme.f_low+"}\n";

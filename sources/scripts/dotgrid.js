@@ -85,6 +85,22 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.mirror_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
     this.mirror_path = document.createElementNS("http://www.w3.org/2000/svg", "path");
 
+    // Interface
+    var html = ""
+    var path_arr = [
+      ["line","line (d)","M50,50 L250,250 ",""],
+      ["arc_c","arc clockwise (s)","M50,50 A200,200 0 0,1 250,250 ",""],
+      ["arc_r","arc reverse (a)","M50,50 A200,200 0 0,0 250,250 ",""],
+      ["bezier","bezier (f)","M50,50 Q50,150 150,150 Q250,150 250,250 ",""],
+      ["close","close (r)","M50,50 L120,120 M250,250 L180,180 ",""],
+      ["mirror","mirror (space)","M144,50 L144,250 M48,144 L96,144 M192,144 L240,144 ","margin-left:35px"],// these values are almost all multiples of 12, to get pixel alignment.
+      ["export","export (ctrl s)","M150,50 L50,150 L150,250 L250,150 L150,50 ","float:right"]
+    ]
+    path_arr.forEach(function(a) {
+      html+='<svg id="'+a[0]+'" ar="'+a[0]+'" title="hello" class="icon" viewBox="0 0 300 300" style="'+a[3]+'"><path class="icon_path" d="'+a[2]+'" stroke-linecap: square; stroke-width="24px" fill="none" /><rect ar="'+a[0]+'" width="300" height="300" opacity="0"><title>'+a[1]+'</title></rect></svg>'
+    }, this);
+    this.interface.innerHTML = html
+
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.svg_el.setAttribute("class","vector fh");
@@ -119,7 +135,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.mouse_down = function(e)
   {
-    var o = e.target.getAttribute("data-operation");
+    var o = e.target.getAttribute("ar");
 
     var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
     pos = this.position_on_grid(pos);
@@ -364,6 +380,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.segments.push(new Path_Line(from,to,end));
 
+    this.reset();
     this.draw();
     this.reset();
   }
@@ -378,6 +395,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.segments.push(new Path_Arc(from,to,orientation,end));
 
+    this.reset();
     this.draw();
     this.reset();
   }
@@ -392,6 +410,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.segments.push(new Path_Bezier(from,to,end));
 
+    this.reset();
     this.draw();
     this.reset();
   }
@@ -403,6 +422,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.segments.push(new Path_Close());
 
+    this.reset();
     this.draw();
     this.reset();
   }
@@ -463,48 +483,36 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.update_interface = function()
   {
-    var html = "";
-
     if(from && to){
-      html += "<img data-operation='line' title='line (d)' src='media/icons/line.svg' class='icon'/>";
-      html += "<img data-operation='arc_c' title='arc clockwise (s)' src='media/icons/arc_clockwise.svg' class='icon'/>";
-      html += "<img data-operation='arc_r' title='arc reverse (a)' src='media/icons/arc_reverse.svg' class='icon'/>";
-    }
-    else{
-      html += "<img title='line (d)' src='media/icons/line.svg' class='icon inactive'/>";
-      html += "<img title='arc clockwise (s)' src='media/icons/arc_clockwise.svg' class='icon inactive'/>";
-      html += "<img title='arc reverse (a)' src='media/icons/arc_reverse.svg' class='icon inactive'/>";
+      document.getElementById("line").className.baseVal = "icon";
+      document.getElementById("arc_c").className.baseVal = "icon";
+      document.getElementById("arc_r").className.baseVal = "icon";
+    } else {
+      document.getElementById("line").className.baseVal = "icon inactive";
+      document.getElementById("arc_c").className.baseVal = "icon inactive";
+      document.getElementById("arc_r").className.baseVal = "icon inactive";
     }
 
     if(from && to && end){
-      html += "<img data-operation='bezier' title='bezier (f)' src='media/icons/bezier.svg' class='icon'/>";
-    }
-    else{
-      html += "<img title='bezier (f)' src='media/icons/bezier.svg' class='icon inactive'/>";
-    }
-
-    if(this.segments.length > 0 && this.segments[this.segments.length-1].name != "close"){
-      html += "<img data-operation='close (r)' title='close' src='media/icons/close.svg' class='icon'/>";
-    }
-    else{
-      html += "<img title='close (r)' src='media/icons/close.svg' class='icon inactive'/>";
+      document.getElementById("bezier").className.baseVal = "icon";
+    } else {
+      document.getElementById("bezier").className.baseVal = "icon inactive";
     }
 
-    if(this.segments.length > 0 && this.mirror_index != 0){
-      html += "<img data-operation='mirror' title='mirror (space)' src='media/icons/mirror.svg' class='icon' style='margin-left:35px'/>";
-    }
-    else{
-      html += "<img data-operation='mirror' title='mirror (space)' src='media/icons/mirror.svg' class='icon inactive' style='margin-left:35px'/>";
-    }
-
-    if(this.segments.length > 0){
-      html += "<img data-operation='export' title='export (e)' src='media/icons/export.svg' class='icon right'/>";
-    }
-    else{
-      html += "<img title='export (e)' src='media/icons/export.svg' class='icon right inactive'/>";
+    let prev = this.segments[this.segments.length-1]
+    if(this.segments.length > 0 && prev.name != "close" && (prev.name != "line" || prev.end)){
+      document.getElementById("close").className.baseVal = "icon";
+    } else {
+      document.getElementById("close").className.baseVal = "icon inactive";
     }
 
-    this.interface.innerHTML = html;
+    if(this.segments.length > 0) {
+      document.getElementById("mirror").className.baseVal = "icon";
+      document.getElementById("export").className.baseVal = "icon";
+    } else {
+      document.getElementById("mirror").className.baseVal = "icon inactive";
+      document.getElementById("export").className.baseVal = "icon inactive";
+    }
   }
 
   // Normalizers
