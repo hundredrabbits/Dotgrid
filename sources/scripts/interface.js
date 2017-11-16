@@ -6,7 +6,7 @@ function Interface()
 
   this.start = function()
   {
-    document.body.appendChild(this.el);
+    document.getElementById("app").appendChild(this.el);
 
     // Interface
     var html = ""
