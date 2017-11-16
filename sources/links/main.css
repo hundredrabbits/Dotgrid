@@ -1,9 +1,5 @@
 body { background:#fff; padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: none; overflow: hidden;}
-#app {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
+#app { display: flex; flex-direction: column; align-items: center;}
 
 #wrapper { padding: 25px; background: inherit;-webkit-app-region: drag;}
 #dotgrid { margin:0px auto; position:relative; overflow: hidden; padding:10px;-webkit-app-region: no-drag; width:310px !important; height:310px !important; }
@@ -28,7 +24,7 @@ svg.vector { z-index: 1000;position: relative; left:10px; top:10px; width:300px 
 #dotgrid:hover #guide { opacity: 1 }
 #dotgrid:hover #widgets { opacity: 1 }
 
-#interface { font-size: 11px;line-height: 30px;text-transform: uppercase;-webkit-app-region: no-drag; transition: all 50ms;}
+#interface { font-size: 11px;line-height: 30px;text-transform: uppercase;-webkit-app-region: no-drag; transition: all 50ms; position: absolute; left:50px; bottom:20px;}
 #interface svg.inactive { opacity: 0.2 }
 #interface svg:hover { opacity: 0.5 }
 #interface svg.icon:last-child { margin-right: 0 }
