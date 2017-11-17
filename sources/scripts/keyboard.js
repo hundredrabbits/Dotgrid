@@ -27,9 +27,15 @@ function Keyboard()
       return;
     }
 
-    switch(e.key){
-
+    var numbers = ["0","1","2","3","4","5","6","7","8","9"]
+    if(numbers.indexOf(e.key) > -1 || e.code == "Digit0" || e.keyCode == 48){
+      keyboard.cheatcode(e.key);
+      return;
     }
+    else{
+      this.code_history = "";
+    }
+
     switch(e.keyCode) {
       case 65 : dotgrid.draw_arc(e.shiftKey ? "1,0" : "0,0"); break; // 'a/A'
       case 83 : dotgrid.draw_arc(e.shiftKey ? "1,1" : "0,1"); break; // 's/S'
@@ -67,5 +73,26 @@ function Keyboard()
       case 39 : dotgrid.mod_move(new Pos(15,0)); break; // 'right'
     }
     dotgrid.draw();
+  }
+
+  this.code_history = "";
+
+  this.cheatcode = function(key)
+  {
+    if(key.length != 1){ return; }
+    this.code_history += key;
+
+    if(this.code_history.length == 2){
+      var x = this.code_history.substr(0,2);
+      var y = 15;
+      dotgrid.move_cursor(new Pos(x * -15,y * 15))
+    }
+    if(this.code_history.length > 3){
+      var x = this.code_history.substr(0,2);
+      var y = this.code_history.substr(2,2);
+      dotgrid.add_point(new Pos(x * -15,y * 15))
+      dotgrid.move_cursor(new Pos(x * -15,y * 15))
+      this.code_history = "";
+    }
   }
 }

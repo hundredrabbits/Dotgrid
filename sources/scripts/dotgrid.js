@@ -147,22 +147,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     if(dotgrid.translation){ dotgrid.translation.to = pos; }
 
-    if(pos.x>0) {
-      this.cursor.style.visibility = "hidden"
-    } else {
-      if(this.cursor.style.visibility == "hidden") {
-        this.cursor.style.transition = "initial"
-      }
-      this.cursor.style.visibility = "visible"
-      this.cursor.style.left = Math.floor(-(pos.x-this.grid_width));
-      this.cursor.style.top = Math.floor(pos.y+this.grid_height);
-      this.cursor_coord.className = -pos.x > this.width/2 ? "fl left" : "fl"
-      this.cursor_coord.textContent = parseInt(-pos.x/this.grid_width)+","+parseInt(pos.y/this.grid_height);
-      window.setTimeout(() => dotgrid.cursor.style.transition = "all 50ms", 17 /*one frame*/)
-    }
-
+    dotgrid.move_cursor(pos)
     dotgrid.guide.update();
-
   }
 
   this.mouse_up = function(e)
@@ -181,10 +167,32 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     dotgrid.translation = null;
 
+    this.add_point(pos)
+    this.draw();
+  }
+
+  this.move_cursor = function(pos)
+  {
+    if(pos.x>0) {
+      this.cursor.style.visibility = "hidden"
+    } else {
+      if(this.cursor.style.visibility == "hidden") {
+        this.cursor.style.transition = "initial"
+      }
+      this.cursor.style.visibility = "visible"
+      this.cursor.style.left = Math.floor(-(pos.x-this.grid_width));
+      this.cursor.style.top = Math.floor(pos.y+this.grid_height);
+      this.cursor_coord.className = -pos.x > this.width/2 ? "fl left" : "fl"
+      this.cursor_coord.textContent = parseInt(-pos.x/this.grid_width)+","+parseInt(pos.y/this.grid_height);
+      window.setTimeout(() => dotgrid.cursor.style.transition = "all 50ms", 17 /*one frame*/)
+    }
+  }
+
+  this.add_point = function(pos)
+  {
     if(from === null){ this.set_from(pos.scale(1/this.scale)); }
     else if(to === null){ this.set_to(pos.scale(1/this.scale)); }
     else{ this.set_end(pos.scale(1/this.scale)); }
-    this.draw();
   }
 
   this.handle_at = function(pos)
@@ -276,17 +284,23 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.mod_move = function(move)
   {
     if(!to && !end && from){
-      this.set_from(new Pos(from.x-(move.x),from.y+(move.y)))
+      var pos = new Pos(from.x-(move.x),from.y+(move.y))
+      this.set_from(pos)
+      this.move_cursor(pos)
       this.draw();
       return;
     }
     if(!end && to){
-      this.set_to(new Pos(to.x-(move.x),to.y+(move.y)))
+      var pos = new Pos(to.x-(move.x),to.y+(move.y))
+      this.set_to(pos)
+      this.move_cursor(pos)
       this.draw();
       return;
     }
     if(end){
-      this.set_end(new Pos(end.x-(move.x),end.y+(move.y)))
+      var pos = new Pos(end.x-(move.x),end.y+(move.y))
+      this.set_end(pos)
+      this.move_cursor(pos)
       this.draw();
       return;
     }
