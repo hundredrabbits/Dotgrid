@@ -20,27 +20,26 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 
 ### Parametric
 
+- `arrows` Move last control point.
+- `click/drag` Translate target control point.
+- `click+alt` Erase target control point.
+
+### Shortcuts
+
 - `]` Increase stroke size.
 - `[` Reduce stroke size.
 - `/` Toggle linecap.
-
-### Commands
-
 - `space` Mirror.
 - `escape` Remove control points.
-- `arrows` Move last control point.
-- `tab` Toggle interface.
-
-### Shortcuts
 
 - `ctrl+n` New canvas.
 - `ctrl+s` Export canvas.
 - `ctrl+z` Delete last segment.
 
-## Mouse
+## Hacker Mode(Cheatmode)
 
-- `click/drag` Translate target control point.
-- `click+alt` Erase target control point.
+- `tab` Toggle interface.
+- `1204` Will add a control point at x:12,y:4.
 
 ## License
 
