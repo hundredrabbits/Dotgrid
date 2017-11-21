@@ -3,7 +3,7 @@ function Render()
   this.el = document.createElement("canvas"); this.el.id = "render";
   this.img = document.createElement("img");
 
-  this.el.width = 512; this.el.height = 512;
+  this.el.width = 1280; this.el.height = 1280;
 
   this.draw = function()
   {
@@ -13,7 +13,7 @@ function Render()
     var image64 = b64Start + svg64;
     this.img.src = image64;
     this.el.getContext('2d').clearRect(0, 0, 1280, 1280);
-    this.el.getContext('2d').drawImage(this.img, 0, 0, 512, 512);
+    this.el.getContext('2d').drawImage(this.img, 0, 0, 1280, 1280);
   }
 
   this.buffer = function()

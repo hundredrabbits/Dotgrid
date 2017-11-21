@@ -31,6 +31,7 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 - `/` Toggle linecap.
 - `space` Mirror.
 - `escape` Remove control points.
+- `~` Double canvas size.
 
 - `ctrl+n` New canvas.
 - `ctrl+s` Export canvas.

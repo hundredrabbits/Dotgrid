@@ -109,7 +109,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.guide.start();
     this.interface.start();
 
-    this.resize();
+    dotgrid.set_size({width:300,height:300})
     this.draw();
   }
 
@@ -226,7 +226,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.set_from = function(pos)
   {
-    from = pos.mirror().clamp(0,300).mirror();
+    from = pos.mirror().clamp(0,this.width).mirror();
 
     cursor_from.style.left = Math.floor(-from.x*this.scale + this.grid_width);
     cursor_from.style.top = Math.floor(from.y*this.scale + this.grid_height);
@@ -234,7 +234,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.set_to = function(pos)
   {
-    to = pos.mirror().clamp(0,300).mirror();
+    to = pos.mirror().clamp(0,this.width).mirror();
 
     cursor_to.style.left = Math.floor(-to.x*this.scale + this.grid_width);
     cursor_to.style.top = Math.floor(to.y*this.scale + this.grid_height);
@@ -242,7 +242,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.set_end = function(pos)
   {
-    end = pos.mirror().clamp(0,300).mirror();
+    end = pos.mirror().clamp(0,this.width).mirror();
 
     cursor_end.style.left = Math.floor(-end.x*this.scale + this.grid_width);
     cursor_end.style.top = Math.floor(end.y*this.scale + this.grid_height);
@@ -320,6 +320,33 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.toggle_fill = function()
   {
     dotgrid.fill = dotgrid.fill ? false : true;
+    this.draw();
+  }
+
+  this.zoom = false;
+
+  this.toggle_zoom = function()
+  {
+    dotgrid.set_size(!dotgrid.zoom ? {width:600,height:600} : {width:300,height:300})
+    dotgrid.zoom = dotgrid.zoom ? false : true;
+  }
+
+  this.set_size = function(size = {width:300,height:300}) 
+  {
+    var win = require('electron').remote.getCurrentWindow();
+    win.setSize(size.width+100,size.height+120);
+    
+    this.width = size.width
+    this.height = size.height
+    this.element.style.width = size.width+10
+    this.element.style.height = size.height+10
+    this.grid_x = size.width/15
+    this.grid_y = size.height/15
+    this.svg_el.setAttribute("width",size.width+"px");
+    this.svg_el.setAttribute("height",size.height+"px");
+
+    dotgrid.guide.resize(size);
+    this.interface.update();
     this.draw();
   }
 
@@ -464,14 +491,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     if(this.segments.length == 0){ return; }
     this.scale = 1
-    this.width = 300
-    this.height = 300
     this.draw()
     var svg = this.svg_el.outerHTML
 
-    dotgrid.resize()
     dialog.showSaveDialog((fileName) => {
-      dotgrid.resize()
       if (fileName === undefined){ return; }
       fs.writeFile(fileName+".svg", svg, (err) => {
         if(err){ alert("An error ocurred creating the file "+ err.message); return; }
@@ -487,7 +510,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.width = 300;
     this.height = 300;
 
-    dotgrid.resize();
     dialog.showOpenDialog({
       openFile: true,
       openDirectory: false,
@@ -497,7 +519,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
         { name: "All Files", extensions: ["*"] }
       ]
     }, (filePaths) => {
-      dotgrid.resize();
       if (filePaths === undefined || filePaths.length === 0)
         return;
       fs.readFile(filePaths[0], (err, data) => {
@@ -506,7 +527,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
           return;
         }
         dotgrid.serializer.deserialize(JSON.parse(data.toString().trim()));
-        dotgrid.resize();
         dotgrid.draw();
       });
     });
@@ -548,7 +568,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     }
 
     this.serializer.deserialize(data);
-    this.resize();
     this.draw();
   }
 
@@ -562,6 +581,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.position_on_grid = function(pos)
   {
     pos.y = pos.y - 7.5
+    pos.x = pos.x + 7.5
     x = Math.round(pos.x/this.grid_width)*this.grid_width
     y = Math.round(pos.y/this.grid_height)*this.grid_height
     off = (x<-this.width || x>0 || y>this.height || y<0)
@@ -570,37 +590,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       y = -50
     }
     return new Pos(x,y);
-  }
-
-  this.resize = function() 
-  {
-    return;
-    this.scale = Math.min((window.innerWidth-90)/300,(window.innerHeight-100)/320)
-    this.width = dotgrid.scale*300
-    this.height = dotgrid.scale*300
-    this.element.style.width = this.width
-    this.element.style.height = this.height
-    this.element.style.padding = Math.floor(10*this.scale)+"px"
-    this.svg_el.setAttribute("width",this.width+"px");
-    this.svg_el.setAttribute("height",this.height+"px");
-    this.grid_width = dotgrid.width/dotgrid.grid_x;
-    this.grid_height = dotgrid.height/dotgrid.grid_y;
-    this.guide.update()
-
-    //cursor updates
-
-    if(from) {
-      cursor_from.style.left = Math.floor(-from.x*this.scale + this.grid_width);
-      cursor_from.style.top = Math.floor(from.y*this.scale + this.grid_height);
-    }
-    if(to) {
-      cursor_to.style.left = Math.floor(-to.x*this.scale + this.grid_width);
-      cursor_to.style.top = Math.floor(to.y*this.scale + this.grid_height);
-    }
-    if(end) {
-      cursor_end.style.left = Math.floor(-end.x*this.scale + this.grid_width);
-      cursor_end.style.top = Math.floor(end.y*this.scale + this.grid_height);
-    }
   }
 
   // To Clean
@@ -630,7 +619,6 @@ window.addEventListener('dragover',function(e)
 
 window.addEventListener('resize', function(e)
 {
-  dotgrid.resize()
   dotgrid.draw()
 }, false);
 
@@ -660,7 +648,6 @@ window.addEventListener('drop', function(e)
       reader.onload = function(e){
         var o = JSON.parse(e.target.result);
         dotgrid.serializer.deserialize(o);
-        dotgrid.resize();
         dotgrid.draw();
       };
       reader.readAsText(file);

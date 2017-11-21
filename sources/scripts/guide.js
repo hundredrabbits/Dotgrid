@@ -16,6 +16,12 @@ function Guide()
 
   this.start = function()
   {
+    this.clear();
+    this.draw();
+  }
+
+  this.draw = function()
+  {
     for (var x = dotgrid.grid_x; x >= 0; x--) {
       for (var y = dotgrid.grid_y; y >= 0; y--) {
         var pos_x = parseInt(x * dotgrid.grid_width) + dotgrid.grid_width ;
@@ -27,8 +33,24 @@ function Guide()
     }
   }
 
+  this.resize = function(size)
+  {
+    this.el.width = (size.width+40)*2;
+    this.el.height = (size.height+40)*2;
+    this.el.style.width = (size.width+40)+"px";
+    this.el.style.height = (size.height+40)+"px";
+
+    this.widgets.width = (size.width+20)*2;
+    this.widgets.height = (size.height+20)*2;
+    this.widgets.style.width = (size.width+20)+"px";
+    this.widgets.style.height = (size.height+20)+"px";
+
+    this.update();
+  }
+
   this.clear = function()
   {
+    this.el.getContext('2d').clearRect(0, 0, 1280, 1280);
     this.widgets.getContext('2d').clearRect(0, 0, 1280, 1280);
   }
 
@@ -51,6 +73,7 @@ function Guide()
     if(dotgrid.translation){
       this.draw_translation();
     }
+    this.draw();
   }
 
   this.draw_marker = function(pos,radius = 1,step)

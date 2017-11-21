@@ -2,6 +2,12 @@ function Keyboard()
 {
   this.listen = function(e)
   { 
+    // zoom
+    if(e.key == "~" || e.keyCode == 192){
+      dotgrid.toggle_zoom();
+      return;
+    }
+
     // save
     if(e.key == "s" && (e.ctrlKey || e.metaKey)){
       dotgrid.export();
