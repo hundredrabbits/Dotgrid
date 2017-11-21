@@ -1,5 +1,6 @@
 function Path_Arc(from,to,orientation,end)
 {
+  this.__serialized_name__ = "Path_Arc";
   this.name = "arc";
 
   this.from = from;

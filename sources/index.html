@@ -9,6 +9,7 @@
     <script type="text/javascript" src="scripts/keyboard.js"></script>
     <script type="text/javascript" src="scripts/guide.js"></script>
     <script type="text/javascript" src="scripts/render.js"></script>
+    <script type="text/javascript" src="scripts/serializer.js"></script>
     <script type="text/javascript" src="scripts/theme.js"></script>
     <script type="text/javascript" src="scripts/interface.js"></script>
     <link rel="stylesheet" type="text/css" href="links/reset.css"/>
@@ -31,6 +32,8 @@
         document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
         document.addEventListener('mousemove', function(e){ dotgrid.mouse_move(e); }, false);
         document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);
+        document.addEventListener('copy', function(e){ dotgrid.copy(e);}, false);
+        document.addEventListener('paste', function(e){ dotgrid.paste(e);}, false);
       </script>
     </div>
   </body>

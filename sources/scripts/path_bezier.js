@@ -1,7 +1,8 @@
 function Path_Bezier(from,to,end)
 {
+  this.__serialized_name__ = "Path_Bezier";
   this.name = "bezier";
-
+  
   this.from = from;
   this.to = to;
   this.end = end;

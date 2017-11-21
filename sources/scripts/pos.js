@@ -1,5 +1,6 @@
 function Pos(x,y)
 {
+  this.__serialized_name__ = ".";  
   this.x = x;
   this.y = y;
 
@@ -40,3 +41,7 @@ function Pos(x,y)
 
   function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }
+
+// This is ugly, but Pos.__serialized_name__ == ".";
+// Let's keep the character count low.
+window["."] = Pos;
