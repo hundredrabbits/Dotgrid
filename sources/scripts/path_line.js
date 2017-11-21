@@ -1,7 +1,8 @@
 function Path_Line(from,to,end = null)
 {
+  this.__serialized_name__ = "Path_Line";
   this.name = "line";
-
+  
   this.from = from;
   this.to = to;
   this.end = end;

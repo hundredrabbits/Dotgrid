@@ -44,6 +44,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.guide = new Guide();
   this.render = new Render();
+  this.serializer = new Serializer();
 
   this.path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   this.segments = [];
@@ -477,6 +478,47 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       });
       fs.writeFile(fileName+'.png', dotgrid.render.buffer());
     });
+  }
+
+  this.copy = function(e)
+  {
+    if(this.segments.length == 0){ return; }
+    this.scale = 1
+    this.width = 300
+    this.height = 300
+    this.draw()
+    var svg = this.svg_el.outerHTML
+
+    e.clipboardData.items.add(JSON.stringify({ dotgrid: this.serializer.serialize() }), "text/plain");
+
+    e.clipboardData.items.add(svg, "text/html");
+    e.clipboardData.items.add(svg, "text/svg+xml");
+    
+    // Right now, the following doesn't work and breaks "text/plain".
+    // This seems to be a bug in Chromium as others around the web complain, too.
+    /*
+    e.clipboardData.items.add(new File([new Blob([svg], { type: "image/svg+xml" } )], "image.svg"));
+    e.clipboardData.items.add(new File([new Blob([Uint8Array.from(dotgrid.render.buffer()).buffer], { type: "image/png" } ) ], "image.png"));
+    */
+
+    e.preventDefault();
+  }
+
+  this.paste = function(e)
+  {
+    var data = e.clipboardData.getData("text/plain");
+    try {
+      data = JSON.parse(data.trim()).dotgrid;
+      if (!data) throw null;
+    } catch (err) {
+      // Not a dotgrid JSON.
+      return;
+    }
+
+    this.serializer.deserialize(data);
+
+    this.resize();
+    this.draw();
   }
 
   // Normalizers
