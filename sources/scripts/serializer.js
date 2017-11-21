@@ -24,11 +24,15 @@ function Serializer()
       data[__data_segments__][id] = this.serialize_segment(dotgrid.segments[id]);
     }
 
-    return data;
+    return { dotgrid: data };
   }
 
   this.deserialize = function(data)
   {
+    data = data.dotgrid;
+    if (!data)
+      return;
+    
     if (data[__data_segments__]) {
       for (var id in data[__data_segments__]) {
         data[__data_segments__][id] = this.deserialize_segment(data[__data_segments__][id]);

@@ -477,6 +477,38 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
         if(err){ alert("An error ocurred creating the file "+ err.message); return; }
       });
       fs.writeFile(fileName+'.png', dotgrid.render.buffer());
+      fs.writeFile(fileName+'.dot', JSON.stringify(dotgrid.serializer.serialize()));
+    });
+  }
+
+  this.load = function()
+  {
+    this.scale = 1;
+    this.width = 300;
+    this.height = 300;
+
+    dotgrid.resize();
+    dialog.showOpenDialog({
+      openFile: true,
+      openDirectory: false,
+      multiSelections: false,
+      filters: [
+        { name: "Dotgrid Image", extensions: ["dot"] },
+        { name: "All Files", extensions: ["*"] }
+      ]
+    }, (filePaths) => {
+      dotgrid.resize();
+      if (filePaths === undefined || filePaths.length === 0)
+        return;
+      fs.readFile(filePaths[0], (err, data) => {
+        if (err) {
+          alert("An error ocurred creating the file " + err.message);
+          return;
+        }
+        dotgrid.serializer.deserialize(JSON.parse(data.toString().trim()));
+        dotgrid.resize();
+        dotgrid.draw();
+      });
     });
   }
 
@@ -489,7 +521,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.draw()
     var svg = this.svg_el.outerHTML
 
-    e.clipboardData.items.add(JSON.stringify({ dotgrid: this.serializer.serialize() }), "text/plain");
+    e.clipboardData.items.add(JSON.stringify(this.serializer.serialize()), "text/plain");
 
     e.clipboardData.items.add(svg, "text/html");
     e.clipboardData.items.add(svg, "text/svg+xml");
@@ -508,15 +540,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     var data = e.clipboardData.getData("text/plain");
     try {
-      data = JSON.parse(data.trim()).dotgrid;
-      if (!data) throw null;
+      data = JSON.parse(data.trim());
+      if (!data || !data.dotgrid) throw null;
     } catch (err) {
       // Not a dotgrid JSON.
       return;
     }
 
     this.serializer.deserialize(data);
-
     this.resize();
     this.draw();
   }
@@ -612,15 +643,31 @@ window.addEventListener('drop', function(e)
 
   for(file_id in files){
     var file = files[file_id];
-    if(file.name.indexOf(".thm") == -1){ console.log("skipped",file); continue; }
+    if(file.name.indexOf(".thm") > -1) {
+      var path = file.path;
+      var reader = new FileReader();
+      reader.onload = function(e){
+        var o = JSON.parse(e.target.result);
+        dotgrid.theme.install(o);
+      };
+      reader.readAsText(file);
+      continue;
+    }
 
-    var path = file.path;
-    var reader = new FileReader();
-    reader.onload = function(e){
-      var o = JSON.parse(e.target.result);
-      dotgrid.theme.install(o);
-    };
-    reader.readAsText(file);
+    if(file.name.indexOf(".dot") > -1) {
+      var path = file.path;
+      var reader = new FileReader();
+      reader.onload = function(e){
+        var o = JSON.parse(e.target.result);
+        dotgrid.serializer.deserialize(o);
+        dotgrid.resize();
+        dotgrid.draw();
+      };
+      reader.readAsText(file);
+      continue;
+    }
+
+    console.log("skipped",file);
     return;
   }
 });

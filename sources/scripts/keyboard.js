@@ -8,6 +8,12 @@ function Keyboard()
       return;
     }
 
+    // open
+    if(e.key == "o" && (e.ctrlKey || e.metaKey)){
+      dotgrid.load();
+      return;
+    }
+
     // undo
     if(e.key == "z" && (e.ctrlKey || e.metaKey)){
       dotgrid.erase();
