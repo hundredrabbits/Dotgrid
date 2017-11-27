@@ -43,6 +43,10 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 - `tab` Toggle interface.
 - `1204` Will add a control point at x:12,y:4.
 
+## Support
+
+You can support this project through [Patreon](https://patreon.com/100), or with `$ETH 0x7a5f5d9B697F04f5deE82c81859F7cC4FDb6e990` and `$BTC 1NU2Pso6nYbRpCAftX3yqQW9w2NSUxzsNa`. 
+
 ## License
 
 See the [LICENSE](LICENSE.md) file for license rights and limitations (CC).
