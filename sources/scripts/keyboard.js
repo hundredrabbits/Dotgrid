@@ -48,13 +48,15 @@ function Keyboard()
       this.code_history = "";
     }
 
-    switch(e.keyCode) {
+    switch(e.keyCode || e.key) {
       case 65 : dotgrid.draw_arc(e.shiftKey ? "1,0" : "0,0"); break; // 'a/A'
       case 83 : dotgrid.draw_arc(e.shiftKey ? "1,1" : "0,1"); break; // 's/S'
       case 68 : dotgrid.draw_line(); break; // 'd'
       case 70 : dotgrid.draw_bezier(); break; // 'f'
       case "g" : dotgrid.draw_close(); break;
       case 71 : dotgrid.draw_close(); break; // 'g'
+      case "h" : dotgrid.toggle_fill(); break;
+      case 72 : dotgrid.toggle_fill(); break; // 'g'
 
       case "[" : dotgrid.mod_thickness(-1); break;
       case 219 : dotgrid.mod_thickness(-1); break; // '['

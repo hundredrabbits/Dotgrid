@@ -18,8 +18,9 @@ function Interface()
       ["close","close (g)","M60,60 A180,180 0 0,1 240,240  M60,60 A180,180 0 0,0 240,240",""],
       
       ["thickness","thickness ([ & ])","M60,60 L240,240","stroke-dasharray: 30,15"],
-      ["linecap","linecap (/)","M60,60 L240,240  M240,180 L240,240  M180,240 L240,240"],
-      ["mirror","mirror (space)","M60,60 L240,240  M180,120 L210,90  M120,180 L90,210  "],
+      ["linecap","linecap (/)","M60,60 L240,240 M240,180 L240,240 M180,240 L240,240"],
+      ["mirror","mirror (space)","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210  "],
+      ["fill","fill (h)","M60,60 L60,150 L150,150 L240,150 L240,240 Z  "],
       
       ["export","export (ctrl s)","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
     ]
@@ -41,6 +42,7 @@ function Interface()
     document.getElementById("thickness").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
     document.getElementById("linecap").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
     document.getElementById("mirror").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
+    document.getElementById("fill").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
     document.getElementById("close").className.baseVal = dotgrid.segments.length < 1 || (prev && prev.name == "close") ? "icon inactive" : "icon";
     document.getElementById("export").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
   }
@@ -49,7 +51,6 @@ function Interface()
   {
     this.is_visible = this.is_visible ? false : true;
     this.el.className = this.is_visible ? "visible" : "hidden";
-
 
     const {dialog,app} = require('electron').remote;
     var win = require('electron').remote.getCurrentWindow();

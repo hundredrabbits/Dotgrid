@@ -17,6 +17,7 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 - `d` Draw Line.
 - `f` Draw Bezier.
 - `g` Close Path.
+- `h` Fill Path.
 
 ### Parametric
 

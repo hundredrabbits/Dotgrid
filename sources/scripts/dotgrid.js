@@ -96,7 +96,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.height = this.height;
     this.svg_el.style.stroke = this.color;
     this.svg_el.style.strokeWidth = this.thickness;
-    this.svg_el.style.fill = this.fill ? "black" : "none !important";
+    this.svg_el.style.fill = "none";
     this.svg_el.style.strokeLinecap = this.linecap;
     this.element.appendChild(this.svg_el);
 
@@ -138,6 +138,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(o == "thickness"){ this.mod_thickness(); }
     if(o == "linecap"){ this.mod_linecap(); }
     if(o == "mirror"){ this.mod_mirror(); }
+    if(o == "fill"){ this.toggle_fill(); }
     if(o == "export"){ this.export(); }
   }
 
@@ -367,7 +368,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.stroke = this.color;
     this.svg_el.style.strokeLinecap = this.linecap;
     this.svg_el.style.strokeWidth = this.thickness*this.scale;
-    this.svg_el.style.fill = this.fill ? "black" : "none";
+    this.svg_el.style.fill = this.fill ? this.theme.active.f_high : "none";
 
     // Draw Mirror
     if(this.mirror_index == 1){
@@ -492,6 +493,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(this.segments.length == 0){ return; }
     this.scale = 1
     this.draw()
+
+    // Override fill color
+    if(dotgrid.fill){ dotgrid.svg_el.style.fill = "black" }
+
     var svg = this.svg_el.outerHTML
 
     dialog.showSaveDialog((fileName) => {
@@ -501,6 +506,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       });
       fs.writeFile(fileName+'.png', dotgrid.render.buffer());
       fs.writeFile(fileName+'.dot', JSON.stringify(dotgrid.serializer.serialize()));
+      dotgrid.draw()
     });
   }
 
