@@ -54,6 +54,6 @@ function Interface()
 
     const {dialog,app} = require('electron').remote;
     var win = require('electron').remote.getCurrentWindow();
-    win.setSize(900,this.is_visible ? 420 : 400);
+    win.setSize(400,this.is_visible ? 420 : 400);
   }
 }
