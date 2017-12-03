@@ -247,20 +247,19 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(from && to && operation == "line"){
       var d = new Path_Line(from.mirror(),to.mirror(),end.mirror()).to_segment();
       this.preview_el.innerHTML = "<path d='"+d+"'></path>"
-      console.log(d);
       return;
     }
-    if(from && to && operation == "arc_c"){
+    else if(from && to && operation == "arc_c"){
       var d = new Path_Arc(from.mirror(),to.mirror(),"0,1",end.mirror()).to_segment();
       this.preview_el.innerHTML = "<path d='"+d+"'></path>"
       return;
     }
-    if(from && to && operation == "arc_r"){
+    else if(from && to && operation == "arc_r"){
       var d = new Path_Arc(from.mirror(),to.mirror(),"0,0",end.mirror()).to_segment();
       this.preview_el.innerHTML = "<path d='"+d+"'></path>"
       return;
     }
-    if(from && to && operation == "bezier"){
+    else if(from && to && operation == "bezier"){
       var d = new Path_Bezier(from.mirror(),to.mirror(),end.mirror()).to_segment();
       this.preview_el.innerHTML = "<path d='"+d+"'></path>"
       return;
