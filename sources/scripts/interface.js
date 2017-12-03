@@ -25,7 +25,7 @@ function Interface()
       ["export","export (ctrl s)","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
     ]
     path_arr.forEach(function(a) {
-      html+='<svg id="'+a[0]+'" ar="'+a[0]+'" title="hello" viewBox="0 0 300 300" class="icon" style="'+a[3]+'"><path class="icon_path" d="'+a[2]+'" stroke-linecap: round; stroke-width="12px" fill="none" /><rect ar="'+a[0]+'" width="300" height="300" opacity="0"><title>'+a[1]+'</title></rect></svg>'
+      html += '<svg id="'+a[0]+'" ar="'+a[0]+'" title="hello" viewBox="0 0 300 300" class="icon" style="'+a[3]+'"><path class="icon_path" d="'+a[2]+'" stroke-linecap: round; stroke-width="12px" fill="none" /><rect ar="'+a[0]+'" width="300" height="300" opacity="0"><title>'+a[1]+'</title></rect></svg>'
     }, this);
     this.el.innerHTML = html
   }

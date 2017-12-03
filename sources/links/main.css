@@ -31,3 +31,5 @@ svg.vector { z-index: 1000;position: relative; left:10px; top:10px; width:300px;
 
 #interface.hidden { display: none;opacity: 0 }
 #interface.visible { display: block; opacity: 1 }
+
+#preview { position: absolute; top:20px; left:20px; stroke-dasharray: 4,4 }

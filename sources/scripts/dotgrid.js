@@ -99,6 +99,22 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.fill = "none";
     this.svg_el.style.strokeLinecap = this.linecap;
     this.element.appendChild(this.svg_el);
+    // Preview
+    this.preview_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this.preview_el.id = "preview"
+    this.preview_el.setAttribute("class","vector fh");
+    this.preview_el.setAttribute("width",this.width+"px");
+    this.preview_el.setAttribute("height",this.height+"px");
+    this.preview_el.setAttribute("xmlns","http://www.w3.org/2000/svg");
+    this.preview_el.setAttribute("baseProfile","full");
+    this.preview_el.setAttribute("version","1.1");
+    this.preview_el.style.width = this.width;
+    this.preview_el.style.height = this.height;
+    this.preview_el.style.stroke = "#72dec2";
+    this.preview_el.style.strokeWidth = 2;
+    this.preview_el.style.fill = "none";
+    this.preview_el.style.strokeLinecap = "round";
+    this.element.appendChild(this.preview_el);
 
     this.offset_el.appendChild(this.path)
     this.svg_el.appendChild(this.offset_el);
@@ -148,6 +164,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     pos = this.position_on_grid(pos);
 
     if(dotgrid.translation){ dotgrid.translation.to = pos; }
+
+    var o = e.target.getAttribute("ar");
+    dotgrid.preview(o);
 
     dotgrid.move_cursor(pos)
     dotgrid.guide.update();
@@ -221,6 +240,32 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     dotgrid.reset();
 
     dotgrid.draw();
+  }
+
+  this.preview = function(operation)
+  {
+    if(from && to && operation == "line"){
+      var d = new Path_Line(from.mirror(),to.mirror(),end.mirror()).to_segment();
+      this.preview_el.innerHTML = "<path d='"+d+"'></path>"
+      console.log(d);
+      return;
+    }
+    if(from && to && operation == "arc_c"){
+      var d = new Path_Arc(from.mirror(),to.mirror(),"0,1",end.mirror()).to_segment();
+      this.preview_el.innerHTML = "<path d='"+d+"'></path>"
+      return;
+    }
+    if(from && to && operation == "arc_r"){
+      var d = new Path_Arc(from.mirror(),to.mirror(),"0,0",end.mirror()).to_segment();
+      this.preview_el.innerHTML = "<path d='"+d+"'></path>"
+      return;
+    }
+    if(from && to && operation == "bezier"){
+      var d = new Path_Bezier(from.mirror(),to.mirror(),end.mirror()).to_segment();
+      this.preview_el.innerHTML = "<path d='"+d+"'></path>"
+      return;
+    }
+    this.preview_el.innerHTML = "";
   }
 
   // Setters

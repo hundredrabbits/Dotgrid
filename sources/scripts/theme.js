@@ -57,6 +57,7 @@ function Theme()
     html += ".icon { color:"+theme.f_high+" !important; stroke:"+theme.f_high+" !important }\n";
 
     html += "#dotgrid svg.vector { fill:"+theme.f_high+" }\n";
+    html += "#dotgrid #preview { stroke:"+theme.f_low+" !important} \n";
     html += "#dotgrid #cursor { border-color:"+theme.f_med+"}\n";
     html += "#dotgrid #cursor_from { background:"+theme.f_low+"; border-color:"+theme.f_low+"}\n";
     html += "#dotgrid #cursor_to { background:"+theme.f_low+"; border-color:"+theme.f_low+"}\n";
