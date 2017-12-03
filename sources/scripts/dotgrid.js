@@ -389,6 +389,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.grid_y = size.height/15
     this.svg_el.setAttribute("width",size.width+"px");
     this.svg_el.setAttribute("height",size.height+"px");
+    this.preview_el.style.width = size.width+10
+    this.preview_el.style.height = size.height+10
+    this.preview_el.setAttribute("width",size.width+"px");
+    this.preview_el.setAttribute("height",size.height+"px");
 
     dotgrid.guide.resize(size);
     this.interface.update();
