@@ -46,14 +46,8 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 - `tab` Toggle interface.
 - `1204` Will add a control point at x:12,y:4.
 
-## Themes
+## Etc
 
-You can change the theme by dragging a [.thm](https://github.com/hundredrabbits/Themes) file onto the application.
-
-## Support
-
+- You can change the theme by dragging a [.thm](https://github.com/hundredrabbits/Themes) file onto the application.
 - You can support this project through [Patreon](https://patreon.com/100).
-
-## License
-
-See the [LICENSE](LICENSE.md) file for license rights and limitations (CC).
+- See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
