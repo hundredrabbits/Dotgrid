@@ -34,9 +34,12 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 - `escape` Remove control points.
 - `~` Double canvas size.
 
+### System 
+
 - `ctrl+n` New canvas.
 - `ctrl+s` Export canvas.
 - `ctrl+z` Delete last segment.
+- `ctrl+shift+backspace` Reset.
 
 ## Hacker Mode(Cheatmode)
 
