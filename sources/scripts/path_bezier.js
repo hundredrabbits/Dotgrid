@@ -10,6 +10,7 @@ function Path_Bezier(from,to,end)
   this.to_segment = function(prev)
   {
     var html = ""
+    if(!this.end){ return ""; }
 
     if(!prev || (!prev.to && !prev.end)){
       html += "M"+this.from.scale(dotgrid.scale)+" ";  

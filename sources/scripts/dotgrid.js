@@ -52,6 +52,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.install = function()
   {
+    document.body.appendChild(this.theme.el);
+  
     document.getElementById("app").appendChild(this.wrapper);
     this.wrapper.appendChild(this.element);
     this.element.appendChild(this.guide.el);
@@ -245,22 +247,22 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.preview = function(operation)
   {
     if(from && to && operation == "line"){
-      var d = new Path_Line(from.mirror(),to.mirror(),end.mirror()).to_segment();
+      var d = new Path_Line(from.mirror(),to.mirror(),end ? end.mirror() : null).to_segment();
       this.preview_el.innerHTML = "<path d='"+d+"'></path>"
       return;
     }
     else if(from && to && operation == "arc_c"){
-      var d = new Path_Arc(from.mirror(),to.mirror(),"0,1",end.mirror()).to_segment();
+      var d = new Path_Arc(from.mirror(),to.mirror(),"0,1",end ? end.mirror() : null).to_segment();
       this.preview_el.innerHTML = "<path d='"+d+"'></path>"
       return;
     }
     else if(from && to && operation == "arc_r"){
-      var d = new Path_Arc(from.mirror(),to.mirror(),"0,0",end.mirror()).to_segment();
+      var d = new Path_Arc(from.mirror(),to.mirror(),"0,0",end ? end.mirror() : null).to_segment();
       this.preview_el.innerHTML = "<path d='"+d+"'></path>"
       return;
     }
     else if(from && to && operation == "bezier"){
-      var d = new Path_Bezier(from.mirror(),to.mirror(),end.mirror()).to_segment();
+      var d = new Path_Bezier(from.mirror(),to.mirror(),end ? end.mirror() : null).to_segment();
       this.preview_el.innerHTML = "<path d='"+d+"'></path>"
       return;
     }

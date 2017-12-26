@@ -3,20 +3,17 @@ function Theme()
   this.el = document.createElement("style");
   this.active = null;
 
-  this.collection = {};
-  this.collection.blanc = { background:"#eee",f_high:"#111",f_med:"#999",f_low:"#ddd",f_inv:"#fff",f_inv:"#000",b_high:"#000",b_med:"#999",b_low:"#ddd",b_inv:"#999",b_inv:"#72dec2" };
+  this.default = { background: "#222", f_high: "#fff", f_med: "#777", f_low: "#444", f_inv: "#affec7", b_high: "#000", b_med: "#affec7", b_low: "#000", b_inv: "#affec7" }
 
   this.start = function()
   {
-    document.body.appendChild(this.el);
-
     if(localStorage.theme && is_json(localStorage.theme)){
       console.log("Theme","Found in localStorage")
       this.install(JSON.parse(localStorage.theme));  
     }
     else{
       console.log("Theme","Creating new")
-      this.install(this.collection.blanc);
+      this.install(this.default);
     }
   }
 
@@ -30,9 +27,6 @@ function Theme()
   {
     if(is_json(theme_str)){
       this.install(JSON.parse(theme_str));
-    }
-    else if(this.collection[theme_str]){
-      this.install(this.collection[theme_str]);
     }
     console.log("Theme","Loaded");
   }
@@ -70,7 +64,7 @@ function Theme()
   this.reset = function()
   {
     console.log("Theme","reset");
-    this.install(this.collection.blanc);
+    this.install(this.default);
   }
 
   function is_json(text)
