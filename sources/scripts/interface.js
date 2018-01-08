@@ -2,7 +2,6 @@ function Interface()
 {
   this.el = document.createElement("div");
   this.el.id = "interface";
-  this.is_visible = true;
 
   this.start = function()
   {
@@ -47,13 +46,28 @@ function Interface()
     document.getElementById("export").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
   }
 
+  this.update_size = function()
+  {
+    var size = this.zoom ? {width:600,height:600} : {width:300,height:300};
+
+    dotgrid.set_size(size,this.is_visible);
+  }
+
+  this.is_visible = true;
+  this.zoom = false;
+
   this.toggle = function()
   {
     this.is_visible = this.is_visible ? false : true;
     this.el.className = this.is_visible ? "visible" : "hidden";
 
-    const {dialog,app} = require('electron').remote;
-    var win = require('electron').remote.getCurrentWindow();
-    win.setSize(400,this.is_visible ? 420 : 400);
+    this.update_size();
+  }
+
+  this.toggle_zoom = function()
+  {
+    this.zoom = this.zoom ? false : true;
+
+    this.update_size();
   }
 }

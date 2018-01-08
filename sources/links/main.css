@@ -24,12 +24,12 @@ svg.vector { z-index: 1000;position: relative; left:10px; top:10px; width:300px;
 #dotgrid:hover #guide { opacity: 1 }
 #dotgrid:hover #widgets { opacity: 1 }
 
-#interface { font-size: 11px;line-height: 30px;text-transform: uppercase;-webkit-app-region: no-drag; transition: all 50ms; display: flex; width: 315px; margin-left: 50px; margin-right: 40px; }
+#interface { font-size: 11px;line-height: 30px;text-transform: uppercase;-webkit-app-region: no-drag; transition: all 50ms; width: 315px; position:fixed; bottom:20px; left:calc(50vw - 150px);}
 #interface svg.inactive { opacity: 0.2 }
 #interface svg:hover { opacity: 0.5 }
-#interface svg.icon:last-child { margin-right: 0; margin-left: auto; }
+#interface svg.icon:last-child { margin-right: 0; margin-left: 15px; }
 
-#interface.hidden { display: none;opacity: 0 }
-#interface.visible { display: block; opacity: 1 }
+#interface.hidden { bottom:30px;opacity: 0 }
+#interface.visible { bottom:20px; opacity: 1 }
 
 #preview { position: absolute; top:20px; left:20px; stroke-dasharray: 4,4; }

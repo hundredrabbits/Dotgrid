@@ -4,7 +4,8 @@ function Keyboard()
   { 
     // zoom
     if(e.key == "~" || e.keyCode == 192){
-      dotgrid.toggle_zoom();
+      dotgrid.interface.toggle_zoom();
+      e.preventDefault();
       return;
     }
 
