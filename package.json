@@ -13,7 +13,11 @@
     "push_linux"   : "~/butler push ~/Desktop/Dotgrid-linux-x64/ hundredrabbits/dotgrid:linux-64",
     "push_win"     : "~/butler push ~/Desktop/Dotgrid-win32-x64/ hundredrabbits/dotgrid:windows-64",
     "push_status"  : "~/butler status hundredrabbits/dotgrid",
-    "push"         : "npm run build ; npm run push_osx ; npm run push_linux ; npm run push_win ; npm run clean ; npm run push_status"
+    "theme"        : "npm run theme_osx ; npm run theme_linux ; npm run theme_win",
+    "theme_osx"    : "cp -R ~/Github/HundredRabbits/Themes/themes ~/Desktop/Dotgrid-darwin-x64/",
+    "theme_linux"  : "cp -R ~/Github/HundredRabbits/Themes/themes ~/Desktop/Dotgrid-linux-x64/",
+    "theme_win"    : "cp -R ~/Github/HundredRabbits/Themes/themes ~/Desktop/Dotgrid-win32-x64/",
+    "push"         : "npm run build ; npm run theme ; npm run push_osx ; npm run push_linux ; npm run push_win ; npm run clean ; npm run push_status"
   },
   "devDependencies": {
     "electron": "^1.8.1"
