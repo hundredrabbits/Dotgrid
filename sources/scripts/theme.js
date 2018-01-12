@@ -9,7 +9,8 @@ function Theme()
   {
     this.load(localStorage.theme ? localStorage.theme : this.default);
     document.head.appendChild(this.el)
-    window.addEventListener('drop', dotgrid.theme.drag);
+    window.addEventListener('dragover',this.drag_enter);
+    window.addEventListener('drop', this.drag);
   }
 
   this.load = function(t)
@@ -41,11 +42,18 @@ function Theme()
     this.load(this.default);
   }
 
+  this.drag_enter = function(e)
+  {
+    e.stopPropagation();
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'copy';
+  }
+
   this.drag = function(e)
   {
     e.preventDefault();
     e.stopPropagation();
-    
+
     var file = e.dataTransfer.files[0];
 
     if(!file.name || !file.name.indexOf(".thm") < 0){ console.log("Theme","Not a theme"); return; }
