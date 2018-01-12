@@ -1,5 +1,7 @@
 function Theme()
 {
+  var app = this;
+
   this.el = document.createElement("style");
   this.el.type = 'text/css';
   this.default = { background: "#222", f_high: "#fff", f_med: "#777", f_low: "#444", f_inv: "#000", b_high: "#000", b_med: "#affec7", b_low: "#000", b_inv: "#affec7" }
@@ -8,9 +10,9 @@ function Theme()
   this.start = function()
   {
     this.load(localStorage.theme ? localStorage.theme : this.default);
-    document.head.appendChild(this.el)
     window.addEventListener('dragover',this.drag_enter);
     window.addEventListener('drop', this.drag);
+    document.head.appendChild(this.el)
   }
 
   this.load = function(t)
@@ -60,7 +62,7 @@ function Theme()
 
     var reader = new FileReader();
     reader.onload = function(e){
-      dotgrid.theme.load(e.target.result);
+      app.load(e.target.result);
     };
     reader.readAsText(file);
   }
