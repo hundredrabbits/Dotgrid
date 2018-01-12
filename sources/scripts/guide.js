@@ -20,6 +20,11 @@ function Guide()
     this.draw();
   }
 
+  this.toggle = function()
+  {
+    this.el.style.opacity = !this.el.style.opacity || this.el.style.opacity == 1 ? 0 : 1;
+  }
+
   this.draw = function()
   {
     for (var x = dotgrid.grid_x; x >= 0; x--) {

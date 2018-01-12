@@ -127,11 +127,18 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.interface.start();
     this.controller.start();
 
+    this.controller.add("default","*","Reset",() => { dotgrid.reset(); dotgrid.theme.reset(); },"CmdOrCtrl+Backspace");
+    this.controller.add("default","*","About Dotgrid",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
+    this.controller.add("default","*","Developer Tools",() => { app.inspect },"CmdOrCtrl+.");
+    this.controller.add("default","*","Toggle Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
+    this.controller.add("default","*","Toggle Visible",() => { app.toggle_visible(); },"CmdOrCtrl+H");
+    this.controller.add("default","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
+
     this.controller.add("default","File","New",() => { dotgrid.new(); },"CmdOrCtrl+N");
     this.controller.add("default","File","Open",() => { dotgrid.open(); },"CmdOrCtrl+O");
     this.controller.add("default","File","Save",() => { dotgrid.save(); },"CmdOrCtrl+S");
-    this.controller.add("default","File","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
 
+    this.controller.add("default","Edit","Add vertex",() => { dotgrid.add_point(); },"Enter");
     this.controller.add("default","Edit","Undo",() => { dotgrid.undo(); },"CmdOrCtrl+Z");
     this.controller.add("default","Edit","Delete Last",() => { dotgrid.undo(); },"Backspace");
     this.controller.add("default","Edit","Move Up",() => { dotgrid.mod_move(new Pos(0,-15)); },"Up");
@@ -152,10 +159,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Effect","Mirror",() => { dotgrid.mod_mirror(); },"Space");
     this.controller.add("default","Effect","Fill",() => { dotgrid.toggle_fill(); },"G");
     
-    this.controller.add("default","View","Toggle Tools",() => { dotgrid.interface.toggle(); },"Tab");
+    this.controller.add("default","View","Toggle Tools",() => { dotgrid.interface.toggle(); },";");
     this.controller.add("default","View","Toggle Canvas Size",() => { dotgrid.interface.toggle_zoom(); },":");
-
-    this.controller.add("default","Develop","Inspect",app.inspect,"CmdOrCtrl+.");
+    this.controller.add("default","View","Toggle Grid",() => { dotgrid.guide.toggle(); },"H");
 
     this.controller.commit();
 
@@ -357,7 +363,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     }
   }
 
-  this.add_point = function(pos)
+  this.add_point = function(pos = new Pos(0,0))
   {
     if(from === null){ this.set_from(pos.scale(1/this.scale)); }
     else if(to === null){ this.set_to(pos.scale(1/this.scale)); }
