@@ -5,11 +5,19 @@ const shell = require('electron').shell
 
 let win
 
+app.inspect = function()
+{
+  win.webContents.openDevTools(); 
+}
+
+app.inject_menu = function(m)
+{
+  Menu.setApplicationMenu(Menu.buildFromTemplate(m));
+}
+
 app.on('ready', () => 
 {
   win = new BrowserWindow({width: 400, height: 420, minWidth: 400, minHeight: 400, backgroundColor:"#000", frame:false, autoHideMenuBar: true, icon: __dirname + '/icon.ico'})
-
-  win.loadURL(`file://${__dirname}/sources/index.html`)
 
   let is_shown = true;
 
@@ -28,6 +36,12 @@ app.on('ready', () =>
     }
   ]));
 
+  win.loadURL(`file://${__dirname}/sources/index.html`)
+
+  win.webContents.on('did-finish-load', () => { 
+    win.webContents.send('controller-access', "hello");
+  })
+
   win.on('closed', () => {
     win = null
     app.quit()
@@ -38,6 +52,7 @@ app.on('ready', () =>
   })
 
   win.on('show',function() {
+    var something = {name:"fuck"}
     is_shown = true;
   })
 })

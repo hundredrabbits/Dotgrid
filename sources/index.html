@@ -11,6 +11,7 @@
     <script type="text/javascript" src="scripts/render.js"></script>
     <script type="text/javascript" src="scripts/serializer.js"></script>
     <script type="text/javascript" src="scripts/theme.js"></script>
+    <script type="text/javascript" src="scripts/controller.js"></script>
     <script type="text/javascript" src="scripts/interface.js"></script>
     <link rel="stylesheet" type="text/css" href="links/reset.css"/>
     <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
@@ -22,7 +23,7 @@
       <script>
         const {dialog,app} = require('electron').remote;
         const fs = require('fs');
-        
+
         dotgrid = new Dotgrid(300,300,20,20,4,4, 10,"square","#000000");
         dotgrid.install();
 

@@ -1,5 +1,6 @@
 function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,linecap = "round", color = "#000000")
 {
+  this.controller = new Controller();
   this.theme = new Theme();
   this.interface = new Interface();
 
@@ -124,11 +125,57 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.theme.start();
     this.guide.start();
     this.interface.start();
+    this.controller.start();
+
+    this.controller.add("default","File","New",dotgrid.new,"CmdOrCtrl+N");
+    this.controller.add("default","File","Open",dotgrid.open,"CmdOrCtrl+O");
+    this.controller.add("default","File","Save",dotgrid.save,"CmdOrCtrl+S");
+    this.controller.add("default","File","Quit",app.exit,"CmdOrCtrl+Q");
+    this.controller.add("default","Develop","Inspect",app.inspect,"CmdOrCtrl+.");
+    this.controller.commit();
 
     window.addEventListener('drop', dotgrid.drag);
 
     dotgrid.set_size({width:300,height:300});
     this.draw();
+  }
+
+  this.new = function()
+  {
+    dotgrid.segments = [];
+    dotgrid.draw();
+  }
+
+  this.save = function()
+  {
+    if(this.segments.length == 0){ return; }
+    this.scale = 1
+    this.draw();
+
+    if(dotgrid.fill){ dotgrid.svg_el.style.fill = "black"; dotgrid.render.draw(); }
+
+    var svg = dotgrid.svg_el.outerHTML;
+
+    dialog.showSaveDialog((fileName) => {
+      if (fileName === undefined){ return; }
+      fs.writeFile(fileName+".svg", svg);
+      fs.writeFile(fileName+'.png', dotgrid.render.buffer());
+      fs.writeFile(fileName+'.dot', JSON.stringify(dotgrid.serializer.serialize()));
+      dotgrid.draw()
+    });
+  }
+
+  this.open = function()
+  {
+    var paths = dialog.showOpenDialog({properties: ['openFile'],filters:[{name:"Dotgrid Image",extensions:["dot"]}]});
+
+    if(!paths){ console.log("Nothing to load"); return; }
+
+    fs.readFile(paths[0], 'utf-8', (err, data) => {
+      if(err){ alert("An error ocurred reading the file :" + err.message); return; }
+      dotgrid.serializer.deserialize(JSON.parse(data.toString().trim()));
+      dotgrid.draw();
+    });
   }
 
   // Cursor
@@ -157,7 +204,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(o == "linecap"){ this.mod_linecap(); }
     if(o == "mirror"){ this.mod_mirror(); }
     if(o == "fill"){ this.toggle_fill(); }
-    if(o == "export"){ this.export(); }
+    if(o == "export"){ this.save(); }
   }
 
   this.mouse_move = function(e)
@@ -528,38 +575,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       this.segments.pop();
     }
     this.draw();
-  }
-
-  this.export = function()
-  {
-    if(this.segments.length == 0){ return; }
-    this.scale = 1
-    this.draw();
-
-    if(dotgrid.fill){ dotgrid.svg_el.style.fill = "black"; dotgrid.render.draw(); }
-
-    var svg = dotgrid.svg_el.outerHTML;
-
-    dialog.showSaveDialog((fileName) => {
-      if (fileName === undefined){ return; }
-      fs.writeFile(fileName+".svg", svg);
-      fs.writeFile(fileName+'.png', dotgrid.render.buffer());
-      fs.writeFile(fileName+'.dot', JSON.stringify(dotgrid.serializer.serialize()));
-      dotgrid.draw()
-    });
-  }
-
-  this.open = function()
-  {
-    var paths = dialog.showOpenDialog({properties: ['openFile'],filters:[{name:"Dotgrid Image",extensions:["dot"]}]});
-
-    if(!paths){ console.log("Nothing to load"); return; }
-
-    fs.readFile(paths[0], 'utf-8', (err, data) => {
-      if(err){ alert("An error ocurred reading the file :" + err.message); return; }
-      dotgrid.serializer.deserialize(JSON.parse(data.toString().trim()));
-      dotgrid.draw();
-    });
   }
 
   this.drag = function(e)
