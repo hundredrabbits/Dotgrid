@@ -11,24 +11,28 @@ function Keyboard()
 
     // save
     if(e.key == "s" && (e.ctrlKey || e.metaKey)){
+      e.preventDefault();
       dotgrid.export();
       return;
     }
 
     // open
     if(e.key == "o" && (e.ctrlKey || e.metaKey)){
-      dotgrid.load();
+      e.preventDefault();
+      dotgrid.open();
       return;
     }
 
     // undo
     if(e.key == "z" && (e.ctrlKey || e.metaKey)){
+      e.preventDefault();
       dotgrid.erase();
       return;
     }
 
     // new
     if(e.key == "n" && (e.ctrlKey || e.metaKey)){
+      e.preventDefault();
       dotgrid.clear();
       return;
     }

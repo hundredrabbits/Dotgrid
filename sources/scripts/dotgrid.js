@@ -51,9 +51,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.scale = 1
 
   this.install = function()
-  {
-    document.body.appendChild(this.theme.el);
-  
+  {  
     document.getElementById("app").appendChild(this.wrapper);
     this.wrapper.appendChild(this.element);
     this.element.appendChild(this.guide.el);
@@ -88,7 +86,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    this.svg_el.setAttribute("class","vector fh");
+    this.svg_el.setAttribute("class","vector");
     this.svg_el.setAttribute("width",this.width+"px");
     this.svg_el.setAttribute("height",this.height+"px");
     this.svg_el.setAttribute("xmlns","http://www.w3.org/2000/svg");
@@ -104,7 +102,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     // Preview
     this.preview_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.preview_el.id = "preview"
-    this.preview_el.setAttribute("class","vector fh");
+    this.preview_el.setAttribute("class","vector");
     this.preview_el.setAttribute("width",this.width+"px");
     this.preview_el.setAttribute("height",this.height+"px");
     this.preview_el.setAttribute("xmlns","http://www.w3.org/2000/svg");
@@ -127,7 +125,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.guide.start();
     this.interface.start();
 
-    dotgrid.set_size({width:300,height:300})
+    window.addEventListener('drop', dotgrid.drag);
+
+    dotgrid.set_size({width:300,height:300});
     this.draw();
   }
 
@@ -534,50 +534,49 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     if(this.segments.length == 0){ return; }
     this.scale = 1
-    this.draw()
+    this.draw();
 
-    // Override fill color
-    if(dotgrid.fill){ dotgrid.svg_el.style.fill = "black" }
+    if(dotgrid.fill){ dotgrid.svg_el.style.fill = "black"; dotgrid.render.draw(); }
 
-    var svg = this.svg_el.outerHTML
+    var svg = dotgrid.svg_el.outerHTML;
 
     dialog.showSaveDialog((fileName) => {
       if (fileName === undefined){ return; }
-      fs.writeFile(fileName+".svg", svg, (err) => {
-        if(err){ alert("An error ocurred creating the file "+ err.message); return; }
-      });
+      fs.writeFile(fileName+".svg", svg);
       fs.writeFile(fileName+'.png', dotgrid.render.buffer());
       fs.writeFile(fileName+'.dot', JSON.stringify(dotgrid.serializer.serialize()));
       dotgrid.draw()
     });
   }
 
-  this.load = function()
+  this.open = function()
   {
-    this.scale = 1;
-    this.width = 300;
-    this.height = 300;
+    var paths = dialog.showOpenDialog({properties: ['openFile'],filters:[{name:"Dotgrid Image",extensions:["dot"]}]});
 
-    dialog.showOpenDialog({
-      openFile: true,
-      openDirectory: false,
-      multiSelections: false,
-      filters: [
-        { name: "Dotgrid Image", extensions: ["dot"] },
-        { name: "All Files", extensions: ["*"] }
-      ]
-    }, (filePaths) => {
-      if (filePaths === undefined || filePaths.length === 0)
-        return;
-      fs.readFile(filePaths[0], (err, data) => {
-        if (err) {
-          alert("An error ocurred creating the file " + err.message);
-          return;
-        }
-        dotgrid.serializer.deserialize(JSON.parse(data.toString().trim()));
-        dotgrid.draw();
-      });
+    if(!paths){ console.log("Nothing to load"); return; }
+
+    fs.readFile(paths[0], 'utf-8', (err, data) => {
+      if(err){ alert("An error ocurred reading the file :" + err.message); return; }
+      dotgrid.serializer.deserialize(JSON.parse(data.toString().trim()));
+      dotgrid.draw();
     });
+  }
+
+  this.drag = function(e)
+  {
+    e.preventDefault();
+    e.stopPropagation();
+    
+    var file = e.dataTransfer.files[0];
+
+    if(!file.name || !file.name.indexOf(".dot") < 0){ console.log("Dotgrid","Not a dot file"); return; }
+
+    var reader = new FileReader();
+    reader.onload = function(e){
+      dotgrid.serializer.deserialize(JSON.parse(e.target.result.toString().trim()));
+      dotgrid.draw();
+    };
+    reader.readAsText(file);
   }
 
   this.copy = function(e)
@@ -586,21 +585,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.scale = 1
     this.width = 300
     this.height = 300
-    this.draw()
+    this.draw();
+
     var svg = this.svg_el.outerHTML
-
     e.clipboardData.items.add(JSON.stringify(this.serializer.serialize()), "text/plain");
-
     e.clipboardData.items.add(svg, "text/html");
     e.clipboardData.items.add(svg, "text/svg+xml");
-    
-    // Right now, the following doesn't work and breaks "text/plain".
-    // This seems to be a bug in Chromium as others around the web complain, too.
-    /*
-    e.clipboardData.items.add(new File([new Blob([svg], { type: "image/svg+xml" } )], "image.svg"));
-    e.clipboardData.items.add(new File([new Blob([Uint8Array.from(dotgrid.render.buffer()).buffer], { type: "image/png" } ) ], "image.png"));
-    */
-
     e.preventDefault();
   }
 
@@ -658,51 +648,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   }
 }
 
-window.addEventListener('dragover',function(e)
-{
-  e.preventDefault();
-  e.stopPropagation();
-  e.dataTransfer.dropEffect = 'copy';
-});
-
 window.addEventListener('resize', function(e)
 {
   dotgrid.draw()
 }, false);
 
-window.addEventListener('drop', function(e)
+window.addEventListener('dragover',function(e)
 {
-  e.preventDefault();
   e.stopPropagation();
-
-  var files = e.dataTransfer.files;
-
-  for(file_id in files){
-    var file = files[file_id];
-    if(file.name.indexOf(".thm") > -1) {
-      var path = file.path;
-      var reader = new FileReader();
-      reader.onload = function(e){
-        var o = JSON.parse(e.target.result);
-        dotgrid.theme.install(o);
-      };
-      reader.readAsText(file);
-      continue;
-    }
-
-    if(file.name.indexOf(".dot") > -1) {
-      var path = file.path;
-      var reader = new FileReader();
-      reader.onload = function(e){
-        var o = JSON.parse(e.target.result);
-        dotgrid.serializer.deserialize(o);
-        dotgrid.draw();
-      };
-      reader.readAsText(file);
-      continue;
-    }
-
-    console.log("skipped",file);
-    return;
-  }
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'copy';
 });
