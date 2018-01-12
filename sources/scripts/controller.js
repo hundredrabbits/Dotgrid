@@ -5,11 +5,6 @@ function Controller()
 
   this.app = require('electron').remote.app;
 
-  const ipcRenderer = require('electron').ipcRenderer;
-  ipcRenderer.on('controller-access',function(event,data){ 
-    console.log(require('electron').Menu)
-  });
-
   this.start = function()
   {
   }
@@ -19,7 +14,7 @@ function Controller()
     if(!this.menu[mode]){ this.menu[mode] = {}; }
     if(!this.menu[mode][cat]){ this.menu[mode][cat] = {}; }
     this.menu[mode][cat][label] = {fn:fn,accelerator:accelerator};
-    console.log("Added control",mode,cat,label,fn,accelerator)
+    console.log("Added control",mode,cat,label,accelerator)
   }
 
   this.commit = function()

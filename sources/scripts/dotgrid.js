@@ -127,11 +127,36 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.interface.start();
     this.controller.start();
 
-    this.controller.add("default","File","New",dotgrid.new,"CmdOrCtrl+N");
-    this.controller.add("default","File","Open",dotgrid.open,"CmdOrCtrl+O");
-    this.controller.add("default","File","Save",dotgrid.save,"CmdOrCtrl+S");
-    this.controller.add("default","File","Quit",app.exit,"CmdOrCtrl+Q");
+    this.controller.add("default","File","New",() => { dotgrid.new(); },"CmdOrCtrl+N");
+    this.controller.add("default","File","Open",() => { dotgrid.open(); },"CmdOrCtrl+O");
+    this.controller.add("default","File","Save",() => { dotgrid.save(); },"CmdOrCtrl+S");
+    this.controller.add("default","File","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
+
+    this.controller.add("default","Edit","Undo",() => { dotgrid.undo(); },"CmdOrCtrl+Z");
+    this.controller.add("default","Edit","Delete Last",() => { dotgrid.undo(); },"Backspace");
+    this.controller.add("default","Edit","Move Up",() => { dotgrid.mod_move(new Pos(0,-15)); },"Up");
+    this.controller.add("default","Edit","Move Down",() => { dotgrid.mod_move(new Pos(0,15)); },"Down");
+    this.controller.add("default","Edit","Move Left",() => { dotgrid.mod_move(new Pos(-15,0)); },"Left");
+    this.controller.add("default","Edit","Move Right",() => { dotgrid.mod_move(new Pos(15,0)); },"Right");
+    this.controller.add("default","Edit","Deselect All",() => { dotgrid.reset(); },"Esc");
+
+    this.controller.add("default","Stroke","Line",() => { dotgrid.draw_line(); },"A");
+    this.controller.add("default","Stroke","Arc",() => { dotgrid.draw_arc("0,1"); },"S");
+    this.controller.add("default","Stroke","Arc(CC)",() => { dotgrid.draw_arc("0,0"); },"D");
+    this.controller.add("default","Stroke","Bezier",() => { dotgrid.draw_bezier(); },"F");
+    this.controller.add("default","Stroke","Close",() => { dotgrid.draw_close(); },"Z");
+
+    this.controller.add("default","Effect","Increase Thickness",() => { dotgrid.mod_thickness(1) },"]");
+    this.controller.add("default","Effect","Decrease Thickness",() => { dotgrid.mod_thickness(-1) },"[");
+    this.controller.add("default","Effect","Linecap",() => { dotgrid.mod_linecap(); },"/");
+    this.controller.add("default","Effect","Mirror",() => { dotgrid.mod_mirror(); },"Space");
+    this.controller.add("default","Effect","Fill",() => { dotgrid.toggle_fill(); },"G");
+    
+    this.controller.add("default","View","Toggle Tools",() => { dotgrid.interface.toggle(); },"Tab");
+    this.controller.add("default","View","Toggle Canvas Size",() => { dotgrid.interface.toggle_zoom(); },":");
+
     this.controller.add("default","Develop","Inspect",app.inspect,"CmdOrCtrl+.");
+
     this.controller.commit();
 
     window.addEventListener('drop', dotgrid.drag);
@@ -139,6 +164,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     dotgrid.set_size({width:300,height:300});
     this.draw();
   }
+
+  // FILE
 
   this.new = function()
   {
@@ -176,6 +203,78 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       dotgrid.serializer.deserialize(JSON.parse(data.toString().trim()));
       dotgrid.draw();
     });
+  }
+
+  // EDIT
+
+  this.undo = function()
+  {
+    if(from || to || end){
+      dotgrid.reset();
+    }
+    else{
+      dotgrid.segments.pop();
+    }
+    dotgrid.draw();
+  }
+
+  // STROKE
+
+  this.draw_line = function()
+  {
+    if(from === null || to === null){ return; }
+
+    to = new Pos(to.x * -1, to.y).sub(dotgrid.offset)
+    from = new Pos(from.x * -1,from.y).sub(dotgrid.offset)
+    end = end ? new Pos(end.x * -1,end.y).sub(dotgrid.offset) : null;
+
+    dotgrid.segments.push(new Path_Line(from,to,end));
+
+    dotgrid.reset();
+    dotgrid.draw();
+    dotgrid.reset();
+  }
+
+  this.draw_arc = function(orientation = "0,0")
+  {
+    if(from === null || to === null){ return; }
+
+    to = new Pos(to.x * -1, to.y).sub(dotgrid.offset)
+    from = new Pos(from.x * -1,from.y).sub(dotgrid.offset)
+    end = end ? new Pos(end.x * -1,end.y).sub(dotgrid.offset) : null;
+
+    dotgrid.segments.push(new Path_Arc(from,to,orientation,end));
+
+    dotgrid.reset();
+    dotgrid.draw();
+    dotgrid.reset();
+  }
+
+  this.draw_bezier = function()
+  {
+    if(from === null || to === null || end === null){ return; }
+
+    to = new Pos(to.x * -1, to.y).sub(dotgrid.offset)
+    from = new Pos(from.x * -1,from.y).sub(dotgrid.offset)
+    end = new Pos(end.x * -1,end.y).sub(dotgrid.offset)
+
+    dotgrid.segments.push(new Path_Bezier(from,to,end));
+
+    dotgrid.reset();
+    dotgrid.draw();
+    dotgrid.reset();
+  }
+
+  this.draw_close = function()
+  {
+    if(dotgrid.segments.length == 0){ return; }
+    if(dotgrid.segments[dotgrid.segments.length-1].name == "close"){ return; }
+
+    dotgrid.segments.push(new Path_Close());
+
+    dotgrid.reset();
+    dotgrid.draw();
+    dotgrid.reset();
   }
 
   // Cursor
@@ -486,63 +585,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   }
 
   // Draw
-  this.draw_line = function()
-  {
-    if(from === null || to === null){ return; }
-
-    to = new Pos(to.x * -1, to.y).sub(this.offset)
-    from = new Pos(from.x * -1,from.y).sub(this.offset)
-    end = end ? new Pos(end.x * -1,end.y).sub(this.offset) : null;
-
-    this.segments.push(new Path_Line(from,to,end));
-
-    this.reset();
-    this.draw();
-    this.reset();
-  }
-
-  this.draw_arc = function(orientation)
-  {
-    if(from === null || to === null){ return; }
-
-    to = new Pos(to.x * -1, to.y).sub(this.offset)
-    from = new Pos(from.x * -1,from.y).sub(this.offset)
-    end = end ? new Pos(end.x * -1,end.y).sub(this.offset) : null;
-
-    this.segments.push(new Path_Arc(from,to,orientation,end));
-
-    this.reset();
-    this.draw();
-    this.reset();
-  }
-
-  this.draw_bezier = function()
-  {
-    if(from === null || to === null || end === null){ return; }
-
-    to = new Pos(to.x * -1, to.y).sub(this.offset)
-    from = new Pos(from.x * -1,from.y).sub(this.offset)
-    end = new Pos(end.x * -1,end.y).sub(this.offset)
-
-    this.segments.push(new Path_Bezier(from,to,end));
-
-    this.reset();
-    this.draw();
-    this.reset();
-  }
-
-  this.draw_close = function()
-  {
-    if(this.segments.length == 0){ return; }
-    if(this.segments[this.segments.length-1].name == "close"){ return; }
-
-    this.segments.push(new Path_Close());
-
-    this.reset();
-    this.draw();
-    this.reset();
-  }
-
+  
   this.reset = function()
   {
     from = null;
@@ -563,17 +606,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.thickness = 10
     this.linecap = "square"
     this.color = "#000000"
-    this.draw();
-  }
-
-  this.erase = function()
-  {
-    if(from || to || end){
-      this.reset();
-    }
-    else{
-      this.segments.pop();
-    }
     this.draw();
   }
 

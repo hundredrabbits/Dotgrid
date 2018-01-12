@@ -67,7 +67,6 @@ function Interface()
   this.toggle_zoom = function()
   {
     this.zoom = this.zoom ? false : true;
-
     this.update_size();
   }
 }
