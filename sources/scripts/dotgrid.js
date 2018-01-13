@@ -126,42 +126,42 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.guide.start();
     this.interface.start();
 
+    this.controller.add("default","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
+    this.controller.add("default","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
+    this.controller.add("default","*","Hide",() => { app.toggle_visible(); },"CmdOrCtrl+H");
+    this.controller.add("default","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
+    this.controller.add("default","*","Documentation",() => { dotgrid.controller.docs(); },"CmdOrCtrl+Esc");
     this.controller.add("default","*","Reset",() => { dotgrid.reset(); dotgrid.theme.reset(); },"CmdOrCtrl+Backspace");
-    this.controller.add("default","*","About Dotgrid",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
-    this.controller.add("default","*","Developer Tools",() => { app.inspect(); },"CmdOrCtrl+.");
-    this.controller.add("default","*","Generate Docs",() => { dotgrid.controller.docs(); },"CmdOrCtrl+Esc");
-    this.controller.add("default","*","Toggle Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
-    this.controller.add("default","*","Toggle Visible",() => { app.toggle_visible(); },"CmdOrCtrl+H");
     this.controller.add("default","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
 
     this.controller.add("default","File","New",() => { dotgrid.new(); },"CmdOrCtrl+N");
     this.controller.add("default","File","Open",() => { dotgrid.open(); },"CmdOrCtrl+O");
     this.controller.add("default","File","Save",() => { dotgrid.save(); },"CmdOrCtrl+S");
 
-    this.controller.add("default","Edit","Add vertex",() => { dotgrid.add_point(); },"Enter");
+    this.controller.add("default","Edit","Vertex",() => { dotgrid.add_point(); },"Enter");
     this.controller.add("default","Edit","Undo",() => { dotgrid.undo(); },"CmdOrCtrl+Z");
-    this.controller.add("default","Edit","Delete Last",() => { dotgrid.undo(); },"Backspace");
+    this.controller.add("default","Edit","Delete",() => { dotgrid.undo(); },"Backspace");
     this.controller.add("default","Edit","Move Up",() => { dotgrid.mod_move(new Pos(0,-15)); },"Up");
     this.controller.add("default","Edit","Move Down",() => { dotgrid.mod_move(new Pos(0,15)); },"Down");
     this.controller.add("default","Edit","Move Left",() => { dotgrid.mod_move(new Pos(-15,0)); },"Left");
     this.controller.add("default","Edit","Move Right",() => { dotgrid.mod_move(new Pos(15,0)); },"Right");
-    this.controller.add("default","Edit","Deselect All",() => { dotgrid.reset(); },"Esc");
+    this.controller.add("default","Edit","Deselect",() => { dotgrid.reset(); },"Esc");
 
     this.controller.add("default","Stroke","Line",() => { dotgrid.draw_line(); },"A");
     this.controller.add("default","Stroke","Arc",() => { dotgrid.draw_arc("0,1"); },"S");
-    this.controller.add("default","Stroke","Arc Reverse",() => { dotgrid.draw_arc("0,0"); },"D");
+    this.controller.add("default","Stroke","Arc Rev",() => { dotgrid.draw_arc("0,0"); },"D");
     this.controller.add("default","Stroke","Bezier",() => { dotgrid.draw_bezier(); },"F");
     this.controller.add("default","Stroke","Close",() => { dotgrid.draw_close(); },"Z");
 
-    this.controller.add("default","Effect","Increase Thickness",() => { dotgrid.mod_thickness(1) },"]");
-    this.controller.add("default","Effect","Decrease Thickness",() => { dotgrid.mod_thickness(-1) },"[");
+    this.controller.add("default","Effect","Thicker",() => { dotgrid.mod_thickness(1) },"]");
+    this.controller.add("default","Effect","Thinner",() => { dotgrid.mod_thickness(-1) },"[");
     this.controller.add("default","Effect","Linecap",() => { dotgrid.mod_linecap(); },"/");
     this.controller.add("default","Effect","Mirror",() => { dotgrid.mod_mirror(); },"Space");
     this.controller.add("default","Effect","Fill",() => { dotgrid.toggle_fill(); },"G");
     
-    this.controller.add("default","View","Toggle Tools",() => { dotgrid.interface.toggle(); },";");
-    this.controller.add("default","View","Toggle Canvas Size",() => { dotgrid.interface.toggle_zoom(); },":");
-    this.controller.add("default","View","Toggle Grid",() => { dotgrid.guide.toggle(); },"H");
+    this.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },";");
+    this.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
+    this.controller.add("default","View","Expert",() => { dotgrid.interface.toggle_zoom(); },":");
 
     this.controller.commit();
 

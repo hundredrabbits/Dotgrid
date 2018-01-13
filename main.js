@@ -1,4 +1,4 @@
-const {app, BrowserWindow, webFrame, Menu} = require('electron')
+const {app, BrowserWindow, webFrame, Menu, dialog} = require('electron')
 const path = require('path')
 const url = require('url')
 const shell = require('electron').shell
@@ -27,10 +27,14 @@ app.inject_menu = function(m)
 
 app.generate_docs = function(m)
 {
-  console.log("Generating docs..");
-  var docs = require('./docs.js');
   var fs = require('fs');
-  fs.writeFile("/Users/VillaMoirai/Desktop/keyboard.svg", docs.generate(m));
+  var docs = require('./docs.js');
+
+  dialog.showSaveDialog((fileName) => {
+    if (fileName === undefined){ return; }
+    fileName = fileName.substr(-4,4) != ".svg" ? fileName+".svg" : fileName;
+    fs.writeFile(fileName, docs.generate(m));
+  }); 
 }
 
 app.win = null;
