@@ -10,7 +10,7 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 
 ## Controls
 
-<img src='https://raw.githubusercontent.com/hundredrabbits/Dotgrid/master/LAYOUT.svg' width="600"/>
+<img src='https://cdn.rawgit.com/hundredrabbits/Dotgrid/master/LAYOUT.svg' width="600"/>
 
 ## Extras
 
