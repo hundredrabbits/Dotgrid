@@ -14,10 +14,10 @@ function Controller()
     if(!this.menu[mode]){ this.menu[mode] = {}; }
     if(!this.menu[mode][cat]){ this.menu[mode][cat] = {}; }
     this.menu[mode][cat][label] = {fn:fn,accelerator:accelerator};
-    console.log("Added control",mode,cat,label,accelerator)
+    console.log(`${mode}/${cat}/${label} <${accelerator}>`);
   }
 
-  this.commit = function()
+  this.format = function()
   {
     var f = [];
     var m = this.menu[this.mode];
@@ -29,7 +29,18 @@ function Controller()
       }
       f.push({label:cat,submenu:submenu});
     }
-    this.app.inject_menu(f);
+    return f;
+  }
+
+  this.commit = function()
+  {
+    this.app.inject_menu(this.format());
+  }
+
+  this.docs = function()
+  {
+    console.log("Generating docs..");
+    this.app.generate_docs(this.format());
   }
 }
 

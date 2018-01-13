@@ -17,6 +17,7 @@
     "theme_osx"    : "cp -R ~/Github/HundredRabbits/Themes/themes ~/Desktop/Dotgrid-darwin-x64/",
     "theme_linux"  : "cp -R ~/Github/HundredRabbits/Themes/themes ~/Desktop/Dotgrid-linux-x64/",
     "theme_win"    : "cp -R ~/Github/HundredRabbits/Themes/themes ~/Desktop/Dotgrid-win32-x64/",
+    "docs"         : "electron . docs",
     "push"         : "npm run build ; npm run theme ; npm run push_osx ; npm run push_linux ; npm run push_win ; npm run clean ; npm run push_status"
   },
   "devDependencies": {

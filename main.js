@@ -3,22 +3,21 @@ const path = require('path')
 const url = require('url')
 const shell = require('electron').shell
 
-let win
 let is_shown = true;
 
 app.inspect = function()
 {
-  this.win.webContents.openDevTools(); 
+  app.win.toggleDevTools();
 }
 
 app.toggle_fullscreen = function()
 {
-  win.setFullScreen(win.isFullScreen() ? false : true);
+  app.win.setFullScreen(app.win.isFullScreen() ? false : true);
 }
 
 app.toggle_visible = function()
 {
-  if(is_shown){ win.hide(); } else{ win.show(); }
+  if(is_shown){ app.win.hide(); } else{ app.win.show(); }
 }
 
 app.inject_menu = function(m)
@@ -26,24 +25,32 @@ app.inject_menu = function(m)
   Menu.setApplicationMenu(Menu.buildFromTemplate(m));
 }
 
-app.win = win;
+app.generate_docs = function(m)
+{
+  console.log("Generating docs..");
+  var docs = require('./docs.js');
+  var fs = require('fs');
+  fs.writeFile("/Users/VillaMoirai/Desktop/keyboard.svg", docs.generate(m));
+}
+
+app.win = null;
 
 app.on('ready', () => 
 {
-  win = new BrowserWindow({width: 400, height: 420, minWidth: 400, minHeight: 400, backgroundColor:"#000", frame:false, autoHideMenuBar: true, icon: __dirname + '/icon.ico'})
+  app.win = new BrowserWindow({width: 400, height: 420, minWidth: 400, minHeight: 400, backgroundColor:"#000", frame:false, autoHideMenuBar: true, icon: __dirname + '/icon.ico'})
 
-  win.loadURL(`file://${__dirname}/sources/index.html`);
+  app.win.loadURL(`file://${__dirname}/sources/index.html`);
 
-  win.on('closed', () => {
+  app.win.on('closed', () => {
     win = null
     app.quit()
   })
 
-  win.on('hide',function() {
+  app.win.on('hide',function() {
     is_shown = false;
   })
 
-  win.on('show',function() {
+  app.win.on('show',function() {
     is_shown = true;
   })
 })
@@ -54,7 +61,7 @@ app.on('window-all-closed', () =>
 })
 
 app.on('activate', () => {
-  if (win === null) {
+  if (app.win === null) {
     createWindow()
   }
   else{

@@ -10,16 +10,16 @@ function Interface()
     // Interface
     var html = ""
     var path_arr = [
-      ["line","line (d)","M60,60 L240,240",""],
-      ["arc_c","arc clockwise (s)","M60,60 A180,180 0 0,1 240,240",""],
-      ["arc_r","arc reverse (a)","M60,60 A180,180 0 0,0 240,240",""],
-      ["bezier","bezier (f)","M60,60 Q60,150 150,150 Q240,150 240,240 ",""],
-      ["close","close (g)","M60,60 A180,180 0 0,1 240,240  M60,60 A180,180 0 0,0 240,240",""],
+      ["line","line","M60,60 L240,240",""],
+      ["arc_c","arc clockwise","M60,60 A180,180 0 0,1 240,240",""],
+      ["arc_r","arc reverse","M60,60 A180,180 0 0,0 240,240",""],
+      ["bezier","bezier","M60,60 Q60,150 150,150 Q240,150 240,240 ",""],
+      ["close","close","M60,60 A180,180 0 0,1 240,240  M60,60 A180,180 0 0,0 240,240",""],
       
-      ["thickness","thickness ([ & ])","M60,60 L240,240","stroke-dasharray: 30,15"],
-      ["linecap","linecap (/)","M60,60 L240,240 M240,180 L240,240 M180,240 L240,240"],
-      ["mirror","mirror (space)","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210  "],
-      ["fill","fill (h)","M60,60 L60,150 L150,150 L240,150 L240,240 Z  "],
+      ["thickness","thickness","M60,60 L240,240","stroke-dasharray: 30,15"],
+      ["linecap","linecap","M60,60 L240,240 M240,180 L240,240 M180,240 L240,240"],
+      ["mirror","mirror","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210  "],
+      ["fill","fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z  "],
       
       ["export","export (ctrl s)","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
     ]
