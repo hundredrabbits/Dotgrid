@@ -138,7 +138,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","File","Open",() => { dotgrid.open(); },"CmdOrCtrl+O");
     this.controller.add("default","File","Save",() => { dotgrid.save(); },"CmdOrCtrl+S");
 
-    this.controller.add("default","Edit","Vertex",() => { dotgrid.add_point(); },"Enter");
+    this.controller.add("default","Edit","Insert",() => { dotgrid.add_point(); },"Enter");
+    this.controller.add("default","Edit","Copy",() => { document.execCommand('copy'); },"CmdOrCtrl+C");
+    this.controller.add("default","Edit","Paste",() => { document.execCommand('paste'); },"CmdOrCtrl+V");
     this.controller.add("default","Edit","Undo",() => { dotgrid.undo(); },"CmdOrCtrl+Z");
     this.controller.add("default","Edit","Delete",() => { dotgrid.undo(); },"Backspace");
     this.controller.add("default","Edit","Move Up",() => { dotgrid.mod_move(new Pos(0,-15)); },"Up");
@@ -151,7 +153,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Stroke","Arc",() => { dotgrid.draw_arc("0,1"); },"S");
     this.controller.add("default","Stroke","Arc Rev",() => { dotgrid.draw_arc("0,0"); },"D");
     this.controller.add("default","Stroke","Bezier",() => { dotgrid.draw_bezier(); },"F");
-    this.controller.add("default","Stroke","Close",() => { dotgrid.draw_close(); },"Z");
+    this.controller.add("default","Stroke","Connect",() => { dotgrid.draw_close(); },"Z");
 
     this.controller.add("default","Effect","Thicker",() => { dotgrid.mod_thickness(1) },"]");
     this.controller.add("default","Effect","Thinner",() => { dotgrid.mod_thickness(-1) },"[");
@@ -164,6 +166,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","View","Expert",() => { dotgrid.interface.toggle_zoom(); },":");
 
     this.controller.commit();
+
+    document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
+    document.addEventListener('mousemove', function(e){ dotgrid.mouse_move(e); }, false);
+    document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);
+    document.addEventListener('copy', function(e){ dotgrid.copy(e); e.preventDefault(); }, false);
+    document.addEventListener('paste', function(e){ dotgrid.paste(e); e.preventDefault(); }, false);
 
     window.addEventListener('drop', dotgrid.drag);
 
@@ -634,17 +642,18 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.copy = function(e)
   {
-    if(this.segments.length == 0){ return; }
-    this.scale = 1
-    this.width = 300
-    this.height = 300
-    this.draw();
+    if(dotgrid.segments.length == 0){ return; }
 
-    var svg = this.svg_el.outerHTML
-    e.clipboardData.items.add(JSON.stringify(this.serializer.serialize()), "text/plain");
-    e.clipboardData.items.add(svg, "text/html");
-    e.clipboardData.items.add(svg, "text/svg+xml");
-    e.preventDefault();
+    dotgrid.scale = 1
+    dotgrid.width = 300
+    dotgrid.height = 300
+    dotgrid.draw();
+
+    var svg = dotgrid.svg_el.outerHTML;
+
+    e.clipboardData.setData('text/plain', JSON.stringify(dotgrid.serializer.serialize()));
+    e.clipboardData.setData('text/html', svg);
+    e.clipboardData.setData('text/svg+xml', svg);
   }
 
   this.paste = function(e)
@@ -654,7 +663,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       data = JSON.parse(data.trim());
       if (!data || !data.dotgrid) throw null;
     } catch (err) {
-      // Not a dotgrid JSON.
       return;
     }
 

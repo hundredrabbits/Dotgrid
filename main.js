@@ -25,18 +25,6 @@ app.inject_menu = function(m)
   Menu.setApplicationMenu(Menu.buildFromTemplate(m));
 }
 
-app.generate_docs = function(m)
-{
-  var fs = require('fs');
-  var docs = require('./docs.js');
-
-  dialog.showSaveDialog((fileName) => {
-    if (fileName === undefined){ return; }
-    fileName = fileName.substr(-4,4) != ".svg" ? fileName+".svg" : fileName;
-    fs.writeFile(fileName, docs.generate(m));
-  }); 
-}
-
 app.win = null;
 
 app.on('ready', () => 
