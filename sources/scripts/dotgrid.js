@@ -163,6 +163,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     
     this.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },";");
     this.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
+    this.controller.add("default","View","Control Points",() => { dotgrid.guide.toggle_widgets(); },"J");
     this.controller.add("default","View","Expert",() => { dotgrid.interface.toggle_zoom(); },":");
 
     this.controller.commit();

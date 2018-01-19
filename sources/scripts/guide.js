@@ -25,6 +25,11 @@ function Guide()
     this.el.style.opacity = !this.el.style.opacity || this.el.style.opacity == 1 ? 0 : 1;
   }
 
+  this.toggle_widgets = function()
+  {
+   this.widgets.style.opacity = !this.widgets.style.opacity || this.widgets.style.opacity == 1 ? 0 : 1; 
+  }
+
   this.draw = function()
   {
     for (var x = dotgrid.grid_x; x >= 0; x--) {
