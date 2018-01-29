@@ -17,7 +17,14 @@ function Controller()
     console.log(`${mode}/${cat}/${label} <${accelerator}>`);
   }
 
-  this.set = function(mode)
+  this.add_role = function(mode,cat,label)
+  {
+    if(!this.menu[mode]){ this.menu[mode] = {}; }
+    if(!this.menu[mode][cat]){ this.menu[mode][cat] = {}; }
+    this.menu[mode][cat][label] = {role:label};    
+  }
+
+  this.set = function(mode = "default")
   {
     this.mode = mode;
     this.commit();
@@ -31,7 +38,12 @@ function Controller()
       var submenu = [];
       for(name in m[cat]){
         var option = m[cat][name];
-        submenu.push({label:name,accelerator:option.accelerator,click:option.fn})
+        if(option.role){
+          submenu.push({role:option.role})
+        }
+        else{
+          submenu.push({label:name,accelerator:option.accelerator,click:option.fn})  
+        }
       }
       f.push({label:cat,submenu:submenu});
     }
@@ -46,15 +58,17 @@ function Controller()
   this.docs = function()
   {
     console.log("Generating docs..");
-    var svg = this.generate(this.format())
+    var svg = this.generate_svg(this.format())
+    var txt = this.documentation(this.format());
     dialog.showSaveDialog((fileName) => {
       if (fileName === undefined){ return; }
       fileName = fileName.substr(-4,4) != ".svg" ? fileName+".svg" : fileName;
       fs.writeFile(fileName,svg);
+      fs.writeFile(fileName.replace(".svg",".md"),txt);
     }); 
   }
 
-  this.generate = function(m)
+  this.generate_svg = function(m)
   {
     var svg_html = "";
 
@@ -70,13 +84,43 @@ function Controller()
     return `<?xml version="1.0" encoding="UTF-8" standalone="no"?><svg xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" width="900" height="300" version="1.0" style="fill:none;stroke:black;stroke-width:2px;">${svg_html}</svg>`;
   }
 
+  this.documentation = function()
+  {
+    var txt = "";
+
+    txt += this.documentation_for_mode("default",this.menu.default);
+
+    for(name in this.menu){
+      if(name == "default"){ continue; }
+      txt += this.documentation_for_mode(name,this.menu[name]);
+    }
+    return txt;
+  }
+
+  this.documentation_for_mode = function(name,mode)
+  {
+    var txt = `## ${name} Mode\n\n`;
+
+    for(id in mode){
+      if(id == "*"){ continue; }
+      txt += `### ${id}\n`;
+      for(name in mode[id]){
+        var option = mode[id][name];
+        txt += `- ${name}: \`${option.accelerator}\`\n`;
+      }
+      txt += "\n"
+    }
+
+    return txt+"\n";
+  }
+
   this.accelerator_for_key = function(key,menu)
   {
     var acc = {basic:null,ctrl:null}
     for(cat in menu){
       var options = menu[cat];
       for(id in options.submenu){
-        var option = options.submenu[id];
+        var option = options.submenu[id]; if(option.role){ continue; }
         acc.basic = (option.accelerator.toLowerCase() == key.toLowerCase()) ? option.label.toUpperCase().replace("TOGGLE ","").substr(0,8).trim() : acc.basic;
         acc.ctrl = (option.accelerator.toLowerCase() == ("CmdOrCtrl+"+key).toLowerCase()) ? option.label.toUpperCase().replace("TOGGLE ","").substr(0,8).trim() : acc.ctrl;
       }
@@ -97,7 +141,7 @@ function Controller()
     {x:540, y:0,   width:60,  height:60, name:"9"},
     {x:600, y:0,   width:60,  height:60, name:"0"},
     {x:660, y:0,   width:60,  height:60, name:"-"},
-    {x:720, y:0,   width:60,  height:60, name:"+"},
+    {x:720, y:0,   width:60,  height:60, name:"plus"},
     {x:780, y:0,   width:120, height:60, name:"backspace"},
     {x:0,   y:60,  width:90,  height:60, name:"tab"},
     {x:90,  y:60,  width:60,  height:60, name:"q"},

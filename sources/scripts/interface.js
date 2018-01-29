@@ -21,7 +21,7 @@ function Interface()
       ["mirror","mirror","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210  "],
       ["fill","fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z  "],
       
-      ["export","export (ctrl s)","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
+      ["export","export","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
     ]
     path_arr.forEach(function(a) {
       html += '<svg id="'+a[0]+'" ar="'+a[0]+'" title="hello" viewBox="0 0 300 300" class="icon" style="'+a[3]+'"><path class="icon_path" d="'+a[2]+'" stroke-linecap: round; stroke-width="12px" fill="none" /><rect ar="'+a[0]+'" width="300" height="300" opacity="0"><title>'+a[1]+'</title></rect></svg>'

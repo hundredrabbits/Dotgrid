@@ -64,10 +64,15 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.cursor.id = "cursor";
     this.element.appendChild(this.cursor);
 
-    this.cursor_coord = document.createElement("div");
-    this.cursor_coord.id = "cursor_coord";
-    this.cursor_coord.className = "fl"
-    this.cursor.appendChild(this.cursor_coord);
+    this.cursor_x = document.createElement("t");
+    this.cursor_x.id = "cursor_x";
+    this.cursor_x.className = "fl"
+    this.element.appendChild(this.cursor_x);
+
+    this.cursor_y = document.createElement("t");
+    this.cursor_y.id = "cursor_y";
+    this.cursor_y.className = "fl"
+    this.element.appendChild(this.cursor_y);
 
     cursor_from = document.createElement("div");
     cursor_from.id = "cursor_from";
@@ -111,7 +116,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.preview_el.setAttribute("version","1.1");
     this.preview_el.style.width = this.width;
     this.preview_el.style.height = this.height;
-    this.preview_el.style.stroke = "#72dec2";
     this.preview_el.style.strokeWidth = 2;
     this.preview_el.style.fill = "none";
     this.preview_el.style.strokeLinecap = "round";
@@ -138,7 +142,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","File","Open",() => { dotgrid.open(); },"CmdOrCtrl+O");
     this.controller.add("default","File","Save",() => { dotgrid.save(); },"CmdOrCtrl+S");
 
-    this.controller.add("default","Edit","Insert",() => { dotgrid.add_point(); },"Enter");
+    this.controller.add("default","Edit","Insert",() => { dotgrid.add_point(); },"I");
     this.controller.add("default","Edit","Copy",() => { document.execCommand('copy'); },"CmdOrCtrl+C");
     this.controller.add("default","Edit","Paste",() => { document.execCommand('paste'); },"CmdOrCtrl+V");
     this.controller.add("default","Edit","Undo",() => { dotgrid.undo(); },"CmdOrCtrl+Z");
@@ -155,16 +159,18 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Stroke","Bezier",() => { dotgrid.draw_bezier(); },"F");
     this.controller.add("default","Stroke","Connect",() => { dotgrid.draw_close(); },"Z");
 
-    this.controller.add("default","Effect","Thicker",() => { dotgrid.mod_thickness(1) },"]");
-    this.controller.add("default","Effect","Thinner",() => { dotgrid.mod_thickness(-1) },"[");
-    this.controller.add("default","Effect","Linecap",() => { dotgrid.mod_linecap(); },"/");
+    this.controller.add("default","Effect","Thicker",() => { dotgrid.mod_thickness(1) },"}");
+    this.controller.add("default","Effect","Thinner",() => { dotgrid.mod_thickness(-1) },"{");
+    this.controller.add("default","Effect","Thicker +5",() => { dotgrid.mod_thickness(5,true) },"]");
+    this.controller.add("default","Effect","Thinner -5",() => { dotgrid.mod_thickness(-5,true) },"[");
+    this.controller.add("default","Effect","Linecap",() => { dotgrid.mod_linecap(); },"Y");
     this.controller.add("default","Effect","Mirror",() => { dotgrid.mod_mirror(); },"Space");
     this.controller.add("default","Effect","Fill",() => { dotgrid.toggle_fill(); },"G");
     
-    this.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },";");
+    this.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },"U");
     this.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
     this.controller.add("default","View","Control Points",() => { dotgrid.guide.toggle_widgets(); },"J");
-    this.controller.add("default","View","Expert",() => { dotgrid.interface.toggle_zoom(); },":");
+    this.controller.add("default","View","Expert Mode",() => { dotgrid.interface.toggle_zoom(); },":");
 
     this.controller.commit();
 
@@ -300,7 +306,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     var o = e.target.getAttribute("ar");
 
-    var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
+    var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5));
     pos = this.position_on_grid(pos);
 
     if(e.altKey){ dotgrid.delete_at(pos); return; }
@@ -323,7 +329,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.mouse_move = function(e)
   {
-    var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
+    var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5));
     pos = this.position_on_grid(pos);
 
     if(dotgrid.translation){ dotgrid.translation.to = pos; }
@@ -337,7 +343,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.mouse_up = function(e)
   {
-    var pos = this.position_in_grid(new Pos(e.clientX,e.clientY));
+    var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5));
     pos = this.position_on_grid(pos);
 
     if(e.altKey){ return; }
@@ -366,10 +372,17 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       this.cursor.style.visibility = "visible"
       this.cursor.style.left = Math.floor(-(pos.x-this.grid_width));
       this.cursor.style.top = Math.floor(pos.y+this.grid_height);
-      this.cursor_coord.className = -pos.x > this.width/2 ? "fl left" : "fl"
-      this.cursor_coord.textContent = parseInt(-pos.x/this.grid_width)+","+parseInt(pos.y/this.grid_height);
+      this.update_cursor(pos);
       window.setTimeout(() => dotgrid.cursor.style.transition = "all 50ms", 17 /*one frame*/)
     }
+  }
+
+  this.update_cursor = function(pos)
+  {
+    this.cursor_x.style.left = `${-pos.x}px`;
+    this.cursor_x.textContent = parseInt(-pos.x/this.grid_width)
+    this.cursor_y.style.top = `${pos.y}px`;
+    this.cursor_y.textContent = parseInt(pos.y/this.grid_width)
   }
 
   this.add_point = function(pos = new Pos(0,0))
@@ -471,12 +484,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.draw();
   }
 
-  this.mod_thickness = function(mod)
+  this.mod_thickness = function(mod,step = false)
   {
     if(!mod){ mod = 1; this.thickness = this.thickness > 30 ? 1 : this.thickness }
 
+    if(step){
+      this.thickness = parseInt(this.thickness/5) * 5;
+    }
+
     this.thickness = Math.max(this.thickness+mod,0);
-    this.cursor_coord.textContent = this.thickness;
+    this.cursor_x.textContent = this.thickness;
     this.draw();
   }
 
