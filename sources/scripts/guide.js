@@ -129,7 +129,7 @@ function Guide()
       ctx.lineTo((to.x * -2)+20,(to.y * 2)+20);
       ctx.lineCap="round";
       ctx.lineWidth = 5;
-      ctx.strokeStyle = dotgrid.theme.active.f_inv;
+      ctx.strokeStyle = dotgrid.theme.active.b_inv;
       ctx.stroke();
       ctx.closePath();
     }
