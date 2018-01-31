@@ -241,14 +241,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     }
 
     this.segments = this.history.prev();
-    console.log(this.history.a)
     this.draw();
   }
 
   this.redo = function()
   {
     this.segments = this.history.next();
-    console.log(this.history.a)
     this.draw();    
   }
 
@@ -279,6 +277,22 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.segments = segs;
     dotgrid.history.push(dotgrid.segments);
     this.draw();
+  }
+
+  this.translate = function(t)
+  {
+    for(id in dotgrid.segments){
+      var segment = dotgrid.segments[id];
+      if(segment.from && segment.from.is_equal(dotgrid.translation.from)){ segment.from = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
+      if(segment.to && segment.to.is_equal(dotgrid.translation.from)){ segment.to = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
+      if(segment.end && segment.end.is_equal(dotgrid.translation.from)){ segment.end = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
+    }
+  
+    dotgrid.history.push(dotgrid.segments);
+    dotgrid.translation = null;
+    dotgrid.reset();
+
+    dotgrid.draw();
   }
 
   // STROKE
@@ -447,22 +461,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       if(segment.end && segment.end.is_equal(pos)){ return true; }
     }
     return false;
-  }
-
-  this.translate = function(t)
-  {
-    for(id in dotgrid.segments){
-      var segment = dotgrid.segments[id];
-      if(segment.from && segment.from.is_equal(dotgrid.translation.from)){ segment.from = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
-      if(segment.to && segment.to.is_equal(dotgrid.translation.from)){ segment.to = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
-      if(segment.end && segment.end.is_equal(dotgrid.translation.from)){ segment.end = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
-    }
-
-    dotgrid.translation = null;
-    dotgrid.reset();
-    dotgrid.history.push(dotgrid.segments);
-
-    dotgrid.draw();
   }
 
   this.preview = function(operation)

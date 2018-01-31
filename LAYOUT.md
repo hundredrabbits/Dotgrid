@@ -10,6 +10,7 @@
 - Copy: `CmdOrCtrl+C`
 - Paste: `CmdOrCtrl+V`
 - Undo: `CmdOrCtrl+Z`
+- Redo: `CmdOrCtrl+Shift+Z`
 - Delete: `Backspace`
 - Move Up: `Up`
 - Move Down: `Down`
