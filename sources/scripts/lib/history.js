@@ -3,6 +3,12 @@ function History()
   this.index = 0;
   this.a = [];
 
+  this.clear = function()
+  {
+    this.a = [];
+    this.index = 0;
+  }
+
   this.push = function(data)
   {
     if(this.index < this.a.length-1){
@@ -35,6 +41,6 @@ function History()
     return copy(this.a[this.index]);
   }
 
-  function copy(data){ return data.slice(0); }
+  function copy(data){ return data ? data.slice(0) : []; }
   function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }

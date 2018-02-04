@@ -193,9 +193,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.new = function()
   {
-    dotgrid.segments = [];
-    dotgrid.history.push(dotgrid.segments)
-    dotgrid.draw();
+    dotgrid.clear();
   }
 
   this.save = function()
@@ -663,6 +661,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.clear = function()
   {
+    this.history.clear();
     this.reset();
     this.segments = [];
     this.thickness = 10
