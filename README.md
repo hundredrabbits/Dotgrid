@@ -43,6 +43,7 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 - Thicker +5: `]`
 - Thinner -5: `[`
 - Linecap: `Y`
+- Linejoin: `T`
 - Mirror: `Space`
 - Fill: `G`
 

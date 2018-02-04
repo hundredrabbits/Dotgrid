@@ -31,6 +31,7 @@
 - Thicker +5: `]`
 - Thinner -5: `[`
 - Linecap: `Y`
+- Linejoin: `T`
 - Mirror: `Space`
 - Fill: `G`
 
