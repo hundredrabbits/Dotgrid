@@ -1,4 +1,4 @@
-function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,linecap = "round", color = "#000000")
+function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,linecap = "round",linejoin = "round", color = "#000000")
 {
   this.controller = new Controller();
   this.theme = new Theme();
@@ -14,6 +14,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.thickness = thickness;
   this.linecap = linecap;
+  this.linejoin = linejoin;
   this.color = color;
   this.offset = new Pos(0,0);
 
@@ -105,6 +106,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.strokeWidth = this.thickness;
     this.svg_el.style.fill = "none";
     this.svg_el.style.strokeLinecap = this.linecap;
+    this.svg_el.style.strokeLinejoin = this.linejoin;
     this.element.appendChild(this.svg_el);
     // Preview
     this.preview_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -166,6 +168,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Effect","Thicker +5",() => { dotgrid.mod_thickness(5,true) },"]");
     this.controller.add("default","Effect","Thinner -5",() => { dotgrid.mod_thickness(-5,true) },"[");
     this.controller.add("default","Effect","Linecap",() => { dotgrid.mod_linecap(); },"Y");
+    this.controller.add("default","Effect","Linejoin",() => { dotgrid.mod_linejoin(); },"T");
     this.controller.add("default","Effect","Mirror",() => { dotgrid.mod_mirror(); },"Space");
     this.controller.add("default","Effect","Fill",() => { dotgrid.toggle_fill(); },"G");
     
@@ -380,6 +383,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     if(o == "thickness"){ this.mod_thickness(); }
     if(o == "linecap"){ this.mod_linecap(); }
+    if(o == "linejoin"){ this.mod_linejoin(); }
     if(o == "mirror"){ this.mod_mirror(); }
     if(o == "fill"){ this.toggle_fill(); }
     if(o == "export"){ this.save(); }
@@ -535,6 +539,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.draw();
   }
 
+  this.mod_linejoin_index = 1;
+
+  this.mod_linejoin = function(mod)
+  {
+    var a = ["miter","round","bevel"];
+    this.mod_linejoin_index += 1;
+    this.linejoin = a[this.mod_linejoin_index % a.length];
+    this.draw();
+  }
+
   this.mod_move = function(move)
   {
     if(!to && !end && from){
@@ -615,6 +629,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.height = this.height;
     this.svg_el.style.stroke = this.color;
     this.svg_el.style.strokeLinecap = this.linecap;
+    this.svg_el.style.strokeLinejoin = this.linejoin;
     this.svg_el.style.strokeWidth = this.thickness*this.scale;
     this.svg_el.style.fill = this.fill ? this.theme.active.f_high : "none";
 
@@ -666,6 +681,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.segments = [];
     this.thickness = 10
     this.linecap = "square"
+    this.linejoin = "round"
     this.color = "#000000"
     this.draw();
   }
