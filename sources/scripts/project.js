@@ -1,0 +1,5 @@
+function Project()
+{
+  this.layers = [];
+  
+}

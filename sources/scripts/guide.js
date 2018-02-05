@@ -68,15 +68,8 @@ function Guide()
   {
     this.clear();
 
-    var handles = [];
-    for(id in dotgrid.segments){
-      var segment = dotgrid.segments[id];
-      handles = handles.concat(segment.handles())
-    }
-
-    for(id in handles){
-      var handle = handles[id];
-      this.draw_handle(handle,4);
+    for(id in dotgrid.tool.verteces){
+      this.draw_vertex(dotgrid.tool.verteces[id]);
     }
 
     // Translations
@@ -84,6 +77,16 @@ function Guide()
       this.draw_translation();
     }
     this.draw();
+  }
+
+  this.draw_vertex = function(pos, radius = 5)
+  {
+    var ctx = this.el.getContext('2d');
+    ctx.beginPath();
+    ctx.arc((pos.x * 2)+30, (pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = "red";
+    ctx.fill();
+    ctx.closePath();
   }
 
   this.draw_marker = function(pos,radius = 1,step)

@@ -4,6 +4,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.theme = new Theme();
   this.interface = new Interface();
   this.history = new History();
+  this.guide = new Guide();
+  this.render = new Render();
+  this.serializer = new Serializer();
+  this.project = new Project();
+  this.tool = new Tool();
 
   this.width = width;
   this.height = height;
@@ -41,14 +46,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.svg_el = null;
   this.mirror_el = null;
-
   this.mirror = false;
   this.fill = false;
-
-  this.guide = new Guide();
-  this.render = new Render();
-  this.serializer = new Serializer();
-
   this.path = document.createElementNS("http://www.w3.org/2000/svg", "path");
   this.segments = [];
   this.scale = 1;
@@ -150,14 +149,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Edit","Paste",() => { document.execCommand('paste'); },"CmdOrCtrl+V");
     this.controller.add("default","Edit","Undo",() => { dotgrid.undo(); },"CmdOrCtrl+Z");
     this.controller.add("default","Edit","Redo",() => { dotgrid.redo(); },"CmdOrCtrl+Shift+Z");
-    this.controller.add("default","Edit","Delete",() => { dotgrid.delete(); },"Backspace");
+    this.controller.add("default","Edit","Delete",() => { dotgrid.tool.remove_segment(); },"Backspace");
     this.controller.add("default","Edit","Move Up",() => { dotgrid.mod_move(new Pos(0,-15)); },"Up");
     this.controller.add("default","Edit","Move Down",() => { dotgrid.mod_move(new Pos(0,15)); },"Down");
     this.controller.add("default","Edit","Move Left",() => { dotgrid.mod_move(new Pos(-15,0)); },"Left");
     this.controller.add("default","Edit","Move Right",() => { dotgrid.mod_move(new Pos(15,0)); },"Right");
     this.controller.add("default","Edit","Deselect",() => { dotgrid.reset(); },"Esc");
 
-    this.controller.add("default","Stroke","Line",() => { dotgrid.draw_line(); },"A");
+    this.controller.add("default","Stroke","Line",() => { dotgrid.tool.cast("line"); },"A");
     this.controller.add("default","Stroke","Arc",() => { dotgrid.draw_arc("0,1"); },"S");
     this.controller.add("default","Stroke","Arc Rev",() => { dotgrid.draw_arc("0,0"); },"D");
     this.controller.add("default","Stroke","Bezier",() => { dotgrid.draw_bezier(); },"F");
@@ -358,6 +357,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     dotgrid.reset();
   }
 
+
   // Cursor
 
   this.translation = null;
@@ -417,8 +417,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     }
 
     dotgrid.translation = null;
-
-    this.add_point(pos);
+    this.tool.add_vertex({x:pos.x * -1,y:pos.y});
     this.draw();
   }
 
@@ -622,7 +621,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       prev = segment;
     }
 
-    this.path.setAttribute("d",d);
+    this.path.setAttribute("d",this.tool.path());
 
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
