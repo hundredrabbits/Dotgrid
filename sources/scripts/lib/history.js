@@ -17,6 +17,10 @@ function History()
     this.index = this.a.length;
     this.a = this.a.slice(0,this.index);
     this.a.push(copy(data));
+
+    if(this.a.length > 20){
+      this.a.shift();
+    }
   }
 
   this.fork = function()
@@ -41,6 +45,6 @@ function History()
     return copy(this.a[this.index]);
   }
 
-  function copy(data){ return data ? data.slice(0) : []; }
+  function copy(data){ return data ? JSON.parse(JSON.stringify(data)) : []; }
   function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }

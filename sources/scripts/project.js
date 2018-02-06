@@ -1,5 +1,0 @@
-function Project()
-{
-  this.layers = [];
-  
-}

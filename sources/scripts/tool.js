@@ -156,4 +156,14 @@ function Tool()
     this.layers = dotgrid.history.next();
     dotgrid.draw();    
   }
+
+  this.export = function()
+  {
+    return JSON.stringify(this.layers, null, 2);
+  }
+
+  this.import = function(layers)
+  {
+    this.layers = layers;
+  }
 }

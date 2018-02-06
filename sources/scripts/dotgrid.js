@@ -6,8 +6,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.history = new History();
   this.guide = new Guide();
   this.render = new Render();
-  this.serializer = new Serializer();
-  this.project = new Project();
   this.tool = new Tool();
 
   this.width = width;
@@ -177,7 +175,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.save = function()
   {
-    if(this.segments.length == 0){ return; }
     this.scale = 1
     this.draw();
 
@@ -189,7 +186,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       if (fileName === undefined){ return; }
       fs.writeFile(fileName+".svg", svg);
       fs.writeFile(fileName+'.png', dotgrid.render.buffer());
-      fs.writeFile(fileName+'.dot', JSON.stringify(dotgrid.serializer.serialize()));
+      fs.writeFile(fileName+'.dot', dotgrid.tool.export());
       dotgrid.draw()
     });
   }
@@ -202,7 +199,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     fs.readFile(paths[0], 'utf-8', (err, data) => {
       if(err){ alert("An error ocurred reading the file :" + err.message); return; }
-      dotgrid.serializer.deserialize(JSON.parse(data.toString().trim()));
+      dotgrid.tool.import(JSON.parse(data.toString().trim()));
       dotgrid.draw();
     });
   }
@@ -439,7 +436,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     var reader = new FileReader();
     reader.onload = function(e){
-      dotgrid.serializer.deserialize(JSON.parse(e.target.result.toString().trim()));
+      dotgrid.tool.import(JSON.parse(e.target.result.toString().trim()));
       dotgrid.draw();
     };
     reader.readAsText(file);
@@ -456,7 +453,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     var svg = dotgrid.svg_el.outerHTML;
 
-    e.clipboardData.setData('text/plain', JSON.stringify(dotgrid.serializer.serialize()));
+    e.clipboardData.setData('text/plain', dotgrid.tool.export());
     e.clipboardData.setData('text/html', svg);
     e.clipboardData.setData('text/svg+xml', svg);
   }
@@ -471,7 +468,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       return;
     }
 
-    this.serializer.deserialize(data);
+    dotgrid.tool.import(data);
     this.draw();
   }
 
