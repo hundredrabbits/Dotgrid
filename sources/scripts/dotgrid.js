@@ -39,12 +39,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.mirror_el = null;
   this.mirror = false;
   this.fill = false;
-  this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  this.layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  this.mirror_layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  this.mirror_layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  this.mirror_layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_1.id = "layer_1"
+  this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_2.id = "layer_2"
+  this.layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_3.id = "layer_3"
+  this.mirror_layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_1.id = "mirror_layer_1"
+  this.mirror_layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_2.id = "mirror_layer_2"
+  this.mirror_layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_3.id = "mirror_layer_3"
   this.scale = 1;
 
   this.install = function()
@@ -396,14 +396,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.mirror_layer_1.setAttribute("d",paths[0]);
     this.mirror_layer_2.setAttribute("d",paths[1]);
     this.mirror_layer_3.setAttribute("d",paths[2]);
-
-    this.layer_1.style.stroke = this.theme.active.f_high;
-    this.layer_2.style.stroke = this.theme.active.f_med;
-    this.layer_3.style.stroke = this.theme.active.f_low;
-
-    this.mirror_layer_1.style.stroke = this.theme.active.f_high;
-    this.mirror_layer_2.style.stroke = this.theme.active.f_med;
-    this.mirror_layer_3.style.stroke = this.theme.active.f_low;
 
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
