@@ -153,6 +153,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
     document.addEventListener('mousemove', function(e){ dotgrid.mouse_move(e); }, false);
+    document.addEventListener('contextmenu', function(e){ dotgrid.mouse_alt(e); }, false);
     document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);
     document.addEventListener('copy', function(e){ dotgrid.copy(e); e.preventDefault(); }, false);
     document.addEventListener('paste', function(e){ dotgrid.paste(e); e.preventDefault(); }, false);
@@ -257,6 +258,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     }
 
     this.tool.add_vertex({x:pos.x * -1,y:pos.y});
+    this.draw();
+  }
+
+  this.mouse_alt = function(e)
+  {
+    var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5)); pos = this.position_on_grid(pos);
+    dotgrid.tool.remove_segments_at(pos);
     this.draw();
   }
 
