@@ -250,19 +250,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.draw();    
   }
 
-  this.delete = function()
-  {
-    if(from || to || end){
-      dotgrid.reset();
-      dotgrid.draw();
-      return;
-    }
-
-    this.segments.pop();
-    dotgrid.history.push(dotgrid.segments);
-    this.draw();    
-  }
-
   this.delete_at = function(pos)
   {
     var segs = [];
@@ -277,21 +264,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.segments = segs;
     dotgrid.history.push(dotgrid.segments);
     this.draw();
-  }
-
-  this.translate = function(t)
-  {
-    for(id in dotgrid.segments){
-      var segment = dotgrid.segments[id];
-      if(segment.from && segment.from.is_equal(dotgrid.translation.from)){ segment.from = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
-      if(segment.to && segment.to.is_equal(dotgrid.translation.from)){ segment.to = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
-      if(segment.end && segment.end.is_equal(dotgrid.translation.from)){ segment.end = new Pos(-dotgrid.translation.to.x,dotgrid.translation.to.y)}
-    }
-
-    dotgrid.translation = null;
-    dotgrid.reset();
-
-    dotgrid.draw();
   }
 
   // STROKE
@@ -370,7 +342,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     pos = this.position_on_grid(pos);
 
     if(e.altKey){ dotgrid.delete_at(pos); return; }
-    if(dotgrid.handle_at(pos)){ dotgrid.translation = {from:pos,to:pos}; return; }
+    if(dotgrid.tool.vertex_at(pos)){ dotgrid.translation = {from:pos,to:pos}; return; }
 
     if(!o){ return; }
 
@@ -411,12 +383,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     if(pos.x>0) { dotgrid.translation = null; return; }
 
-    if(dotgrid.translation && !dotgrid.translation.to.is_equal(dotgrid.translation.from) ){
-      dotgrid.translate(dotgrid.translation);
+    if(dotgrid.translation){
+      dotgrid.tool.translate(dotgrid.translation.from,dotgrid.translation.to);
+      dotgrid.translation = null;
       return;
     }
 
-    dotgrid.translation = null;
     this.tool.add_vertex({x:pos.x * -1,y:pos.y});
     this.draw();
   }

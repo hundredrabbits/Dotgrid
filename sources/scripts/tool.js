@@ -54,6 +54,34 @@ function Tool()
     return html
   }
 
+  this.vertex_at = function(pos)
+  {
+    for(segment_id in this.layers[this.layer]){
+      var segment = this.layers[this.layer][segment_id];
+      for(vertex_id in segment.verteces){
+        var vertex = segment.verteces[vertex_id];
+        if(vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)){
+          return vertex;
+        }
+      }
+    }
+    return null;
+  }
+
+  this.translate = function(a,b)
+  {
+    for(segment_id in this.layers[this.layer]){
+      var segment = this.layers[this.layer][segment_id];
+      for(vertex_id in segment.verteces){
+        var vertex = segment.verteces[vertex_id];
+        if(vertex.x == Math.abs(a.x) && vertex.y == Math.abs(a.y)){
+          segment.verteces[vertex_id] = {x:Math.abs(b.x),y:Math.abs(b.y)};
+        }
+      }
+    }
+    dotgrid.draw();
+  }
+
   this.clear = function()
   {
     this.verteces = [];
