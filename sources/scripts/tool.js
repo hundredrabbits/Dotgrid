@@ -22,7 +22,17 @@ function Tool()
 
   this.remove_segments_at = function(pos)
   {
-
+    for(segment_id in this.layer()){
+      var segment = this.layer()[segment_id];
+      for(vertex_id in segment.verteces){
+        var vertex = segment.verteces[vertex_id];
+        if(Math.abs(pos.x) == Math.abs(vertex.x) && Math.abs(pos.y) == Math.abs(vertex.y)){
+          segment.verteces.splice(vertex_id,1)
+        }
+      }
+    }
+    this.clear();
+    dotgrid.draw();
   }
 
   this.add_vertex = function(pos)
