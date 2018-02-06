@@ -30,6 +30,8 @@ function Tool()
     if(!this.layer()){ this.layers[this.index] = []; }
     if(!this.can_cast(type)){ console.warn("Cannot cast"); return; }
 
+    console.log(this.verteces.length,this.reqs[type])
+
     this.layer().push({type:type,verteces:this.verteces.slice()})
     this.clear();
     dotgrid.draw();
@@ -69,7 +71,7 @@ function Tool()
 
     for(id in verteces){
       if(skip > 0){ skip -= 1; continue; }
-      if(id == 0){ html += `M${verteces[id].x},${verteces[id].y} `; continue; }
+      if(id == 0){ html += `M${verteces[id].x},${verteces[id].y} `; }
       var vertex = verteces[id];
       var next = verteces[parseInt(id)+1]
       var after_next = verteces[parseInt(id)+2]
@@ -79,15 +81,13 @@ function Tool()
       }
       else if(type == "arc_c" && next){
         html += `A${next.x - vertex.x},${next.y - vertex.y} 0 0,1 ${next.x},${next.y} `;  
-        skip = 1
       }
       else if(type == "arc_r" && next){
-        html += `A${next.x - vertex.x},${next.y - vertex.y} 0 0,0 ${next.x},${next.y} `;  
-        skip = 1
+        html += `A${next.x - vertex.x},${next.y - vertex.y} 0 0,0 ${next.x},${next.y} `;
       }
       else if(type == "bezier" && next && after_next){
         html += `Q${next.x},${next.y} ${after_next.x},${after_next.y} `;  
-        skip = 2
+        skip = 1
       }
     }
   
@@ -120,6 +120,7 @@ function Tool()
       }
     }
     dotgrid.history.push(this.layers);
+    this.clear();
     dotgrid.draw();
   }
 
