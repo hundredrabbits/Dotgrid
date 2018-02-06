@@ -236,10 +236,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(!o){ return; }
 
     if(o == "line"){ this.tool.cast("line"); }
-    if(o == "arc_c"){ this.draw_arc("0,1"); }
-    if(o == "arc_r"){ this.draw_arc("0,0"); }
-    if(o == "bezier"){ this.draw_bezier(); }
-    if(o == "close"){ this.draw_close(); }
+    if(o == "arc_c"){ this.tool.cast("arc_c"); }
+    if(o == "arc_r"){ this.tool.cast("arc_r"); }
+    if(o == "bezier"){ this.tool.cast("bezier"); }
+    if(o == "close"){ this.tool.cast("close"); }
 
     if(o == "thickness"){ this.mod_thickness(); }
     if(o == "linecap"){ this.mod_linecap(); }

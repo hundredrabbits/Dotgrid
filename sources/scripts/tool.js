@@ -3,6 +3,7 @@ function Tool()
   this.index = 0;
   this.layers = [];
   this.verteces = [];
+  this.reqs = {line:2,arc_c:2,arc_r:2,bezier:3,close:0};
 
   this.layer = function()
   {
@@ -34,12 +35,12 @@ function Tool()
     dotgrid.draw();
     dotgrid.history.push(this.layers);
 
-    console.log(`Casted ${type}+${this.layer().length}`);
+    console.log(`Casted ${type} -> ${this.layer().length} elements`);
   }
 
   this.can_cast = function(type)
   {    
-    return this.verteces.length >= {line:2,arc_c:2,arc_r:2,bezier:3}[type];
+    return this.verteces.length >= this.reqs[type];
   }
 
   this.path = function()
@@ -48,6 +49,7 @@ function Tool()
 
     for(id in this.layer()){
       var segment = this.layer()[id];
+      console.log(segment)
       html += this.render(segment);
     }
     return html
@@ -60,11 +62,15 @@ function Tool()
     var html = ``;
     var skip = 0;
 
+    if(type == "close"){
+      return `Z `;  
+    }
     for(id in verteces){
       if(skip > 0){ skip -= 1; continue; }
-      if(id == 0){ html += `M${verteces[0].x},${verteces[0].y} `; continue; }
+      if(id == 0){ html += `M${verteces[id].x},${verteces[id].y} `; continue; }
       var vertex = verteces[id];
       var next = verteces[parseInt(id)+1]
+      var after_next = verteces[parseInt(id)+2]
 
       if(type == "line"){
         html += `L${vertex.x},${vertex.y} `;  
@@ -76,6 +82,10 @@ function Tool()
       else if(type == "arc_r" && next){
         html += `A${next.x - vertex.x},${next.y - vertex.y} 0 0,0 ${next.x},${next.y} `;  
         skip = 1
+      }
+      else if(type == "bezier" && next && after_next){
+        html += `Q${next.x},${next.y} ${after_next.x},${after_next.y} `;  
+        skip = 2
       }
     }
     
