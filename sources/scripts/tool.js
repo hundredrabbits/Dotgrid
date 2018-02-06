@@ -20,6 +20,11 @@ function Tool()
     dotgrid.draw();
   }
 
+  this.remove_segments_at = function(pos)
+  {
+
+  }
+
   this.add_vertex = function(pos)
   {
     this.verteces.push(pos);
@@ -29,8 +34,6 @@ function Tool()
   {
     if(!this.layer()){ this.layers[this.index] = []; }
     if(!this.can_cast(type)){ console.warn("Cannot cast"); return; }
-
-    console.log(this.verteces.length,this.reqs[type])
 
     this.layer().push({type:type,verteces:this.verteces.slice()})
     this.clear();
@@ -52,11 +55,13 @@ function Tool()
     return this.verteces.length >= this.reqs[type];
   }
 
-  this.path = function()
+  this.path = function(layer = this.layer())
   {
+    if(layer.length > 0 && layer[0].type == "close"){ return ""; }
+    
     var html = "";
-    for(id in this.layer()){
-      var segment = this.layer()[id];
+    for(id in layer){
+      var segment = layer[id];
       html += segment.type == "close" ? "Z " : this.render(segment);
     }
     return html
