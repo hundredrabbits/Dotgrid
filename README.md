@@ -33,14 +33,18 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 - Connect: `Z`
 
 ### Effect
+- Linecap: `Q`
+- Linejoin: `W`
+- Mirror: `E`
+- Fill: `R`
 - Thicker: `}`
 - Thinner: `{`
 - Thicker +5: `]`
 - Thinner -5: `[`
-- Linecap: `Y`
-- Linejoin: `T`
-- Mirror: `Space`
-- Fill: `G`
+
+### Layers
+- Move Above: `Up`
+- Move Below: `Down`
 
 ### View
 - Tools: `U`
