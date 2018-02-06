@@ -28,7 +28,7 @@ function Tool()
   this.cast = function(type)
   {
     if(!this.layer()){ this.layers[this.index] = []; }
-    if(!this.can_cast(type)){ console.log("Not enough verteces"); return; }
+    if(!this.can_cast(type)){ console.warn("Cannot cast"); return; }
 
     this.layer().push({type:type,verteces:this.verteces.slice()})
     this.clear();
@@ -39,18 +39,23 @@ function Tool()
   }
 
   this.can_cast = function(type)
-  {    
+  {
+    // Cannot cast close twice
+    if(type == "close"){
+      var prev = this.layer()[this.layer().length-1];
+      if(prev.type == "close"){
+        return false;
+      }
+    }
     return this.verteces.length >= this.reqs[type];
   }
 
   this.path = function()
   {
     var html = "";
-
     for(id in this.layer()){
       var segment = this.layer()[id];
-      console.log(segment)
-      html += this.render(segment);
+      html += segment.type == "close" ? "Z " : this.render(segment);
     }
     return html
   }
@@ -62,9 +67,6 @@ function Tool()
     var html = ``;
     var skip = 0;
 
-    if(type == "close"){
-      return `Z `;  
-    }
     for(id in verteces){
       if(skip > 0){ skip -= 1; continue; }
       if(id == 0){ html += `M${verteces[id].x},${verteces[id].y} `; continue; }
@@ -88,7 +90,7 @@ function Tool()
         skip = 2
       }
     }
-    
+  
     return html
   }
 
