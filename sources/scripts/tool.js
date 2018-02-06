@@ -1,9 +1,16 @@
 function Tool()
 {
   this.index = 0;
-  this.layers = [];
+  this.layers = [[],[],[]];
   this.verteces = [];
   this.reqs = {line:2,arc_c:2,arc_r:2,bezier:3,close:0};
+
+  this.reset = function()
+  {
+    this.layers = [[],[],[]];
+    this.verteces = [];
+    this.index = 0;
+  }
 
   this.layer = function()
   {

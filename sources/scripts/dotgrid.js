@@ -221,7 +221,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5)); pos = this.position_on_grid(pos);
 
     if(e.altKey){ dotgrid.tool.remove_segments_at(pos); return; }
-    if(dotgrid.tool.vertex_at(pos)){ dotgrid.translation = {from:pos,to:pos}; return; }
+    if(dotgrid.tool.vertex_at(pos)){ console.log("Begin translation"); dotgrid.translation = {from:pos,to:pos}; return; }
 
     var o = e.target.getAttribute("ar");
     if(!o){ return; }
@@ -244,7 +244,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5)); pos = this.position_on_grid(pos);
 
-    if(dotgrid.translation){ dotgrid.translation.to = pos; }
+    if(dotgrid.translation && (Math.abs(dotgrid.translation.from.x) != Math.abs(pos.x) || Math.abs(dotgrid.translation.from.y) != Math.abs(pos.y))){ dotgrid.translation.to = pos; }
 
     dotgrid.preview(e.target.getAttribute("ar"));
     dotgrid.move_cursor(pos)
@@ -259,9 +259,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     if(pos.x > 0) { dotgrid.translation = null; return; }
 
-    if(dotgrid.translation && Math.abs(dotgrid.translation.from.x) != Math.abs(dotgrid.translation.to.x) && Math.abs(dotgrid.translation.from.y) != Math.abs(dotgrid.translation.to.y)){
+    if(dotgrid.translation && (Math.abs(dotgrid.translation.from.x) != Math.abs(dotgrid.translation.to.x) || Math.abs(dotgrid.translation.from.y) != Math.abs(dotgrid.translation.to.y))){
       dotgrid.tool.translate(dotgrid.translation.from,dotgrid.translation.to);
       dotgrid.translation = null;
+      this.draw();
       return;
     }
 
@@ -433,12 +434,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   
   this.reset = function()
   {
-    console.log("TODO")
+    this.tool.clear();
   }
 
   this.clear = function()
   {
     this.history.clear();
+    this.tool.reset();
     this.reset();
     this.thickness = 10
     this.linecap = "round"

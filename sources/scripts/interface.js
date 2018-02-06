@@ -54,7 +54,7 @@ function Interface()
     document.getElementById("mirror").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("fill").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
 
-    document.getElementById("export").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
+    document.getElementById("export").className.baseVal = "icon";
   }
 
   this.update_size = function()
