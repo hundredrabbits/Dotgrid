@@ -290,11 +290,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.preview = function(operation)
   {
-    if(!operation){ return `<path></path>`;}
-    if(operation != "line" && operation != "arc_c" && operation != "arc_r" && operation != "bezier" && operation != "close"){ return `<path></path>`; }
+    if(!operation){ return `<path d='M0,0'></path>`;}
+    if(operation != "line" && operation != "arc_c" && operation != "arc_r" && operation != "bezier" && operation != "close"){ return `<path d='M0,0'></path>`; }
 
     this.preview_el.innerHTML = `<path d='${dotgrid.tool.path([{type:operation,verteces:dotgrid.tool.verteces}])}'></path>`;
   }
+
+  // Toggles
 
   this.mod_thickness = function(mod,step = false)
   {
@@ -369,15 +371,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.draw = function(exp = false)
   {
-    var d = "";
-    var prev = "";
-    for(id in this.segments){
-      var segment = this.segments[id];
-      d += segment.to_segment(prev)+" ";
-      prev = segment;
-    }
-
-    this.path.setAttribute("d",this.tool.path());
+    var d = this.tool.path();
+    this.path.setAttribute("d",d);
 
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
