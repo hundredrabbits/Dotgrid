@@ -42,6 +42,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
   this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
   this.layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  this.mirror_layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  this.mirror_layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  this.mirror_layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path");
   this.scale = 1;
 
   this.install = function()
@@ -69,8 +72,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.offset_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
     this.mirror_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    this.mirror_path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.svg_el.setAttribute("class","vector");
@@ -106,9 +107,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.offset_el.appendChild(this.layer_1)
     this.offset_el.appendChild(this.layer_2)
     this.offset_el.appendChild(this.layer_3)
+    this.mirror_el.appendChild(this.mirror_layer_1)
+    this.mirror_el.appendChild(this.mirror_layer_2)
+    this.mirror_el.appendChild(this.mirror_layer_3)
     this.svg_el.appendChild(this.offset_el);
     this.svg_el.appendChild(this.mirror_el);
-    this.mirror_el.appendChild(this.mirror_path);
 
     this.theme.start();
     this.guide.start();
@@ -390,10 +393,17 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.layer_1.setAttribute("d",paths[0]);
     this.layer_2.setAttribute("d",paths[1]);
     this.layer_3.setAttribute("d",paths[2]);
+    this.mirror_layer_1.setAttribute("d",paths[0]);
+    this.mirror_layer_2.setAttribute("d",paths[1]);
+    this.mirror_layer_3.setAttribute("d",paths[2]);
 
     this.layer_1.style.stroke = this.theme.active.f_high;
     this.layer_2.style.stroke = this.theme.active.f_med;
     this.layer_3.style.stroke = this.theme.active.f_low;
+
+    this.mirror_layer_1.style.stroke = this.theme.active.f_high;
+    this.mirror_layer_2.style.stroke = this.theme.active.f_med;
+    this.mirror_layer_3.style.stroke = this.theme.active.f_low;
 
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
@@ -405,21 +415,24 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     // Draw Mirror
     if(this.mirror_index == 1){
-      this.mirror_path.setAttribute("d",d);
-      this.mirror_path.setAttribute("transform","translate("+(this.width - (this.offset.x*this.scale))+","+(this.offset.y*this.scale)+"),scale(-1,1)")
+      this.mirror_layer_1.setAttribute("transform","translate("+(this.width - (this.offset.x*this.scale))+","+(this.offset.y*this.scale)+"),scale(-1,1)")
+      this.mirror_layer_2.setAttribute("transform","translate("+(this.width - (this.offset.x*this.scale))+","+(this.offset.y*this.scale)+"),scale(-1,1)")
+      this.mirror_layer_3.setAttribute("transform","translate("+(this.width - (this.offset.x*this.scale))+","+(this.offset.y*this.scale)+"),scale(-1,1)")
     }
     else if(this.mirror_index == 2){
-      this.mirror_path.setAttribute("d",d);
-      this.mirror_path.setAttribute("transform","translate("+((this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(1,-1)")
-
+      this.mirror_layer_1.setAttribute("transform","translate("+((this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(1,-1)")
+      this.mirror_layer_2.setAttribute("transform","translate("+((this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(1,-1)")
+      this.mirror_layer_3.setAttribute("transform","translate("+((this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(1,-1)")
     }
     else if(this.mirror_index == 3){
-      this.mirror_path.setAttribute("d",d);
-      this.mirror_path.setAttribute("transform","translate("+(this.width -(this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(-1,-1)")
+      this.mirror_layer_1.setAttribute("transform","translate("+(this.width -(this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(-1,-1)")
+      this.mirror_layer_2.setAttribute("transform","translate("+(this.width -(this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(-1,-1)")
+      this.mirror_layer_3.setAttribute("transform","translate("+(this.width -(this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(-1,-1)")
     }
     else{
-      this.mirror_path.setAttribute("d",'M0,0');
-      this.mirror_path.setAttribute("transform","")
+      this.mirror_layer_1.setAttribute("transform","")
+      this.mirror_layer_2.setAttribute("transform","")
+      this.mirror_layer_3.setAttribute("transform","")
     }
 
     this.offset_el.setAttribute("transform","translate("+(this.offset.x*this.scale)+","+(this.offset.y*this.scale)+")")
