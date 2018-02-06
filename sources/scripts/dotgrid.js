@@ -39,12 +39,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.mirror_el = null;
   this.mirror = false;
   this.fill = false;
-  this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_1.id = "layer_1"
-  this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_2.id = "layer_2"
-  this.layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_3.id = "layer_3"
-  this.mirror_layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_1.id = "mirror_layer_1"
-  this.mirror_layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_2.id = "mirror_layer_2"
-  this.mirror_layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_3.id = "mirror_layer_3"
+  this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_1.id = "layer_1"; this.layer_1.style.stroke = "black";
+  this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_2.id = "layer_2"; this.layer_2.style.stroke = "#999";
+  this.layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_3.id = "layer_3"; this.layer_3.style.stroke = "#ccc";
+  this.mirror_layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_1.id = "mirror_layer_1"; this.mirror_layer_1.style.stroke = "black";
+  this.mirror_layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_2.id = "mirror_layer_2"; this.mirror_layer_2.style.stroke = "#999";
+  this.mirror_layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_3.id = "mirror_layer_3"; this.mirror_layer_3.style.stroke = "#ccc";
   this.scale = 1;
 
   this.install = function()
@@ -104,12 +104,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.preview_el.style.strokeLinecap = "round";
     this.element.appendChild(this.preview_el);
 
-    this.offset_el.appendChild(this.layer_1)
-    this.offset_el.appendChild(this.layer_2)
-    this.offset_el.appendChild(this.layer_3)
-    this.mirror_el.appendChild(this.mirror_layer_1)
-    this.mirror_el.appendChild(this.mirror_layer_2)
     this.mirror_el.appendChild(this.mirror_layer_3)
+    this.offset_el.appendChild(this.layer_3)
+    this.mirror_el.appendChild(this.mirror_layer_2)
+    this.offset_el.appendChild(this.layer_2)
+    this.mirror_el.appendChild(this.mirror_layer_1)
+    this.offset_el.appendChild(this.layer_1)
     this.svg_el.appendChild(this.offset_el);
     this.svg_el.appendChild(this.mirror_el);
 
@@ -393,9 +393,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.layer_1.setAttribute("d",paths[0]);
     this.layer_2.setAttribute("d",paths[1]);
     this.layer_3.setAttribute("d",paths[2]);
-    this.mirror_layer_1.setAttribute("d",paths[0]);
-    this.mirror_layer_2.setAttribute("d",paths[1]);
-    this.mirror_layer_3.setAttribute("d",paths[2]);
+    
+    this.mirror_layer_1.setAttribute("d",this.mirror_index > 0 ? paths[0] : "M0,0");
+    this.mirror_layer_2.setAttribute("d",this.mirror_index > 0 ? paths[1] : "M0,0");
+    this.mirror_layer_3.setAttribute("d",this.mirror_index > 0 ? paths[2] : "M0,0");
 
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
@@ -461,7 +462,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     
     var file = e.dataTransfer.files[0];
 
-    if(!file.name || !file.name.indexOf(".dot") < 0){ console.log("Dotgrid","Not a dot file"); return; }
+    if(!file.path || file.path.indexOf(".dot") < 0){ console.log("Dotgrid","Not a dot file"); return; }
 
     var reader = new FileReader();
     reader.onload = function(e){
