@@ -36,13 +36,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.grid_height = this.height/this.grid_y;
 
   var cursor = null;
-  var cursor_from = null;
-  var cursor_to = null;
-  var cursor_end = null;
-
-  var from = null;
-  var to = null;
-  var end = null;
 
   this.svg_el = null;
   this.mirror_el = null;
@@ -74,18 +67,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.cursor_y.id = "cursor_y";
     this.cursor_y.className = "fl"
     this.element.appendChild(this.cursor_y);
-
-    cursor_from = document.createElement("div");
-    cursor_from.id = "cursor_from";
-    this.element.appendChild(cursor_from);
-
-    cursor_to = document.createElement("div");
-    cursor_to.id = "cursor_to";
-    this.element.appendChild(cursor_to);
-
-    cursor_end = document.createElement("div");
-    cursor_end.id = "cursor_end";
-    this.element.appendChild(cursor_end);
 
     this.offset_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
     this.mirror_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
@@ -234,55 +215,33 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.undo = function()
   {
-    if(from || to || end){
-      dotgrid.reset();
-      dotgrid.draw();
-      return;
-    }
-
-    this.segments = this.history.prev();
+    // this.segments = this.history.prev();
     this.draw();
   }
 
   this.redo = function()
   {
-    this.segments = this.history.next();
+    // this.segments = this.history.next();
     this.draw();    
   }
 
   this.delete_at = function(pos)
   {
-    var segs = [];
+    // var segs = [];
 
-    for(id in this.segments){
-      var s = this.segments[id];
-      if(s.from && s.from.is_equal(pos)){ continue; }
-      if(s.to && s.to.is_equal(pos)){ continue; }
-      if(s.end && s.end.is_equal(pos)){ continue; }
-      segs.push(s);
-    }
-    this.segments = segs;
-    dotgrid.history.push(dotgrid.segments);
+    // for(id in this.segments){
+    //   var s = this.segments[id];
+    //   if(s.from && s.from.is_equal(pos)){ continue; }
+    //   if(s.to && s.to.is_equal(pos)){ continue; }
+    //   if(s.end && s.end.is_equal(pos)){ continue; }
+    //   segs.push(s);
+    // }
+    // this.segments = segs;
+    // dotgrid.history.push(dotgrid.segments);
     this.draw();
   }
 
   // STROKE
-
-  this.draw_line = function()
-  {
-    if(from === null || to === null){ return; }
-
-    to = new Pos(to.x * -1, to.y).sub(dotgrid.offset)
-    from = new Pos(from.x * -1,from.y).sub(dotgrid.offset)
-    end = end ? new Pos(end.x * -1,end.y).sub(dotgrid.offset) : null;
-
-    dotgrid.segments.push(new Path_Line(from,to,end));
-    dotgrid.history.push(dotgrid.segments);
-
-    dotgrid.reset();
-    dotgrid.draw();
-    dotgrid.reset();
-  }
 
   this.draw_arc = function(orientation = "0,0")
   {
@@ -346,7 +305,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     if(!o){ return; }
 
-    if(o == "line"){ this.draw_line(); }
+    if(o == "line"){ this.tool.cast("line"); }
     if(o == "arc_c"){ this.draw_arc("0,1"); }
     if(o == "arc_r"){ this.draw_arc("0,0"); }
     if(o == "bezier"){ this.draw_bezier(); }
@@ -437,26 +396,26 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.preview = function(operation)
   {
-    if(from && to && operation == "line"){
-      var d = new Path_Line(from.mirror(),to.mirror(),end ? end.mirror() : null).to_segment();
-      this.preview_el.innerHTML = "<path d='"+d+"'></path>"
-      return;
-    }
-    else if(from && to && operation == "arc_c"){
-      var d = new Path_Arc(from.mirror(),to.mirror(),"0,1",end ? end.mirror() : null).to_segment();
-      this.preview_el.innerHTML = "<path d='"+d+"'></path>"
-      return;
-    }
-    else if(from && to && operation == "arc_r"){
-      var d = new Path_Arc(from.mirror(),to.mirror(),"0,0",end ? end.mirror() : null).to_segment();
-      this.preview_el.innerHTML = "<path d='"+d+"'></path>"
-      return;
-    }
-    else if(from && to && operation == "bezier"){
-      var d = new Path_Bezier(from.mirror(),to.mirror(),end ? end.mirror() : null).to_segment();
-      this.preview_el.innerHTML = "<path d='"+d+"'></path>"
-      return;
-    }
+    // if(from && to && operation == "line"){
+    //   var d = new Path_Line(from.mirror(),to.mirror(),end ? end.mirror() : null).to_segment();
+    //   this.preview_el.innerHTML = "<path d='"+d+"'></path>"
+    //   return;
+    // }
+    // else if(from && to && operation == "arc_c"){
+    //   var d = new Path_Arc(from.mirror(),to.mirror(),"0,1",end ? end.mirror() : null).to_segment();
+    //   this.preview_el.innerHTML = "<path d='"+d+"'></path>"
+    //   return;
+    // }
+    // else if(from && to && operation == "arc_r"){
+    //   var d = new Path_Arc(from.mirror(),to.mirror(),"0,0",end ? end.mirror() : null).to_segment();
+    //   this.preview_el.innerHTML = "<path d='"+d+"'></path>"
+    //   return;
+    // }
+    // else if(from && to && operation == "bezier"){
+    //   var d = new Path_Bezier(from.mirror(),to.mirror(),end ? end.mirror() : null).to_segment();
+    //   this.preview_el.innerHTML = "<path d='"+d+"'></path>"
+    //   return;
+    // }
     this.preview_el.innerHTML = "";
   }
 
@@ -633,15 +592,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   
   this.reset = function()
   {
-    from = null;
-    to = null;
-    end = null;
-    cursor_from.style.left = -100;
-    cursor_from.style.top = -100;
-    cursor_to.style.left = -100;
-    cursor_to.style.top = -100;
-    cursor_end.style.left = -100;
-    cursor_end.style.top = -100;
+    console.log("TODO")
   }
 
   this.clear = function()
@@ -722,23 +673,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       y = -50
     }
     return new Pos(x,y);
-  }
-
-  // To Clean
-
-  this.from = function()
-  {
-    return from;
-  }
-
-  this.to = function()
-  {
-    return to;
-  }
-
-  this.end = function()
-  {
-    return end;
   }
 }
 

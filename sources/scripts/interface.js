@@ -25,7 +25,7 @@ function Interface()
     
       ["export","export","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
     ]
-    
+
     for(id in tools){
       var tool = tools[id];
       html += `<svg id="${tool[0]}" ar="${tool[0]}" title="${tool[1]}" viewBox="0 0 300 300" class="icon" style="${tool[3]}"><path class="icon_path" d="${tool[2]}" stroke-linecap: round; stroke-width="12px" fill="none" /><rect ar="${tool[0]}" width="300" height="300" opacity="0"><title>${tool[1]}</title></rect></svg>`
@@ -37,19 +37,19 @@ function Interface()
   {
     let prev = dotgrid.segments[dotgrid.segments.length-1]
 
-    document.getElementById("line").className.baseVal = !dotgrid.from() || !dotgrid.to() ? "icon inactive" : "icon";
-    document.getElementById("arc_c").className.baseVal = !dotgrid.from() || !dotgrid.to() ? "icon inactive" : "icon";
-    document.getElementById("arc_r").className.baseVal = !dotgrid.from() || !dotgrid.to() ? "icon inactive" : "icon";
-    document.getElementById("bezier").className.baseVal = !dotgrid.from() || !dotgrid.to() || !dotgrid.end() ? "icon inactive" : "icon";
+    document.getElementById("line").className.baseVal = dotgrid.tool.verteces.length < 2 ? "icon inactive" : "icon";
+    document.getElementById("arc_c").className.baseVal = dotgrid.tool.verteces.length < 2 ? "icon inactive" : "icon";
+    document.getElementById("arc_r").className.baseVal = dotgrid.tool.verteces.length < 2 ? "icon inactive" : "icon";
+    document.getElementById("bezier").className.baseVal = dotgrid.tool.verteces.length < 3 ? "icon inactive" : "icon";
     document.getElementById("close").className.baseVal = dotgrid.segments.length < 1 || (prev && prev.name == "close") ? "icon inactive" : "icon";
     
-    document.getElementById("thickness").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
-    document.getElementById("linecap").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
-    document.getElementById("linejoin").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
-    document.getElementById("mirror").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
-    document.getElementById("fill").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
+    document.getElementById("thickness").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
+    document.getElementById("linecap").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
+    document.getElementById("linejoin").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
+    document.getElementById("mirror").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
+    document.getElementById("fill").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
 
-    document.getElementById("export").className.baseVal = dotgrid.segments.length < 1 ? "icon inactive" : "icon";
+    document.getElementById("export").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
   }
 
   this.update_size = function()
