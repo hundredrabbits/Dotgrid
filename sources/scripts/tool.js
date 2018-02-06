@@ -40,6 +40,20 @@ function Tool()
     this.verteces.push(pos);
   }
 
+  this.vertex_at = function(pos)
+  {
+    for(segment_id in this.layer()){
+      var segment = this.layer()[segment_id];
+      for(vertex_id in segment.verteces){
+        var vertex = segment.verteces[vertex_id];
+        if(vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)){
+          return vertex;
+        }
+      }
+    }
+    return null;
+  }
+
   this.cast = function(type)
   {
     if(!this.layer()){ this.layers[this.index] = []; }
@@ -78,6 +92,11 @@ function Tool()
     return html
   }
 
+  this.paths = function()
+  {
+    return [this.path(this.layers[0]),this.path(this.layers[1]),this.path(this.layers[2])]
+  }
+
   this.render = function(segment)
   {
     var type = segment.type;
@@ -108,20 +127,6 @@ function Tool()
     }
   
     return html
-  }
-
-  this.vertex_at = function(pos)
-  {
-    for(segment_id in this.layer()){
-      var segment = this.layer()[segment_id];
-      for(vertex_id in segment.verteces){
-        var vertex = segment.verteces[vertex_id];
-        if(vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)){
-          return vertex;
-        }
-      }
-    }
-    return null;
   }
 
   this.translate = function(a,b)
@@ -169,5 +174,21 @@ function Tool()
     dotgrid.history.push(this.layers);
     this.clear();
     dotgrid.draw();
+  }
+
+  this.layer_up = function()
+  {
+    this.index -= this.index > 0 ? 1 : 0;
+    this.clear();
+    dotgrid.draw();
+    console.log(`layer:${this.index}`)
+  }
+
+  this.layer_down = function()
+  {
+    this.index += this.index < 2 ? 1 : 0;
+    this.clear();
+    dotgrid.draw();
+    console.log(`layer:${this.index}`)
   }
 }
