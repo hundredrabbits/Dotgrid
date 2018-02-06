@@ -55,10 +55,11 @@ function Tool()
 
   this.can_cast = function(type)
   {
+    if(!type){ return false; }
     // Cannot cast close twice
     if(type == "close"){
       var prev = this.layer()[this.layer().length-1];
-      if(prev.type == "close"){
+      if(!prev || prev.type == "close"){
         return false;
       }
     }
@@ -165,5 +166,8 @@ function Tool()
   this.import = function(layers)
   {
     this.layers = layers;
+    dotgrid.history.push(this.layers);
+    this.clear();
+    dotgrid.draw();
   }
 }

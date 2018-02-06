@@ -40,7 +40,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.mirror = false;
   this.fill = false;
   this.path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  this.segments = [];
   this.scale = 1;
 
   this.install = function()
@@ -417,7 +416,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     this.history.clear();
     this.reset();
-    this.segments = [];
     this.thickness = 10
     this.linecap = "round"
     this.linejoin = "round"
@@ -444,8 +442,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.copy = function(e)
   {
-    if(dotgrid.segments.length == 0){ return; }
-
     dotgrid.scale = 1
     dotgrid.width = 300
     dotgrid.height = 300

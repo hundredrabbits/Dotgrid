@@ -18,16 +18,11 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 - Save: `CmdOrCtrl+S`
 
 ### Edit
-- Insert: `I`
 - Copy: `CmdOrCtrl+C`
 - Paste: `CmdOrCtrl+V`
 - Undo: `CmdOrCtrl+Z`
 - Redo: `CmdOrCtrl+Shift+Z`
 - Delete: `Backspace`
-- Move Up: `Up`
-- Move Down: `Down`
-- Move Left: `Left`
-- Move Right: `Right`
 - Deselect: `Esc`
 
 ### Stroke
