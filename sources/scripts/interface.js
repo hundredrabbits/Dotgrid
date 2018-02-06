@@ -37,10 +37,10 @@ function Interface()
   {
     let prev = dotgrid.segments[dotgrid.segments.length-1]
 
-    document.getElementById("line").className.baseVal = dotgrid.tool.verteces.length < 2 ? "icon inactive" : "icon";
-    document.getElementById("arc_c").className.baseVal = dotgrid.tool.verteces.length < 2 ? "icon inactive" : "icon";
-    document.getElementById("arc_r").className.baseVal = dotgrid.tool.verteces.length < 2 ? "icon inactive" : "icon";
-    document.getElementById("bezier").className.baseVal = dotgrid.tool.verteces.length < 3 ? "icon inactive" : "icon";
+    document.getElementById("line").className.baseVal = !dotgrid.tool.can_cast("line") ? "icon inactive" : "icon";
+    document.getElementById("arc_c").className.baseVal = !dotgrid.tool.can_cast("arc_c") ? "icon inactive" : "icon";
+    document.getElementById("arc_r").className.baseVal = !dotgrid.tool.can_cast("arc_r") ? "icon inactive" : "icon";
+    document.getElementById("bezier").className.baseVal = !dotgrid.tool.can_cast("bezier") ? "icon inactive" : "icon";
     document.getElementById("close").className.baseVal = dotgrid.segments.length < 1 || (prev && prev.name == "close") ? "icon inactive" : "icon";
     
     document.getElementById("thickness").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";

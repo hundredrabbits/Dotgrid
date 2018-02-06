@@ -92,7 +92,7 @@ function Guide()
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
     ctx.arc((pos.x * 2)+30, (pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = "red";
+    ctx.fillStyle = dotgrid.theme.active.f_med;
     ctx.fill();
     ctx.closePath();
   }

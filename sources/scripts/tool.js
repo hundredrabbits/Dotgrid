@@ -6,7 +6,6 @@ function Tool()
 
   this.layer = function()
   {
-    console.log(this.layers)
     if(!this.layers[this.index]){
       this.layers[this.index] = [];
     }
@@ -23,18 +22,24 @@ function Tool()
   this.add_vertex = function(pos)
   {
     this.verteces.push(pos);
-    console.log(this.verteces);
   }
 
   this.cast = function(type)
   {
     if(!this.layer()){ this.layers[this.index] = []; }
+    if(!this.can_cast(type)){ console.log("Not enough verteces"); return; }
 
     this.layer().push({type:type,verteces:this.verteces.slice()})
     this.clear();
     dotgrid.draw();
+    dotgrid.history.push(this.layers);
 
     console.log(`Casted ${type}+${this.layer().length}`);
+  }
+
+  this.can_cast = function(type)
+  {    
+    return this.verteces.length >= {line:2,arc_c:2,arc_r:2,bezier:3}[type];
   }
 
   this.path = function()
@@ -52,12 +57,26 @@ function Tool()
   {
     var type = segment.type;
     var verteces = segment.verteces;
-    var html = `M${verteces[0].x},${verteces[0].y} `;
+    var html = ``;
+    var skip = 0;
 
     for(id in verteces){
-      if(id == 0){ continue; }
+      if(skip > 0){ skip -= 1; continue; }
+      if(id == 0){ html += `M${verteces[0].x},${verteces[0].y} `; continue; }
       var vertex = verteces[id];
-      html += `L${vertex.x},${vertex.y} `;
+      var next = verteces[parseInt(id)+1]
+
+      if(type == "line"){
+        html += `L${vertex.x},${vertex.y} `;  
+      }
+      else if(type == "arc_c" && next){
+        html += `A${next.x - vertex.x},${next.y - vertex.y} 0 0,1 ${next.x},${next.y} `;  
+        skip = 1
+      }
+      else if(type == "arc_r" && next){
+        html += `A${next.x - vertex.x},${next.y - vertex.y} 0 0,0 ${next.x},${next.y} `;  
+        skip = 1
+      }
     }
     
     return html
@@ -88,6 +107,7 @@ function Tool()
         }
       }
     }
+    dotgrid.history.push(this.layers);
     dotgrid.draw();
   }
 
@@ -95,5 +115,17 @@ function Tool()
   {
     this.verteces = [];
     dotgrid.draw();
+  }
+
+  this.undo = function()
+  {
+    this.layers = dotgrid.history.prev();
+    dotgrid.draw();
+  }
+
+  this.redo = function()
+  {
+    this.layers = dotgrid.history.next();
+    dotgrid.draw();    
   }
 }

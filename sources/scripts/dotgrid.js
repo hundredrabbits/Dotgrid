@@ -128,8 +128,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Edit","Insert",() => { dotgrid.add_point(); },"I");
     this.controller.add("default","Edit","Copy",() => { document.execCommand('copy'); },"CmdOrCtrl+C");
     this.controller.add("default","Edit","Paste",() => { document.execCommand('paste'); },"CmdOrCtrl+V");
-    this.controller.add("default","Edit","Undo",() => { dotgrid.undo(); },"CmdOrCtrl+Z");
-    this.controller.add("default","Edit","Redo",() => { dotgrid.redo(); },"CmdOrCtrl+Shift+Z");
+    this.controller.add("default","Edit","Undo",() => { dotgrid.tool.undo(); },"CmdOrCtrl+Z");
+    this.controller.add("default","Edit","Redo",() => { dotgrid.tool.redo(); },"CmdOrCtrl+Shift+Z");
     this.controller.add("default","Edit","Delete",() => { dotgrid.tool.remove_segment(); },"Backspace");
     this.controller.add("default","Edit","Move Up",() => { dotgrid.mod_move(new Pos(0,-15)); },"Up");
     this.controller.add("default","Edit","Move Down",() => { dotgrid.mod_move(new Pos(0,15)); },"Down");
@@ -138,10 +138,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Edit","Deselect",() => { dotgrid.tool.clear(); },"Esc");
 
     this.controller.add("default","Stroke","Line",() => { dotgrid.tool.cast("line"); },"A");
-    this.controller.add("default","Stroke","Arc",() => { dotgrid.draw_arc("0,1"); },"S");
-    this.controller.add("default","Stroke","Arc Rev",() => { dotgrid.draw_arc("0,0"); },"D");
-    this.controller.add("default","Stroke","Bezier",() => { dotgrid.draw_bezier(); },"F");
-    this.controller.add("default","Stroke","Connect",() => { dotgrid.draw_close(); },"Z");
+    this.controller.add("default","Stroke","Arc",() => { dotgrid.tool.cast("arc_c"); },"S"); // 0,1
+    this.controller.add("default","Stroke","Arc Rev",() => { dotgrid.tool.cast("arc_r")},"D"); // 0,0
+    this.controller.add("default","Stroke","Bezier",() => { dotgrid.tool.cast("bezier") },"F");
+    this.controller.add("default","Stroke","Connect",() => { dotgrid.tool.cast("close") },"Z");
 
     this.controller.add("default","Effect","Thicker",() => { dotgrid.mod_thickness(1) },"}");
     this.controller.add("default","Effect","Thinner",() => { dotgrid.mod_thickness(-1) },"{");
@@ -176,6 +176,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.new = function()
   {
+    this.history.push(this.tool.layers);
     dotgrid.clear();
   }
 
@@ -213,81 +214,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   // EDIT
 
-  this.undo = function()
-  {
-    // this.segments = this.history.prev();
-    this.draw();
-  }
-
-  this.redo = function()
-  {
-    // this.segments = this.history.next();
-    this.draw();    
-  }
-
   this.delete_at = function(pos)
   {
-    // var segs = [];
-
-    // for(id in this.segments){
-    //   var s = this.segments[id];
-    //   if(s.from && s.from.is_equal(pos)){ continue; }
-    //   if(s.to && s.to.is_equal(pos)){ continue; }
-    //   if(s.end && s.end.is_equal(pos)){ continue; }
-    //   segs.push(s);
-    // }
-    // this.segments = segs;
-    // dotgrid.history.push(dotgrid.segments);
     this.draw();
   }
-
-  // STROKE
-
-  this.draw_arc = function(orientation = "0,0")
-  {
-    if(from === null || to === null){ return; }
-
-    to = new Pos(to.x * -1, to.y).sub(dotgrid.offset)
-    from = new Pos(from.x * -1,from.y).sub(dotgrid.offset)
-    end = end ? new Pos(end.x * -1,end.y).sub(dotgrid.offset) : null;
-
-    dotgrid.segments.push(new Path_Arc(from,to,orientation,end));
-    dotgrid.history.push(dotgrid.segments);
-
-    dotgrid.reset();
-    dotgrid.draw();
-    dotgrid.reset();
-  }
-
-  this.draw_bezier = function()
-  {
-    if(from === null || to === null || end === null){ return; }
-
-    to = new Pos(to.x * -1, to.y).sub(dotgrid.offset)
-    from = new Pos(from.x * -1,from.y).sub(dotgrid.offset)
-    end = new Pos(end.x * -1,end.y).sub(dotgrid.offset)
-
-    dotgrid.segments.push(new Path_Bezier(from,to,end));
-    dotgrid.history.push(dotgrid.segments);
-
-    dotgrid.reset();
-    dotgrid.draw();
-    dotgrid.reset();
-  }
-
-  this.draw_close = function()
-  {
-    if(dotgrid.segments.length == 0){ return; }
-    if(dotgrid.segments[dotgrid.segments.length-1].name == "close"){ return; }
-
-    dotgrid.segments.push(new Path_Close());
-    dotgrid.history.push(dotgrid.segments);
-
-    dotgrid.reset();
-    dotgrid.draw();
-    dotgrid.reset();
-  }
-
 
   // Cursor
 
@@ -601,7 +531,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.reset();
     this.segments = [];
     this.thickness = 10
-    this.linecap = "square"
+    this.linecap = "round"
     this.linejoin = "round"
     this.color = "#000000"
     this.draw();
