@@ -135,7 +135,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Edit","Move Down",() => { dotgrid.mod_move(new Pos(0,15)); },"Down");
     this.controller.add("default","Edit","Move Left",() => { dotgrid.mod_move(new Pos(-15,0)); },"Left");
     this.controller.add("default","Edit","Move Right",() => { dotgrid.mod_move(new Pos(15,0)); },"Right");
-    this.controller.add("default","Edit","Deselect",() => { dotgrid.reset(); },"Esc");
+    this.controller.add("default","Edit","Deselect",() => { dotgrid.tool.clear(); },"Esc");
 
     this.controller.add("default","Stroke","Line",() => { dotgrid.tool.cast("line"); },"A");
     this.controller.add("default","Stroke","Arc",() => { dotgrid.draw_arc("0,1"); },"S");

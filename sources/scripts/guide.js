@@ -72,6 +72,14 @@ function Guide()
       this.draw_vertex(dotgrid.tool.verteces[id]);
     }
 
+    for(segment_id in dotgrid.tool.layer()){
+      var segment = dotgrid.tool.layer()[segment_id];
+      for(vertex_id in segment.verteces){
+        var vertex = segment.verteces[vertex_id];
+        this.draw_handle(vertex);  
+      }
+    }
+
     // Translations
     if(dotgrid.translation){
       this.draw_translation();
@@ -99,7 +107,7 @@ function Guide()
     ctx.closePath();
   }
 
-  this.draw_handle = function(pos,radius)
+  this.draw_handle = function(pos,radius = 5)
   {
     var ctx = this.widgets.getContext('2d');
 
@@ -108,7 +116,6 @@ function Guide()
     ctx.fillStyle = dotgrid.theme.active.f_high;
     ctx.fill(); 
     ctx.closePath(); 
-
     ctx.beginPath();
     ctx.arc((pos.x * 2)+20, (pos.y * 2)+20, radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = dotgrid.theme.active.f_high;
