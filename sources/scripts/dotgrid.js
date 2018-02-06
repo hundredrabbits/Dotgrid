@@ -251,13 +251,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     if(pos.x > 0) { dotgrid.translation = null; return; }
 
-    if(dotgrid.translation){
+    if(dotgrid.translation && Math.abs(dotgrid.translation.from.x) != Math.abs(dotgrid.translation.to.x) && Math.abs(dotgrid.translation.from.y) != Math.abs(dotgrid.translation.to.y)){
       dotgrid.tool.translate(dotgrid.translation.from,dotgrid.translation.to);
       dotgrid.translation = null;
       return;
     }
 
     this.tool.add_vertex({x:pos.x * -1,y:pos.y});
+    dotgrid.translation = null;
     this.draw();
   }
 
