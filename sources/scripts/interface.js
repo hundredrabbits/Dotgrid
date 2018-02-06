@@ -37,8 +37,8 @@ function Interface()
   {
     var layer_path = "M150,50 L50,150 L150,250 L250,150 L150,50 Z ";
 
-    layer_path += dotgrid.tool.index > 0 ? "M60,150 L60,150 L240,150 " : "";
-    layer_path += dotgrid.tool.index > 1 ? "M90,120 L90,120 M105,195 L105,195 L195,195 M105,105 L105,105 L195,105" : "";
+    layer_path += dotgrid.tool.index > 0 ? "M105,150 L105,150 L150,105 L195,150" : "";
+    layer_path += dotgrid.tool.index > 1 ? "M105,150 L105,150 L150,195 L195,150" : "";
 
     document.getElementById("export").children[0].setAttribute("d",layer_path);
 
