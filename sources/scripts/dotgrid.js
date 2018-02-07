@@ -130,6 +130,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","File","Save",() => { dotgrid.save(); },"CmdOrCtrl+S");
 
     this.controller.add("default","Edit","Copy",() => { document.execCommand('copy'); },"CmdOrCtrl+C");
+    this.controller.add("default","Edit","Cut",() => { document.execCommand('cut'); },"CmdOrCtrl+X");
     this.controller.add("default","Edit","Paste",() => { document.execCommand('paste'); },"CmdOrCtrl+V");
     this.controller.add("default","Edit","Undo",() => { dotgrid.tool.undo(); },"CmdOrCtrl+Z");
     this.controller.add("default","Edit","Redo",() => { dotgrid.tool.redo(); },"CmdOrCtrl+Shift+Z");
@@ -167,6 +168,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     document.addEventListener('contextmenu', function(e){ dotgrid.mouse_alt(e); }, false);
     document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);
     document.addEventListener('copy', function(e){ dotgrid.copy(e); e.preventDefault(); }, false);
+    document.addEventListener('cut', function(e){ dotgrid.cut(e); e.preventDefault(); }, false);
     document.addEventListener('paste', function(e){ dotgrid.paste(e); e.preventDefault(); }, false);
 
     window.addEventListener('drop', dotgrid.drag);
@@ -481,21 +483,35 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     var svg = dotgrid.svg_el.outerHTML;
 
-    e.clipboardData.setData('text/plain', dotgrid.tool.export());
+    e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
     e.clipboardData.setData('text/html', svg);
     e.clipboardData.setData('text/svg+xml', svg);
+
+    this.draw();
+  }
+
+  this.cut = function(e)
+  {
+    dotgrid.scale = 1
+    dotgrid.width = 300
+    dotgrid.height = 300
+    dotgrid.draw();
+
+    var svg = dotgrid.svg_el.outerHTML;
+
+    e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
+    e.clipboardData.setData('text/html', svg);
+    e.clipboardData.setData('text/svg+xml', svg);
+
+    dotgrid.tool.layers[dotgrid.tool.index] = [];
+
+    this.draw();
   }
 
   this.paste = function(e)
   {
     var data = e.clipboardData.getData("text/plain");
-    try {
-      data = JSON.parse(data.trim());
-      if (!data || !data.dotgrid) throw null;
-    } catch (err) {
-      return;
-    }
-
+    data = JSON.parse(data.trim());
     dotgrid.tool.import(data);
     this.draw();
   }

@@ -170,14 +170,14 @@ function Tool()
     dotgrid.draw();    
   }
 
-  this.export = function()
+  this.export = function(target = this.layers)
   {
-    return JSON.stringify(this.layers, null, 2);
+    return JSON.stringify(copy(target), null, 2);
   }
 
-  this.import = function(layers)
+  this.import = function(layer)
   {
-    this.layers = layers;
+    this.layers[this.index] = this.layers[this.index].concat(layer)
     dotgrid.history.push(this.layers);
     this.clear();
     dotgrid.draw();
@@ -198,4 +198,6 @@ function Tool()
     dotgrid.draw();
     console.log(`layer:${this.index}`)
   }
+
+  function copy(data){ return data ? JSON.parse(JSON.stringify(data)) : []; }
 }
