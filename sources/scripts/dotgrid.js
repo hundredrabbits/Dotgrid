@@ -212,7 +212,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     fs.readFile(paths[0], 'utf-8', (err, data) => {
       if(err){ alert("An error ocurred reading the file :" + err.message); return; }
-      dotgrid.tool.import(JSON.parse(data.toString().trim()));
+      dotgrid.tool.replace(JSON.parse(data.toString().trim()));
       dotgrid.draw();
     });
   }
@@ -468,7 +468,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     var reader = new FileReader();
     reader.onload = function(e){
-      dotgrid.tool.import(JSON.parse(e.target.result.toString().trim()));
+      dotgrid.tool.replace(JSON.parse(e.target.result.toString().trim()));
       dotgrid.draw();
     };
     reader.readAsText(file);

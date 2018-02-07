@@ -175,6 +175,16 @@ function Tool()
     return JSON.stringify(copy(target), null, 2);
   }
 
+  this.replace = function(layers)
+  {
+    if(layers.length != 3){ console.log("Incompatible"); return; }
+    
+    this.layers = layers;
+    this.clear();
+    dotgrid.draw();
+    dotgrid.history.push(this.layers);
+  }
+
   this.import = function(layer)
   {
     this.layers[this.index] = this.layers[this.index].concat(layer)
