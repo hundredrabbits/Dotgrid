@@ -66,12 +66,32 @@ function Tool()
     if(!this.layer()){ this.layers[this.index] = []; }
     if(!this.can_cast(type)){ console.warn("Cannot cast"); return; }
 
-    this.layer().push({type:type,verteces:this.verteces.slice()})
+    var append_target = this.can_append({type:type,verteces:this.verteces.slice()})
+
+    if(append_target){
+      this.layers[this.index][append_target].verteces = this.layers[this.index][append_target].verteces.concat(this.verteces.slice())
+    }
+    else{
+      this.layer().push({type:type,verteces:this.verteces.slice()})  
+    }
+    
     this.clear();
     dotgrid.draw();
     dotgrid.history.push(this.layers);
 
     console.log(`Casted ${type} -> ${this.layer().length} elements`);
+  }
+
+  this.can_append = function(content)
+  {
+    for(id in this.layer()){
+      var stroke = this.layer()[id];
+      if(stroke.type != content.type){ continue; }
+      if(stroke.verteces[stroke.verteces.length-1].x != content.verteces[0].x){ continue; }
+      if(stroke.verteces[stroke.verteces.length-1].y != content.verteces[0].y){ continue; }
+      return id;
+    }
+    return false;
   }
 
   this.can_cast = function(type)
