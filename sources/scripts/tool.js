@@ -22,6 +22,8 @@ function Tool()
 
   this.remove_segment = function()
   {
+    if(this.verteces.length > 0){ this.clear(); return; }
+    
     this.layer().pop();
     this.clear();
     dotgrid.draw();
@@ -213,21 +215,24 @@ function Tool()
     dotgrid.draw();
   }
 
-  this.layer_up = function()
+  this.select_layer = function(id)
   {
-    this.index -= this.index > 0 ? 1 : 0;
+    this.index = clamp(id,0,2);
     this.clear();
     dotgrid.draw();
     console.log(`layer:${this.index}`)
+  }
+
+  this.layer_up = function()
+  {
+    this.select_layer(this.index-1);
   }
 
   this.layer_down = function()
   {
-    this.index += this.index < 2 ? 1 : 0;
-    this.clear();
-    dotgrid.draw();
-    console.log(`layer:${this.index}`)
+    this.select_layer(this.index+1);
   }
 
   function copy(data){ return data ? JSON.parse(JSON.stringify(data)) : []; }
+  function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }
