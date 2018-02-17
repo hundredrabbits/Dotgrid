@@ -284,7 +284,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5)); pos = this.position_on_grid(pos);
     dotgrid.tool.remove_segments_at(pos);
-    this.draw();
+    e.preventDefault();
+    setTimeout(() => { dotgrid.tool.clear(); },150);
+
   }
 
   this.move_cursor = function(pos)

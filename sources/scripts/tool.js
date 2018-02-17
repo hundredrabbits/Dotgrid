@@ -39,6 +39,9 @@ function Tool()
           segment.verteces.splice(vertex_id,1)
         }
       }
+      if(segment.verteces.length < 2){
+        this.layers[this.index].splice(segment_id,1)
+      }
     }
     this.clear();
     dotgrid.draw();
