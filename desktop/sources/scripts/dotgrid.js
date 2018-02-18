@@ -286,7 +286,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     dotgrid.tool.remove_segments_at(pos);
     e.preventDefault();
     setTimeout(() => { dotgrid.tool.clear(); },150);
-
   }
 
   this.move_cursor = function(pos)
