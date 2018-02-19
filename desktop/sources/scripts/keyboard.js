@@ -1,0 +1,64 @@
+function Keyboard()
+{
+  this.memory = "";
+
+  this.selector = {x:0,y:0};
+
+  this.select = function(pos)
+  {
+    this.selector = {x:pos.x * -dotgrid.grid_width,y:pos.y * dotgrid.grid_height};
+    dotgrid.move_cursor(this.selector)
+    dotgrid.guide.update();
+    dotgrid.draw();
+  }
+
+  this.deselect = function()
+  {
+    dotgrid.tool.clear();
+    dotgrid.guide.update();
+    dotgrid.draw();
+  }
+
+  this.confirm = function()
+  {
+    dotgrid.tool.add_vertex({x:this.selector.x * -1,y:this.selector.y});
+    dotgrid.guide.update();
+    dotgrid.draw();
+  }
+
+  this.erase = function()
+  {
+    dotgrid.tool.remove_segments_at(this.selector);
+    dotgrid.guide.update();
+    dotgrid.draw();
+  }
+
+  this.move = function(x,y)
+  {
+    this.selector = {x:this.selector.x+(x*dotgrid.grid_width),y:this.selector.y+(-y*dotgrid.grid_height)}
+    dotgrid.move_cursor(this.selector)
+    dotgrid.guide.update();
+    dotgrid.draw();
+  }
+
+  this.push = function(k)
+  {
+    this.memory = `${this.memory}${k}`;
+    if(this.memory.length > 3){
+      var pos = {x:parseInt(this.memory.substr(0,2)),y:parseInt(this.memory.substr(2,2))};
+      this.select(pos);
+      this.memory = "";
+    }
+  }
+
+  this.reset = function()
+  {
+    this.memory = "";
+    dotgrid.update();
+  }
+
+  this.exit = function()
+  {
+    dotgrid.controller.set();
+  }
+}

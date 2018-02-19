@@ -7,6 +7,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.guide = new Guide();
   this.render = new Render();
   this.tool = new Tool();
+  this.keyboard = new Keyboard();
 
   this.width = width;
   this.height = height;
@@ -137,10 +138,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Edit","Delete",() => { dotgrid.tool.remove_segment(); },"Backspace");
     this.controller.add("default","Edit","Deselect",() => { dotgrid.tool.clear(); },"Esc");
 
-    this.controller.add("default","Select","Foreground",() => { dotgrid.tool.select_layer(0); },"1");
-    this.controller.add("default","Select","Middleground",() => { dotgrid.tool.select_layer(1); },"2");
-    this.controller.add("default","Select","Background",() => { dotgrid.tool.select_layer(2); },"3");
-
     this.controller.add("default","Stroke","Line",() => { dotgrid.tool.cast("line"); },"A");
     this.controller.add("default","Stroke","Arc",() => { dotgrid.tool.cast("arc_c"); },"S"); // 0,1
     this.controller.add("default","Stroke","Arc Rev",() => { dotgrid.tool.cast("arc_r")},"D"); // 0,0
@@ -157,14 +154,45 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Effect","Thicker +5",() => { dotgrid.mod_thickness(5,true) },"]");
     this.controller.add("default","Effect","Thinner -5",() => { dotgrid.mod_thickness(-5,true) },"[");
 
-    this.controller.add("default","Layers","Move Above",() => { dotgrid.tool.layer_up() },"Up");
-    this.controller.add("default","Layers","Move Below",() => { dotgrid.tool.layer_down() },"Down");
+    this.controller.add("default","Layers","Move Above",() => { dotgrid.tool.layer_up() },"P");
+    this.controller.add("default","Layers","Move Below",() => { dotgrid.tool.layer_down() },"L");
 
     this.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },"U");
     this.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
     this.controller.add("default","View","Control Points",() => { dotgrid.guide.toggle_widgets(); },"J");
-    this.controller.add("default","View","Expert Mode",() => { dotgrid.interface.toggle_zoom(); },":");
 
+    this.controller.add("default","Mode","Toggle Size",() => { dotgrid.interface.toggle_zoom(); },"CmdOrCtrl+E");
+    this.controller.add("default","Mode","Keyboard",() => { dotgrid.controller.set("keyboard"); },"CmdOrCtrl+K");
+
+    this.controller.add("keyboard","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
+    this.controller.add("keyboard","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
+    this.controller.add("keyboard","*","Hide",() => { app.toggle_visible(); },"CmdOrCtrl+H");
+    this.controller.add("keyboard","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
+    this.controller.add("keyboard","*","Documentation",() => { dotgrid.controller.docs(); },"CmdOrCtrl+Esc");
+    this.controller.add("keyboard","*","Reset",() => { dotgrid.reset(); dotgrid.theme.reset(); },"CmdOrCtrl+Backspace");
+    this.controller.add("keyboard","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
+
+    this.controller.add("keyboard","Controls","Add vertex",() => { dotgrid.keyboard.confirm(); },"Enter");
+    this.controller.add("keyboard","Controls","Remove vertex",() => { dotgrid.keyboard.erase(); },"Backspace");
+
+    this.controller.add("keyboard","Select","Move Up",() => { dotgrid.keyboard.move(0,1); },"Up");
+    this.controller.add("keyboard","Select","Move Down",() => { dotgrid.keyboard.move(0,-1); },"Down");
+    this.controller.add("keyboard","Select","Move Left",() => { dotgrid.keyboard.move(1,0); },"Left");
+    this.controller.add("keyboard","Select","Move Right",() => { dotgrid.keyboard.move(-1,0); },"Right");
+
+    this.controller.add("keyboard","Select","XXYY(0)",() => { dotgrid.keyboard.push(0); },"0");
+    this.controller.add("keyboard","Select","XXYY(1)",() => { dotgrid.keyboard.push(1); },"1");
+    this.controller.add("keyboard","Select","XXYY(2)",() => { dotgrid.keyboard.push(2); },"2");
+    this.controller.add("keyboard","Select","XXYY(3)",() => { dotgrid.keyboard.push(3); },"3");
+    this.controller.add("keyboard","Select","XXYY(4)",() => { dotgrid.keyboard.push(4); },"4");
+    this.controller.add("keyboard","Select","XXYY(5)",() => { dotgrid.keyboard.push(5); },"5");
+    this.controller.add("keyboard","Select","XXYY(6)",() => { dotgrid.keyboard.push(6); },"6");
+    this.controller.add("keyboard","Select","XXYY(7)",() => { dotgrid.keyboard.push(7); },"7");
+    this.controller.add("keyboard","Select","XXYY(8)",() => { dotgrid.keyboard.push(8); },"8");
+    this.controller.add("keyboard","Select","XXYY(9)",() => { dotgrid.keyboard.push(9); },"9");
+    
+    this.controller.add("keyboard","Mode","Stop Keyboard Mode",() => { dotgrid.keyboard.exit(); },"Escape");
+    
     this.controller.commit();
 
     document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
