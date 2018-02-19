@@ -61,4 +61,32 @@ function Keyboard()
   {
     dotgrid.controller.set();
   }
+
+  this.listen = function(e)
+  {
+    if(e.key == "ArrowRight"){
+      dotgrid.keyboard.move(-1,0);
+      e.preventDefault();
+    }
+    if(e.key == "ArrowLeft"){
+      dotgrid.keyboard.move(1,0);
+      e.preventDefault();
+    }
+    if(e.key == "ArrowUp"){
+      dotgrid.keyboard.move(0,1);
+      e.preventDefault();
+    }
+    if(e.key == "ArrowDown"){
+      dotgrid.keyboard.move(0,-1);
+      e.preventDefault();
+    }
+    if(e.code && e.code.substr(0,5) == "Digit"){
+      var value = parseInt(e.code.substr(5,1));
+      dotgrid.keyboard.push(value);
+      e.preventDefault();
+    }
+  }
+
+  document.onkeyup = function(event){ dotgrid.keyboard.listen(event); };
+  document.onkeydown = function(event){ dotgrid.keyboard.listen(event); };
 }
