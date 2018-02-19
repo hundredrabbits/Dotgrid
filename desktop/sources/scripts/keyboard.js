@@ -4,6 +4,19 @@ function Keyboard()
 
   this.selector = {x:0,y:0};
 
+  this.start = function()
+  {
+    dotgrid.controller.set("keyboard");
+    this.select({x:10,y:10})
+    dotgrid.cursor.className = "keyboard";
+  }
+
+  this.stop = function()
+  {
+    dotgrid.controller.set();
+    dotgrid.cursor.className = "";
+  }
+
   this.select = function(pos)
   {
     this.selector = {x:pos.x * -dotgrid.grid_width,y:pos.y * dotgrid.grid_height};
@@ -35,7 +48,10 @@ function Keyboard()
 
   this.move = function(x,y)
   {
-    this.selector = {x:this.selector.x+(x*dotgrid.grid_width),y:this.selector.y+(-y*dotgrid.grid_height)}
+    this.selector = {x:this.selector.x+(x*dotgrid.grid_width),y:this.selector.y+(-y*dotgrid.grid_height)};
+
+    this.selector.x = this.selector.x > 0 ? 0 : this.selector.x;
+    this.selector.y = this.selector.y < 0 ? 0 : this.selector.y;
     dotgrid.move_cursor(this.selector)
     dotgrid.guide.update();
     dotgrid.draw();
@@ -55,11 +71,6 @@ function Keyboard()
   {
     this.memory = "";
     dotgrid.update();
-  }
-
-  this.exit = function()
-  {
-    dotgrid.controller.set();
   }
 
   this.listen = function(e)
@@ -87,6 +98,6 @@ function Keyboard()
     }
   }
 
-  document.onkeyup = function(event){ dotgrid.keyboard.listen(event); };
+  // document.onkeyup = function(event){ dotgrid.keyboard.listen(event); };
   document.onkeydown = function(event){ dotgrid.keyboard.listen(event); };
 }

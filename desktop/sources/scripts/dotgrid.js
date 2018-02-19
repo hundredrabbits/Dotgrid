@@ -162,7 +162,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","View","Control Points",() => { dotgrid.guide.toggle_widgets(); },"J");
 
     this.controller.add("default","Mode","Toggle Size",() => { dotgrid.interface.toggle_zoom(); },"CmdOrCtrl+E");
-    this.controller.add("default","Mode","Keyboard",() => { dotgrid.controller.set("keyboard"); },"CmdOrCtrl+K");
+    this.controller.add("default","Mode","Keyboard",() => { dotgrid.keyboard.start(); },"CmdOrCtrl+K");
 
     this.controller.add("keyboard","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
     this.controller.add("keyboard","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
@@ -191,7 +191,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("keyboard","Select","XXYY(8)",() => { dotgrid.keyboard.push(8); },"8");
     this.controller.add("keyboard","Select","XXYY(9)",() => { dotgrid.keyboard.push(9); },"9");
     
-    this.controller.add("keyboard","Mode","Stop Keyboard Mode",() => { dotgrid.keyboard.exit(); },"Escape");
+    this.controller.add("keyboard","Mode","Stop Keyboard Mode",() => { dotgrid.keyboard.stop(); },"Escape");
     
     this.controller.commit();
 

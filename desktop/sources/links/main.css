@@ -55,4 +55,5 @@ body { background:var(--background) !important; }
 #dotgrid svg.vector #mirror_layer_3 { stroke:var(--f_low) !important; }
 #dotgrid #preview { stroke:var(--f_high) !important; } 
 #dotgrid #cursor { border-color:var(--f_med); }
+#dotgrid #cursor.keyboard { border-color:var(--f_high) !Important; }
     
