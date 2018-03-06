@@ -2,7 +2,11 @@ function Tool()
 {
   this.index = 0;
   this.layers = [[],[],[]];
-  this.styles = [{thickness:1},{thickness:10},{thickness:15}];
+  this.styles = [
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round"},
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round"},
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round"}
+  ];
   this.verteces = [];
   this.reqs = {line:2,arc_c:2,arc_r:2,bezier:3,close:0};
 

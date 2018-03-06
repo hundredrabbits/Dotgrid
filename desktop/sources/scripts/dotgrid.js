@@ -1,4 +1,4 @@
-function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,linecap = "round",linejoin = "round", color = "#000000")
+function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 {
   this.controller = new Controller();
   this.theme = new Theme();
@@ -16,8 +16,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,linecap = "round",li
   this.block_x = block_x;
   this.block_y = block_y;
 
-  this.linecap = linecap;
-  this.linejoin = linejoin;
   this.color = color;
   this.offset = new Pos(0,0);
 
@@ -85,8 +83,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,linecap = "round",li
     this.svg_el.style.stroke = this.color;
     this.svg_el.style.strokeWidth = this.tool.style().thickness;
     this.svg_el.style.fill = "none";
-    this.svg_el.style.strokeLinecap = this.linecap;
-    this.svg_el.style.strokeLinejoin = this.linejoin;
     this.element.appendChild(this.svg_el);
     // Preview
     this.preview_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -369,7 +365,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,linecap = "round",li
   {
     var a = ["butt","square","round"];
     this.mod_linecap_index += 1;
-    this.linecap = a[this.mod_linecap_index % a.length];
+    this.tool.style().strokeLinecap = a[this.mod_linecap_index % a.length];
     this.draw();
   }
 
@@ -379,7 +375,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,linecap = "round",li
   {
     var a = ["miter","round","bevel"];
     this.mod_linejoin_index += 1;
-    this.linejoin = a[this.mod_linejoin_index % a.length];
+    this.tool.style().strokeLinejoin = a[this.mod_linejoin_index % a.length];
     this.draw();
   }
 
@@ -443,8 +439,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,linecap = "round",li
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
     this.svg_el.style.stroke = this.color;
-    this.svg_el.style.strokeLinecap = this.linecap;
-    this.svg_el.style.strokeLinejoin = this.linejoin;
     this.svg_el.style.strokeWidth = this.tool.style().thickness;
     this.svg_el.style.fill = this.fill ? this.theme.active.f_high : "none";
 
@@ -452,21 +446,29 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,linecap = "round",li
     this.layer_2.style.strokeWidth = this.tool.styles[1].thickness;
     this.layer_3.style.strokeWidth = this.tool.styles[2].thickness;
 
+    this.layer_1.style.strokeLinecap = this.tool.styles[0].strokeLinecap;
+    this.layer_2.style.strokeLinecap = this.tool.styles[1].strokeLinecap;
+    this.layer_3.style.strokeLinecap = this.tool.styles[2].strokeLinecap;
+
+    this.layer_1.style.strokeLinejoin = this.tool.styles[0].strokeLinejoin;
+    this.layer_2.style.strokeLinejoin = this.tool.styles[1].strokeLinejoin;
+    this.layer_3.style.strokeLinejoin = this.tool.styles[2].strokeLinejoin;
+
     // Draw Mirror
     if(this.mirror_index == 1){
-      this.mirror_layer_1.setAttribute("transform","translate("+(this.width - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
-      this.mirror_layer_2.setAttribute("transform","translate("+(this.width - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
-      this.mirror_layer_3.setAttribute("transform","translate("+(this.width - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
+      this.mirror_layer_1.setAttribute("transform",`translate(${this.width},0),scale(-1,1)`)
+      this.mirror_layer_2.setAttribute("transform",`translate(${this.width},0),scale(-1,1)`)
+      this.mirror_layer_3.setAttribute("transform",`translate(${this.width},0),scale(-1,1)`)
     }
     else if(this.mirror_index == 2){
-      this.mirror_layer_1.setAttribute("transform","translate("+((this.offset.x))+","+(this.height - (this.offset.y))+"),scale(1,-1)")
-      this.mirror_layer_2.setAttribute("transform","translate("+((this.offset.x))+","+(this.height - (this.offset.y))+"),scale(1,-1)")
-      this.mirror_layer_3.setAttribute("transform","translate("+((this.offset.x))+","+(this.height - (this.offset.y))+"),scale(1,-1)")
+      this.mirror_layer_1.setAttribute("transform",`translate(0,${this.height}),scale(1,-1)`)
+      this.mirror_layer_2.setAttribute("transform",`translate(0,${this.height}),scale(1,-1)`)
+      this.mirror_layer_3.setAttribute("transform",`translate(0,${this.height}),scale(1,-1)`)
     }
     else if(this.mirror_index == 3){
-      this.mirror_layer_1.setAttribute("transform","translate("+(this.width -(this.offset.x))+","+(this.height - (this.offset.y))+"),scale(-1,-1)")
-      this.mirror_layer_2.setAttribute("transform","translate("+(this.width -(this.offset.x))+","+(this.height - (this.offset.y))+"),scale(-1,-1)")
-      this.mirror_layer_3.setAttribute("transform","translate("+(this.width -(this.offset.x))+","+(this.height - (this.offset.y))+"),scale(-1,-1)")
+      this.mirror_layer_1.setAttribute("transform",`translate(${this.width},${this.height}),scale(-1,-1)`)
+      this.mirror_layer_2.setAttribute("transform",`translate(${this.width},${this.height}),scale(-1,-1)`)
+      this.mirror_layer_3.setAttribute("transform",`translate(${this.width},${this.height}),scale(-1,-1)`)
     }
     else{
       this.mirror_layer_1.setAttribute("transform","")
@@ -494,8 +496,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,linecap = "round",li
     this.history.clear();
     this.tool.reset();
     this.reset();
-    this.linecap = "round"
-    this.linejoin = "round"
     this.color = "#000000"
     this.draw();
   }
