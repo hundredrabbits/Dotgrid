@@ -200,6 +200,7 @@ function Tool()
   this.clear = function()
   {
     this.verteces = [];
+    dotgrid.preview();
     dotgrid.draw();
   }
 

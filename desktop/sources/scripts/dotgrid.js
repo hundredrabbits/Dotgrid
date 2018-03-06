@@ -36,7 +36,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
   this.svg_el = null;
   this.mirror_el = null;
   this.mirror = false;
-  this.fill = false;
   this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_1.id = "layer_1"; this.layer_1.style.stroke = "black";
   this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_2.id = "layer_2"; this.layer_2.style.stroke = "#999";
   this.layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_3.id = "layer_3"; this.layer_3.style.stroke = "#ccc";
@@ -81,8 +80,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
     this.svg_el.style.stroke = this.color;
-    this.svg_el.style.strokeWidth = this.tool.style().thickness;
     this.svg_el.style.fill = "none";
+    this.svg_el.style.strokeWidth = this.tool.style().thickness;
     this.element.appendChild(this.svg_el);
     // Preview
     this.preview_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
@@ -96,8 +95,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     this.preview_el.style.width = this.width;
     this.preview_el.style.height = this.height;
     this.preview_el.style.strokeWidth = 2;
-    this.preview_el.style.fill = "none";
     this.preview_el.style.strokeLinecap = "round";
+    this.preview_el.style.fill = "none";
     this.element.appendChild(this.preview_el);
 
     this.mirror_el.appendChild(this.mirror_layer_3)
@@ -143,7 +142,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     this.controller.add("default","Effect","Linecap",() => { dotgrid.mod_linecap(); },"Q");
     this.controller.add("default","Effect","Linejoin",() => { dotgrid.mod_linejoin(); },"W");
     this.controller.add("default","Effect","Mirror",() => { dotgrid.mod_mirror(); },"E");
-    this.controller.add("default","Effect","Fill",() => { dotgrid.toggle_fill(); },"R");
 
     this.controller.add("default","Effect","Thicker",() => { dotgrid.mod_thickness(1) },"}");
     this.controller.add("default","Effect","Thinner",() => { dotgrid.mod_thickness(-1) },"{");
@@ -219,8 +217,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
   {
     this.draw();
 
-    if(dotgrid.fill){ dotgrid.svg_el.style.fill = "black"; dotgrid.render.draw(); }
-
     var svg = dotgrid.svg_el.outerHTML;
 
     dialog.showSaveDialog((fileName) => {
@@ -269,7 +265,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     if(o == "linecap"){ this.mod_linecap(); }
     if(o == "linejoin"){ this.mod_linejoin(); }
     if(o == "mirror"){ this.mod_mirror(); }
-    if(o == "fill"){ this.toggle_fill(); }
     if(o == "depth"){ this.toggle_layer(); }
   }
 
@@ -338,8 +333,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
   this.preview = function(operation)
   {
-    if(!operation){ return `<path d='M0,0'></path>`;}
-    if(operation != "line" && operation != "arc_c" && operation != "arc_r" && operation != "bezier" && operation != "close"){ return `<path d='M0,0'></path>`; }
+    if(!operation){ this.preview_el.innerHTML = `<path d='M0,0'></path>`; return;}
+    if(operation != "line" && operation != "arc_c" && operation != "arc_r" && operation != "bezier" && operation != "close"){ this.preview_el.innerHTML = `<path d='M0,0'></path>`; return; }
 
     this.preview_el.innerHTML = `<path d='${dotgrid.tool.path([{type:operation,verteces:dotgrid.tool.verteces}])}'></path>`;
   }
@@ -389,12 +384,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     this.draw();
   }
 
-  this.toggle_fill = function()
-  {
-    dotgrid.fill = dotgrid.fill ? false : true;
-    this.draw();
-  }
-
   this.toggle_layer = function()
   {
     var index = this.tool.index;
@@ -439,7 +428,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
-    this.svg_el.style.fill = this.fill ? this.theme.active.f_high : "none";
 
     this.layer_1.style.strokeWidth = this.tool.styles[0].thickness;
     this.layer_1.style.strokeLinecap = this.tool.styles[0].strokeLinecap;
