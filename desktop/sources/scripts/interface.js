@@ -22,7 +22,7 @@ function Interface()
       thickness: ["thickness","M120,90 L120,90 L90,120 L180,210 L210,180 Z M105,105 L105,105 L60,60 M195,195 L195,195 L240,240","stroke-dasharray: 30,15"],
       
       mirror: ["mirror","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210"],
-      fill: ["fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z"],
+      color: ["color","M150,60 A90,90 0 0,1 240,150 A-90,90 0 0,1 150,240 A-90,-90 0 0,1 60,150 A90,-90 0 0,1 150,60"],
 
       depth: ["depth","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
     }
@@ -55,8 +55,11 @@ function Interface()
     document.getElementById("linecap").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("linejoin").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("mirror").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
-    document.getElementById("fill").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
+    
+    document.getElementById("color").children[0].style.fill = dotgrid.tool.style().color;
+    document.getElementById("color").children[0].style.stroke = dotgrid.tool.style().color;
 
+    document.getElementById("color").className.baseVal = "icon";
     document.getElementById("depth").className.baseVal = "icon";
   }
 
