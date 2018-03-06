@@ -23,8 +23,10 @@ svg.vector { z-index: 1000;position: relative; left:10px; top:10px; width:300px;
 
 #interface { font-size: 11px;line-height: 30px;text-transform: uppercase;-webkit-app-region: no-drag; transition: all 150ms; width: 315px; position:fixed; bottom:20px; left:calc(50vw - 155px);}
 #interface svg.inactive { opacity: 0.2 }
+#interface svg path.inactive { opacity: 0.2 }
 #interface svg:hover { opacity: 0.5 }
 #interface svg.icon:last-child { margin-right: 0; }
+#interface svg path { fill:none; stroke-linecap: round; stroke-linejoin: round; stroke-width:12px; }
 
 #interface.hidden { bottom:10px;opacity: 0 }
 #interface.visible { bottom:20px; opacity: 1 }

@@ -17,31 +17,32 @@ function Interface()
       bezier: ["bezier","M60,60 Q60,150 150,150 Q240,150 240,240",""],
       close: ["close","M60,60 A180,180 0 0,1 240,240  M60,60 A180,180 0 0,0 240,240",""],
 
-      thickness: ["thickness","M60,60 L240,240","stroke-dasharray: 30,15"],
-      linecap: ["linecap","M60,60 L240,240 M240,180 L240,240 M180,240 L240,240"],
+      // thickness: ["thickness","M60,60 L240,240","stroke-dasharray: 30,15"],
+      fill: ["fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z"],
+      linecap: ["linecap","M60,60 L60,60 L180,180 L240,180 L240,240 L180,240 L180,180"],
       linejoin: ["linejoin","M60,60 L120,120 L180,120  M120,180 L180,180 L240,240"],
       mirror: ["mirror","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210"],
-      fill: ["fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z"],
 
-      export: ["export","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
+      depth: ["depth","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
     }
 
     for(id in tools){
       var tool = tools[id];
-      html += `<svg id="${id}" ar="${id}" title="${tool[0]}" viewBox="0 0 300 300" class="icon"><path class="icon_path" d="${tool[1]}" stroke-linecap: round; stroke-width="12px" fill="none" /><rect ar="${id}" width="300" height="300" opacity="0"><title>${id}</title></rect></svg>`
+      html += `<svg id="${id}" ar="${id}" title="${tool[0]}" viewBox="0 0 300 300" class="icon"><path class="icon_path" d="${tool[1]}"/>${id == "depth" ? `<path class="icon_path inactive" d=""/>` : ""}<rect ar="${id}" width="300" height="300" opacity="0"><title>${id}</title></rect></svg>`
     }
     this.el.innerHTML = html
   }
 
   this.update = function()
   {
-    var layer_path = "M150,50 L50,150 L150,250 L250,150 L150,50 Z ";
+    var layer_path = "";
 
-    layer_path += dotgrid.tool.index == 0 ? "M105,150 L105,150 L150,105 L195,150" : "";
-    layer_path += dotgrid.tool.index == 1 ? "M105,150 L195,150" : "";
-    layer_path += dotgrid.tool.index == 2 ? "M105,150 L105,150 L150,195 L195,150" : "";
+    layer_path += dotgrid.tool.index == 0 ? "M150,60 L150,60 L240,105 L150,150 L60,105 Z" : "";
+    layer_path += dotgrid.tool.index == 1 ? "M150,105 L150,105 L240,150 L150,195 L60,150 Z" : "";
+    layer_path += dotgrid.tool.index == 2 ? "M150,150 L150,150 L240,195 L150,240 L60,195 Z" : "";
 
-    document.getElementById("export").children[0].setAttribute("d",layer_path);
+    document.getElementById("depth").children[0].setAttribute("d",layer_path);
+    document.getElementById("depth").children[1].setAttribute("d","M60,150 L60,150 L150,195 L240,150 M60,195 L60,195 L150,240 L240,195 M60,105 L60,105 L150,150 L240,105 L240,105 L150,60 L60,105");
 
     document.getElementById("line").className.baseVal = !dotgrid.tool.can_cast("line") ? "icon inactive" : "icon";
     document.getElementById("arc_c").className.baseVal = !dotgrid.tool.can_cast("arc_c") ? "icon inactive" : "icon";
@@ -49,13 +50,13 @@ function Interface()
     document.getElementById("bezier").className.baseVal = !dotgrid.tool.can_cast("bezier") ? "icon inactive" : "icon";
     document.getElementById("close").className.baseVal = !dotgrid.tool.can_cast("close") ? "icon inactive" : "icon";
     
-    document.getElementById("thickness").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
+    // document.getElementById("thickness").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("linecap").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("linejoin").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("mirror").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("fill").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
 
-    document.getElementById("export").className.baseVal = "icon";
+    document.getElementById("depth").className.baseVal = "icon";
   }
 
   this.update_size = function()

@@ -154,8 +154,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.controller.add("default","Effect","Thicker +5",() => { dotgrid.mod_thickness(5,true) },"]");
     this.controller.add("default","Effect","Thinner -5",() => { dotgrid.mod_thickness(-5,true) },"[");
 
-    this.controller.add("default","Layers","Move Above",() => { dotgrid.tool.layer_up() },"P");
-    this.controller.add("default","Layers","Move Below",() => { dotgrid.tool.layer_down() },"L");
     this.controller.add("default","Layers","Foreground",() => { dotgrid.tool.select_layer(0) },"CmdOrCtrl+1");
     this.controller.add("default","Layers","Middleground",() => { dotgrid.tool.select_layer(1) },"CmdOrCtrl+2");
     this.controller.add("default","Layers","Background",() => { dotgrid.tool.select_layer(2) },"CmdOrCtrl+3");
@@ -277,7 +275,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     if(o == "linejoin"){ this.mod_linejoin(); }
     if(o == "mirror"){ this.mod_mirror(); }
     if(o == "fill"){ this.toggle_fill(); }
-    if(o == "export"){ this.save(); }
+    if(o == "depth"){ this.toggle_layer(); }
   }
 
   this.mouse_move = function(e)
@@ -399,6 +397,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   {
     dotgrid.fill = dotgrid.fill ? false : true;
     this.draw();
+  }
+
+  this.toggle_layer = function()
+  {
+    var index = this.tool.index;
+    index = index >= 2 ? 0 : index+1;
+    this.tool.select_layer(index);
   }
 
   this.set_size = function(size = {width:300,height:300},interface = true) 

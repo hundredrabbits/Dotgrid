@@ -226,14 +226,10 @@ function Tool()
     console.log(`layer:${this.index}`)
   }
 
-  this.layer_up = function()
+  this.select_next_layer = function()
   {
-    this.select_layer(this.index-1);
-  }
-
-  this.layer_down = function()
-  {
-    this.select_layer(this.index+1);
+    this.index = this.index >= 2 ? 0 : this.index+1
+    this.select_layer(this.index);
   }
 
   function copy(data){ return data ? JSON.parse(JSON.stringify(data)) : []; }
