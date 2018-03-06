@@ -2,6 +2,7 @@ function Tool()
 {
   this.index = 0;
   this.layers = [[],[],[]];
+  this.styles = [{thickness:1},{thickness:10},{thickness:15}];
   this.verteces = [];
   this.reqs = {line:2,arc_c:2,arc_r:2,bezier:3,close:0};
 
@@ -10,6 +11,14 @@ function Tool()
     this.layers = [[],[],[]];
     this.verteces = [];
     this.index = 0;
+  }
+
+  this.style = function()
+  {
+    if(!this.styles[this.index]){
+      this.styles[this.index] = [];
+    }
+    return this.styles[this.index];    
   }
 
   this.layer = function()

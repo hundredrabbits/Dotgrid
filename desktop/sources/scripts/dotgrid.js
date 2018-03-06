@@ -1,4 +1,4 @@
-function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,linecap = "round",linejoin = "round", color = "#000000")
+function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,linecap = "round",linejoin = "round", color = "#000000")
 {
   this.controller = new Controller();
   this.theme = new Theme();
@@ -16,7 +16,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.block_x = block_x;
   this.block_y = block_y;
 
-  this.thickness = thickness;
   this.linecap = linecap;
   this.linejoin = linejoin;
   this.color = color;
@@ -46,7 +45,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
   this.mirror_layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_1.id = "mirror_layer_1"; this.mirror_layer_1.style.stroke = "black";
   this.mirror_layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_2.id = "mirror_layer_2"; this.mirror_layer_2.style.stroke = "#999";
   this.mirror_layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_3.id = "mirror_layer_3"; this.mirror_layer_3.style.stroke = "#ccc";
-  this.scale = 1;
 
   this.install = function()
   {  
@@ -81,10 +79,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.setAttribute("xmlns","http://www.w3.org/2000/svg");
     this.svg_el.setAttribute("baseProfile","full");
     this.svg_el.setAttribute("version","1.1");
+
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
     this.svg_el.style.stroke = this.color;
-    this.svg_el.style.strokeWidth = this.thickness;
+    this.svg_el.style.strokeWidth = this.tool.style().thickness;
     this.svg_el.style.fill = "none";
     this.svg_el.style.strokeLinecap = this.linecap;
     this.svg_el.style.strokeLinejoin = this.linejoin;
@@ -221,7 +220,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.save = function()
   {
-    this.scale = 1
     this.draw();
 
     if(dotgrid.fill){ dotgrid.svg_el.style.fill = "black"; dotgrid.render.draw(); }
@@ -353,15 +351,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.mod_thickness = function(mod,step = false)
   {
-    if(!mod){ mod = 1; this.thickness = this.thickness > 30 ? 1 : this.thickness }
+    if(!mod){ mod = 1; this.tool.style().thickness = this.tool.style().thickness > 30 ? 1 : this.tool.style().thickness }
 
     if(step){
-      this.thickness = parseInt(this.thickness/5) * 5;
+      this.tool.style().thickness = parseInt(this.tool.style().thickness/5) * 5;
     }
 
-    this.thickness = Math.max(this.thickness+mod,0);
-    this.cursor_x.textContent = this.thickness;
+    this.tool.style().thickness = Math.max(this.tool.style().thickness+mod,0);
+    this.cursor_x.textContent = this.tool.style().thickness;
     this.draw();
+    console.log(mod,step,this.tool.style())
   }
 
   this.mod_linecap_index = 1;
@@ -446,24 +445,28 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.svg_el.style.stroke = this.color;
     this.svg_el.style.strokeLinecap = this.linecap;
     this.svg_el.style.strokeLinejoin = this.linejoin;
-    this.svg_el.style.strokeWidth = this.thickness*this.scale;
+    this.svg_el.style.strokeWidth = this.tool.style().thickness;
     this.svg_el.style.fill = this.fill ? this.theme.active.f_high : "none";
+
+    this.layer_1.style.strokeWidth = this.tool.styles[0].thickness;
+    this.layer_2.style.strokeWidth = this.tool.styles[1].thickness;
+    this.layer_3.style.strokeWidth = this.tool.styles[2].thickness;
 
     // Draw Mirror
     if(this.mirror_index == 1){
-      this.mirror_layer_1.setAttribute("transform","translate("+(this.width - (this.offset.x*this.scale))+","+(this.offset.y*this.scale)+"),scale(-1,1)")
-      this.mirror_layer_2.setAttribute("transform","translate("+(this.width - (this.offset.x*this.scale))+","+(this.offset.y*this.scale)+"),scale(-1,1)")
-      this.mirror_layer_3.setAttribute("transform","translate("+(this.width - (this.offset.x*this.scale))+","+(this.offset.y*this.scale)+"),scale(-1,1)")
+      this.mirror_layer_1.setAttribute("transform","translate("+(this.width - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
+      this.mirror_layer_2.setAttribute("transform","translate("+(this.width - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
+      this.mirror_layer_3.setAttribute("transform","translate("+(this.width - (this.offset.x))+","+(this.offset.y)+"),scale(-1,1)")
     }
     else if(this.mirror_index == 2){
-      this.mirror_layer_1.setAttribute("transform","translate("+((this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(1,-1)")
-      this.mirror_layer_2.setAttribute("transform","translate("+((this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(1,-1)")
-      this.mirror_layer_3.setAttribute("transform","translate("+((this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(1,-1)")
+      this.mirror_layer_1.setAttribute("transform","translate("+((this.offset.x))+","+(this.height - (this.offset.y))+"),scale(1,-1)")
+      this.mirror_layer_2.setAttribute("transform","translate("+((this.offset.x))+","+(this.height - (this.offset.y))+"),scale(1,-1)")
+      this.mirror_layer_3.setAttribute("transform","translate("+((this.offset.x))+","+(this.height - (this.offset.y))+"),scale(1,-1)")
     }
     else if(this.mirror_index == 3){
-      this.mirror_layer_1.setAttribute("transform","translate("+(this.width -(this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(-1,-1)")
-      this.mirror_layer_2.setAttribute("transform","translate("+(this.width -(this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(-1,-1)")
-      this.mirror_layer_3.setAttribute("transform","translate("+(this.width -(this.offset.x*this.scale))+","+(this.height - (this.offset.y*this.scale))+"),scale(-1,-1)")
+      this.mirror_layer_1.setAttribute("transform","translate("+(this.width -(this.offset.x))+","+(this.height - (this.offset.y))+"),scale(-1,-1)")
+      this.mirror_layer_2.setAttribute("transform","translate("+(this.width -(this.offset.x))+","+(this.height - (this.offset.y))+"),scale(-1,-1)")
+      this.mirror_layer_3.setAttribute("transform","translate("+(this.width -(this.offset.x))+","+(this.height - (this.offset.y))+"),scale(-1,-1)")
     }
     else{
       this.mirror_layer_1.setAttribute("transform","")
@@ -471,7 +474,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
       this.mirror_layer_3.setAttribute("transform","")
     }
 
-    this.offset_el.setAttribute("transform","translate("+(this.offset.x*this.scale)+","+(this.offset.y*this.scale)+")")
+    this.offset_el.setAttribute("transform","translate("+(this.offset.x)+","+(this.offset.y)+")")
 
     this.preview();
     this.render.draw();
@@ -491,7 +494,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
     this.history.clear();
     this.tool.reset();
     this.reset();
-    this.thickness = 10
     this.linecap = "round"
     this.linejoin = "round"
     this.color = "#000000"
@@ -517,7 +519,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.copy = function(e)
   {
-    dotgrid.scale = 1
     dotgrid.width = 300
     dotgrid.height = 300
     dotgrid.draw();
@@ -533,7 +534,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.cut = function(e)
   {
-    dotgrid.scale = 1
     dotgrid.width = 300
     dotgrid.height = 300
     dotgrid.draw();
@@ -561,7 +561,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
   this.position_in_grid = function(pos)
   {
-    return new Pos((window.innerWidth/2) - (this.width/2) - pos.x,pos.y - (30+10*(this.scale)))
+    return new Pos((window.innerWidth/2) - (this.width/2) - pos.x,pos.y - (30+10))
   }
 
   this.position_on_grid = function(pos)
