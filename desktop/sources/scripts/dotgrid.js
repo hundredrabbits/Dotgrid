@@ -110,6 +110,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     this.svg_el.appendChild(this.mirror_el);
 
     this.theme.start();
+    this.tool.start();
     this.guide.start();
     this.interface.start();
 
@@ -438,21 +439,34 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
-    this.svg_el.style.stroke = this.color;
-    this.svg_el.style.strokeWidth = this.tool.style().thickness;
     this.svg_el.style.fill = this.fill ? this.theme.active.f_high : "none";
 
     this.layer_1.style.strokeWidth = this.tool.styles[0].thickness;
-    this.layer_2.style.strokeWidth = this.tool.styles[1].thickness;
-    this.layer_3.style.strokeWidth = this.tool.styles[2].thickness;
-
     this.layer_1.style.strokeLinecap = this.tool.styles[0].strokeLinecap;
-    this.layer_2.style.strokeLinecap = this.tool.styles[1].strokeLinecap;
-    this.layer_3.style.strokeLinecap = this.tool.styles[2].strokeLinecap;
-
     this.layer_1.style.strokeLinejoin = this.tool.styles[0].strokeLinejoin;
+    this.layer_1.style.stroke = this.tool.styles[0].color;
+    this.mirror_layer_1.style.strokeWidth = this.tool.styles[0].thickness;
+    this.mirror_layer_1.style.strokeLinecap = this.tool.styles[0].strokeLinecap;
+    this.mirror_layer_1.style.strokeLinejoin = this.tool.styles[0].strokeLinejoin;
+    this.mirror_layer_1.style.stroke = this.tool.styles[0].color;
+
+    this.layer_2.style.strokeWidth = this.tool.styles[1].thickness;
+    this.layer_2.style.strokeLinecap = this.tool.styles[1].strokeLinecap;
     this.layer_2.style.strokeLinejoin = this.tool.styles[1].strokeLinejoin;
+    this.layer_2.style.stroke = this.tool.styles[1].color;
+    this.mirror_layer_2.style.strokeWidth = this.tool.styles[1].thickness;
+    this.mirror_layer_2.style.strokeLinecap = this.tool.styles[1].strokeLinecap;
+    this.mirror_layer_2.style.strokeLinejoin = this.tool.styles[1].strokeLinejoin;
+    this.mirror_layer_2.style.stroke = this.tool.styles[1].color;
+
+    this.layer_3.style.strokeWidth = this.tool.styles[2].thickness;
+    this.layer_3.style.strokeLinecap = this.tool.styles[2].strokeLinecap;
     this.layer_3.style.strokeLinejoin = this.tool.styles[2].strokeLinejoin;
+    this.layer_3.style.stroke = this.tool.styles[2].color;
+    this.mirror_layer_3.style.strokeWidth = this.tool.styles[2].thickness;
+    this.mirror_layer_3.style.strokeLinecap = this.tool.styles[2].strokeLinecap;
+    this.mirror_layer_3.style.strokeLinejoin = this.tool.styles[2].strokeLinejoin;
+    this.mirror_layer_3.style.stroke = this.tool.styles[2].color;
 
     // Draw Mirror
     if(this.mirror_index == 1){
@@ -476,7 +490,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
       this.mirror_layer_3.setAttribute("transform","")
     }
 
-    this.offset_el.setAttribute("transform","translate("+(this.offset.x)+","+(this.offset.y)+")")
+    this.offset_el.setAttribute("transform","translate(0,0)")
 
     this.preview();
     this.render.draw();

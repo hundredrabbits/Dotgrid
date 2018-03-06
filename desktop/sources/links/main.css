@@ -49,12 +49,6 @@ body { background:var(--background) !important; }
 .b_inv { background:var(--b_inv) !important ; ; }
 .icon { color:var(--f_high) !important; stroke:var(--f_high) !important; }
 #dotgrid svg.vector { stroke:var(--f_high) !important; }
-#dotgrid svg.vector #layer_1 { stroke:var(--f_high) !important; }
-#dotgrid svg.vector #layer_2 { stroke:var(--f_med) !important; }
-#dotgrid svg.vector #layer_3 { stroke:var(--f_low) !important; }
-#dotgrid svg.vector #mirror_layer_1 { stroke:var(--f_high) !important; }
-#dotgrid svg.vector #mirror_layer_2 { stroke:var(--f_med) !important; }
-#dotgrid svg.vector #mirror_layer_3 { stroke:var(--f_low) !important; }
 #dotgrid #preview { stroke:var(--f_high) !important; } 
 #dotgrid #cursor { border-color:var(--f_med); }
 #dotgrid #cursor.keyboard { border-color:var(--f_high) !Important; }

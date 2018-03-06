@@ -3,12 +3,19 @@ function Tool()
   this.index = 0;
   this.layers = [[],[],[]];
   this.styles = [
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round"},
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round"},
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round"}
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00"},
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0"},
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f"}
   ];
   this.verteces = [];
   this.reqs = {line:2,arc_c:2,arc_r:2,bezier:3,close:0};
+
+  this.start = function()
+  {
+    this.styles[0].color = dotgrid.theme.active.f_high
+    this.styles[1].color = dotgrid.theme.active.f_med
+    this.styles[2].color = dotgrid.theme.active.f_low
+  }
 
   this.reset = function()
   {
