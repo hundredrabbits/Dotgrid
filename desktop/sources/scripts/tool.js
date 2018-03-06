@@ -215,16 +215,17 @@ function Tool()
     dotgrid.draw();    
   }
 
-  this.export = function(target = this.layers)
+  this.export = function(target = {layers:this.layers,styles:this.styles})
   {
     return JSON.stringify(copy(target), null, 2);
   }
 
-  this.replace = function(layers)
+  this.replace = function(dot)
   {
-    if(layers.length != 3){ console.log("Incompatible"); return; }
+    if(!dot.layers || dot.layers.length != 3){ console.log("Incompatible version"); return; }
     
-    this.layers = layers;
+    this.layers = dot.layers;
+    this.styles = dot.styles;
     this.clear();
     dotgrid.draw();
     dotgrid.history.push(this.layers);
