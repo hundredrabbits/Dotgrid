@@ -91,7 +91,7 @@ function Keyboard()
       dotgrid.keyboard.move(0,-1);
       e.preventDefault();
     }
-    if(e.code && e.code.substr(0,5) == "Digit"){
+    if(e.code && e.code.substr(0,5) == "Digit" && !e.metaKey && !e.ctrlKey){
       var value = parseInt(e.code.substr(5,1));
       dotgrid.keyboard.push(value);
       e.preventDefault();

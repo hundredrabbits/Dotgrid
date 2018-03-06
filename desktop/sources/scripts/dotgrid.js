@@ -156,6 +156,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y,thickness = 3,lineca
 
     this.controller.add("default","Layers","Move Above",() => { dotgrid.tool.layer_up() },"P");
     this.controller.add("default","Layers","Move Below",() => { dotgrid.tool.layer_down() },"L");
+    this.controller.add("default","Layers","Foreground",() => { dotgrid.tool.select_layer(0) },"CmdOrCtrl+1");
+    this.controller.add("default","Layers","Middleground",() => { dotgrid.tool.select_layer(1) },"CmdOrCtrl+2");
+    this.controller.add("default","Layers","Background",() => { dotgrid.tool.select_layer(2) },"CmdOrCtrl+3");
 
     this.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },"U");
     this.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
