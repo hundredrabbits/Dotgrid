@@ -17,11 +17,12 @@ function Interface()
       bezier: ["bezier","M60,60 Q60,150 150,150 Q240,150 240,240",""],
       close: ["close","M60,60 A180,180 0 0,1 240,240  M60,60 A180,180 0 0,0 240,240",""],
 
-      // thickness: ["thickness","M60,60 L240,240","stroke-dasharray: 30,15"],
-      fill: ["fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z"],
       linecap: ["linecap","M60,60 L60,60 L180,180 L240,180 L240,240 L180,240 L180,180"],
       linejoin: ["linejoin","M60,60 L120,120 L180,120  M120,180 L180,180 L240,240"],
+      thickness: ["thickness","M120,90 L120,90 L90,120 L180,210 L210,180 Z M105,105 L105,105 L60,60 M195,195 L195,195 L240,240","stroke-dasharray: 30,15"],
+      
       mirror: ["mirror","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210"],
+      fill: ["fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z"],
 
       depth: ["depth","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
     }
@@ -50,7 +51,7 @@ function Interface()
     document.getElementById("bezier").className.baseVal = !dotgrid.tool.can_cast("bezier") ? "icon inactive" : "icon";
     document.getElementById("close").className.baseVal = !dotgrid.tool.can_cast("close") ? "icon inactive" : "icon";
     
-    // document.getElementById("thickness").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
+    document.getElementById("thickness").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("linecap").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("linejoin").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("mirror").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
