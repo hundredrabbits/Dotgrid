@@ -28,6 +28,7 @@ function Picker()
   this.validate = function()
   {
     dotgrid.tool.style().color = this.el.value;
+    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? this.el.value : "none";
     dotgrid.draw();
     dotgrid.controller.set();
     dotgrid.interface.el.className = ""
@@ -38,6 +39,7 @@ function Picker()
   {
     if(!this.original){ return; }
     dotgrid.tool.style().color = this.original;
+    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? this.original : "none";
     dotgrid.draw();
   }
 
@@ -46,6 +48,7 @@ function Picker()
     if(this.el.value.length != 4 && this.el.value.length != 7){ return; }
 
     dotgrid.tool.style().color = this.el.value;
+    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? this.el.value : "none";
     dotgrid.draw();
   }
 
