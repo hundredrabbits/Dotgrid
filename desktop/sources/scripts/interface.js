@@ -27,9 +27,8 @@ function Interface()
       thickness: ["thickness","M120,90 L120,90 L90,120 L180,210 L210,180 Z M105,105 L105,105 L60,60 M195,195 L195,195 L240,240","stroke-dasharray: 30,15"],
       
       mirror: ["mirror","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210"],
+      fill: ["fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z"],
       color: ["color","M150,60 A90,90 0 0,1 240,150 A-90,90 0 0,1 150,240 A-90,-90 0 0,1 60,150 A90,-90 0 0,1 150,60"],
-
-      depth: ["depth","M150,50 L50,150 L150,250 L250,150 L150,50 Z"]
     }
 
     for(id in tools){
@@ -41,15 +40,6 @@ function Interface()
 
   this.update = function()
   {
-    var layer_path = "";
-
-    layer_path += dotgrid.tool.index == 0 ? "M150,60 L150,60 L240,105 L150,150 L60,105 Z" : "";
-    layer_path += dotgrid.tool.index == 1 ? "M150,105 L150,105 L240,150 L150,195 L60,150 Z" : "";
-    layer_path += dotgrid.tool.index == 2 ? "M150,150 L150,150 L240,195 L150,240 L60,195 Z" : "";
-
-    document.getElementById("depth").children[0].setAttribute("d",layer_path);
-    document.getElementById("depth").children[1].setAttribute("d","M60,150 L60,150 L150,195 L240,150 M60,195 L60,195 L150,240 L240,195 M60,105 L60,105 L150,150 L240,105 L240,105 L150,60 L60,105");
-
     document.getElementById("line").className.baseVal = !dotgrid.tool.can_cast("line") ? "icon inactive" : "icon";
     document.getElementById("arc_c").className.baseVal = !dotgrid.tool.can_cast("arc_c") ? "icon inactive" : "icon";
     document.getElementById("arc_r").className.baseVal = !dotgrid.tool.can_cast("arc_r") ? "icon inactive" : "icon";
@@ -60,12 +50,11 @@ function Interface()
     document.getElementById("linecap").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("linejoin").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("mirror").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
+    document.getElementById("fill").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     
     document.getElementById("color").children[0].style.fill = dotgrid.tool.style().color;
     document.getElementById("color").children[0].style.stroke = dotgrid.tool.style().color;
-
     document.getElementById("color").className.baseVal = "icon";
-    document.getElementById("depth").className.baseVal = "icon";
   }
 
   this.update_size = function()
