@@ -1,11 +1,13 @@
 function Keyboard()
 {
   this.memory = "";
+  this.is_active = false;
 
   this.selector = {x:0,y:0};
 
   this.start = function()
   {
+    this.is_active = true;
     dotgrid.controller.set("keyboard");
     this.select({x:10,y:10})
     dotgrid.cursor.className = "keyboard";
@@ -13,6 +15,7 @@ function Keyboard()
 
   this.stop = function()
   {
+    this.is_active = false;
     dotgrid.controller.set();
     dotgrid.cursor.className = "";
   }
@@ -75,6 +78,8 @@ function Keyboard()
 
   this.listen = function(e)
   {
+    if(!this.is_active){ return; }
+    
     if(e.key == "ArrowRight"){
       dotgrid.keyboard.move(-1,0);
       e.preventDefault();

@@ -8,6 +8,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
   this.render = new Render();
   this.tool = new Tool();
   this.keyboard = new Keyboard();
+  this.picker = new Picker();
 
   this.width = width;
   this.height = height;
@@ -158,6 +159,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
     this.controller.add("default","Mode","Toggle Size",() => { dotgrid.interface.toggle_zoom(); },"CmdOrCtrl+E");
     this.controller.add("default","Mode","Keyboard",() => { dotgrid.keyboard.start(); },"CmdOrCtrl+K");
+    this.controller.add("default","Mode","Picker",() => { dotgrid.picker.start(); },"CmdOrCtrl+P");
 
     this.controller.add("keyboard","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
     this.controller.add("keyboard","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
@@ -187,6 +189,24 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     this.controller.add("keyboard","Select","XXYY(9)",() => { dotgrid.keyboard.push(9); },"9");
     
     this.controller.add("keyboard","Mode","Stop Keyboard Mode",() => { dotgrid.keyboard.stop(); },"Escape");
+
+    this.controller.add("picker","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
+    this.controller.add("picker","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
+    this.controller.add("picker","*","Hide",() => { app.toggle_visible(); },"CmdOrCtrl+H");
+    this.controller.add("picker","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
+    this.controller.add("picker","*","Documentation",() => { dotgrid.controller.docs(); },"CmdOrCtrl+Esc");
+    this.controller.add("picker","*","Reset",() => { dotgrid.reset(); dotgrid.theme.reset(); },"CmdOrCtrl+Backspace");
+    this.controller.add("picker","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
+
+    this.controller.add_role("picker","Edit","undo");
+    this.controller.add_role("picker","Edit","redo");
+    this.controller.add_role("picker","Edit","cut");
+    this.controller.add_role("picker","Edit","copy");
+    this.controller.add_role("picker","Edit","paste");
+    this.controller.add_role("picker","Edit","delete");
+    this.controller.add_role("picker","Edit","selectall");
+
+    this.controller.add("picker","Mode","Stop Picker Mode",() => { dotgrid.picker.stop(); },"Escape");
     
     this.controller.commit();
 
@@ -265,6 +285,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     if(o == "linecap"){ this.mod_linecap(); }
     if(o == "linejoin"){ this.mod_linejoin(); }
     if(o == "mirror"){ this.mod_mirror(); }
+    if(o == "color"){ setTimeout(()=>{ this.picker.start(); }, 100) }
     if(o == "depth"){ this.toggle_layer(); }
   }
 
@@ -352,7 +373,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     this.tool.style().thickness = Math.max(this.tool.style().thickness+mod,0);
     this.cursor_x.textContent = this.tool.style().thickness;
     this.draw();
-    console.log(mod,step,this.tool.style())
   }
 
   this.mod_linecap_index = 1;

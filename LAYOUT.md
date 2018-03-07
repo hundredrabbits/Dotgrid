@@ -25,15 +25,15 @@
 - Linecap: `Q`
 - Linejoin: `W`
 - Mirror: `E`
-- Fill: `R`
 - Thicker: `}`
 - Thinner: `{`
 - Thicker +5: `]`
 - Thinner -5: `[`
 
 ### Layers
-- Move Above: `P`
-- Move Below: `L`
+- Foreground: `CmdOrCtrl+1`
+- Middleground: `CmdOrCtrl+2`
+- Background: `CmdOrCtrl+3`
 
 ### View
 - Tools: `U`
@@ -43,6 +43,7 @@
 ### Mode
 - Toggle Size: `CmdOrCtrl+E`
 - Keyboard: `CmdOrCtrl+K`
+- Picker: `CmdOrCtrl+P`
 
 
 ## keyboard Mode
@@ -69,5 +70,20 @@
 
 ### Mode
 - Stop Keyboard Mode: `Escape`
+
+
+## picker Mode
+
+### Edit
+- undo: `undefined`
+- redo: `undefined`
+- cut: `undefined`
+- copy: `undefined`
+- paste: `undefined`
+- delete: `undefined`
+- selectall: `undefined`
+
+### Mode
+- Stop Picker Mode: `Escape`
 
 

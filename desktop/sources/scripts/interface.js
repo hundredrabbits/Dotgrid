@@ -3,12 +3,17 @@ function Interface()
   this.el = document.createElement("div");
   this.el.id = "interface";
 
+  this.el.appendChild(this.menu_el = document.createElement("div"));
+  this.menu_el.id = "menu";
+
   this.is_visible = true;
   this.zoom = false;
 
   this.start = function()
   {
     document.getElementById("app").appendChild(this.el);
+    this.el.appendChild(dotgrid.picker.el);
+    
     var html = ""
     var tools = {
       line: ["line","M60,60 L240,240",""],
@@ -31,7 +36,7 @@ function Interface()
       var tool = tools[id];
       html += `<svg id="${id}" ar="${id}" title="${tool[0]}" viewBox="0 0 300 300" class="icon"><path class="icon_path" d="${tool[1]}"/>${id == "depth" ? `<path class="icon_path inactive" d=""/>` : ""}<rect ar="${id}" width="300" height="300" opacity="0"><title>${id}</title></rect></svg>`
     }
-    this.el.innerHTML = html
+    this.menu_el.innerHTML = html
   }
 
   this.update = function()
