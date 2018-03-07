@@ -552,7 +552,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
     var svg = dotgrid.svg_el.outerHTML;
 
-    e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
+    e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()));
+    e.clipboardData.setData('text/plain', dotgrid.tool.path());
     e.clipboardData.setData('text/html', svg);
     e.clipboardData.setData('text/svg+xml', svg);
 
@@ -578,7 +579,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
   this.paste = function(e)
   {
-    var data = e.clipboardData.getData("text/plain");
+    var data = e.clipboardData.getData("text/source");
     data = JSON.parse(data.trim());
     dotgrid.tool.import(data);
     this.draw();
