@@ -112,6 +112,7 @@ function Tool()
     for(id in this.layer()){
       var stroke = this.layer()[id];
       if(stroke.type != content.type){ continue; }
+      if(!stroke.verteces[stroke.verteces.length-1]){ continue; }
       if(stroke.verteces[stroke.verteces.length-1].x != content.verteces[0].x){ continue; }
       if(stroke.verteces[stroke.verteces.length-1].y != content.verteces[0].y){ continue; }
       return id;
