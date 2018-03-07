@@ -287,6 +287,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     if(o == "mirror"){ this.mod_mirror(); }
     if(o == "color"){ setTimeout(()=>{ this.picker.start(); }, 100) }
     if(o == "depth"){ this.toggle_layer(); }
+
+    e.preventDefault();
   }
 
   this.mouse_move = function(e)
@@ -298,6 +300,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     dotgrid.preview(e.target.getAttribute("ar"));
     dotgrid.move_cursor(pos)
     dotgrid.guide.update();
+    e.preventDefault();
   }
 
   this.mouse_up = function(e)
@@ -312,12 +315,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
       dotgrid.tool.translate(dotgrid.translation.from,dotgrid.translation.to);
       dotgrid.translation = null;
       this.draw();
+      e.preventDefault();
       return;
     }
 
     this.tool.add_vertex({x:pos.x * -1,y:pos.y});
     dotgrid.translation = null;
     this.draw();
+    e.preventDefault();
   }
 
   this.mouse_alt = function(e)
