@@ -4,14 +4,15 @@
     <script type="text/javascript" src="scripts/lib/controller.js"></script>
     <script type="text/javascript" src="scripts/lib/history.js"></script>
 
-    <script type="text/javascript" src="scripts/pos.js"></script>
     <script type="text/javascript" src="scripts/dotgrid.js"></script>
     <script type="text/javascript" src="scripts/guide.js"></script>
     <script type="text/javascript" src="scripts/render.js"></script>
     <script type="text/javascript" src="scripts/interface.js"></script>
     <script type="text/javascript" src="scripts/tool.js"></script>
+
     <script type="text/javascript" src="scripts/keyboard.js"></script>
     <script type="text/javascript" src="scripts/picker.js"></script>
+
     <link rel="stylesheet" type="text/css" href="links/reset.css"/>
     <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
     <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -23,7 +24,7 @@
         const {dialog,app} = require('electron').remote;
         const fs = require('fs');
 
-        dotgrid = new Dotgrid(300,300,20,20,4,4, 10,"square","#000000");
+        dotgrid = new Dotgrid(300,300,20,20,4,4);
         dotgrid.install();
         
       </script>

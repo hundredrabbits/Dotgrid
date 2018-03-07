@@ -24,22 +24,53 @@ function Tool()
     this.index = 0;
   }
 
-  this.style = function()
+  this.clear = function()
   {
-    if(!this.styles[this.index]){
-      this.styles[this.index] = [];
-    }
-    return this.styles[this.index];    
+    this.verteces = [];
+    dotgrid.preview();
+    dotgrid.draw();
   }
 
-  this.layer = function()
+  this.undo = function()
   {
-    if(!this.layers[this.index]){
-      this.layers[this.index] = [];
-    }
-    return this.layers[this.index];
+    this.layers = dotgrid.history.prev();
+    dotgrid.draw();
   }
 
+  this.redo = function()
+  {
+    this.layers = dotgrid.history.next();
+    dotgrid.draw();    
+  }
+
+  // I/O
+
+  this.export = function(target = {layers:this.layers,styles:this.styles})
+  {
+    return JSON.stringify(copy(target), null, 2);
+  }
+
+  this.import = function(layer)
+  {
+    this.layers[this.index] = this.layers[this.index].concat(layer)
+    dotgrid.history.push(this.layers);
+    this.clear();
+    dotgrid.draw();
+  }
+  
+  this.replace = function(dot)
+  {
+    if(!dot.layers || dot.layers.length != 3){ console.log("Incompatible version"); return; }
+    
+    this.layers = dot.layers;
+    this.styles = dot.styles;
+    this.clear();
+    dotgrid.draw();
+    dotgrid.history.push(this.layers);
+  }
+
+  // EDIT
+  
   this.remove_segment = function()
   {
     if(this.verteces.length > 0){ this.clear(); return; }
@@ -198,47 +229,24 @@ function Tool()
     dotgrid.draw();
   }
 
-  this.clear = function()
+  // Style
+
+  this.style = function()
   {
-    this.verteces = [];
-    dotgrid.preview();
-    dotgrid.draw();
+    if(!this.styles[this.index]){
+      this.styles[this.index] = [];
+    }
+    return this.styles[this.index];    
   }
 
-  this.undo = function()
-  {
-    this.layers = dotgrid.history.prev();
-    dotgrid.draw();
-  }
+  // Layers
 
-  this.redo = function()
+  this.layer = function()
   {
-    this.layers = dotgrid.history.next();
-    dotgrid.draw();    
-  }
-
-  this.export = function(target = {layers:this.layers,styles:this.styles})
-  {
-    return JSON.stringify(copy(target), null, 2);
-  }
-
-  this.replace = function(dot)
-  {
-    if(!dot.layers || dot.layers.length != 3){ console.log("Incompatible version"); return; }
-    
-    this.layers = dot.layers;
-    this.styles = dot.styles;
-    this.clear();
-    dotgrid.draw();
-    dotgrid.history.push(this.layers);
-  }
-
-  this.import = function(layer)
-  {
-    this.layers[this.index] = this.layers[this.index].concat(layer)
-    dotgrid.history.push(this.layers);
-    this.clear();
-    dotgrid.draw();
+    if(!this.layers[this.index]){
+      this.layers[this.index] = [];
+    }
+    return this.layers[this.index];
   }
 
   this.select_layer = function(id)

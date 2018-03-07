@@ -1,4 +1,4 @@
-function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
+function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 {
   this.controller = new Controller();
   this.theme = new Theme();
@@ -16,9 +16,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
   this.grid_y = grid_y;
   this.block_x = block_x;
   this.block_y = block_y;
-
-  this.color = color;
-  this.offset = new Pos(0,0);
 
   // Dotgrid
   this.element = document.createElement("div");
@@ -80,7 +77,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
-    this.svg_el.style.stroke = this.color;
     this.svg_el.style.fill = "none";
     this.svg_el.style.strokeWidth = this.tool.style().thickness;
     this.element.appendChild(this.svg_el);
@@ -267,7 +263,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
   this.mouse_down = function(e)
   {
-    var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5)); pos = this.position_on_grid(pos);
+    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
 
     if(e.altKey){ dotgrid.tool.remove_segments_at(pos); return; }
     if(dotgrid.tool.vertex_at(pos)){ console.log("Begin translation"); dotgrid.translation = {from:pos,to:pos}; return; }
@@ -286,14 +282,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     if(o == "linejoin"){ this.mod_linejoin(); }
     if(o == "mirror"){ this.mod_mirror(); }
     if(o == "color"){ setTimeout(()=>{ this.picker.start(); }, 100) }
-    if(o == "depth"){ this.toggle_layer(); }
+    if(o == "depth"){ this.tool.select_next_layer(); }
 
     e.preventDefault();
   }
 
   this.mouse_move = function(e)
   {
-    var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5)); pos = this.position_on_grid(pos);
+    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
 
     if(dotgrid.translation && (Math.abs(dotgrid.translation.from.x) != Math.abs(pos.x) || Math.abs(dotgrid.translation.from.y) != Math.abs(pos.y))){ dotgrid.translation.to = pos; }
 
@@ -305,7 +301,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
   this.mouse_up = function(e)
   {
-    var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5)); pos = this.position_on_grid(pos);
+    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
 
     if(e.altKey){ return; }
 
@@ -327,7 +323,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
   this.mouse_alt = function(e)
   {
-    var pos = this.position_in_grid(new Pos(e.clientX+5,e.clientY-5)); pos = this.position_on_grid(pos);
+    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
     dotgrid.tool.remove_segments_at(pos);
     e.preventDefault();
     setTimeout(() => { dotgrid.tool.clear(); },150);
@@ -407,13 +403,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     this.mirror_index += 1; 
     this.mirror_index = this.mirror_index > 3 ? 0 : this.mirror_index;
     this.draw();
-  }
-
-  this.toggle_layer = function()
-  {
-    var index = this.tool.index;
-    index = index >= 2 ? 0 : index+1;
-    this.tool.select_layer(index);
   }
 
   this.set_size = function(size = {width:300,height:300},interface = true) 
@@ -523,7 +512,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
     this.history.clear();
     this.tool.reset();
     this.reset();
-    this.color = "#000000"
     this.draw();
   }
 
@@ -589,7 +577,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
 
   this.position_in_grid = function(pos)
   {
-    return new Pos((window.innerWidth/2) - (this.width/2) - pos.x,pos.y - (30+10))
+    return {x:(window.innerWidth/2) - (this.width/2) - pos.x,y:pos.y - (30+10)}
   }
 
   this.position_on_grid = function(pos)
@@ -603,7 +591,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y, color = "#000000")
       x = 50
       y = -50
     }
-    return new Pos(x,y);
+    return {x:x,y:y};
   }
 }
 
