@@ -8,6 +8,8 @@ Dotgrid is a simple vector drawing application.
 
 Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved with the arrows. Clicking one of the path icons, or pressing one of the shortcuts, will draw a stroke between them. The newly created segment's handles can be moved by clicking and dragging them.
 
+Hold `shift` to drag entire layer, hold `alt` to delete a vertex.
+
 ## Controls
 
 ## default Mode

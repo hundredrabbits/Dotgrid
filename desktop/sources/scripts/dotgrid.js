@@ -262,13 +262,19 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   // Cursor
 
   this.translation = null;
+  this.translation_multi = null;
 
   this.mouse_down = function(e)
   {
     var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
 
     if(e.altKey){ dotgrid.tool.remove_segments_at(pos); return; }
-    if(dotgrid.tool.vertex_at(pos)){ console.log("Begin translation"); dotgrid.translation = {from:pos,to:pos}; return; }
+    
+    if(dotgrid.tool.vertex_at(pos)){ 
+      console.log("Begin translation"); dotgrid.translation = {from:pos,to:pos}; 
+      if(e.shiftKey){ console.log("Begin translation(multi)"); dotgrid.translation_multi = true; }
+      return; 
+    }
 
     var o = e.target.getAttribute("ar");
     if(!o){ return; }
@@ -311,8 +317,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     if(pos.x > 0) { dotgrid.translation = null; return; }
 
     if(dotgrid.translation && (Math.abs(dotgrid.translation.from.x) != Math.abs(dotgrid.translation.to.x) || Math.abs(dotgrid.translation.from.y) != Math.abs(dotgrid.translation.to.y))){
-      dotgrid.tool.translate(dotgrid.translation.from,dotgrid.translation.to);
+      if(dotgrid.translation_multi){
+        dotgrid.tool.translate_multi(dotgrid.translation.from,dotgrid.translation.to);
+      }
+      else{
+        dotgrid.tool.translate(dotgrid.translation.from,dotgrid.translation.to);  
+      }
       dotgrid.translation = null;
+      dotgrid.translation_multi = null;
       this.draw();
       e.preventDefault();
       return;

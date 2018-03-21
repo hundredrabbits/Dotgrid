@@ -229,6 +229,22 @@ function Tool()
     dotgrid.draw();
   }
 
+  this.translate_multi = function(a,b)
+  {
+    var offset = {x:a.x - b.x,y:a.y - b.y}
+
+    for(segment_id in this.layer()){
+      var segment = this.layer()[segment_id];
+      for(vertex_id in segment.verteces){
+        var vertex = segment.verteces[vertex_id];
+        segment.verteces[vertex_id] = {x:vertex.x+offset.x,y:vertex.y-offset.y};
+      }
+    }
+    dotgrid.history.push(this.layers);
+    this.clear();
+    dotgrid.draw();
+  }
+
   // Style
 
   this.style = function()
