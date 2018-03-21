@@ -140,7 +140,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","Effect","Linejoin",() => { dotgrid.mod_linejoin(); },"W");
     this.controller.add("default","Effect","Mirror",() => { dotgrid.mod_mirror(); },"E");
     this.controller.add("default","Effect","Fill",() => { dotgrid.mod_fill(); },"R");
-
+    this.controller.add("default","Effect","Dash",() => { dotgrid.mod_dash(); },"T");
+    this.controller.add("default","Effect","Color",() => { dotgrid.picker.start(); },"G");
     this.controller.add("default","Effect","Thicker",() => { dotgrid.mod_thickness(1) },"}");
     this.controller.add("default","Effect","Thinner",() => { dotgrid.mod_thickness(-1) },"{");
     this.controller.add("default","Effect","Thicker +5",() => { dotgrid.mod_thickness(5,true) },"]");
@@ -413,6 +414,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.draw();
   }
 
+  this.dash_index = 0;
+
+  this.mod_dash = function()
+  {
+    var styles = [[0,0],[0.1,1.25],[1.5,1.25],[2,1.25]]
+    this.dash_index += 1; 
+    this.dash_index = this.dash_index > styles.length-1 ? 0 : this.dash_index;
+    this.tool.style().dash = styles[this.dash_index]
+    this.draw();
+  }
   this.set_size = function(size = {width:300,height:300},interface = true) 
   {
     var win = require('electron').remote.getCurrentWindow();
@@ -456,33 +467,39 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.layer_1.style.strokeLinejoin = this.tool.styles[0].strokeLinejoin;
     this.layer_1.style.stroke = this.tool.styles[0].color;
     this.layer_1.style.fill = this.tool.styles[0].fill;
+    this.layer_1.style.strokeDasharray = `${this.tool.styles[0].dash[0] * this.tool.styles[0].thickness},${this.tool.styles[0].dash[1] * this.tool.styles[0].thickness}`;
     this.mirror_layer_1.style.strokeWidth = this.tool.styles[0].thickness;
     this.mirror_layer_1.style.strokeLinecap = this.tool.styles[0].strokeLinecap;
     this.mirror_layer_1.style.strokeLinejoin = this.tool.styles[0].strokeLinejoin;
     this.mirror_layer_1.style.stroke = this.tool.styles[0].color;
     this.mirror_layer_1.style.fill = this.tool.styles[0].fill;
+    this.mirror_layer_1.style.strokeDasharray = `${this.tool.styles[0].dash[0] * this.tool.styles[0].thickness},${this.tool.styles[0].dash[1] * this.tool.styles[0].thickness}`;
 
     this.layer_2.style.strokeWidth = this.tool.styles[1].thickness;
     this.layer_2.style.strokeLinecap = this.tool.styles[1].strokeLinecap;
     this.layer_2.style.strokeLinejoin = this.tool.styles[1].strokeLinejoin;
     this.layer_2.style.stroke = this.tool.styles[1].color;
     this.layer_2.style.fill = this.tool.styles[1].fill;
+    this.layer_2.style.strokeDasharray = `${this.tool.styles[1].dash[0] * this.tool.styles[1].thickness},${this.tool.styles[1].dash[1] * this.tool.styles[1].thickness}`;
     this.mirror_layer_2.style.strokeWidth = this.tool.styles[1].thickness;
     this.mirror_layer_2.style.strokeLinecap = this.tool.styles[1].strokeLinecap;
     this.mirror_layer_2.style.strokeLinejoin = this.tool.styles[1].strokeLinejoin;
     this.mirror_layer_2.style.stroke = this.tool.styles[1].color;
     this.mirror_layer_2.style.fill = this.tool.styles[1].fill;
+    this.mirror_layer_2.style.strokeDasharray = `${this.tool.styles[1].dash[0] * this.tool.styles[1].thickness},${this.tool.styles[1].dash[1] * this.tool.styles[1].thickness}`;
 
     this.layer_3.style.strokeWidth = this.tool.styles[2].thickness;
     this.layer_3.style.strokeLinecap = this.tool.styles[2].strokeLinecap;
     this.layer_3.style.strokeLinejoin = this.tool.styles[2].strokeLinejoin;
     this.layer_3.style.stroke = this.tool.styles[2].color;
     this.layer_3.style.fill = this.tool.styles[2].fill;
+    this.layer_3.style.strokeDasharray = `${this.tool.styles[2].dash[0] * this.tool.styles[2].thickness},${this.tool.styles[2].dash[1] * this.tool.styles[2].thickness}`;
     this.mirror_layer_3.style.strokeWidth = this.tool.styles[2].thickness;
     this.mirror_layer_3.style.strokeLinecap = this.tool.styles[2].strokeLinecap;
     this.mirror_layer_3.style.strokeLinejoin = this.tool.styles[2].strokeLinejoin;
     this.mirror_layer_3.style.stroke = this.tool.styles[2].color;
     this.mirror_layer_3.style.fill = this.tool.styles[2].fill;
+    this.mirror_layer_3.style.strokeDasharray = `${this.tool.styles[2].dash[0] * this.tool.styles[2].thickness},${this.tool.styles[2].dash[1] * this.tool.styles[2].thickness}`;
 
     // Draw Mirror
     if(this.mirror_index == 1){
@@ -620,3 +637,8 @@ window.addEventListener('dragover',function(e)
   e.preventDefault();
   e.dataTransfer.dropEffect = 'copy';
 });
+
+String.prototype.capitalize = function()
+{
+  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
+}

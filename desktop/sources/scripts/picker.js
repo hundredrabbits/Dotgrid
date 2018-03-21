@@ -27,6 +27,8 @@ function Picker()
 
   this.validate = function()
   {
+    if(!is_valid(this.el.value)){ return; }
+
     dotgrid.tool.style().color = this.el.value;
     dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? this.el.value : "none";
     dotgrid.draw();
@@ -61,6 +63,12 @@ function Picker()
     }
 
     this.update();
+  }
+
+  function is_valid(val)
+  {
+    var re = /[0-9A-Fa-f]{6}/g;
+    return re.test(val)
   }
 
   this.el.onkeyup = function(event){ dotgrid.picker.listen(event); };

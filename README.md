@@ -10,6 +10,8 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 
 ## Controls
 
+## default Mode
+
 ### File
 - New: `CmdOrCtrl+N`
 - Open: `CmdOrCtrl+O`
@@ -35,6 +37,8 @@ Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved 
 - Linecap: `Q`
 - Linejoin: `W`
 - Mirror: `E`
+- Fill: `R`
+- Dash: `T`
 - Thicker: `}`
 - Thinner: `{`
 - Thicker +5: `]`

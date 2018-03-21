@@ -3,9 +3,9 @@ function Tool()
   this.index = 0;
   this.layers = [[],[],[]];
   this.styles = [
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none"},
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none"},
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none"}
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none",dash:[0,0]},
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none",dash:[0,0]},
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none",dash:[0,0]}
   ];
   this.verteces = [];
   this.reqs = {line:2,arc_c:2,arc_r:2,bezier:3,close:0};

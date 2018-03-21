@@ -25,6 +25,8 @@
 - Linecap: `Q`
 - Linejoin: `W`
 - Mirror: `E`
+- Fill: `R`
+- Dash: `T`
 - Thicker: `}`
 - Thinner: `{`
 - Thicker +5: `]`

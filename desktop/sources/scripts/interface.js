@@ -16,24 +16,25 @@ function Interface()
     
     var html = ""
     var tools = {
-      line: ["line","M60,60 L240,240",""],
-      arc_c: ["arc clockwise","M60,60 A180,180 0 0,1 240,240",""],
-      arc_r: ["arc reverse","M60,60 A180,180 0 0,0 240,240",""],
-      bezier: ["bezier","M60,60 Q60,150 150,150 Q240,150 240,240",""],
-      close: ["close","M60,60 A180,180 0 0,1 240,240  M60,60 A180,180 0 0,0 240,240",""],
+      line: ["line","M60,60 L240,240","A"],
+      arc_c: ["arc clockwise","M60,60 A180,180 0 0,1 240,240","S"],
+      arc_r: ["arc reverse","M60,60 A180,180 0 0,0 240,240","D"],
+      bezier: ["bezier","M60,60 Q60,150 150,150 Q240,150 240,240","F"],
+      close: ["close","M60,60 A180,180 0 0,1 240,240  M60,60 A180,180 0 0,0 240,240","Z"],
 
-      linecap: ["linecap","M60,60 L60,60 L180,180 L240,180 L240,240 L180,240 L180,180"],
-      linejoin: ["linejoin","M60,60 L120,120 L180,120  M120,180 L180,180 L240,240"],
-      thickness: ["thickness","M120,90 L120,90 L90,120 L180,210 L210,180 Z M105,105 L105,105 L60,60 M195,195 L195,195 L240,240","stroke-dasharray: 30,15"],
+      linecap: ["linecap","M60,60 L60,60 L180,180 L240,180 L240,240 L180,240 L180,180","Q"],
+      linejoin: ["linejoin","M60,60 L120,120 L180,120  M120,180 L180,180 L240,240","W"],
+      thickness: ["thickness","M120,90 L120,90 L90,120 L180,210 L210,180 Z M105,105 L105,105 L60,60 M195,195 L195,195 L240,240"],
       
-      mirror: ["mirror","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210"],
-      fill: ["fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z"],
-      color: ["color","M150,60 A90,90 0 0,1 240,150 A-90,90 0 0,1 150,240 A-90,-90 0 0,1 60,150 A90,-90 0 0,1 150,60"],
+      mirror: ["mirror","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210","E"],
+      fill: ["fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z","R"],
+      color: ["color","M150,60 A90,90 0 0,1 240,150 A-90,90 0 0,1 150,240 A-90,-90 0 0,1 60,150 A90,-90 0 0,1 150,60","G"],
     }
 
     for(id in tools){
       var tool = tools[id];
-      html += `<svg id="${id}" ar="${id}" title="${tool[0]}" viewBox="0 0 300 300" class="icon"><path class="icon_path" d="${tool[1]}"/>${id == "depth" ? `<path class="icon_path inactive" d=""/>` : ""}<rect ar="${id}" width="300" height="300" opacity="0"><title>${id}</title></rect></svg>`
+      var shortcut = tool[2];
+      html += `<svg id="${id}" ar="${id}" title="${tool[0].capitalize()}" viewBox="0 0 300 300" class="icon"><path class="icon_path" d="${tool[1]}"/>${id == "depth" ? `<path class="icon_path inactive" d=""/>` : ""}<rect ar="${id}" width="300" height="300" opacity="0"><title>${id.capitalize()}${shortcut ? '('+shortcut+')' : ''}</title></rect></svg>`
     }
     this.menu_el.innerHTML = html
   }
