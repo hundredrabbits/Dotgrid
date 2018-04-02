@@ -344,8 +344,18 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     setTimeout(() => { dotgrid.tool.clear(); },150);
   }
 
-  this.move_cursor = function(pos)
+  function pos_is_equal(a,b)
   {
+    return a && b && a.x == b.x && a.y == b.y
+  }
+
+  this.cursor_prev = null;
+
+  this.move_cursor = function(pos, force = false)
+  {
+    if(pos_is_equal(pos,this.cursor_prev) && !force){ return; }
+
+    console.log("move_cursor",pos)
     if(pos.x>0) {
       this.cursor.style.visibility = "hidden"
     } else {
@@ -355,21 +365,18 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       this.cursor.style.visibility = "visible"
       this.cursor.style.left = Math.floor(-(pos.x-this.grid_width));
       this.cursor.style.top = Math.floor(pos.y+this.grid_height);
-      this.update_cursor(pos);
+      this.cursor_x.style.left = `${-pos.x}px`;
+      this.cursor_x.textContent = parseInt(-pos.x/this.grid_width)
+      this.cursor_y.style.top = `${pos.y}px`;
+      this.cursor_y.textContent = parseInt(pos.y/this.grid_width)
       window.setTimeout(() => dotgrid.cursor.style.transition = "all 50ms", 17 /*one frame*/)
     }
-  }
-
-  this.update_cursor = function(pos)
-  {
-    this.cursor_x.style.left = `${-pos.x}px`;
-    this.cursor_x.textContent = parseInt(-pos.x/this.grid_width)
-    this.cursor_y.style.top = `${pos.y}px`;
-    this.cursor_y.textContent = parseInt(pos.y/this.grid_width)
+    this.cursor_prev = pos;
   }
 
   this.preview = function(operation)
   {
+    console.log("preview")
     if(!operation){ this.preview_el.innerHTML = `<path d='M0,0'></path>`; return;}
     if(operation != "line" && operation != "arc_c" && operation != "arc_r" && operation != "bezier" && operation != "close"){ this.preview_el.innerHTML = `<path d='M0,0'></path>`; return; }
 
@@ -461,6 +468,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.draw = function(exp = false)
   {
+    console.log("draw")
     var paths = this.tool.paths();
     var d = this.tool.path();
     this.layer_1.setAttribute("d",paths[0]);

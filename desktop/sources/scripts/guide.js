@@ -66,6 +66,7 @@ function Guide()
 
   this.update = function()
   {
+    console.log("guide_update")
     this.clear();
 
     for(id in dotgrid.tool.verteces){
