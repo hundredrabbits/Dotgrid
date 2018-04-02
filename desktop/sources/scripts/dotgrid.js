@@ -355,7 +355,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     if(pos_is_equal(pos,this.cursor_prev) && !force){ return; }
 
-    console.log("move_cursor",pos)
     if(pos.x>0) {
       this.cursor.style.visibility = "hidden"
     } else {
@@ -374,13 +373,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.cursor_prev = pos;
   }
 
+  this.preview_prev = null
+
   this.preview = function(operation)
   {
-    console.log("preview")
-    if(!operation){ this.preview_el.innerHTML = `<path d='M0,0'></path>`; return;}
-    if(operation != "line" && operation != "arc_c" && operation != "arc_r" && operation != "bezier" && operation != "close"){ this.preview_el.innerHTML = `<path d='M0,0'></path>`; return; }
-
-    this.preview_el.innerHTML = `<path d='${dotgrid.tool.path([{type:operation,verteces:dotgrid.tool.verteces}])}'></path>`;
+    if(this.preview_prev == operation){ return; }
+    this.preview_el.innerHTML = !operation ? `<path d='M0,0'></path>` : `<path d='${dotgrid.tool.path([{type:operation,verteces:dotgrid.tool.verteces}])}'></path>`;
+    this.preview_prev = operation;
   }
 
   // Toggles
