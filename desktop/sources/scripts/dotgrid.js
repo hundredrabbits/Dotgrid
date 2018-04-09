@@ -241,14 +241,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       if (fileName === undefined){ return; }
       fs.writeFile(fileName+".svg", svg);
       fs.writeFile(fileName+'.png', dotgrid.render.buffer());
-      fs.writeFile(fileName+'.dot', dotgrid.tool.export());
+      fs.writeFile(fileName+'.grid', dotgrid.tool.export());
       dotgrid.draw()
     });
   }
 
   this.open = function()
   {
-    var paths = dialog.showOpenDialog({properties: ['openFile'],filters:[{name:"Dotgrid Image",extensions:["dot"]}]});
+    var paths = dialog.showOpenDialog({properties: ['openFile'],filters:[{name:"Dotgrid Image",extensions:["dot","grid"]}]});
 
     if(!paths){ console.log("Nothing to load"); return; }
 
@@ -572,7 +572,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     
     var file = e.dataTransfer.files[0];
 
-    if(!file.path || file.path.indexOf(".dot") < 0){ console.log("Dotgrid","Not a dot file"); return; }
+    if(!file.path || file.path.indexOf(".dot") < 0 && file.path.indexOf(".grid") < 0){ console.log("Dotgrid","Not a dot file"); return; }
 
     var reader = new FileReader();
     reader.onload = function(e){
