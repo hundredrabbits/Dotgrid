@@ -407,12 +407,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.draw();
   }
 
-  this.mirror_index = 0;
-
   this.mod_mirror = function()
   {
-    this.mirror_index += 1; 
-    this.mirror_index = this.mirror_index > 6 ? 0 : this.mirror_index;
+    this.tool.style().mirror_style += 1;
+    this.tool.style().mirror_style = this.tool.style().mirror_style > 7 ? 0 : this.tool.style().mirror_style;
     this.draw();
   }
 

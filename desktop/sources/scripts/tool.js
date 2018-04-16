@@ -3,9 +3,9 @@ function Tool()
   this.index = 0;
   this.layers = [[],[],[]];
   this.styles = [
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none",dash:[0,0]},
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none",dash:[0,0]},
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none",dash:[0,0]}
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none",dash:[0,0],mirror_style:0},
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none",dash:[0,0],mirror_style:0},
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none",dash:[0,0],mirror_style:0}
   ];
   this.verteces = [];
   this.reqs = {line:2,arc_c:2,arc_r:2,bezier:3,close:0};
@@ -164,47 +164,47 @@ function Tool()
     return this.verteces.length >= this.reqs[type];
   }
 
-  this.path = function(layer = this.layer())
+  this.path = function(layer_id = 0)
   {
-    if(layer.length > 0 && layer[0].type == "close"){ return ""; }
-    
+    var layer = this.layers[layer_id];
+
     var html = "";
     for(id in layer){
       var segment = layer[id];
       html += segment.type == "close" ? "Z " : this.render(segment,0);
 
       // Horizontal Mirror
-      if(dotgrid.mirror_index == 0){
+      if(this.styles[layer_id].mirror_style == 1){
         html += segment.type == "close" ? "Z " : this.render(segment,0,true,false);
       }
       // Vertical Mirror
-      if(dotgrid.mirror_index == 1){
+      if(this.styles[layer_id].mirror_style == 2){
         html += segment.type == "close" ? "Z " : this.render(segment,0,false,true);
       }
       // Single-fold
-      if(dotgrid.mirror_index == 2){
+      if(this.styles[layer_id].mirror_style == 3){
         html += segment.type == "close" ? "Z " : this.render(segment,180,false,false);
       }
       // Three-fold
-      if(dotgrid.mirror_index == 3){
+      if(this.styles[layer_id].mirror_style == 4){
         html += segment.type == "close" ? "Z " : this.render(segment,120,false,false);
         html += segment.type == "close" ? "Z " : this.render(segment,240,false,false);
       }
       // Four-fold
-      if(dotgrid.mirror_index == 4){
+      if(this.styles[layer_id].mirror_style == 5){
         html += segment.type == "close" ? "Z " : this.render(segment,90,false,false);
         html += segment.type == "close" ? "Z " : this.render(segment,180,false,false);
         html += segment.type == "close" ? "Z " : this.render(segment,270,false,false);
       }
       // Five-folds
-      if(dotgrid.mirror_index == 5){
+      if(this.styles[layer_id].mirror_style == 6){
         html += segment.type == "close" ? "Z " : this.render(segment,72,false,false);
         html += segment.type == "close" ? "Z " : this.render(segment,72*2,false,false);
         html += segment.type == "close" ? "Z " : this.render(segment,72*3,false,false);
         html += segment.type == "close" ? "Z " : this.render(segment,72*4,false,false);
       }
       // Six-folds
-      if(dotgrid.mirror_index == 6){
+      if(this.styles[layer_id].mirror_style == 7){
         html += segment.type == "close" ? "Z " : this.render(segment,60,false,false);
         html += segment.type == "close" ? "Z " : this.render(segment,60*2,false,false);
         html += segment.type == "close" ? "Z " : this.render(segment,60*3,false,false);
@@ -217,7 +217,7 @@ function Tool()
 
   this.paths = function()
   {
-    return [this.path(this.layers[0]),this.path(this.layers[1]),this.path(this.layers[2])]
+    return [this.path(0),this.path(1),this.path(2)]
   }
 
   this.render = function(segment, angle = 0, mirror_x = false, mirror_y = false)
@@ -235,7 +235,7 @@ function Tool()
       var after_next = this.mirror_mod(verteces[parseInt(id)+2],angle,mirror_x,mirror_y)
 
       if(id == 0){ 
-        html += `M${vertex.x},${vertex.y} `; continue;
+        html += `M${vertex.x},${vertex.y} `;
       }
 
       if(type == "line"){
@@ -261,10 +261,10 @@ function Tool()
     if(!vertex){ return null; }
 
     if(mirror_x == true){
-      return {x:dotgrid.width - vertex.x,y:vertex.y}
+      return {x:(dotgrid.width - vertex.x),y:vertex.y}
     }
     if(mirror_y == true){
-      return {x:vertex.x,y:dotgrid.height - vertex.y}
+      return {x:vertex.x,y:(dotgrid.height - vertex.y)+(dotgrid.height/2)}
     }
     return rotate_point(vertex.x,vertex.y,dotgrid.width/2,dotgrid.height/2,angle)
   }
