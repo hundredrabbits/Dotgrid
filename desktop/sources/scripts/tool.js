@@ -273,8 +273,8 @@ function Tool()
   {
     angle = angle * Math.PI / 180.0;
     return {
-      x: Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX,
-      y: Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY
+      x: (Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX).toFixed(1),
+      y: (Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY).toFixed(1)
     };
   }
 
