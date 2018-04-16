@@ -32,15 +32,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   var cursor = null;
 
   this.svg_el = null;
-  this.mirror_el = null;
-  this.mirror = false;
   this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_1.id = "layer_1"; this.layer_1.style.stroke = "black";
   this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_2.id = "layer_2"; this.layer_2.style.stroke = "#999";
   this.layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_3.id = "layer_3"; this.layer_3.style.stroke = "#ccc";
-  this.mirror_layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_1.id = "mirror_layer_1"; this.mirror_layer_1.style.stroke = "black";
-  this.mirror_layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_2.id = "mirror_layer_2"; this.mirror_layer_2.style.stroke = "#999";
-  this.mirror_layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.mirror_layer_3.id = "mirror_layer_3"; this.mirror_layer_3.style.stroke = "#ccc";
-
+  
   this.install = function()
   {  
     document.getElementById("app").appendChild(this.wrapper);
@@ -65,7 +60,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.element.appendChild(this.cursor_y);
 
     this.offset_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
-    this.mirror_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.svg_el.setAttribute("class","vector");
@@ -96,14 +90,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.preview_el.style.fill = "none";
     this.element.appendChild(this.preview_el);
 
-    this.mirror_el.appendChild(this.mirror_layer_3)
     this.offset_el.appendChild(this.layer_3)
-    this.mirror_el.appendChild(this.mirror_layer_2)
     this.offset_el.appendChild(this.layer_2)
-    this.mirror_el.appendChild(this.mirror_layer_1)
     this.offset_el.appendChild(this.layer_1)
     this.svg_el.appendChild(this.offset_el);
-    this.svg_el.appendChild(this.mirror_el);
 
     this.theme.start();
     this.tool.start();
@@ -422,7 +412,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.mod_mirror = function()
   {
     this.mirror_index += 1; 
-    this.mirror_index = this.mirror_index > 3 ? 0 : this.mirror_index;
+    this.mirror_index = this.mirror_index > 6 ? 0 : this.mirror_index;
     this.draw();
   }
 
@@ -473,10 +463,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.layer_1.setAttribute("d",paths[0]);
     this.layer_2.setAttribute("d",paths[1]);
     this.layer_3.setAttribute("d",paths[2]);
-    
-    this.mirror_layer_1.setAttribute("d",this.mirror_index > 0 ? paths[0] : "M0,0");
-    this.mirror_layer_2.setAttribute("d",this.mirror_index > 0 ? paths[1] : "M0,0");
-    this.mirror_layer_3.setAttribute("d",this.mirror_index > 0 ? paths[2] : "M0,0");
 
     this.svg_el.style.width = this.width;
     this.svg_el.style.height = this.height;
@@ -487,61 +473,21 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.layer_1.style.stroke = this.tool.styles[0].color;
     this.layer_1.style.fill = this.tool.styles[0].fill;
     this.layer_1.style.strokeDasharray = `${this.tool.styles[0].dash[0] * this.tool.styles[0].thickness},${this.tool.styles[0].dash[1] * this.tool.styles[0].thickness}`;
-    this.mirror_layer_1.style.strokeWidth = this.tool.styles[0].thickness;
-    this.mirror_layer_1.style.strokeLinecap = this.tool.styles[0].strokeLinecap;
-    this.mirror_layer_1.style.strokeLinejoin = this.tool.styles[0].strokeLinejoin;
-    this.mirror_layer_1.style.stroke = this.tool.styles[0].color;
-    this.mirror_layer_1.style.fill = this.tool.styles[0].fill;
-    this.mirror_layer_1.style.strokeDasharray = `${this.tool.styles[0].dash[0] * this.tool.styles[0].thickness},${this.tool.styles[0].dash[1] * this.tool.styles[0].thickness}`;
-
+  
     this.layer_2.style.strokeWidth = this.tool.styles[1].thickness;
     this.layer_2.style.strokeLinecap = this.tool.styles[1].strokeLinecap;
     this.layer_2.style.strokeLinejoin = this.tool.styles[1].strokeLinejoin;
     this.layer_2.style.stroke = this.tool.styles[1].color;
     this.layer_2.style.fill = this.tool.styles[1].fill;
     this.layer_2.style.strokeDasharray = `${this.tool.styles[1].dash[0] * this.tool.styles[1].thickness},${this.tool.styles[1].dash[1] * this.tool.styles[1].thickness}`;
-    this.mirror_layer_2.style.strokeWidth = this.tool.styles[1].thickness;
-    this.mirror_layer_2.style.strokeLinecap = this.tool.styles[1].strokeLinecap;
-    this.mirror_layer_2.style.strokeLinejoin = this.tool.styles[1].strokeLinejoin;
-    this.mirror_layer_2.style.stroke = this.tool.styles[1].color;
-    this.mirror_layer_2.style.fill = this.tool.styles[1].fill;
-    this.mirror_layer_2.style.strokeDasharray = `${this.tool.styles[1].dash[0] * this.tool.styles[1].thickness},${this.tool.styles[1].dash[1] * this.tool.styles[1].thickness}`;
-
+    
     this.layer_3.style.strokeWidth = this.tool.styles[2].thickness;
     this.layer_3.style.strokeLinecap = this.tool.styles[2].strokeLinecap;
     this.layer_3.style.strokeLinejoin = this.tool.styles[2].strokeLinejoin;
     this.layer_3.style.stroke = this.tool.styles[2].color;
     this.layer_3.style.fill = this.tool.styles[2].fill;
     this.layer_3.style.strokeDasharray = `${this.tool.styles[2].dash[0] * this.tool.styles[2].thickness},${this.tool.styles[2].dash[1] * this.tool.styles[2].thickness}`;
-    this.mirror_layer_3.style.strokeWidth = this.tool.styles[2].thickness;
-    this.mirror_layer_3.style.strokeLinecap = this.tool.styles[2].strokeLinecap;
-    this.mirror_layer_3.style.strokeLinejoin = this.tool.styles[2].strokeLinejoin;
-    this.mirror_layer_3.style.stroke = this.tool.styles[2].color;
-    this.mirror_layer_3.style.fill = this.tool.styles[2].fill;
-    this.mirror_layer_3.style.strokeDasharray = `${this.tool.styles[2].dash[0] * this.tool.styles[2].thickness},${this.tool.styles[2].dash[1] * this.tool.styles[2].thickness}`;
-
-    // Draw Mirror
-    if(this.mirror_index == 1){
-      this.mirror_layer_1.setAttribute("transform",`translate(${this.width},0),scale(-1,1)`)
-      this.mirror_layer_2.setAttribute("transform",`translate(${this.width},0),scale(-1,1)`)
-      this.mirror_layer_3.setAttribute("transform",`translate(${this.width},0),scale(-1,1)`)
-    }
-    else if(this.mirror_index == 2){
-      this.mirror_layer_1.setAttribute("transform",`translate(0,${this.height}),scale(1,-1)`)
-      this.mirror_layer_2.setAttribute("transform",`translate(0,${this.height}),scale(1,-1)`)
-      this.mirror_layer_3.setAttribute("transform",`translate(0,${this.height}),scale(1,-1)`)
-    }
-    else if(this.mirror_index == 3){
-      this.mirror_layer_1.setAttribute("transform",`translate(${this.width},${this.height}),scale(-1,-1)`)
-      this.mirror_layer_2.setAttribute("transform",`translate(${this.width},${this.height}),scale(-1,-1)`)
-      this.mirror_layer_3.setAttribute("transform",`translate(${this.width},${this.height}),scale(-1,-1)`)
-    }
-    else{
-      this.mirror_layer_1.setAttribute("transform","")
-      this.mirror_layer_2.setAttribute("transform","")
-      this.mirror_layer_3.setAttribute("transform","")
-    }
-
+    
     this.offset_el.setAttribute("transform","translate(0,0)")
 
     this.preview();

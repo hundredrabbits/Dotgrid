@@ -174,23 +174,43 @@ function Tool()
       html += segment.type == "close" ? "Z " : this.render(segment,0);
 
       // Horizontal Mirror
-      // html += segment.type == "close" ? "Z " : this.render(segment,0,dotgrid.width,0);
-
+      if(dotgrid.mirror_index == 0){
+        html += segment.type == "close" ? "Z " : this.render(segment,0,true,false);
+      }
       // Vertical Mirror
-      html += segment.type == "close" ? "Z " : this.render(segment,0,false,true);
-
+      if(dotgrid.mirror_index == 1){
+        html += segment.type == "close" ? "Z " : this.render(segment,0,false,true);
+      }
       // Single-fold
-      // html += segment.type == "close" ? "Z " : this.render(segment,180);
-      
-      // Three-folds
-      // html += segment.type == "close" ? "Z " : this.render(segment,120);
-      // html += segment.type == "close" ? "Z " : this.render(segment,240);
-      
+      if(dotgrid.mirror_index == 2){
+        html += segment.type == "close" ? "Z " : this.render(segment,180,false,false);
+      }
+      // Three-fold
+      if(dotgrid.mirror_index == 3){
+        html += segment.type == "close" ? "Z " : this.render(segment,120,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,240,false,false);
+      }
+      // Four-fold
+      if(dotgrid.mirror_index == 4){
+        html += segment.type == "close" ? "Z " : this.render(segment,90,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,180,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,270,false,false);
+      }
       // Five-folds
-      // html += segment.type == "close" ? "Z " : this.render(segment,72);
-      // html += segment.type == "close" ? "Z " : this.render(segment,72*2);
-      // html += segment.type == "close" ? "Z " : this.render(segment,72*3);
-      // html += segment.type == "close" ? "Z " : this.render(segment,72*4);
+      if(dotgrid.mirror_index == 5){
+        html += segment.type == "close" ? "Z " : this.render(segment,72,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,72*2,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,72*3,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,72*4,false,false);
+      }
+      // Six-folds
+      if(dotgrid.mirror_index == 6){
+        html += segment.type == "close" ? "Z " : this.render(segment,60,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,60*2,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,60*3,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,60*4,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,60*5,false,false);
+      }
     }
     return html
   }
