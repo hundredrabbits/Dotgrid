@@ -164,9 +164,9 @@ function Tool()
     return this.verteces.length >= this.reqs[type];
   }
 
-  this.path = function(layer_id = 0)
+  this.path = function(layer_id = 0, preview = null)
   {
-    var layer = this.layers[layer_id];
+    var layer = preview ? preview : this.layers[layer_id];
 
     var html = "";
     for(id in layer){

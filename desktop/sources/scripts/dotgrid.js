@@ -368,7 +368,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.preview = function(operation)
   {
     if(this.preview_prev == operation){ return; }
-    this.preview_el.innerHTML = !operation ? `<path d='M0,0'></path>` : `<path d='${dotgrid.tool.path([{type:operation,verteces:dotgrid.tool.verteces}])}'></path>`;
+    this.preview_el.innerHTML = !operation ? `<path d='M0,0'></path>` : `<path d='${dotgrid.tool.path(dotgrid.tool.index,[{type:operation,verteces:dotgrid.tool.verteces}])}'></path>`;
     this.preview_prev = operation;
   }
 
