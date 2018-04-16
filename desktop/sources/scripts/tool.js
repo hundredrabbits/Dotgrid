@@ -3,9 +3,9 @@ function Tool()
   this.index = 0;
   this.layers = [[],[],[]];
   this.styles = [
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none",dash:[0,0]},
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none",dash:[0,0]},
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none",dash:[0,0]}
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none",dash:[0,0],mirror_style:0},
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none",dash:[0,0],mirror_style:0},
+    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none",dash:[0,0],mirror_style:0}
   ];
   this.verteces = [];
   this.reqs = {line:2,arc_c:2,arc_r:2,bezier:3,close:0};
@@ -164,24 +164,63 @@ function Tool()
     return this.verteces.length >= this.reqs[type];
   }
 
-  this.path = function(layer = this.layer())
+  this.path = function(layer_id = 0, preview = null)
   {
-    if(layer.length > 0 && layer[0].type == "close"){ return ""; }
-    
+    var layer = preview ? preview : this.layers[layer_id];
+
     var html = "";
     for(id in layer){
       var segment = layer[id];
-      html += segment.type == "close" ? "Z " : this.render(segment);
+      html += segment.type == "close" ? "Z " : this.render(segment,0);
+
+      // Horizontal Mirror
+      if(this.styles[layer_id].mirror_style == 1){
+        html += segment.type == "close" ? "Z " : this.render(segment,0,true,false);
+      }
+      // Vertical Mirror
+      if(this.styles[layer_id].mirror_style == 2){
+        html += segment.type == "close" ? "Z " : this.render(segment,0,false,true);
+      }
+      // Single-fold
+      if(this.styles[layer_id].mirror_style == 3){
+        html += segment.type == "close" ? "Z " : this.render(segment,180,false,false);
+      }
+      // Three-fold
+      if(this.styles[layer_id].mirror_style == 4){
+        html += segment.type == "close" ? "Z " : this.render(segment,120,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,240,false,false);
+      }
+      // Four-fold
+      if(this.styles[layer_id].mirror_style == 5){
+        html += segment.type == "close" ? "Z " : this.render(segment,90,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,180,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,270,false,false);
+      }
+      // Five-folds
+      if(this.styles[layer_id].mirror_style == 6){
+        html += segment.type == "close" ? "Z " : this.render(segment,72,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,72*2,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,72*3,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,72*4,false,false);
+      }
+      // Six-folds
+      if(this.styles[layer_id].mirror_style == 7){
+        html += segment.type == "close" ? "Z " : this.render(segment,60,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,60*2,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,60*3,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,60*4,false,false);
+        html += segment.type == "close" ? "Z " : this.render(segment,60*5,false,false);
+      }
     }
     return html
   }
 
   this.paths = function()
   {
-    return [this.path(this.layers[0]),this.path(this.layers[1]),this.path(this.layers[2])]
+    return [this.path(0),this.path(1),this.path(2)]
   }
 
-  this.render = function(segment)
+  this.render = function(segment, angle = 0, mirror_x = false, mirror_y = false)
   {
     var type = segment.type;
     var verteces = segment.verteces;
@@ -190,10 +229,14 @@ function Tool()
 
     for(id in verteces){
       if(skip > 0){ skip -= 1; continue; }
-      if(id == 0){ html += `M${verteces[id].x},${verteces[id].y} `; }
-      var vertex = verteces[id];
-      var next = verteces[parseInt(id)+1]
-      var after_next = verteces[parseInt(id)+2]
+      
+      var vertex = this.mirror_mod(verteces[id],angle,mirror_x,mirror_y);
+      var next = this.mirror_mod(verteces[parseInt(id)+1],angle,mirror_x,mirror_y)
+      var after_next = this.mirror_mod(verteces[parseInt(id)+2],angle,mirror_x,mirror_y)
+
+      if(id == 0){ 
+        html += `M${vertex.x},${vertex.y} `;
+      }
 
       if(type == "line"){
         html += `L${vertex.x},${vertex.y} `;  
@@ -211,6 +254,28 @@ function Tool()
     }
   
     return html
+  }
+
+  this.mirror_mod = function(vertex,angle,mirror_x = false,mirror_y = false)
+  {
+    if(!vertex){ return null; }
+
+    if(mirror_x == true){
+      return {x:(dotgrid.width - vertex.x),y:vertex.y}
+    }
+    if(mirror_y == true){
+      return {x:vertex.x,y:(dotgrid.height - vertex.y)+(dotgrid.height/2)}
+    }
+    return rotate_point(vertex.x,vertex.y,dotgrid.width/2,dotgrid.height/2,angle)
+  }
+
+  function rotate_point(pointX, pointY, originX, originY, angle)
+  {
+    angle = angle * Math.PI / 180.0;
+    return {
+      x: Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX,
+      y: Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY
+    };
   }
 
   this.translate = function(a,b)
