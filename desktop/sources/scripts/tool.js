@@ -171,7 +171,17 @@ function Tool()
     var html = "";
     for(id in layer){
       var segment = layer[id];
-      html += segment.type == "close" ? "Z " : this.render(segment);
+      html += segment.type == "close" ? "Z " : this.render(segment,0);
+      
+      // Three-folds
+      html += segment.type == "close" ? "Z " : this.render(segment,120);
+      html += segment.type == "close" ? "Z " : this.render(segment,240);
+      
+      // Five-folds
+      // html += segment.type == "close" ? "Z " : this.render(segment,72);
+      // html += segment.type == "close" ? "Z " : this.render(segment,72*2);
+      // html += segment.type == "close" ? "Z " : this.render(segment,72*3);
+      // html += segment.type == "close" ? "Z " : this.render(segment,72*4);
     }
     return html
   }
@@ -181,7 +191,7 @@ function Tool()
     return [this.path(this.layers[0]),this.path(this.layers[1]),this.path(this.layers[2])]
   }
 
-  this.render = function(segment)
+  this.render = function(segment, angle = 0)
   {
     var type = segment.type;
     var verteces = segment.verteces;
@@ -190,10 +200,14 @@ function Tool()
 
     for(id in verteces){
       if(skip > 0){ skip -= 1; continue; }
-      if(id == 0){ html += `M${verteces[id].x},${verteces[id].y} `; }
-      var vertex = verteces[id];
+      
+      var vertex = this.mirror_mod(verteces[id],angle);
       var next = verteces[parseInt(id)+1]
       var after_next = verteces[parseInt(id)+2]
+
+      if(id == 0){ 
+        html += `M${vertex.x},${vertex.y} `; continue;
+      }
 
       if(type == "line"){
         html += `L${vertex.x},${vertex.y} `;  
@@ -211,6 +225,20 @@ function Tool()
     }
   
     return html
+  }
+
+  this.mirror_mod = function(vertex,angle)
+  {
+    return rotate_point(vertex.x,vertex.y,150,150,angle)
+  }
+
+  function rotate_point(pointX, pointY, originX, originY, angle)
+  {
+    angle = angle * Math.PI / 180.0;
+    return {
+      x: Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX,
+      y: Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY
+    };
   }
 
   this.translate = function(a,b)
