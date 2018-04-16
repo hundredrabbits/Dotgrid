@@ -172,10 +172,19 @@ function Tool()
     for(id in layer){
       var segment = layer[id];
       html += segment.type == "close" ? "Z " : this.render(segment,0);
+
+      // Horizontal Mirror
+      // html += segment.type == "close" ? "Z " : this.render(segment,0,dotgrid.width,0);
+
+      // Vertical Mirror
+      html += segment.type == "close" ? "Z " : this.render(segment,0,false,true);
+
+      // Single-fold
+      // html += segment.type == "close" ? "Z " : this.render(segment,180);
       
       // Three-folds
-      html += segment.type == "close" ? "Z " : this.render(segment,120);
-      html += segment.type == "close" ? "Z " : this.render(segment,240);
+      // html += segment.type == "close" ? "Z " : this.render(segment,120);
+      // html += segment.type == "close" ? "Z " : this.render(segment,240);
       
       // Five-folds
       // html += segment.type == "close" ? "Z " : this.render(segment,72);
@@ -191,7 +200,7 @@ function Tool()
     return [this.path(this.layers[0]),this.path(this.layers[1]),this.path(this.layers[2])]
   }
 
-  this.render = function(segment, angle = 0)
+  this.render = function(segment, angle = 0, mirror_x = false, mirror_y = false)
   {
     var type = segment.type;
     var verteces = segment.verteces;
@@ -201,9 +210,9 @@ function Tool()
     for(id in verteces){
       if(skip > 0){ skip -= 1; continue; }
       
-      var vertex = this.mirror_mod(verteces[id],angle);
-      var next = verteces[parseInt(id)+1]
-      var after_next = verteces[parseInt(id)+2]
+      var vertex = this.mirror_mod(verteces[id],angle,mirror_x,mirror_y);
+      var next = this.mirror_mod(verteces[parseInt(id)+1],angle,mirror_x,mirror_y)
+      var after_next = this.mirror_mod(verteces[parseInt(id)+2],angle,mirror_x,mirror_y)
 
       if(id == 0){ 
         html += `M${vertex.x},${vertex.y} `; continue;
@@ -227,9 +236,17 @@ function Tool()
     return html
   }
 
-  this.mirror_mod = function(vertex,angle)
+  this.mirror_mod = function(vertex,angle,mirror_x = false,mirror_y = false)
   {
-    return rotate_point(vertex.x,vertex.y,150,150,angle)
+    if(!vertex){ return null; }
+
+    if(mirror_x == true){
+      return {x:dotgrid.width - vertex.x,y:vertex.y}
+    }
+    if(mirror_y == true){
+      return {x:vertex.x,y:dotgrid.height - vertex.y}
+    }
+    return rotate_point(vertex.x,vertex.y,dotgrid.width/2,dotgrid.height/2,angle)
   }
 
   function rotate_point(pointX, pointY, originX, originY, angle)
