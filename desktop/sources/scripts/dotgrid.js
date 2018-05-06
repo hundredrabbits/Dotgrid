@@ -432,6 +432,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   }
   this.set_size = function(size = {width:300,height:300},interface = true) 
   {
+    if(size.width < 50 || size.height < 50){ return; }
+
     var win = require('electron').remote.getCurrentWindow();
     win.setSize(size.width+100,size.height+100+(interface ? 10 : 0),true);
     
