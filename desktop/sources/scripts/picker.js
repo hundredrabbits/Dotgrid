@@ -7,7 +7,7 @@ function Picker()
 
   this.start = function()
   {
-    this.el.setAttribute("placeholder",`#${dotgrid.tool.style().color} ${dotgrid.width}x${dotgrid.height}`)
+    this.el.setAttribute("placeholder",`${dotgrid.tool.style().color} ${dotgrid.width}x${dotgrid.height}`)
 
     dotgrid.controller.set("picker");
     dotgrid.interface.el.className = "picker"
