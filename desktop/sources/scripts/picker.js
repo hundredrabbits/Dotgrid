@@ -3,11 +3,12 @@ function Picker()
   this.memory = "";
   this.el = document.createElement("input");
   this.el.id = "picker"
-  this.el.setAttribute("placeholder","#ff0000")
   this.original = null;
 
   this.start = function()
   {
+    this.el.setAttribute("placeholder",`#${dotgrid.tool.style().color} ${dotgrid.width}x${dotgrid.height}`)
+
     dotgrid.controller.set("picker");
     dotgrid.interface.el.className = "picker"
     this.el.focus()
