@@ -10,8 +10,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.keyboard = new Keyboard();
   this.picker = new Picker();
 
-  this.width = width;
-  this.height = height;
   this.grid_x = grid_x;
   this.grid_y = grid_y;
   this.block_x = block_x;
@@ -20,14 +18,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   // Dotgrid
   this.element = document.createElement("div");
   this.element.id = "dotgrid";
-  this.element.style.width = this.width;
-  this.element.style.height = this.height;
 
   this.wrapper = document.createElement("div");
   this.wrapper.id = "wrapper";
-
-  this.grid_width = this.width/this.grid_x;
-  this.grid_height = this.height/this.grid_y;
 
   var cursor = null;
 
@@ -63,14 +56,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.svg_el.setAttribute("class","vector");
-    this.svg_el.setAttribute("width",this.width+"px");
-    this.svg_el.setAttribute("height",this.height+"px");
+    this.svg_el.setAttribute("width",this.tool.settings.width+"px");
+    this.svg_el.setAttribute("height",this.tool.settings.height+"px");
     this.svg_el.setAttribute("xmlns","http://www.w3.org/2000/svg");
     this.svg_el.setAttribute("baseProfile","full");
     this.svg_el.setAttribute("version","1.1");
 
-    this.svg_el.style.width = this.width;
-    this.svg_el.style.height = this.height;
+    this.svg_el.style.width = this.tool.settings.width;
+    this.svg_el.style.height = this.tool.settings.height;
     this.svg_el.style.fill = "none";
     this.svg_el.style.strokeWidth = this.tool.style().thickness;
     this.element.appendChild(this.svg_el);
@@ -78,13 +71,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.preview_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.preview_el.id = "preview"
     this.preview_el.setAttribute("class","vector");
-    this.preview_el.setAttribute("width",this.width+"px");
-    this.preview_el.setAttribute("height",this.height+"px");
+    this.preview_el.setAttribute("width",this.tool.settings.width+"px");
+    this.preview_el.setAttribute("height",this.tool.settings.height+"px");
     this.preview_el.setAttribute("xmlns","http://www.w3.org/2000/svg");
     this.preview_el.setAttribute("baseProfile","full");
     this.preview_el.setAttribute("version","1.1");
-    this.preview_el.style.width = this.width;
-    this.preview_el.style.height = this.height;
+    this.preview_el.style.width = this.tool.settings.width;
+    this.preview_el.style.height = this.tool.settings.height;
     this.preview_el.style.strokeWidth = 2;
     this.preview_el.style.strokeLinecap = "round";
     this.preview_el.style.fill = "none";
@@ -440,8 +433,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     var win = require('electron').remote.getCurrentWindow();
     win.setSize(size.width+100,size.height+100+(interface ? 10 : 0),true);
     
-    this.width = size.width
-    this.height = size.height
+    this.tool.settings.width = size.width
+    this.tool.settings.height = size.height
     this.element.style.width = size.width+10
     this.element.style.height = size.height+10
     this.grid_x = size.width/15
@@ -453,6 +446,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.preview_el.setAttribute("width",size.width+"px");
     this.preview_el.setAttribute("height",size.height+"px");
 
+    this.element.style.width = this.tool.settings.width;
+    this.element.style.height = this.tool.settings.height;
+
+    this.grid_width = this.tool.settings.width/this.grid_x;
+    this.grid_height = this.tool.settings.height/this.grid_y;
+    
     dotgrid.guide.resize(size);
     this.interface.update();
     this.draw();
@@ -467,8 +466,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.layer_2.setAttribute("d",paths[1]);
     this.layer_3.setAttribute("d",paths[2]);
 
-    this.svg_el.style.width = this.width;
-    this.svg_el.style.height = this.height;
+    this.svg_el.style.width = this.tool.settings.width;
+    this.svg_el.style.height = this.tool.settings.height;
 
     this.layer_1.style.strokeWidth = this.tool.styles[0].thickness;
     this.layer_1.style.strokeLinecap = this.tool.styles[0].strokeLinecap;
@@ -533,8 +532,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.copy = function(e)
   {
-    dotgrid.width = 300
-    dotgrid.height = 300
+    dotgrid.tool.settings.width = 300
+    dotgrid.tool.settings.height = 300
     dotgrid.draw();
 
     var svg = dotgrid.svg_el.outerHTML;
@@ -549,8 +548,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.cut = function(e)
   {
-    dotgrid.width = 300
-    dotgrid.height = 300
+    dotgrid.tool.settings.width = 300
+    dotgrid.tool.settings.height = 300
     dotgrid.draw();
 
     var svg = dotgrid.svg_el.outerHTML;
@@ -576,7 +575,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.position_in_grid = function(pos)
   {
-    return {x:(window.innerWidth/2) - (this.width/2) - pos.x,y:pos.y - (30+10)}
+    return {x:(window.innerWidth/2) - (this.tool.settings.width/2) - pos.x,y:pos.y - (30+10)}
   }
 
   this.position_on_grid = function(pos)
@@ -585,7 +584,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     pos.x = pos.x + 7.5
     x = Math.round(pos.x/this.grid_width)*this.grid_width
     y = Math.round(pos.y/this.grid_height)*this.grid_height
-    off = (x<-this.width || x>0 || y>this.height || y<0)
+    off = (x<-this.tool.settings.width || x>0 || y>this.tool.settings.height || y<0)
     if(off) {
       x = 50
       y = -50

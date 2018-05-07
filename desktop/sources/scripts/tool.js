@@ -1,14 +1,15 @@
 function Tool()
 {
   this.index = 0;
+  this.settings = { width:300,height:300 }
   this.layers = [[],[],[]];
   this.styles = [
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none",dash:[0,0],mirror_style:0},
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none",dash:[0,0],mirror_style:0},
-    {thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none",dash:[0,0],mirror_style:0}
+    { thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none",dash:[0,0],mirror_style:0 },
+    { thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none",dash:[0,0],mirror_style:0 },
+    { thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none",dash:[0,0],mirror_style:0 }
   ];
   this.verteces = [];
-  this.reqs = {line:2,arc_c:2,arc_r:2,bezier:3,close:0};
+  this.reqs = { line:2,arc_c:2,arc_r:2,bezier:3,close:0 };
 
   this.start = function()
   {
@@ -45,7 +46,7 @@ function Tool()
 
   // I/O
 
-  this.export = function(target = {layers:this.layers,styles:this.styles})
+  this.export = function(target = {settings:this.settings,layers:this.layers,styles:this.styles})
   {
     return JSON.stringify(copy(target), null, 2);
   }
@@ -261,12 +262,12 @@ function Tool()
     if(!vertex){ return null; }
 
     if(mirror_x == true){
-      return {x:(dotgrid.width - vertex.x),y:vertex.y}
+      return {x:(dotgrid.tool.settings.width - vertex.x),y:vertex.y}
     }
     if(mirror_y == true){
-      return {x:vertex.x,y:(dotgrid.height - vertex.y)+(dotgrid.height/2)}
+      return {x:vertex.x,y:(dotgrid.tool.settings.height - vertex.y)+(dotgrid.height/2)}
     }
-    return rotate_point(vertex.x,vertex.y,dotgrid.width/2,dotgrid.height/2,angle)
+    return rotate_point(vertex.x,vertex.y,dotgrid.tool.settings.width/2,dotgrid.tool.settings.height/2,angle)
   }
 
   function rotate_point(pointX, pointY, originX, originY, angle)
