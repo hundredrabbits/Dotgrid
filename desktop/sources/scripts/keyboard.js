@@ -24,28 +24,28 @@ function Keyboard()
   {
     this.selector = {x:pos.x * -dotgrid.grid_width,y:pos.y * dotgrid.grid_height};
     dotgrid.move_cursor(this.selector)
-    dotgrid.guide.update();
+    dotgrid.guide.refresh();
     dotgrid.draw();
   }
 
   this.deselect = function()
   {
     dotgrid.tool.clear();
-    dotgrid.guide.update();
+    dotgrid.guide.refresh();
     dotgrid.draw();
   }
 
   this.confirm = function()
   {
     dotgrid.tool.add_vertex({x:this.selector.x * -1,y:this.selector.y});
-    dotgrid.guide.update();
+    dotgrid.guide.refresh();
     dotgrid.draw();
   }
 
   this.erase = function()
   {
     dotgrid.tool.remove_segments_at(this.selector);
-    dotgrid.guide.update();
+    dotgrid.guide.refresh();
     dotgrid.draw();
   }
 
@@ -56,7 +56,7 @@ function Keyboard()
     this.selector.x = this.selector.x > 0 ? 0 : this.selector.x;
     this.selector.y = this.selector.y < 0 ? 0 : this.selector.y;
     dotgrid.move_cursor(this.selector)
-    dotgrid.guide.update();
+    dotgrid.guide.refresh();
     dotgrid.draw();
   }
 

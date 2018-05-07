@@ -283,7 +283,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     dotgrid.preview(e.target.getAttribute("ar"));
     dotgrid.move_cursor(pos)
-    dotgrid.guide.update();
+    dotgrid.guide.refresh();
     e.preventDefault();
   }
 
@@ -490,7 +490,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.preview();
     this.render.draw();
     this.interface.update();
-    this.guide.update();
+    this.guide.refresh();
   }
 
   // Draw

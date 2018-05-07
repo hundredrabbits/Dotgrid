@@ -1,14 +1,10 @@
 body { padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: none; overflow: hidden; padding-left:5px; transition: background 500ms}
-#app { display: flex; flex-direction: column; align-items: center;}
+#app { display: flex; flex-direction: column; align-items: center; -webkit-app-region: drag;}
 
 #wrapper { padding: 25px; padding-bottom: 15px; -webkit-app-region: drag; padding-left:15px;}
 #dotgrid { margin:0px auto; position:relative; padding:10px;-webkit-app-region: no-drag; width:310px; height:310px; }
 
-#cursor { opacity: 1; width:6px; height:6px; position:absolute; z-index:25; border-radius:5px; border:2px solid black;}
-#cursor_from { width:4px; height:4px; margin-top:2px; margin-left:2px; position:absolute; z-index:2500; border-radius:10px; left:-100px;border:1px solid black;}
-#cursor_to { width:4px; height:4px; margin-top:2px; margin-left:2px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
-#cursor_end { width:4px; height:4px; margin-top:2px; margin-left:2px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
-
+#cursor { opacity: 1; width:6px; height:6px; position:absolute; z-index:25; border-radius:15px; background:white; margin-left:2px; margin-top:2px;}
 #cursor_x { position: absolute; top:0px; display: block; width:20px; height:10px; font-size: 11px; text-align: center; margin-left:10px; transition: left 100ms }
 #cursor_y { position: absolute; left:-10px; display: block; width:20px; height:10px; font-size: 11px; text-align: right; margin-top:15px; transition: top 100ms }
 
@@ -54,6 +50,6 @@ body { background:var(--background) !important; }
 .icon { color:var(--f_high) !important; stroke:var(--f_high) !important; }
 #dotgrid svg.vector { stroke:var(--f_high) !important; }
 #dotgrid #preview { stroke:var(--f_high) !important; } 
-#dotgrid #cursor { border-color:var(--f_med); }
+#dotgrid #cursor { background:var(--f_med); }
 #dotgrid #cursor.keyboard { border-color:var(--f_high) !Important; }
     
