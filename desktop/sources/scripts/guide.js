@@ -64,9 +64,12 @@ function Guide()
     }
 
     // Translations
-    if(dotgrid.translation){
+    if(dotgrid.cursor.translation){
       this.draw_translation();
     }
+
+    // Cursor
+    this.draw_cursor(dotgrid.cursor.pos);  
   }
 
   this.draw_vertex = function(pos, radius = 5)
@@ -107,8 +110,8 @@ function Guide()
   {    
     // From
     var ctx = this.el.getContext('2d');
-    var from = dotgrid.translation.from;
-    var to = dotgrid.translation.to;
+    var from = dotgrid.cursor.translation.from;
+    var to = dotgrid.cursor.translation.to;
 
     if(to.x<=0) {
       ctx.beginPath();
@@ -120,5 +123,19 @@ function Guide()
       ctx.stroke();
       ctx.closePath();
     }
+  }
+
+  this.draw_cursor = function(pos,radius = 10)
+  {
+    if(!pos || !pos.x || !pos.y){ return; }
+
+    var ctx = this.el.getContext('2d');
+    ctx.beginPath();
+    ctx.lineWidth = 3;
+    ctx.lineCap="round";
+    ctx.arc((pos.x * -2)+30, (pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
+    ctx.strokeStyle = dotgrid.theme.active.f_med;
+    ctx.stroke(); 
+    ctx.closePath(); 
   }
 }

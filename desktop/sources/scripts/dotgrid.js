@@ -7,7 +7,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.guide = new Guide();
   this.render = new Render();
   this.tool = new Tool();
-  this.keyboard = new Keyboard();
   this.picker = new Picker();
 
   this.grid_x = grid_x;
@@ -20,34 +19,19 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.wrapper = document.createElement("div");
   this.wrapper.id = "wrapper";
 
-  var cursor = null;
-
   this.svg_el = null;
   this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_1.id = "layer_1"; this.layer_1.style.stroke = "black";
   this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_2.id = "layer_2"; this.layer_2.style.stroke = "#999";
   this.layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_3.id = "layer_3"; this.layer_3.style.stroke = "#ccc";
   
+  this.cursor = { pos:{x:0,y:0},translation:null,multi:false }
+
   this.install = function()
   {  
     document.getElementById("app").appendChild(this.wrapper);
     this.wrapper.appendChild(this.element);
     this.element.appendChild(this.guide.el);
     this.wrapper.appendChild(this.render.el);
-
-    // Cursors
-    this.cursor = document.createElement("div");
-    this.cursor.id = "cursor";
-    this.element.appendChild(this.cursor);
-
-    this.cursor_x = document.createElement("t");
-    this.cursor_x.id = "cursor_x";
-    this.cursor_x.className = "fl"
-    this.element.appendChild(this.cursor_x);
-
-    this.cursor_y = document.createElement("t");
-    this.cursor_y.id = "cursor_y";
-    this.cursor_y.className = "fl"
-    this.element.appendChild(this.cursor_y);
 
     this.offset_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
     // Vector
@@ -127,6 +111,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","Effect","Thicker +5",() => { dotgrid.mod_thickness(5,true) },"]");
     this.controller.add("default","Effect","Thinner -5",() => { dotgrid.mod_thickness(-5,true) },"[");
 
+    this.controller.add("default","Manual","Add Point",() => { dotgrid.tool.add_vertex(dotgrid.cursor.pos); dotgrid.draw() },"Enter");
+    this.controller.add("default","Manual","Move Up",() => { dotgrid.cursor.pos.y -= 15; dotgrid.draw() },"Up");
+    this.controller.add("default","Manual","Move Right",() => { dotgrid.cursor.pos.x -= 15; dotgrid.draw() },"Right");
+    this.controller.add("default","Manual","Move Down",() => { dotgrid.cursor.pos.y += 15; dotgrid.draw() },"Down");
+    this.controller.add("default","Manual","Move Left",() => { dotgrid.cursor.pos.x += 15; dotgrid.draw() },"Left");
+    this.controller.add("default","Manual","Remove Point",() => { dotgrid.tool.remove_segments_at(dotgrid.cursor.pos); },"CmdOrCtrl+Backspace");
+
     this.controller.add("default","Layers","Foreground",() => { dotgrid.tool.select_layer(0) },"CmdOrCtrl+1");
     this.controller.add("default","Layers","Middleground",() => { dotgrid.tool.select_layer(1) },"CmdOrCtrl+2");
     this.controller.add("default","Layers","Background",() => { dotgrid.tool.select_layer(2) },"CmdOrCtrl+3");
@@ -134,37 +125,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },"U");
     this.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
 
-    this.controller.add("default","Mode","Keyboard",() => { dotgrid.keyboard.start(); },"CmdOrCtrl+K");
     this.controller.add("default","Mode","Picker",() => { dotgrid.picker.start(); },"CmdOrCtrl+P");
-
-    this.controller.add("keyboard","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
-    this.controller.add("keyboard","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
-    this.controller.add("keyboard","*","Hide",() => { app.toggle_visible(); },"CmdOrCtrl+H");
-    this.controller.add("keyboard","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
-    this.controller.add("keyboard","*","Documentation",() => { dotgrid.controller.docs(); },"CmdOrCtrl+Esc");
-    this.controller.add("keyboard","*","Reset",() => { dotgrid.reset(); dotgrid.theme.reset(); },"CmdOrCtrl+Backspace");
-    this.controller.add("keyboard","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
-
-    this.controller.add("keyboard","Controls","Add vertex",() => { dotgrid.keyboard.confirm(); },"Enter");
-    this.controller.add("keyboard","Controls","Remove vertex",() => { dotgrid.keyboard.erase(); },"Backspace");
-
-    this.controller.add("keyboard","Select","Move Up",() => { dotgrid.keyboard.move(0,1); },"Up");
-    this.controller.add("keyboard","Select","Move Down",() => { dotgrid.keyboard.move(0,-1); },"Down");
-    this.controller.add("keyboard","Select","Move Left",() => { dotgrid.keyboard.move(1,0); },"Left");
-    this.controller.add("keyboard","Select","Move Right",() => { dotgrid.keyboard.move(-1,0); },"Right");
-
-    this.controller.add("keyboard","Select","XXYY(0)",() => { dotgrid.keyboard.push(0); },"0");
-    this.controller.add("keyboard","Select","XXYY(1)",() => { dotgrid.keyboard.push(1); },"1");
-    this.controller.add("keyboard","Select","XXYY(2)",() => { dotgrid.keyboard.push(2); },"2");
-    this.controller.add("keyboard","Select","XXYY(3)",() => { dotgrid.keyboard.push(3); },"3");
-    this.controller.add("keyboard","Select","XXYY(4)",() => { dotgrid.keyboard.push(4); },"4");
-    this.controller.add("keyboard","Select","XXYY(5)",() => { dotgrid.keyboard.push(5); },"5");
-    this.controller.add("keyboard","Select","XXYY(6)",() => { dotgrid.keyboard.push(6); },"6");
-    this.controller.add("keyboard","Select","XXYY(7)",() => { dotgrid.keyboard.push(7); },"7");
-    this.controller.add("keyboard","Select","XXYY(8)",() => { dotgrid.keyboard.push(8); },"8");
-    this.controller.add("keyboard","Select","XXYY(9)",() => { dotgrid.keyboard.push(9); },"9");
-    
-    this.controller.add("keyboard","Mode","Stop Keyboard Mode",() => { dotgrid.keyboard.stop(); },"Escape");
 
     this.controller.add("picker","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
     this.controller.add("picker","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
@@ -240,9 +201,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   // Cursor
 
-  this.translation = null;
-  this.translation_multi = null;
-
   this.mouse_down = function(e)
   {
     var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
@@ -250,8 +208,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     if(e.altKey){ dotgrid.tool.remove_segments_at(pos); return; }
     
     if(dotgrid.tool.vertex_at(pos)){ 
-      console.log("Begin translation"); dotgrid.translation = {from:pos,to:pos}; 
-      if(e.shiftKey){ console.log("Begin translation(multi)"); dotgrid.translation_multi = true; }
+      console.log("Begin translation"); dotgrid.cursor.translation = {from:pos,to:pos}; 
+      if(e.shiftKey){ console.log("Begin translation(multi)"); dotgrid.cursor.multi = true; }
       return; 
     }
 
@@ -279,11 +237,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
 
-    if(dotgrid.translation && (Math.abs(dotgrid.translation.from.x) != Math.abs(pos.x) || Math.abs(dotgrid.translation.from.y) != Math.abs(pos.y))){ dotgrid.translation.to = pos; }
+    this.cursor.pos = pos;
+
+    if(dotgrid.cursor.translation && (Math.abs(dotgrid.cursor.translation.from.x) != Math.abs(pos.x) || Math.abs(dotgrid.cursor.translation.from.y) != Math.abs(pos.y))){ dotgrid.cursor.translation.to = pos; }
 
     dotgrid.preview(e.target.getAttribute("ar"));
-    dotgrid.move_cursor(pos)
-    dotgrid.guide.refresh();
+    dotgrid.guide.refresh(pos);
     e.preventDefault();
   }
 
@@ -293,24 +252,24 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     if(e.altKey){ return; }
 
-    if(pos.x > 0) { dotgrid.translation = null; return; }
+    if(pos.x > 0) { dotgrid.cursor.translation = null; return; }
 
-    if(dotgrid.translation && (Math.abs(dotgrid.translation.from.x) != Math.abs(dotgrid.translation.to.x) || Math.abs(dotgrid.translation.from.y) != Math.abs(dotgrid.translation.to.y))){
-      if(dotgrid.translation_multi){
-        dotgrid.tool.translate_multi(dotgrid.translation.from,dotgrid.translation.to);
+    if(dotgrid.cursor.translation && (Math.abs(dotgrid.cursor.translation.from.x) != Math.abs(dotgrid.cursor.translation.to.x) || Math.abs(dotgrid.cursor.translation.from.y) != Math.abs(dotgrid.cursor.translation.to.y))){
+      if(dotgrid.cursor.multi){
+        dotgrid.tool.translate_multi(dotgrid.cursor.translation.from,dotgrid.cursor.translation.to);
       }
       else{
-        dotgrid.tool.translate(dotgrid.translation.from,dotgrid.translation.to);  
+        dotgrid.tool.translate(dotgrid.cursor.translation.from,dotgrid.cursor.translation.to);  
       }
-      dotgrid.translation = null;
-      dotgrid.translation_multi = null;
+      dotgrid.cursor.translation = null;
+      dotgrid.cursor.multi = null;
       this.draw();
       e.preventDefault();
       return;
     }
 
     this.tool.add_vertex({x:pos.x * -1,y:pos.y});
-    dotgrid.translation = null;
+    dotgrid.cursor.translation = null;
     this.draw();
     e.preventDefault();
   }
@@ -322,30 +281,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     e.preventDefault();
 
     setTimeout(() => { dotgrid.tool.clear(); },150);
-  }
-
-  this.cursor_prev = null;
-
-  this.move_cursor = function(pos, force = false)
-  {
-    if(pos_is_equal(pos,this.cursor_prev) && !force){ return; }
-
-    if(pos.x>0) {
-      this.cursor.style.visibility = "hidden"
-    } else {
-      if(this.cursor.style.visibility == "hidden") {
-        this.cursor.style.transition = "initial"
-      }
-      this.cursor.style.visibility = "visible"
-      this.cursor.style.left = Math.floor(-(pos.x-this.grid_width));
-      this.cursor.style.top = Math.floor(pos.y+this.grid_height);
-      this.cursor_x.style.left = `${-pos.x}px`;
-      this.cursor_x.textContent = parseInt(-pos.x/this.grid_width)
-      this.cursor_y.style.top = `${pos.y}px`;
-      this.cursor_y.textContent = parseInt(pos.y/this.grid_width)
-      window.setTimeout(() => dotgrid.cursor.style.transition = "all 50ms", 17 /*one frame*/)
-    }
-    this.cursor_prev = pos;
   }
 
   this.preview_prev = null
@@ -369,7 +304,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     }
 
     this.tool.style().thickness = Math.max(this.tool.style().thickness+mod,0);
-    this.cursor_x.textContent = this.tool.style().thickness;
     this.draw();
   }
 
