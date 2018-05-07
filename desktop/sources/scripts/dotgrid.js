@@ -15,10 +15,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.block_x = block_x;
   this.block_y = block_y;
 
-  // Dotgrid
   this.element = document.createElement("div");
   this.element.id = "dotgrid";
-
   this.wrapper = document.createElement("div");
   this.wrapper.id = "wrapper";
 
@@ -78,9 +76,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.preview_el.setAttribute("version","1.1");
     this.preview_el.style.width = this.tool.settings.width;
     this.preview_el.style.height = this.tool.settings.height;
-    this.preview_el.style.strokeWidth = 2;
-    this.preview_el.style.strokeLinecap = "round";
-    this.preview_el.style.fill = "none";
+    this.preview_el.style.strokeWidth = this.tool.style().thickness;
+    this.preview_el.style.strokeLinecap = this.tool.style().strokeLinecap;
+    this.preview_el.style.fill = this.tool.style().fill;
     this.element.appendChild(this.preview_el);
 
     this.offset_el.appendChild(this.layer_3)
@@ -205,13 +203,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.new();
   }
 
-  // FILE
+  // File
 
   this.new = function()
   {
     this.set_size({width:300,height:300})
     this.history.push(this.tool.layers);
-    dotgrid.clear();
+    this.clear();
   }
 
   this.save = function()
@@ -324,12 +322,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
     dotgrid.tool.remove_segments_at(pos);
     e.preventDefault();
-    setTimeout(() => { dotgrid.tool.clear(); },150);
-  }
 
-  function pos_is_equal(a,b)
-  {
-    return a && b && a.x == b.x && a.y == b.y
+    setTimeout(() => { dotgrid.tool.clear(); },150);
   }
 
   this.cursor_prev = null;
@@ -424,6 +418,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.tool.style().dash = styles[this.dash_index]
     this.draw();
   }
+
+  // Basics
   
   this.set_size = function(size = {width:300,height:300},interface = true) 
   {
@@ -459,8 +455,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.draw = function(exp = false)
   {
     console.log("draw")
+
     var paths = this.tool.paths();
     var d = this.tool.path();
+
     this.layer_1.setAttribute("d",paths[0]);
     this.layer_2.setAttribute("d",paths[1]);
     this.layer_3.setAttribute("d",paths[2]);
@@ -531,8 +529,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.copy = function(e)
   {
-    dotgrid.tool.settings.width = 300
-    dotgrid.tool.settings.height = 300
     dotgrid.draw();
 
     var svg = dotgrid.svg_el.outerHTML;
@@ -547,8 +543,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.cut = function(e)
   {
-    dotgrid.tool.settings.width = 300
-    dotgrid.tool.settings.height = 300
     dotgrid.draw();
 
     var svg = dotgrid.svg_el.outerHTML;
@@ -591,6 +585,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     return {x:x,y:y};
   }
 
+  function pos_is_equal(a,b){ return a && b && a.x == b.x && a.y == b.y }
   function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }
 
