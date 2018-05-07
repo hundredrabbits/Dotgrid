@@ -125,15 +125,13 @@ function Guide()
     }
   }
 
-  this.draw_cursor = function(pos,radius = 10)
+  this.draw_cursor = function(pos = dotgrid.cursor.pos,radius = 10)
   {
-    if(!pos || !pos.x || !pos.y){ return; }
-
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
     ctx.lineWidth = 3;
     ctx.lineCap="round";
-    ctx.arc((pos.x * -2)+30, (pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
+    ctx.arc(Math.abs(pos.x * -2)+30, Math.abs(pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
     ctx.strokeStyle = dotgrid.theme.active.f_med;
     ctx.stroke(); 
     ctx.closePath(); 
