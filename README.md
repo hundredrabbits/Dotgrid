@@ -12,8 +12,6 @@ Hold `shift` to drag entire layer, hold `alt` to delete a vertex.
 
 ## Controls
 
-## default Mode
-
 ### File
 - New: `CmdOrCtrl+N`
 - Open: `CmdOrCtrl+O`
@@ -41,10 +39,19 @@ Hold `shift` to drag entire layer, hold `alt` to delete a vertex.
 - Mirror: `E`
 - Fill: `R`
 - Dash: `T`
+- Color: `G`
 - Thicker: `}`
 - Thinner: `{`
 - Thicker +5: `]`
 - Thinner -5: `[`
+
+### Manual
+- Add Point: `Enter`
+- Move Up: `Up`
+- Move Right: `Right`
+- Move Down: `Down`
+- Move Left: `Left`
+- Remove Point: `CmdOrCtrl+Backspace`
 
 ### Layers
 - Foreground: `CmdOrCtrl+1`
@@ -54,52 +61,11 @@ Hold `shift` to drag entire layer, hold `alt` to delete a vertex.
 ### View
 - Tools: `U`
 - Grid: `H`
-- Control Points: `J`
 
 ### Mode
-- Keyboard: `CmdOrCtrl+K`
 - Picker: `CmdOrCtrl+P`
 
-## keyboard Mode
-
-### Controls
-- Add vertex: `Enter`
-- Remove vertex: `Backspace`
-
-### Select
-- Move Up: `Up`
-- Move Down: `Down`
-- Move Left: `Left`
-- Move Right: `Right`
-- XXYY(0): `0`
-- XXYY(1): `1`
-- XXYY(2): `2`
-- XXYY(3): `3`
-- XXYY(4): `4`
-- XXYY(5): `5`
-- XXYY(6): `6`
-- XXYY(7): `7`
-- XXYY(8): `8`
-- XXYY(9): `9`
-
-### Mode
-- Stop Keyboard Mode: `Escape`
-
-## picker Mode
-
-### Edit
-- undo: `undefined`
-- redo: `undefined`
-- cut: `undefined`
-- copy: `undefined`
-- paste: `undefined`
-- delete: `undefined`
-- selectall: `undefined`
-
-### Mode
-- Stop Picker Mode: `Escape`
-
-<img src='https://cdn.rawgit.com/hundredrabbits/Dotgrid/master/LAYOUT.svg?v=3' width="600"/>
+<img src='https://cdn.rawgit.com/hundredrabbits/Dotgrid/master/LAYOUT.svg?v=4' width="600"/>
 
 ## Extras
 

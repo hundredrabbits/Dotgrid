@@ -16,7 +16,7 @@
     "push_win"     : "~/butler push ~/Desktop/Dotgrid-win32-x64/ hundredrabbits/dotgrid:windows-64",
     "push_theme"   : "~/butler push ~/Github/HundredRabbits/Themes/themes/ hundredrabbits/dotgrid:themes",
     "push_status"  : "~/butler status hundredrabbits/dotgrid",
-    "push"         : "npm run build ; npm run push_theme ; npm run push_osx ; npm run push_linux ; npm run push_win ; npm run clean ; npm run push_status"
+    "push"         : "npm run build ; npm run push_theme ; npm run push_osx ; npm run push_linux ; npm run push_win ; npm run push_pi ; npm run clean ; npm run push_status"
   },
   "devDependencies": {
     "electron": "^1.8.1"
