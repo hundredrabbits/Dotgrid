@@ -138,7 +138,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
     this.controller.add("default","View","Control Points",() => { dotgrid.guide.toggle_widgets(); },"J");
 
-    this.controller.add("default","Mode","Toggle Size",() => { dotgrid.interface.toggle_zoom(); },"CmdOrCtrl+E");
     this.controller.add("default","Mode","Keyboard",() => { dotgrid.keyboard.start(); },"CmdOrCtrl+K");
     this.controller.add("default","Mode","Picker",() => { dotgrid.picker.start(); },"CmdOrCtrl+P");
 
@@ -210,6 +209,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.new = function()
   {
+    this.set_size({width:300,height:300})
     this.history.push(this.tool.layers);
     dotgrid.clear();
   }
@@ -424,11 +424,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.tool.style().dash = styles[this.dash_index]
     this.draw();
   }
+  
   this.set_size = function(size = {width:300,height:300},interface = true) 
   {
-    if(size.width < 50 || size.height < 50){ return; }
-
-    size = { width:parseInt(size.width/15)*15,height:parseInt(size.height/15)*15}
+    size = { width:clamp(parseInt(size.width/15)*15,100,1000),height:clamp(parseInt(size.height/15)*15,100,1000)}
 
     var win = require('electron').remote.getCurrentWindow();
     win.setSize(size.width+100,size.height+100+(interface ? 10 : 0),true);
@@ -451,7 +450,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     this.grid_width = this.tool.settings.width/this.grid_x;
     this.grid_height = this.tool.settings.height/this.grid_y;
-    
+
     dotgrid.guide.resize(size);
     this.interface.update();
     this.draw();
@@ -591,6 +590,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     }
     return {x:x,y:y};
   }
+
+  function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }
 
 window.addEventListener('resize', function(e)

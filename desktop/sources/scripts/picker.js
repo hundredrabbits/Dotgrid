@@ -30,29 +30,24 @@ function Picker()
     var parts = this.parse(this.el.value)
 
     if(parts.color){ this.set_color(parts.color); }
-    else if(parts.size){ this.set_size(parts.size); }
+    if(parts.size){ this.set_size(parts.size); }
 
-    this.stop();
+    dotgrid.draw();
+    dotgrid.controller.set();
+    dotgrid.interface.el.className = ""
+    this.el.blur()
+    this.el.value = ""
   }
 
   this.set_color = function(color)
   {
     dotgrid.tool.style().color = color;
     dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? color : "none";
-    dotgrid.draw();
-    dotgrid.controller.set();
-    dotgrid.interface.el.className = ""
-    this.el.blur()
   }
 
   this.set_size = function(size)
   {
     dotgrid.set_size(size);
-    // dotgrid.tool.style().size = size;
-    // dotgrid.draw();
-    // dotgrid.controller.set();
-    // dotgrid.interface.el.className = ""
-    // this.el.blur()
   }
 
   this.cancel = function()
@@ -65,10 +60,11 @@ function Picker()
 
   this.update = function()
   {
-    if(this.el.value.length != 4 && this.el.value.length != 7){ return; }
+    var parts = this.parse(this.el.value)
+    if(!parts.color){ return; }
 
-    dotgrid.tool.style().color = this.el.value;
-    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? this.el.value : "none";
+    dotgrid.tool.style().color = parts.color;
+    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? parts.color : "none";
     dotgrid.draw();
   }
 

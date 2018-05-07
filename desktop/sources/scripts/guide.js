@@ -60,8 +60,8 @@ function Guide()
 
   this.clear = function()
   {
-    this.el.getContext('2d').clearRect(0, 0, 1280, 1280);
-    this.widgets.getContext('2d').clearRect(0, 0, 1280, 1280);
+    this.el.getContext('2d').clearRect(0, 0, this.el.width*2, this.el.height*2);
+    this.widgets.getContext('2d').clearRect(0, 0, this.el.width*2, this.el.height*2);
   }
 
   this.update = function()

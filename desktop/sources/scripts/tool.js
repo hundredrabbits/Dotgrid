@@ -23,6 +23,7 @@ function Tool()
     this.layers = [[],[],[]];
     this.verteces = [];
     this.index = 0;
+    dotgrid.set_size({width:300,height:300})
   }
 
   this.clear = function()
@@ -63,8 +64,14 @@ function Tool()
   {
     if(!dot.layers || dot.layers.length != 3){ console.log("Incompatible version"); return; }
     
+    if(this.settings && (this.settings.width != dot.settings.width || this.settings.height != dot.settings.height)){
+      dotgrid.set_size({width:dot.settings.width,height:dot.settings.height})
+    }
+
     this.layers = dot.layers;
     this.styles = dot.styles;
+    this.settings = dot.settings;
+
     this.clear();
     dotgrid.draw();
     dotgrid.history.push(this.layers);

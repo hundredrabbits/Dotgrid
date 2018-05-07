@@ -58,22 +58,9 @@ function Interface()
     document.getElementById("color").className.baseVal = "icon";
   }
 
-  this.update_size = function()
-  {
-    var size = this.zoom ? {width:600,height:600} : {width:300,height:300};
-    dotgrid.set_size(size,this.is_visible);
-  }
-
   this.toggle = function()
   {
     this.is_visible = this.is_visible ? false : true;
     this.el.className = this.is_visible ? "visible" : "hidden";
-    this.update_size();
-  }
-
-  this.toggle_zoom = function()
-  {
-    this.zoom = this.zoom ? false : true;
-    this.update_size();
   }
 }
