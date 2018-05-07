@@ -3,8 +3,8 @@ body { padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: non
 
 #wrapper { padding: 25px; padding-bottom: 15px; -webkit-app-region: drag; padding-left:15px;}
 #dotgrid { margin:0px auto; position:relative; padding:10px;-webkit-app-region: no-drag; width:310px; height:310px; }
-#cursor { opacity: 1; transition: all 50ms; width:6px; height:6px; position:absolute; z-index:25; border-radius:5px; border:2px solid black;}
 
+#cursor { opacity: 1; width:6px; height:6px; position:absolute; z-index:25; border-radius:5px; border:2px solid black;}
 #cursor_from { width:4px; height:4px; margin-top:2px; margin-left:2px; position:absolute; z-index:2500; border-radius:10px; left:-100px;border:1px solid black;}
 #cursor_to { width:4px; height:4px; margin-top:2px; margin-left:2px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
 #cursor_end { width:4px; height:4px; margin-top:2px; margin-left:2px; position:absolute; z-index:2500; border-radius:10px; left:-100px; border:1px solid black;}
@@ -12,8 +12,7 @@ body { padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: non
 #cursor_x { position: absolute; top:0px; display: block; width:20px; height:10px; font-size: 11px; text-align: center; margin-left:10px; transition: left 100ms }
 #cursor_y { position: absolute; left:-10px; display: block; width:20px; height:10px; font-size: 11px; text-align: right; margin-top:15px; transition: top 100ms }
 
-#guide,#widgets { position: absolute;width: 300px;height: 300px; margin-left: -5px; margin-top: -5px; transition: opacity 250ms}
-#widgets { z-index: 9000; margin-left: 0; margin-top: 0; }
+#guide { position: absolute;width: 300px;height: 300px; margin-left: -5px; margin-top: -5px; transition: opacity 250ms}
 #render { display: none }
 
 .icon { width:30px; height:30px; margin-right:-2px; opacity: 1}

@@ -7,13 +7,6 @@ function Guide()
   this.el.style.width = "320px";
   this.el.style.height = "320px";
 
-  this.widgets = document.createElement("canvas");
-  this.widgets.id = "widgets";
-  this.widgets.width = 640;
-  this.widgets.height = 640;
-  this.widgets.style.width = "320px";
-  this.widgets.style.height = "320px";
-
   this.start = function()
   {
     this.clear();
@@ -23,11 +16,6 @@ function Guide()
   this.toggle = function()
   {
     this.el.style.opacity = !this.el.style.opacity || this.el.style.opacity == 1 ? 0 : 1;
-  }
-
-  this.toggle_widgets = function()
-  {
-   this.widgets.style.opacity = !this.widgets.style.opacity || this.widgets.style.opacity == 1 ? 0 : 1; 
   }
 
   this.draw = function()
@@ -50,18 +38,12 @@ function Guide()
     this.el.style.width = (size.width+40)+"px";
     this.el.style.height = (size.height+40)+"px";
 
-    this.widgets.width = (size.width+20)*2;
-    this.widgets.height = (size.height+20)*2;
-    this.widgets.style.width = (size.width+20)+"px";
-    this.widgets.style.height = (size.height+20)+"px";
-
     this.update();
   }
 
   this.clear = function()
   {
     this.el.getContext('2d').clearRect(0, 0, this.el.width*2, this.el.height*2);
-    this.widgets.getContext('2d').clearRect(0, 0, this.el.width*2, this.el.height*2);
   }
 
   this.update = function()
@@ -91,6 +73,7 @@ function Guide()
   {
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
+    ctx.lineWidth = 2;
     ctx.arc((pos.x * 2)+30, (pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = dotgrid.theme.active.f_med;
     ctx.fill();
@@ -101,42 +84,43 @@ function Guide()
   {
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
+    ctx.lineWidth = 2;
     ctx.arc(pos.x * 2, pos.y * 2, radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = step ? dotgrid.theme.active.f_med : dotgrid.theme.active.f_low;
     ctx.fill();
     ctx.closePath();
   }
 
-  this.draw_handle = function(pos,radius = 5)
+  this.draw_handle = function(pos,radius = 15)
   {
-    var ctx = this.widgets.getContext('2d');
-
+    var ctx = this.el.getContext('2d');
     ctx.beginPath();
-    ctx.arc((pos.x * 2)+20, (pos.y * 2)+20, 10, 0, 2 * Math.PI, false);
-    ctx.fillStyle = dotgrid.theme.active.f_high;
-    ctx.fill(); 
+    ctx.lineWidth = 3;
+    ctx.lineCap="round";
+    ctx.arc((pos.x * 2)+30, (pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
+    ctx.strokeStyle = dotgrid.theme.active.f_low;
+    ctx.stroke(); 
     ctx.closePath(); 
     ctx.beginPath();
-    ctx.arc((pos.x * 2)+20, (pos.y * 2)+20, radius, 0, 2 * Math.PI, false);
+    ctx.arc((pos.x * 2)+30, (pos.y * 2)+30, 2, 0, 2 * Math.PI, false);
     ctx.fillStyle = dotgrid.theme.active.f_high;
     ctx.fill(); 
-    ctx.lineWidth = 3;
     ctx.strokeStyle = dotgrid.theme.active.background;
     ctx.stroke(); 
-    ctx.closePath();    
+    ctx.closePath();      
   }
 
   this.draw_translation = function()
   {    
     // From
-    var ctx = this.widgets.getContext('2d');
+    var ctx = this.el.getContext('2d');
     var from = dotgrid.translation.from;
     var to = dotgrid.translation.to;
 
     if(to.x<=0) {
       ctx.beginPath();
-      ctx.moveTo((from.x * -2)+20,(from.y * 2)+20);
-      ctx.lineTo((to.x * -2)+20,(to.y * 2)+20);
+      ctx.moveTo((from.x * -2)+30,(from.y * 2)+30);
+      ctx.lineTo((to.x * -2)+30,(to.y * 2)+30);
       ctx.lineCap="round";
       ctx.lineWidth = 5;
       ctx.strokeStyle = dotgrid.theme.active.b_inv;

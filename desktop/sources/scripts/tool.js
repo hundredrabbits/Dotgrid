@@ -1,7 +1,7 @@
 function Tool()
 {
   this.index = 0;
-  this.settings = { width:300,height:300 }
+  this.settings = { size:{width:300,height:300} }
   this.layers = [[],[],[]];
   this.styles = [
     { thickness:5,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none",dash:[0,0],mirror_style:0 },
@@ -64,8 +64,8 @@ function Tool()
   {
     if(!dot.layers || dot.layers.length != 3){ console.log("Incompatible version"); return; }
     
-    if(this.settings && (this.settings.width != dot.settings.width || this.settings.height != dot.settings.height)){
-      dotgrid.set_size({width:dot.settings.width,height:dot.settings.height})
+    if(this.settings && (this.settings.size.width != dot.settings.size.width || this.settings.size.height != dot.settings.size.height)){
+      dotgrid.set_size({width:dot.settings.size.width,height:dot.settings.size.height})
     }
 
     this.layers = dot.layers;
@@ -269,21 +269,12 @@ function Tool()
     if(!vertex){ return null; }
 
     if(mirror_x == true){
-      return {x:(dotgrid.tool.settings.width - vertex.x),y:vertex.y}
+      return {x:(dotgrid.tool.settings.size.width - vertex.x),y:vertex.y}
     }
     if(mirror_y == true){
-      return {x:vertex.x,y:(dotgrid.tool.settings.height - vertex.y)+(dotgrid.height/2)}
+      return {x:vertex.x,y:(dotgrid.tool.settings.size.height - vertex.y)+(dotgrid.height/2)}
     }
-    return rotate_point(vertex.x,vertex.y,dotgrid.tool.settings.width/2,dotgrid.tool.settings.height/2,angle)
-  }
-
-  function rotate_point(pointX, pointY, originX, originY, angle)
-  {
-    angle = angle * Math.PI / 180.0;
-    return {
-      x: (Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX).toFixed(1),
-      y: (Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY).toFixed(1)
-    };
+    return rotate_point(vertex.x,vertex.y,dotgrid.tool.settings.size.width/2,dotgrid.tool.settings.size.height/2,angle)
   }
 
   this.translate = function(a,b)
@@ -352,6 +343,7 @@ function Tool()
     this.select_layer(this.index);
   }
 
+  function rotate_point(pointX, pointY, originX, originY, angle){ angle = angle * Math.PI / 180.0; return { x: (Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX).toFixed(1), y: (Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY).toFixed(1) }; }
   function copy(data){ return data ? JSON.parse(JSON.stringify(data)) : []; }
   function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }
