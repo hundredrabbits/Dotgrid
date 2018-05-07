@@ -57,7 +57,6 @@ Hold `shift` to drag entire layer, hold `alt` to delete a vertex.
 - Control Points: `J`
 
 ### Mode
-- Toggle Size: `CmdOrCtrl+E`
 - Keyboard: `CmdOrCtrl+K`
 - Picker: `CmdOrCtrl+P`
 
