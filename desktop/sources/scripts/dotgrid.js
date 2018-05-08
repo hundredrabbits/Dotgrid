@@ -487,8 +487,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.paste = function(e)
   {
     var data = e.clipboardData.getData("text/source");
-    data = JSON.parse(data.trim());
-    dotgrid.tool.import(data);
+    if(is_json(data)){
+      data = JSON.parse(data.trim());  
+      dotgrid.tool.import(data);
+    }
+    
     this.draw();
   }
 
@@ -511,6 +514,18 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       y = -50
     }
     return {x:x,y:y};
+  }
+
+
+  function is_json(text)
+  {
+    try{
+      JSON.parse(text);
+      return true;
+    }
+    catch (error){
+      return false;
+    }
   }
 
   function pos_is_equal(a,b){ return a && b && a.x == b.x && a.y == b.y }

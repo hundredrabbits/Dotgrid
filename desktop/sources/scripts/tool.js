@@ -265,7 +265,7 @@ function Tool()
     return html
   }
 
-  this.mirror_mod = function(vertex,angle,mirror_x = false,mirror_y = false)
+  this.mirror_mod = function(vertex,angle = 0,mirror_x = false,mirror_y = false)
   {
     if(!vertex){ return null; }
 
@@ -274,6 +274,9 @@ function Tool()
     }
     if(mirror_y == true){
       return {x:vertex.x,y:(dotgrid.tool.settings.size.height - vertex.y)+(dotgrid.height/2)}
+    }
+    if(angle == 0){
+      return vertex;
     }
     return rotate_point(vertex.x,vertex.y,dotgrid.tool.settings.size.width/2,dotgrid.tool.settings.size.height/2,angle)
   }
