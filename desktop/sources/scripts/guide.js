@@ -101,7 +101,7 @@ function Guide()
     ctx.lineWidth = 3;
     ctx.lineCap="round";
     ctx.arc((pos.x * 2)+30, (pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
-    ctx.strokeStyle = dotgrid.theme.active.f_low;
+    ctx.strokeStyle = pos_is_equal(pos,dotgrid.cursor.pos) ? dotgrid.theme.active.b_inv : dotgrid.theme.active.f_low;
     ctx.stroke(); 
     ctx.closePath(); 
   }
@@ -127,7 +127,6 @@ function Guide()
 
   this.draw_cursor = function(pos = dotgrid.cursor.pos,radius = 10)
   {
-    console.log(pos)
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
     ctx.lineWidth = 3;
@@ -137,4 +136,6 @@ function Guide()
     ctx.stroke(); 
     ctx.closePath(); 
   }
+
+  function pos_is_equal(a,b){ return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }
 }

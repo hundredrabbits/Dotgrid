@@ -22,7 +22,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_2.id = "layer_2"; this.layer_2.style.stroke = "#999";
   this.layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_3.id = "layer_3"; this.layer_3.style.stroke = "#ccc";
   
-  this.cursor = { pos:{x:0,y:0},translation:null,multi:false }
+  this.cursor = { pos:{x:0,y:0},translation:null,multi:false,updated:0 }
 
   this.install = function()
   {  
@@ -148,7 +148,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     document.addEventListener('copy', function(e){ dotgrid.copy(e); e.preventDefault(); }, false);
     document.addEventListener('cut', function(e){ dotgrid.cut(e); e.preventDefault(); }, false);
     document.addEventListener('paste', function(e){ dotgrid.paste(e); e.preventDefault(); }, false);
-
     window.addEventListener('drop', dotgrid.drag);
 
     dotgrid.set_size({width:300,height:300});
@@ -197,34 +196,35 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.mouse_down = function(e)
   {
-    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
+    var o = e.target.getAttribute("ar");
+
+    if(o){
+      if(o == "line"){ this.tool.cast("line"); return; }
+      if(o == "arc_c"){ this.tool.cast("arc_c"); return;}
+      if(o == "arc_r"){ this.tool.cast("arc_r"); return; }
+      if(o == "bezier"){ this.tool.cast("bezier"); return; }
+      if(o == "close"){ this.tool.cast("close"); return; }
+
+      if(o == "thickness"){ this.mod_thickness(); return; }
+      if(o == "linecap"){ this.mod_linecap(); return; }
+      if(o == "linejoin"){ this.mod_linejoin(); return; }
+      if(o == "mirror"){ this.mod_mirror(); return; }
+      if(o == "fill"){ this.mod_fill(); return; }
+      if(o == "color"){ setTimeout(()=>{ this.picker.start(); }, 100); return; }
+      if(o == "depth"){ this.tool.select_next_layer(); return; }
+
+      e.preventDefault();
+    }    
+
+    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); 
+    pos = this.position_on_grid(pos);
 
     if(e.altKey){ dotgrid.tool.remove_segments_at(pos); return; }
     
     if(dotgrid.tool.vertex_at(pos)){ 
       console.log("Begin translation"); dotgrid.cursor.translation = {from:pos,to:pos}; 
       if(e.shiftKey){ console.log("Begin translation(multi)"); dotgrid.cursor.multi = true; }
-      return; 
     }
-
-    var o = e.target.getAttribute("ar");
-    if(!o){ return; }
-
-    if(o == "line"){ this.tool.cast("line"); }
-    if(o == "arc_c"){ this.tool.cast("arc_c"); }
-    if(o == "arc_r"){ this.tool.cast("arc_r"); }
-    if(o == "bezier"){ this.tool.cast("bezier"); }
-    if(o == "close"){ this.tool.cast("close"); }
-
-    if(o == "thickness"){ this.mod_thickness(); }
-    if(o == "linecap"){ this.mod_linecap(); }
-    if(o == "linejoin"){ this.mod_linejoin(); }
-    if(o == "mirror"){ this.mod_mirror(); }
-    if(o == "fill"){ this.mod_fill(); }
-    if(o == "color"){ setTimeout(()=>{ this.picker.start(); }, 100) }
-    if(o == "depth"){ this.tool.select_next_layer(); }
-
-    e.preventDefault();
   }
 
   this.mouse_move = function(e)
@@ -232,6 +232,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
 
     this.cursor.pos = pos;
+    this.cursor.updated = new Date().getTime();
 
     if(dotgrid.cursor.translation && (Math.abs(dotgrid.cursor.translation.from.x) != Math.abs(pos.x) || Math.abs(dotgrid.cursor.translation.from.y) != Math.abs(pos.y))){ dotgrid.cursor.translation.to = pos; }
 
@@ -242,7 +243,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.mouse_up = function(e)
   {
-    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
+    if(e.target.getAttribute("ar")){ return } // If clicking on interface
+
+    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); 
+    pos = this.position_on_grid(pos);
 
     if(e.altKey){ return; }
 
@@ -281,9 +285,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.preview = function(operation)
   {
-    if(this.preview_prev == operation ){ return; }
+    if(this.preview_prev == operation){ return; }
 
-    this.preview_el.innerHTML = !operation || operation == "close" ? `<path d='M0,0'></path>` : `<path d='${dotgrid.tool.path(dotgrid.tool.index,[{type:operation,verteces:dotgrid.tool.verteces}])}'></path>`;
+    this.preview_el.innerHTML = !operation || operation == "close" || !dotgrid.tool.can_cast(operation) ? `<path d='M0,0'></path>` : `<path d='${dotgrid.tool.path(dotgrid.tool.index,[{type:operation,verteces:dotgrid.tool.verteces}])}'></path>`;
     this.preview_prev = operation;
   }
 
@@ -496,17 +500,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     return {x:x*-1,y:y};
   }
 
-  function is_json(text)
-  {
-    try{
-      JSON.parse(text);
-      return true;
-    }
-    catch (error){
-      return false;
-    }
-  }
-
+  function is_json(text){ try{ JSON.parse(text);return true; } catch(error){ return false; }}
   function pos_is_equal(a,b){ return a && b && a.x == b.x && a.y == b.y }
   function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }

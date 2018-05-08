@@ -170,6 +170,11 @@ function Tool()
         return false;
       }
     }
+    if(type == "bezier"){
+      if(this.verteces.length % 2 == 0){
+        return false;
+      }
+    }
     return this.verteces.length >= this.reqs[type];
   }
 
