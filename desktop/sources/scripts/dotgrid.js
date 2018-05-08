@@ -32,8 +32,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.wrapper.appendChild(this.element);
     this.element.appendChild(this.guide.el);
     this.wrapper.appendChild(this.render.el);
-
-    this.offset_el = document.createElementNS("http://www.w3.org/2000/svg", "g");
+    
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.svg_el.setAttribute("class","vector");
@@ -64,10 +63,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.preview_el.style.fill = this.tool.style().fill;
     this.element.appendChild(this.preview_el);
 
-    this.offset_el.appendChild(this.layer_3)
-    this.offset_el.appendChild(this.layer_2)
-    this.offset_el.appendChild(this.layer_1)
-    this.svg_el.appendChild(this.offset_el);
+    this.svg_el.appendChild(this.layer_3);
+    this.svg_el.appendChild(this.layer_2);
+    this.svg_el.appendChild(this.layer_1);
 
     this.theme.start();
     this.tool.start();
@@ -418,8 +416,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.layer_3.style.stroke = this.tool.styles[2].color;
     this.layer_3.style.fill = this.tool.styles[2].fill;
     this.layer_3.style.strokeDasharray = `${this.tool.styles[2].dash[0] * this.tool.styles[2].thickness},${this.tool.styles[2].dash[1] * this.tool.styles[2].thickness}`;
-    
-    this.offset_el.setAttribute("transform","translate(0,0)")
 
     this.preview();
     this.render.draw();
