@@ -127,6 +127,7 @@ function Guide()
 
   this.draw_cursor = function(pos = dotgrid.cursor.pos,radius = 10)
   {
+    console.log(pos)
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
     ctx.lineWidth = 3;

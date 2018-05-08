@@ -1,11 +1,13 @@
 body { padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: none; overflow: hidden; padding-left:5px; transition: background 500ms}
 
+/* Core */
+
 #app { display: flex; flex-direction: column; align-items: center; -webkit-app-region: drag; padding-top:30px;}
 #dotgrid { margin:0px auto; position:relative; padding:15px;-webkit-app-region: no-drag; width:310px; height:310px; }
 #guide { position: absolute;width: 300px;height: 300px; transition: opacity 250ms;}
 #render { display: none }
-
-svg.vector { z-index: 1000;position: relative; left:10px; top:10px; width:300px; height:300px; }
+#vector { z-index: 1000;position: relative;width:300px; height:300px; }
+#preview { position: absolute; top:15px; left:15px; stroke-dasharray: 4,4;}
 
 /* Interface */
 
@@ -24,9 +26,7 @@ svg.vector { z-index: 1000;position: relative; left:10px; top:10px; width:300px;
 #interface .icon { width:30px; height:30px; margin-right:-2px; opacity: 1}
 #interface .icon:hover { cursor: pointer; opacity: 1 }
 
-#preview { position: absolute; top:20px; left:20px; stroke-dasharray: 4,4; }
-
-/* Theme Defaults */
+/* Theme Overrides */
 
 :root { --background: "#222"; --f_high: "#fff";--f_med: "#777";--f_low: "#444";--f_inv: "#000";--b_high: "#000";--b_med: "#affec7";--b_low: "#000";--b_inv: "#affec7"; }  
 

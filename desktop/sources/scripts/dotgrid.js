@@ -31,6 +31,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    this.svg_el.id = "vector"
     this.svg_el.setAttribute("class","vector");
     this.svg_el.setAttribute("width",this.tool.settings.size.width+"px");
     this.svg_el.setAttribute("height",this.tool.settings.size.height+"px");
@@ -98,7 +99,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","Effect","Linejoin",() => { dotgrid.mod_linejoin(); },"W");
     this.controller.add("default","Effect","Mirror",() => { dotgrid.mod_mirror(); },"E");
     this.controller.add("default","Effect","Fill",() => { dotgrid.mod_fill(); },"R");
-    this.controller.add("default","Effect","Dash",() => { dotgrid.mod_dash(); },"T");
     this.controller.add("default","Effect","Color",() => { dotgrid.picker.start(); },"G");
     this.controller.add("default","Effect","Thicker",() => { dotgrid.mod_thickness(1) },"}");
     this.controller.add("default","Effect","Thinner",() => { dotgrid.mod_thickness(-1) },"{");
@@ -334,17 +334,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.draw();
   }
 
-  this.dash_index = 0;
-
-  this.mod_dash = function()
-  {
-    var styles = [[0,0],[0.1,1.25],[1.5,1.25],[2,1.25]]
-    this.dash_index += 1; 
-    this.dash_index = this.dash_index > styles.length-1 ? 0 : this.dash_index;
-    this.tool.style().dash = styles[this.dash_index]
-    this.draw();
-  }
-
   // Basics
   
   this.set_size = function(size = {width:300,height:300},interface = true) 
@@ -362,8 +351,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.grid_y = size.height/15
     this.svg_el.setAttribute("width",size.width+"px");
     this.svg_el.setAttribute("height",size.height+"px");
-    this.preview_el.style.width = size.width+10
-    this.preview_el.style.height = size.height+10
+    this.preview_el.style.width = size.width
+    this.preview_el.style.height = size.height
     this.preview_el.setAttribute("width",size.width+"px");
     this.preview_el.setAttribute("height",size.height+"px");
 
@@ -397,21 +386,18 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.layer_1.style.strokeLinejoin = this.tool.styles[0].strokeLinejoin;
     this.layer_1.style.stroke = this.tool.styles[0].color;
     this.layer_1.style.fill = this.tool.styles[0].fill;
-    this.layer_1.style.strokeDasharray = `${this.tool.styles[0].dash[0] * this.tool.styles[0].thickness},${this.tool.styles[0].dash[1] * this.tool.styles[0].thickness}`;
   
     this.layer_2.style.strokeWidth = this.tool.styles[1].thickness;
     this.layer_2.style.strokeLinecap = this.tool.styles[1].strokeLinecap;
     this.layer_2.style.strokeLinejoin = this.tool.styles[1].strokeLinejoin;
     this.layer_2.style.stroke = this.tool.styles[1].color;
     this.layer_2.style.fill = this.tool.styles[1].fill;
-    this.layer_2.style.strokeDasharray = `${this.tool.styles[1].dash[0] * this.tool.styles[1].thickness},${this.tool.styles[1].dash[1] * this.tool.styles[1].thickness}`;
     
     this.layer_3.style.strokeWidth = this.tool.styles[2].thickness;
     this.layer_3.style.strokeLinecap = this.tool.styles[2].strokeLinecap;
     this.layer_3.style.strokeLinejoin = this.tool.styles[2].strokeLinejoin;
     this.layer_3.style.stroke = this.tool.styles[2].color;
     this.layer_3.style.fill = this.tool.styles[2].fill;
-    this.layer_3.style.strokeDasharray = `${this.tool.styles[2].dash[0] * this.tool.styles[2].thickness},${this.tool.styles[2].dash[1] * this.tool.styles[2].thickness}`;
 
     this.preview();
     this.render.draw();
@@ -504,14 +490,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     pos.x = pos.x + 7.5
     x = Math.round(pos.x/this.grid_width)*this.grid_width
     y = Math.round(pos.y/this.grid_height)*this.grid_height
-    off = (x<-this.tool.settings.size.width || x>0 || y>this.tool.settings.size.height || y<0)
-    if(off) {
-      x = 50
-      y = -50
-    }
-    return {x:x,y:y};
-  }
 
+    x = clamp(x * -1,0,this.tool.settings.size.width)
+    y = clamp(y,0,this.tool.settings.size.height)
+    return {x:x*-1,y:y};
+  }
 
   function is_json(text)
   {
