@@ -16,8 +16,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.element = document.createElement("div");
   this.element.id = "dotgrid";
-  this.wrapper = document.createElement("div");
-  this.wrapper.id = "wrapper";
 
   this.svg_el = null;
   this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_1.id = "layer_1"; this.layer_1.style.stroke = "black";
@@ -28,10 +26,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.install = function()
   {  
-    document.getElementById("app").appendChild(this.wrapper);
-    this.wrapper.appendChild(this.element);
-    this.element.appendChild(this.guide.el);
-    this.wrapper.appendChild(this.render.el);
+    document.getElementById("app").appendChild(this.element);
+    document.getElementById("app").appendChild(this.guide.el);
     
     // Vector
     this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");

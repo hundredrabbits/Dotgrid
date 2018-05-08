@@ -20,10 +20,11 @@ function Guide()
 
   this.resize = function(size)
   {
-    this.el.width = (size.width+40)*2;
-    this.el.height = (size.height+40)*2;
-    this.el.style.width = (size.width+40)+"px";
-    this.el.style.height = (size.height+40)+"px";
+    var offset = 30
+    this.el.width = (size.width+offset)*2;
+    this.el.height = (size.height+offset)*2;
+    this.el.style.width = (size.width+offset)+"px";
+    this.el.style.height = (size.height+offset)+"px";
 
     this.refresh();
   }
@@ -35,7 +36,6 @@ function Guide()
 
   this.refresh = function()
   {
-    console.log("refresh")
     this.clear();
 
     // Markers

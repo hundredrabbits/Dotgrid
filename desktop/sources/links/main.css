@@ -1,16 +1,13 @@
 body { padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: none; overflow: hidden; padding-left:5px; transition: background 500ms}
-#app { display: flex; flex-direction: column; align-items: center; -webkit-app-region: drag;}
 
-#wrapper { padding: 25px; padding-bottom: 15px; -webkit-app-region: drag; padding-left:15px;}
-#dotgrid { margin:0px auto; position:relative; padding:10px;-webkit-app-region: no-drag; width:310px; height:310px; }
-
-#guide { position: absolute;width: 300px;height: 300px; margin-left: -5px; margin-top: -5px; transition: opacity 250ms}
+#app { display: flex; flex-direction: column; align-items: center; -webkit-app-region: drag; padding-top:30px;}
+#dotgrid { margin:0px auto; position:relative; padding:15px;-webkit-app-region: no-drag; width:310px; height:310px; }
+#guide { position: absolute;width: 300px;height: 300px; transition: opacity 250ms;}
 #render { display: none }
 
-.icon { width:30px; height:30px; margin-right:-2px; opacity: 1}
-.icon:hover { cursor: pointer; opacity: 1 }
-
 svg.vector { z-index: 1000;position: relative; left:10px; top:10px; width:300px; height:300px; }
+
+/* Interface */
 
 #interface { font-size: 11px;line-height: 30px;text-transform: uppercase;-webkit-app-region: no-drag; transition: all 150ms; width: 315px; position:fixed; bottom:20px; left:calc(50vw - 155px); height:30px;}
 #interface svg.inactive { opacity: 0.2 }
@@ -18,14 +15,15 @@ svg.vector { z-index: 1000;position: relative; left:10px; top:10px; width:300px;
 #interface svg:hover { opacity: 0.5 }
 #interface svg.icon:last-child { margin-right: 0; }
 #interface svg path { fill:none; stroke-linecap: round; stroke-linejoin: round; stroke-width:12px; }
-
 #interface.hidden { bottom:10px;opacity: 0 }
 #interface.visible { bottom:20px; opacity: 1 }
-
 #interface #menu { opacity: 1; position: absolute; top:0px; transition: all 250ms; z-index: 900}
 #interface #picker { background:red; position: absolute; line-height: 30px; z-index: 0; width:250px; top:5px; opacity: 0; transition: all 250ms;}
 #interface.picker #menu { opacity: 0; top:-5px; z-index: 0 }
 #interface.picker #picker { opacity: 1; top:0px; z-index: 900 }
+#interface .icon { width:30px; height:30px; margin-right:-2px; opacity: 1}
+#interface .icon:hover { cursor: pointer; opacity: 1 }
+
 #preview { position: absolute; top:20px; left:20px; stroke-dasharray: 4,4; }
 
 /* Theme Defaults */
