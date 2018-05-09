@@ -7,6 +7,8 @@ function Guide()
   this.el.style.width = "320px";
   this.el.style.height = "320px";
 
+  var scale = 2;
+
   this.start = function()
   {
     this.clear();
@@ -21,8 +23,8 @@ function Guide()
   this.resize = function(size)
   {
     var offset = 30
-    this.el.width = (size.width+offset)*2;
-    this.el.height = (size.height+offset)*2;
+    this.el.width = (size.width+offset)*scale;
+    this.el.height = (size.height+offset)*scale;
     this.el.style.width = (size.width+offset)+"px";
     this.el.style.height = (size.height+offset)+"px";
 
@@ -31,7 +33,7 @@ function Guide()
 
   this.clear = function()
   {
-    this.el.getContext('2d').clearRect(0, 0, this.el.width*2, this.el.height*2);
+    this.el.getContext('2d').clearRect(0, 0, this.el.width*scale, this.el.height*scale);
   }
 
   this.refresh = function()
@@ -63,6 +65,17 @@ function Guide()
       }
     }
 
+    this.draw_paths()
+
+    // Vertices
+    for(segment_id in dotgrid.tool.layer()){
+      var segment = dotgrid.tool.layer()[segment_id];
+      for(vertex_id in segment.vertices){
+        var vertex = segment.vertices[vertex_id];
+        this.draw_vertex(vertex,3);
+      }
+    }
+
     // Translations
     if(dotgrid.cursor.translation){
       this.draw_translation();
@@ -77,7 +90,7 @@ function Guide()
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
     ctx.lineWidth = 2;
-    ctx.arc((pos.x * 2)+30, (pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
+    ctx.arc((pos.x * scale)+30, (pos.y * scale)+30, radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = dotgrid.theme.active.f_med;
     ctx.fill();
     ctx.closePath();
@@ -88,10 +101,33 @@ function Guide()
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
     ctx.lineWidth = 2;
-    ctx.arc(pos.x * 2, pos.y * 2, radius, 0, 2 * Math.PI, false);
+    ctx.arc(pos.x * scale, pos.y * scale, radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = step ? dotgrid.theme.active.f_med : dotgrid.theme.active.f_low;
     ctx.fill();
     ctx.closePath();
+  }
+
+  this.draw_paths = function()
+  {
+    var paths = dotgrid.tool.paths_mod({x:15,y:15},scale)
+    this.draw_path(paths,0)
+  }
+
+  this.draw_path = function(paths,id)
+  {
+    var style = dotgrid.tool.styles[id]
+    var ctx = this.el.getContext('2d');
+    var p = new Path2D(paths[id]);
+
+    ctx.strokeStyle = style.color;
+    ctx.lineWidth = style.thickness * scale;
+    ctx.lineCap = style.strokeLinecap;
+    ctx.lineJoin = style.strokeLinejoin;
+    if(style.fill && style.fill != "none"){
+      ctx.fillStyle = style.color
+      ctx.fill(p);
+    }
+    ctx.stroke(p);
   }
 
   this.draw_handle = function(pos,radius = 15)
@@ -100,7 +136,7 @@ function Guide()
     ctx.beginPath();
     ctx.lineWidth = 3;
     ctx.lineCap="round";
-    ctx.arc((pos.x * 2)+30, (pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
+    ctx.arc((pos.x * scale)+30, (pos.y * scale)+30, radius, 0, 2 * Math.PI, false);
     ctx.strokeStyle = pos_is_equal(pos,dotgrid.cursor.pos) ? dotgrid.theme.active.b_inv : dotgrid.theme.active.f_low;
     ctx.stroke(); 
     ctx.closePath(); 
@@ -115,8 +151,8 @@ function Guide()
 
     if(to.x<=0) {
       ctx.beginPath();
-      ctx.moveTo((from.x * -2)+30,(from.y * 2)+30);
-      ctx.lineTo((to.x * -2)+30,(to.y * 2)+30);
+      ctx.moveTo((from.x * -scale)+30,(from.y * scale)+30);
+      ctx.lineTo((to.x * -scale)+30,(to.y * scale)+30);
       ctx.lineCap="round";
       ctx.lineWidth = 5;
       ctx.strokeStyle = dotgrid.theme.active.b_inv;
@@ -131,7 +167,7 @@ function Guide()
     ctx.beginPath();
     ctx.lineWidth = 3;
     ctx.lineCap="round";
-    ctx.arc(Math.abs(pos.x * -2)+30, Math.abs(pos.y * 2)+30, radius, 0, 2 * Math.PI, false);
+    ctx.arc(Math.abs(pos.x * -scale)+30, Math.abs(pos.y * scale)+30, radius, 0, 2 * Math.PI, false);
     ctx.strokeStyle = dotgrid.theme.active.f_med;
     ctx.stroke(); 
     ctx.closePath(); 

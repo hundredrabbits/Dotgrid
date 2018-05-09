@@ -234,6 +234,26 @@ function Tool()
     return [this.path(0),this.path(1),this.path(2)]
   }
 
+  this.paths_mod = function(offset,scale) // Returns modded paths
+  {
+    var a = []
+    var layers = copy(this.layers)
+    for(id in layers){
+      var layer = layers[id];
+      for(k1 in layer){
+        var seg = layer[k1];
+        for(k2 in seg.vertices){
+          seg.vertices[k2].x += offset.x
+          seg.vertices[k2].x *= scale
+          seg.vertices[k2].y += offset.y
+          seg.vertices[k2].y *= scale
+        }
+      }
+      a.push(this.path(id,layer))
+    }
+    return a
+  }
+
   this.render = function(segment, angle = 0, mirror_x = false, mirror_y = false)
   {
     var type = segment.type;

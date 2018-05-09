@@ -43,7 +43,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.svg_el.style.height = this.tool.settings.size.height;
     this.svg_el.style.fill = "none";
     this.svg_el.style.strokeWidth = this.tool.style().thickness;
-    this.element.appendChild(this.svg_el);
+    // this.element.appendChild(this.svg_el);
+    
     // Preview
     this.preview_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     this.preview_el.id = "preview"
