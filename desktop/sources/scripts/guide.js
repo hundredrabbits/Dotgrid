@@ -109,15 +109,16 @@ function Guide()
 
   this.draw_paths = function()
   {
-    var paths = dotgrid.tool.paths_mod({x:15,y:15},scale)
-    this.draw_path(paths,0)
+    var path = new Generator(dotgrid.tool.layer()).toString({x:15,y:15},scale)
+    var style = dotgrid.tool.style()
+
+    this.draw_path(path,style)
   }
 
-  this.draw_path = function(paths,id)
+  this.draw_path = function(path,style)
   {
-    var style = dotgrid.tool.styles[id]
     var ctx = this.el.getContext('2d');
-    var p = new Path2D(paths[id]);
+    var p = new Path2D(path);
 
     ctx.strokeStyle = style.color;
     ctx.lineWidth = style.thickness * scale;
