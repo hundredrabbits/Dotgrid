@@ -14,6 +14,23 @@ function Guide()
     this.clear();
     this.refresh();
   }
+  
+  this.refresh = function()
+  {
+    this.clear();
+    this.draw_markers()
+    this.draw_vertices()
+    this.draw_handles()
+    this.draw_paths()
+    this.draw_overlays()
+    this.draw_translation();
+    this.draw_cursor();  
+  }
+
+  this.clear = function()
+  {
+    this.el.getContext('2d').clearRect(0, 0, this.el.width*scale, this.el.height*scale);
+  }
 
   this.toggle = function()
   {
@@ -31,16 +48,38 @@ function Guide()
     this.refresh();
   }
 
-  this.clear = function()
+
+  this.draw_overlays = function()
   {
-    this.el.getContext('2d').clearRect(0, 0, this.el.width*scale, this.el.height*scale);
+    for(segment_id in dotgrid.tool.layer()){
+      var segment = dotgrid.tool.layer()[segment_id];
+      for(vertex_id in segment.vertices){
+        var vertex = segment.vertices[vertex_id];
+        this.draw_vertex(vertex,3);
+      }
+    }
   }
 
-  this.refresh = function()
+  this.draw_handles = function()
   {
-    this.clear();
+    for(segment_id in dotgrid.tool.layer()){
+      var segment = dotgrid.tool.layer()[segment_id];
+      for(vertex_id in segment.vertices){
+        var vertex = segment.vertices[vertex_id];
+        this.draw_handle(vertex);  
+      }
+    }
+  }
 
-    // Markers
+  this.draw_vertices = function()
+  {
+    for(id in dotgrid.tool.vertices){
+      this.draw_vertex(dotgrid.tool.vertices[id]);
+    }
+  }
+
+  this.draw_markers = function()
+  {
     for (var x = dotgrid.grid_x; x >= 0; x--) {
       for (var y = dotgrid.grid_y; y >= 0; y--) {
         var pos_x = parseInt(x * dotgrid.grid_width) + dotgrid.grid_width ;
@@ -50,39 +89,6 @@ function Guide()
         this.draw_marker({x:pos_x,y:pos_y},radius,is_step);
       }
     }
-
-    // Vertices
-    for(id in dotgrid.tool.vertices){
-      this.draw_vertex(dotgrid.tool.vertices[id]);
-    }
-
-    // Handles
-    for(segment_id in dotgrid.tool.layer()){
-      var segment = dotgrid.tool.layer()[segment_id];
-      for(vertex_id in segment.vertices){
-        var vertex = segment.vertices[vertex_id];
-        this.draw_handle(vertex);  
-      }
-    }
-
-    this.draw_paths()
-
-    // Vertices
-    for(segment_id in dotgrid.tool.layer()){
-      var segment = dotgrid.tool.layer()[segment_id];
-      for(vertex_id in segment.vertices){
-        var vertex = segment.vertices[vertex_id];
-        this.draw_vertex(vertex,3);
-      }
-    }
-
-    // Translations
-    if(dotgrid.cursor.translation){
-      this.draw_translation();
-    }
-
-    // Cursor
-    this.draw_cursor(dotgrid.cursor.pos);  
   }
 
   this.draw_vertex = function(pos, radius = 5)
@@ -144,7 +150,8 @@ function Guide()
   }
 
   this.draw_translation = function()
-  {    
+  {   
+    if(!dotgrid.cursor.translation){ return; }
     // From
     var ctx = this.el.getContext('2d');
     var from = dotgrid.cursor.translation.from;
