@@ -8,7 +8,7 @@ function Tool()
     { thickness:2,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none",mirror_style:0 },
     { thickness:2,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none",mirror_style:0 }
   ];
-  this.verteces = [];
+  this.vertices = [];
   this.reqs = { line:2,arc_c:2,arc_r:2,bezier:3,close:0 };
 
   this.start = function()
@@ -21,14 +21,14 @@ function Tool()
   this.reset = function()
   {
     this.layers = [[],[],[]];
-    this.verteces = [];
+    this.vertices = [];
     this.index = 0;
     dotgrid.set_size({width:300,height:300})
   }
 
   this.clear = function()
   {
-    this.verteces = [];
+    this.vertices = [];
     dotgrid.preview();
     dotgrid.draw();
   }
@@ -81,7 +81,7 @@ function Tool()
   
   this.remove_segment = function()
   {
-    if(this.verteces.length > 0){ this.clear(); return; }
+    if(this.vertices.length > 0){ this.clear(); return; }
     
     this.layer().pop();
     this.clear();
@@ -92,13 +92,13 @@ function Tool()
   {
     for(segment_id in this.layer()){
       var segment = this.layer()[segment_id];
-      for(vertex_id in segment.verteces){
-        var vertex = segment.verteces[vertex_id];
+      for(vertex_id in segment.vertices){
+        var vertex = segment.vertices[vertex_id];
         if(Math.abs(pos.x) == Math.abs(vertex.x) && Math.abs(pos.y) == Math.abs(vertex.y)){
-          segment.verteces.splice(vertex_id,1)
+          segment.vertices.splice(vertex_id,1)
         }
       }
-      if(segment.verteces.length < 2){
+      if(segment.vertices.length < 2){
         this.layers[this.index].splice(segment_id,1)
       }
     }
@@ -109,15 +109,15 @@ function Tool()
   this.add_vertex = function(pos)
   {
     pos = {x:Math.abs(pos.x),y:Math.abs(pos.y)}
-    this.verteces.push(pos);
+    this.vertices.push(pos);
   }
 
   this.vertex_at = function(pos)
   {
     for(segment_id in this.layer()){
       var segment = this.layer()[segment_id];
-      for(vertex_id in segment.verteces){
-        var vertex = segment.verteces[vertex_id];
+      for(vertex_id in segment.vertices){
+        var vertex = segment.vertices[vertex_id];
         if(vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)){
           return vertex;
         }
@@ -131,13 +131,13 @@ function Tool()
     if(!this.layer()){ this.layers[this.index] = []; }
     if(!this.can_cast(type)){ console.warn("Cannot cast"); return; }
 
-    var append_target = this.can_append({type:type,verteces:this.verteces.slice()})
+    var append_target = this.can_append({type:type,vertices:this.vertices.slice()})
 
     if(append_target){
-      this.layers[this.index][append_target].verteces = this.layers[this.index][append_target].verteces.concat(this.verteces.slice())
+      this.layers[this.index][append_target].vertices = this.layers[this.index][append_target].vertices.concat(this.vertices.slice())
     }
     else{
-      this.layer().push({type:type,verteces:this.verteces.slice()})  
+      this.layer().push({type:type,vertices:this.vertices.slice()})  
     }
     
     this.clear();
@@ -152,9 +152,9 @@ function Tool()
     for(id in this.layer()){
       var stroke = this.layer()[id];
       if(stroke.type != content.type){ continue; }
-      if(!stroke.verteces[stroke.verteces.length-1]){ continue; }
-      if(stroke.verteces[stroke.verteces.length-1].x != content.verteces[0].x){ continue; }
-      if(stroke.verteces[stroke.verteces.length-1].y != content.verteces[0].y){ continue; }
+      if(!stroke.vertices[stroke.vertices.length-1]){ continue; }
+      if(stroke.vertices[stroke.vertices.length-1].x != content.vertices[0].x){ continue; }
+      if(stroke.vertices[stroke.vertices.length-1].y != content.vertices[0].y){ continue; }
       return id;
     }
     return false;
@@ -171,11 +171,11 @@ function Tool()
       }
     }
     if(type == "bezier"){
-      if(this.verteces.length % 2 == 0){
+      if(this.vertices.length % 2 == 0){
         return false;
       }
     }
-    return this.verteces.length >= this.reqs[type];
+    return this.vertices.length >= this.reqs[type];
   }
 
   this.path = function(layer_id = 0, preview = null)
@@ -237,16 +237,16 @@ function Tool()
   this.render = function(segment, angle = 0, mirror_x = false, mirror_y = false)
   {
     var type = segment.type;
-    var verteces = segment.verteces;
+    var vertices = segment.vertices;
     var html = ``;
     var skip = 0;
 
-    for(id in verteces){
+    for(id in vertices){
       if(skip > 0){ skip -= 1; continue; }
       
-      var vertex = this.mirror_mod(verteces[id],angle,mirror_x,mirror_y);
-      var next = this.mirror_mod(verteces[parseInt(id)+1],angle,mirror_x,mirror_y)
-      var after_next = this.mirror_mod(verteces[parseInt(id)+2],angle,mirror_x,mirror_y)
+      var vertex = this.mirror_mod(vertices[id],angle,mirror_x,mirror_y);
+      var next = this.mirror_mod(vertices[parseInt(id)+1],angle,mirror_x,mirror_y)
+      var after_next = this.mirror_mod(vertices[parseInt(id)+2],angle,mirror_x,mirror_y)
 
       if(id == 0){ 
         html += `M${vertex.x},${vertex.y} `;
@@ -290,10 +290,10 @@ function Tool()
   {
     for(segment_id in this.layer()){
       var segment = this.layer()[segment_id];
-      for(vertex_id in segment.verteces){
-        var vertex = segment.verteces[vertex_id];
+      for(vertex_id in segment.vertices){
+        var vertex = segment.vertices[vertex_id];
         if(vertex.x == Math.abs(a.x) && vertex.y == Math.abs(a.y)){
-          segment.verteces[vertex_id] = {x:Math.abs(b.x),y:Math.abs(b.y)};
+          segment.vertices[vertex_id] = {x:Math.abs(b.x),y:Math.abs(b.y)};
         }
       }
     }
@@ -308,9 +308,9 @@ function Tool()
 
     for(segment_id in this.layer()){
       var segment = this.layer()[segment_id];
-      for(vertex_id in segment.verteces){
-        var vertex = segment.verteces[vertex_id];
-        segment.verteces[vertex_id] = {x:vertex.x+offset.x,y:vertex.y-offset.y};
+      for(vertex_id in segment.vertices){
+        var vertex = segment.vertices[vertex_id];
+        segment.vertices[vertex_id] = {x:vertex.x+offset.x,y:vertex.y-offset.y};
       }
     }
     dotgrid.history.push(this.layers);

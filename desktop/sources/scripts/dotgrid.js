@@ -287,7 +287,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     if(this.preview_prev == operation){ return; }
 
-    this.preview_el.innerHTML = !operation || operation == "close" || !dotgrid.tool.can_cast(operation) ? `<path d='M0,0'></path>` : `<path d='${dotgrid.tool.path(dotgrid.tool.index,[{type:operation,verteces:dotgrid.tool.verteces}])}'></path>`;
+    this.preview_el.innerHTML = !operation || operation == "close" || !dotgrid.tool.can_cast(operation) ? `<path d='M0,0'></path>` : `<path d='${dotgrid.tool.path(dotgrid.tool.index,[{type:operation,vertices:dotgrid.tool.vertices}])}'></path>`;
     this.preview_prev = operation;
   }
 

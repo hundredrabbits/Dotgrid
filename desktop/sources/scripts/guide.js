@@ -49,16 +49,16 @@ function Guide()
       }
     }
 
-    // Verteces
-    for(id in dotgrid.tool.verteces){
-      this.draw_vertex(dotgrid.tool.verteces[id]);
+    // Vertices
+    for(id in dotgrid.tool.vertices){
+      this.draw_vertex(dotgrid.tool.vertices[id]);
     }
 
     // Handles
     for(segment_id in dotgrid.tool.layer()){
       var segment = dotgrid.tool.layer()[segment_id];
-      for(vertex_id in segment.verteces){
-        var vertex = segment.verteces[vertex_id];
+      for(vertex_id in segment.vertices){
+        var vertex = segment.vertices[vertex_id];
         this.draw_handle(vertex);  
       }
     }
