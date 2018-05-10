@@ -53,7 +53,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     this.controller.add("default","Effect","Linecap",() => { dotgrid.mod_linecap(); },"Q");
     this.controller.add("default","Effect","Linejoin",() => { dotgrid.mod_linejoin(); },"W");
-    this.controller.add("default","Effect","Mirror",() => { dotgrid.mod_mirror(); },"E");
+    this.controller.add("default","Effect","Mirror",() => { dotgrid.tool.toggle_mirror(); },"E");
     this.controller.add("default","Effect","Fill",() => { dotgrid.mod_fill(); },"R");
     this.controller.add("default","Effect","Color",() => { dotgrid.picker.start(); },"G");
     this.controller.add("default","Effect","Thicker",() => { dotgrid.mod_thickness(1) },"}");
@@ -162,7 +162,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       if(o == "thickness"){ this.mod_thickness(); return; }
       if(o == "linecap"){ this.mod_linecap(); return; }
       if(o == "linejoin"){ this.mod_linejoin(); return; }
-      if(o == "mirror"){ this.mod_mirror(); return; }
+      if(o == "mirror"){ this.tool.toggle_mirror(); return; }
       if(o == "fill"){ this.mod_fill(); return; }
       if(o == "color"){ setTimeout(()=>{ this.picker.start(); }, 100); return; }
       if(o == "depth"){ this.tool.select_next_layer(); return; }
@@ -273,13 +273,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     var a = ["miter","round","bevel"];
     this.mod_linejoin_index += 1;
     this.tool.style().strokeLinejoin = a[this.mod_linejoin_index % a.length];
-    dotgrid.guide.refresh();
-  }
-
-  this.mod_mirror = function()
-  {
-    this.tool.style().mirror_style += 1;
-    this.tool.style().mirror_style = this.tool.style().mirror_style > 7 ? 0 : this.tool.style().mirror_style;
     dotgrid.guide.refresh();
   }
 

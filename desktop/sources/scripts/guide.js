@@ -123,10 +123,9 @@ function Guide()
 
   this.draw_paths = function()
   {
-    var path = new Generator(dotgrid.tool.layer()).toString({x:15,y:15},scale)
-    var style = dotgrid.tool.style()
-
-    this.draw_path(path,style)
+    this.draw_path(new Generator(dotgrid.tool.layers[2]).toString({x:15,y:15},scale),dotgrid.tool.styles[2])
+    this.draw_path(new Generator(dotgrid.tool.layers[1]).toString({x:15,y:15},scale),dotgrid.tool.styles[1])
+    this.draw_path(new Generator(dotgrid.tool.layers[0]).toString({x:15,y:15},scale),dotgrid.tool.styles[0])
   }
 
   this.draw_path = function(path,style)

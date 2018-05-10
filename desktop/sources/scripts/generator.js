@@ -62,18 +62,24 @@ function Generator(layer)
     return html
   }
 
-  this.toString = function(offset = {x:0,y:0}, scale = 1)
+  this.convert = function(layer)
   {
     var s = ""
-
-    var layer = operate(this.layer,offset,scale)
 
     for(id in layer){
       var seg = layer[id];
       s += `${this.render(seg)}`
     }
 
-    return s.trim()
+    return s.trim();
+  }
+
+  this.toString = function(offset = {x:0,y:0}, scale = 1, mirror = dotgrid.tool.style().mirror_style)
+  {
+    var s = ""
+    var layer = operate(this.layer,offset,scale)
+    s += this.convert(layer)
+    return s
   }
 
   function copy(data){ return data ? JSON.parse(JSON.stringify(data)) : []; }
