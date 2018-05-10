@@ -38,6 +38,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","File","Save(.grid)",() => { dotgrid.save(); },"CmdOrCtrl+S");
     this.controller.add("default","File","Render(.png)",() => { dotgrid.render(); },"CmdOrCtrl+R");
     this.controller.add("default","File","Export(.svg)",() => { dotgrid.export(); },"CmdOrCtrl+E");
+    this.controller.add("default","File","Build Icons",() => { dotgrid.build(); },"CmdOrCtrl+B");
 
     this.controller.add("default","Edit","Copy",() => { document.execCommand('copy'); },"CmdOrCtrl+C");
     this.controller.add("default","Edit","Cut",() => { document.execCommand('cut'); },"CmdOrCtrl+X");
@@ -144,12 +145,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     });
   }
 
-  this.render = function(content = this.renderer.to_png(), ready = null)
+  this.render = function(content = this.renderer.to_png(), ready = null, size = null)
   {
     if(!ready){return; }
 
     dialog.showSaveDialog({title:"Render to .png"},(fileName) => {
       if (fileName === undefined){ return; }
+      console.log(`Rendered ${size.width}x${size.height}`)
       fs.writeFileSync(fileName+'.png', ready);
     });
   }
@@ -161,6 +163,45 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       fs.writeFileSync(fileName+".svg", content);
       this.guide.refresh()
     });
+  }
+
+  this.bundle = {}
+
+  this.build = function()
+  {
+    this.bundle = {}
+
+    var sizes = [
+      {width:16,height:16},
+      {width:32,height:32},
+      {width:52,height:52},
+      {width:64,height:64},
+      {width:72,height:72},
+      {width:96,height:96},
+      {width:128,height:128},
+      {width:256,height:256},
+      {width:512,height:512}
+    ]
+
+    for(id in sizes){
+      this.renderer.to_png(sizes[id],dotgrid.package)
+    }
+  }
+
+  this.package = function(n = null, ready,size)
+  {
+    dotgrid.bundle[`${size.width}x${size.height}`] = ready
+
+    console.log(`Rendered ${size.width}x${size.height}`,`${Object.keys(dotgrid.bundle).length}/9`)
+
+    if(Object.keys(dotgrid.bundle).length == 9){
+      dialog.showSaveDialog({title:"Export to Icons"},(fileName) => {
+        if (fileName === undefined){ return; }
+        for(id in dotgrid.bundle){
+          fs.writeFileSync(`${fileName}.${id}.png`, dotgrid.bundle[id]);
+        }
+      });
+    }
   }
 
   // Cursor

@@ -14,11 +14,6 @@ function Renderer()
   this.svg_el.appendChild(this.layer_3);
   this.svg_el.appendChild(this.layer_2);
   this.svg_el.appendChild(this.layer_1);
-    
-  // Etc
-  this.el = document.createElement("canvas"); 
-  this.el.width = 1280; 
-  this.el.height = 1280;
 
   this.refresh = function()
   {
@@ -53,7 +48,7 @@ function Renderer()
     this.layer_1.setAttribute("d",paths[2])   
   }
 
-  this.to_png = function()
+  this.to_png = function(size = {width:1280,height:1280},callback = dotgrid.render)
   {
     this.refresh();
 
@@ -63,21 +58,24 @@ function Renderer()
     var image64 = b64Start + svg64;
     var img = new Image;
 
-    var canvas = this.el;
+    var canvas = document.createElement("canvas");
+
+    canvas.width = size.width; 
+    canvas.height = size.height;
+
     var ctx = canvas.getContext('2d');
 
     img.onload = function(){
-      ctx.clearRect(0, 0, 1280, 1280);
-      ctx.drawImage(img, 0, 0, 1280, 1280);
+      ctx.drawImage(img, 0, 0, size.width, size.height);
       var data = canvas.toDataURL('image/png').replace(/^data:image\/\w+;base64,/, "");
-      dotgrid.renderer.to_png_ready(new Buffer(data, 'base64'))
+      dotgrid.renderer.to_png_ready(callback, new Buffer(data, 'base64'),size)
     };
     img.src = image64;
   }
 
-  this.to_png_ready = function(buffer)
+  this.to_png_ready = function(callback, buffer, size)
   {
-    dotgrid.render(null,buffer)
+    callback(null,buffer,size)
   }
 
   this.to_svg = function()
