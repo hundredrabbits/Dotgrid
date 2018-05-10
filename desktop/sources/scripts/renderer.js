@@ -1,4 +1,4 @@
-function Render()
+function Renderer()
 {
   // Create SVG parts
   this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");

@@ -5,7 +5,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.interface = new Interface();
   this.history = new History();
   this.guide = new Guide();
-  this.render = new Render();
+  this.renderer = new Renderer();
   this.tool = new Tool();
   this.picker = new Picker();
 
@@ -130,41 +130,35 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     fs.readFile(paths[0], 'utf-8', (err, data) => {
       if(err){ alert("An error ocurred reading the file :" + err.message); return; }
-      dotgrid.tool.replace(JSON.parse(data.toString().trim()));
-      dotgrid.guide.refresh();
+      this.tool.replace(JSON.parse(data.toString().trim()));
+      this.guide.refresh();
     });
   }
 
   this.save = function()
   {
-    dotgrid.guide.refresh();
-
     dialog.showSaveDialog({title:"Save to .grid"},(fileName) => {
       if (fileName === undefined){ return; }
-      fs.writeFile(fileName+'.grid', dotgrid.tool.export());
-      dotgrid.guide.refresh()
+      fs.writeFileSync(fileName+'.grid', this.tool.export());
+      this.guide.refresh()
     });
   }
 
   this.render = function()
   {
-    dotgrid.guide.refresh();
-
     dialog.showSaveDialog({title:"Render to .png"},(fileName) => {
       if (fileName === undefined){ return; }
-      fs.writeFile(fileName+'.png', dotgrid.render.to_png());
-      dotgrid.guide.refresh()
+      fs.writeFileSync(fileName+'.png', this.renderer.to_png());
+      this.guide.refresh()
     });
   }
 
   this.export = function()
   {
-    dotgrid.guide.refresh();
-
-    dialog.showSaveDialog({title:"Exoprt to .svg"},(fileName) => {
+    dialog.showSaveDialog({title:"Export to .svg"},(fileName) => {
       if (fileName === undefined){ return; }
-      fs.writeFile(fileName+".svg", dotgrid.render.to_svg());
-      dotgrid.guide.refresh()
+      fs.writeFileSync(fileName+".svg", this.renderer.to_svg());
+      this.guide.refresh()
     });
   }
 
