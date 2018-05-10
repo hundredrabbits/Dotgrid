@@ -20,7 +20,7 @@ function Renderer()
   this.el.width = 1280; 
   this.el.height = 1280;
 
-  this.update = function()
+  this.refresh = function()
   {
     this.svg_el.setAttribute("width",dotgrid.tool.settings.size.width+"px");
     this.svg_el.setAttribute("height",dotgrid.tool.settings.size.height+"px");
@@ -55,27 +55,34 @@ function Renderer()
 
   this.to_png = function()
   {
-    this.update();
+    this.refresh();
 
     var xml = new XMLSerializer().serializeToString(this.svg_el);
     var svg64 = btoa(xml);
     var b64Start = 'data:image/svg+xml;base64,';
     var image64 = b64Start + svg64;
-    var img = document.createElement("img")
+    var img = new Image;
+
+    var canvas = this.el;
+    var ctx = canvas.getContext('2d');
+
+    img.onload = function(){
+      ctx.clearRect(0, 0, 1280, 1280);
+      ctx.drawImage(img, 0, 0, 1280, 1280);
+      var data = canvas.toDataURL('image/png').replace(/^data:image\/\w+;base64,/, "");
+      dotgrid.renderer.to_png_ready(new Buffer(data, 'base64'))
+    };
     img.src = image64;
-    this.el.getContext('2d').clearRect(0, 0, 1280, 1280);
-    this.el.getContext('2d').drawImage(img, 0, 0, 1280, 1280);
+  }
 
-    var fs = require('fs');
-    var data = this.el.toDataURL('image/png').replace(/^data:image\/\w+;base64,/, "");
-    var buf = new Buffer(data, 'base64');
-
-    return buf;
+  this.to_png_ready = function(buffer)
+  {
+    dotgrid.render(null,buffer)
   }
 
   this.to_svg = function()
   {
-    this.update();
+    this.refresh();
 
     return this.svg_el.outerHTML;
   }

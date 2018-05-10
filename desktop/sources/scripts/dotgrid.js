@@ -135,29 +135,30 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     });
   }
 
-  this.save = function()
+  this.save = function(content = this.tool.export())
   {
     dialog.showSaveDialog({title:"Save to .grid"},(fileName) => {
       if (fileName === undefined){ return; }
-      fs.writeFileSync(fileName+'.grid', this.tool.export());
+      fs.writeFileSync(fileName+'.grid', content);
       this.guide.refresh()
     });
   }
 
-  this.render = function()
+  this.render = function(content = this.renderer.to_png(), ready = null)
   {
+    if(!ready){return; }
+
     dialog.showSaveDialog({title:"Render to .png"},(fileName) => {
       if (fileName === undefined){ return; }
-      fs.writeFileSync(fileName+'.png', this.renderer.to_png());
-      this.guide.refresh()
+      fs.writeFileSync(fileName+'.png', ready);
     });
   }
 
-  this.export = function()
+  this.export = function(content = this.renderer.to_svg())
   {
     dialog.showSaveDialog({title:"Export to .svg"},(fileName) => {
       if (fileName === undefined){ return; }
-      fs.writeFileSync(fileName+".svg", this.renderer.to_svg());
+      fs.writeFileSync(fileName+".svg", content);
       this.guide.refresh()
     });
   }
