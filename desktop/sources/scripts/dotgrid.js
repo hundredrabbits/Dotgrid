@@ -127,7 +127,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     dialog.showSaveDialog((fileName) => {
       if (fileName === undefined){ return; }
       fs.writeFile(fileName+".svg", dotgrid.render.to_svg());
-      fs.writeFile(fileName+'.png', dotgrid.render.buffer());
+      fs.writeFile(fileName+'.png', dotgrid.render.to_png());
       fs.writeFile(fileName+'.grid', dotgrid.tool.export());
       dotgrid.guide.refresh()
     });
