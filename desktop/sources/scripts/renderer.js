@@ -38,14 +38,14 @@ function Renderer()
     this.layer_2.style.strokeLinejoin = styles[1].strokeLinejoin;
     this.layer_2.style.stroke = styles[1].color;
     this.layer_2.style.fill = styles[1].fill;
-    this.layer_1.setAttribute("d",paths[1])
+    this.layer_2.setAttribute("d",paths[1])
     
     this.layer_3.style.strokeWidth = styles[2].thickness;
     this.layer_3.style.strokeLinecap = styles[2].strokeLinecap;
     this.layer_3.style.strokeLinejoin = styles[2].strokeLinejoin;
     this.layer_3.style.stroke = styles[2].color;
     this.layer_3.style.fill = styles[2].fill; 
-    this.layer_1.setAttribute("d",paths[2])   
+    this.layer_3.setAttribute("d",paths[2])   
   }
 
   this.to_png = function(size = {width:1280,height:1280},callback = dotgrid.render)

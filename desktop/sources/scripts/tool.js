@@ -190,8 +190,8 @@ function Tool()
   this.paths = function()
   {
     var l1 = new Generator(dotgrid.tool.layers[0]).toString({x:0,y:0},1)
-    var l2 = new Generator(dotgrid.tool.layers[0]).toString({x:0,y:0},1)
-    var l3 = new Generator(dotgrid.tool.layers[0]).toString({x:0,y:0},1)
+    var l2 = new Generator(dotgrid.tool.layers[1]).toString({x:0,y:0},1)
+    var l3 = new Generator(dotgrid.tool.layers[2]).toString({x:0,y:0},1)
 
     return [l1,l2,l3]
   }
