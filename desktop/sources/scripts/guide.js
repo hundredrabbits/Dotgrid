@@ -201,7 +201,7 @@ function Guide()
 
     var path  = new Generator([{vertices:dotgrid.tool.vertices,type:operation}]).toString({x:15,y:15},2)
     var style = {
-      color:"#f00",
+      color:dotgrid.theme.active.f_med,
       thickness:2,
       strokeLinecap:"round",
       strokeLinejoin:"round",

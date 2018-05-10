@@ -63,8 +63,6 @@ function Generator(layer)
 
     var layer = operate(this.layer,offset,scale)
 
-    console.log(layer)
-
     for(id in layer){
       var seg = layer[id];
       s += `${this.render(seg)}`

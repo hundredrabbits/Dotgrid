@@ -29,7 +29,6 @@ function Tool()
   this.clear = function()
   {
     this.vertices = [];
-    dotgrid.preview();
     dotgrid.draw();
   }
 
@@ -62,7 +61,7 @@ function Tool()
   
   this.replace = function(dot)
   {
-    if(!dot.layers || dot.layers.length != 3){ console.log("Incompatible version"); return; }
+    if(!dot.layers || dot.layers.length != 3){ console.warn("Incompatible version"); return; }
     
     if(this.settings && (this.settings.size.width != dot.settings.size.width || this.settings.size.height != dot.settings.size.height)){
       dotgrid.set_size({width:dot.settings.size.width,height:dot.settings.size.height})
