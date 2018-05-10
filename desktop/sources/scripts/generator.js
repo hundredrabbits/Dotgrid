@@ -19,7 +19,7 @@ function Generator(layer)
     return l;
   }
 
-  function render(segment)
+  this.render = function(segment)
   {
     var type = segment.type;
     var vertices = segment.vertices;
@@ -63,9 +63,11 @@ function Generator(layer)
 
     var layer = operate(this.layer,offset,scale)
 
+    console.log(layer)
+
     for(id in layer){
       var seg = layer[id];
-      s += `${render(seg)}`
+      s += `${this.render(seg)}`
     }
 
     return s.trim()

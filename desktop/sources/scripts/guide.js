@@ -25,6 +25,7 @@ function Guide()
     this.draw_overlays()
     this.draw_translation();
     this.draw_cursor();  
+    this.draw_preview();
   }
 
   this.clear = function()
@@ -126,14 +127,21 @@ function Guide()
     var ctx = this.el.getContext('2d');
     var p = new Path2D(path);
 
+    ctx.setLineDash([0,0]); 
+
     ctx.strokeStyle = style.color;
     ctx.lineWidth = style.thickness * scale;
     ctx.lineCap = style.strokeLinecap;
     ctx.lineJoin = style.strokeLinejoin;
+
     if(style.fill && style.fill != "none"){
       ctx.fillStyle = style.color
       ctx.fill(p);
     }
+    if(style.strokeLineDash){
+      ctx.setLineDash(style.strokeLineDash);
+    }
+
     ctx.stroke(p);
   }
 
@@ -141,6 +149,7 @@ function Guide()
   {
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
+    ctx.setLineDash([0,0]); 
     ctx.lineWidth = 3;
     ctx.lineCap="round";
     ctx.arc((pos.x * scale)+30, (pos.y * scale)+30, radius, 0, 2 * Math.PI, false);
@@ -159,6 +168,7 @@ function Guide()
 
     if(to.x<=0) {
       ctx.beginPath();
+      ctx.setLineDash([0,0]); 
       ctx.moveTo((from.x * -scale)+30,(from.y * scale)+30);
       ctx.lineTo((to.x * -scale)+30,(to.y * scale)+30);
       ctx.lineCap="round";
@@ -173,12 +183,32 @@ function Guide()
   {
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
+    ctx.setLineDash([0,0]); 
     ctx.lineWidth = 3;
     ctx.lineCap="round";
     ctx.arc(Math.abs(pos.x * -scale)+30, Math.abs(pos.y * scale)+30, radius, 0, 2 * Math.PI, false);
     ctx.strokeStyle = dotgrid.theme.active.f_med;
     ctx.stroke(); 
     ctx.closePath(); 
+  }
+
+  this.draw_preview = function()
+  {
+    var operation = dotgrid.cursor.operation
+
+    if(!dotgrid.tool.can_cast(operation)){ return; }
+    if(operation == "close"){ return; }
+
+    var path  = new Generator([{vertices:dotgrid.tool.vertices,type:operation}]).toString({x:15,y:15},2)
+    var style = {
+      color:"#f00",
+      thickness:2,
+      strokeLinecap:"round",
+      strokeLinejoin:"round",
+      strokeLineDash:[5, 15]
+    }
+
+    this.draw_path(path,style)
   }
 
   function pos_is_equal(a,b){ return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }

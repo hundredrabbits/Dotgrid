@@ -59,7 +59,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.preview_el.style.strokeWidth = this.tool.style().thickness;
     this.preview_el.style.strokeLinecap = this.tool.style().strokeLinecap;
     this.preview_el.style.fill = this.tool.style().fill;
-    this.element.appendChild(this.preview_el);
+    // this.element.appendChild(this.preview_el);
 
     this.svg_el.appendChild(this.layer_3);
     this.svg_el.appendChild(this.layer_2);
@@ -234,11 +234,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     this.cursor.pos = pos;
     this.cursor.updated = new Date().getTime();
+    this.cursor.operation = e.target.getAttribute("ar");
 
     if(dotgrid.cursor.translation && (Math.abs(dotgrid.cursor.translation.from.x) != Math.abs(pos.x) || Math.abs(dotgrid.cursor.translation.from.y) != Math.abs(pos.y))){ dotgrid.cursor.translation.to = pos; }
 
-    dotgrid.preview(e.target.getAttribute("ar"));
-    dotgrid.guide.refresh(pos);
+    dotgrid.guide.refresh();
     e.preventDefault();
   }
 
@@ -249,7 +249,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); 
     pos = this.position_on_grid(pos);
 
-    if(e.altKey){ return; }
+    if(e.altKey || e.target.id != "guide"){ return; }
 
     if(pos.x > 0) { dotgrid.cursor.translation = null; return; }
 
