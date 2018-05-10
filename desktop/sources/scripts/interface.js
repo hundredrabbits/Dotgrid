@@ -62,15 +62,9 @@ function Interface()
     document.getElementById("color").className.baseVal = "icon";
 
     // Mirror
-    if(dotgrid.tool.style().mirror_style == 0){
-      document.getElementById("mirror_path").setAttribute("d","M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210")
-    }
-    else if(dotgrid.tool.style().mirror_style == 1){
-      document.getElementById("mirror_path").setAttribute("d","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210")
-    }
-    else if(dotgrid.tool.style().mirror_style == 2){
-      document.getElementById("mirror_path").setAttribute("d","M210,90 L210,90 L90,210 M60,60 L60,60 L120,120 M180,180 L180,180 L240,240")
-    }
+    if(dotgrid.tool.style().mirror_style == 0){ document.getElementById("mirror_path").setAttribute("d","M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210") }
+    else if(dotgrid.tool.style().mirror_style == 1){ document.getElementById("mirror_path").setAttribute("d","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210") }
+    else if(dotgrid.tool.style().mirror_style == 2){ document.getElementById("mirror_path").setAttribute("d","M210,90 L210,90 L90,210 M60,60 L60,60 L120,120 M180,180 L180,180 L240,240") }
 
     this.prev_operation = dotgrid.cursor.operation;
   }
