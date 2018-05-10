@@ -138,7 +138,7 @@ function Tool()
     else{
       this.layer().push({type:type,vertices:this.vertices.slice()})  
     }
-    
+
     this.clear();
     dotgrid.guide.refresh();
     dotgrid.history.push(this.layers);

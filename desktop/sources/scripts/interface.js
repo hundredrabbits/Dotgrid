@@ -39,7 +39,7 @@ function Interface()
     this.menu_el.innerHTML = html
   }
 
-  this.update = function()
+  this.refresh = function()
   {
     document.getElementById("line").className.baseVal = !dotgrid.tool.can_cast("line") ? "icon inactive" : "icon";
     document.getElementById("arc_c").className.baseVal = !dotgrid.tool.can_cast("arc_c") ? "icon inactive" : "icon";

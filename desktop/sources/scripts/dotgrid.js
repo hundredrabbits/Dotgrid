@@ -49,7 +49,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","Stroke","Arc",() => { dotgrid.tool.cast("arc_c"); },"S"); // 0,1
     this.controller.add("default","Stroke","Arc Rev",() => { dotgrid.tool.cast("arc_r")},"D"); // 0,0
     this.controller.add("default","Stroke","Bezier",() => { dotgrid.tool.cast("bezier") },"F");
-    this.controller.add("default","Stroke","Connect",() => { dotgrid.tool.cast("close") },"Z");
+    this.controller.add("default","Stroke","Close",() => { dotgrid.tool.cast("close") },"Z");
 
     this.controller.add("default","Effect","Linecap",() => { dotgrid.mod_linecap(); },"Q");
     this.controller.add("default","Effect","Linejoin",() => { dotgrid.mod_linejoin(); },"W");
@@ -179,6 +179,9 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       console.log("Begin translation"); dotgrid.cursor.translation = {from:pos,to:pos}; 
       if(e.shiftKey){ console.log("Begin translation(multi)"); dotgrid.cursor.multi = true; }
     }
+
+    dotgrid.guide.refresh();
+    dotgrid.interface.refresh();
   }
 
   this.mouse_move = function(e)
@@ -192,6 +195,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     if(dotgrid.cursor.translation && (Math.abs(dotgrid.cursor.translation.from.x) != Math.abs(pos.x) || Math.abs(dotgrid.cursor.translation.from.y) != Math.abs(pos.y))){ dotgrid.cursor.translation.to = pos; }
 
     dotgrid.guide.refresh();
+    dotgrid.interface.refresh();
     e.preventDefault();
   }
 
@@ -222,7 +226,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     this.tool.add_vertex({x:pos.x * -1,y:pos.y});
     dotgrid.cursor.translation = null;
+
+    dotgrid.interface.refresh();
     dotgrid.guide.refresh();
+
     e.preventDefault();
   }
 
@@ -301,7 +308,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.grid_height = this.tool.settings.size.height/this.grid_y;
 
     dotgrid.guide.resize(size);
-    this.interface.update();
+
+    this.interface.refresh();
     dotgrid.guide.refresh();
   }
 

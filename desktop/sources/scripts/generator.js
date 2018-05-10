@@ -54,6 +54,10 @@ function Generator(layer)
         console.warn(`unknown type:${type}`)
       }
     }
+
+    if(segment.type == "close"){
+      html += "Z "
+    }
   
     return html
   }
