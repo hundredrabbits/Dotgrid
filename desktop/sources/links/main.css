@@ -3,7 +3,6 @@ body { padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: non
 /* Core */
 
 #app { display: flex; flex-direction: column; align-items: center; -webkit-app-region: drag; padding-top:30px;}
-#dotgrid { margin:0px auto; position:relative; padding:15px;-webkit-app-region: no-drag; width:310px; height:310px; }
 #guide { position: absolute;width: 300px;height: 300px; transition: opacity 150ms;}
 #render { display: none }
 #vector { z-index: 1000;position: relative;width:300px; height:300px; }
@@ -41,5 +40,3 @@ body { background:var(--background) !important; }
 .bl { background:var(--b_low) !important ; }
 .b_inv { background:var(--b_inv) !important ; ; }
 .icon { color:var(--f_high) !important; stroke:var(--f_high) !important; }
-#dotgrid svg.vector { stroke:var(--f_high) !important; }
-    

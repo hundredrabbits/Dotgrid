@@ -14,9 +14,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.block_x = block_x;
   this.block_y = block_y;
 
-  this.element = document.createElement("div");
-  this.element.id = "dotgrid";
-
   this.svg_el = null;
   this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_1.id = "layer_1"; this.layer_1.style.stroke = "black";
   this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_2.id = "layer_2"; this.layer_2.style.stroke = "#999";
@@ -26,7 +23,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.install = function()
   {  
-    document.getElementById("app").appendChild(this.element);
     document.getElementById("app").appendChild(this.guide.el);
     
     // Vector
@@ -43,7 +39,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.svg_el.style.height = this.tool.settings.size.height;
     this.svg_el.style.fill = "none";
     this.svg_el.style.strokeWidth = this.tool.style().thickness;
-    // this.element.appendChild(this.svg_el);
 
     this.svg_el.appendChild(this.layer_3);
     this.svg_el.appendChild(this.layer_2);
@@ -324,15 +319,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     
     this.tool.settings.size.width = size.width
     this.tool.settings.size.height = size.height
-    this.element.style.width = size.width+10
-    this.element.style.height = size.height+10
+
     this.grid_x = size.width/15
     this.grid_y = size.height/15
     this.svg_el.setAttribute("width",size.width+"px");
     this.svg_el.setAttribute("height",size.height+"px");
-    
-    this.element.style.width = this.tool.settings.size.width;
-    this.element.style.height = this.tool.settings.size.height;
 
     this.grid_width = this.tool.settings.size.width/this.grid_x;
     this.grid_height = this.tool.settings.size.height/this.grid_y;

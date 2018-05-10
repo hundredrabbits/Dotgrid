@@ -6,6 +6,7 @@ function Guide()
   this.el.height = 640;
   this.el.style.width = "320px";
   this.el.style.height = "320px";
+  this.show_extras = true;
 
   var scale = 2;
 
@@ -35,7 +36,8 @@ function Guide()
 
   this.toggle = function()
   {
-    this.el.style.opacity = !this.el.style.opacity || this.el.style.opacity == 1 ? 0 : 1;
+    this.show_extras = this.show_extras ? false : true;
+    this.refresh()
   }
 
   this.resize = function(size)
@@ -49,9 +51,10 @@ function Guide()
     this.refresh();
   }
 
-
   this.draw_overlays = function()
   {
+    if(!this.show_extras){ return; }
+
     for(segment_id in dotgrid.tool.layer()){
       var segment = dotgrid.tool.layer()[segment_id];
       for(vertex_id in segment.vertices){
@@ -63,6 +66,8 @@ function Guide()
 
   this.draw_handles = function()
   {
+    if(!this.show_extras){ return; }
+    
     for(segment_id in dotgrid.tool.layer()){
       var segment = dotgrid.tool.layer()[segment_id];
       for(vertex_id in segment.vertices){
@@ -81,6 +86,8 @@ function Guide()
 
   this.draw_markers = function()
   {
+    if(!this.show_extras){ return; }
+
     for (var x = dotgrid.grid_x; x >= 0; x--) {
       for (var y = dotgrid.grid_y; y >= 0; y--) {
         var pos_x = parseInt(x * dotgrid.grid_width) + dotgrid.grid_width ;
