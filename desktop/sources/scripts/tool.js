@@ -29,19 +29,19 @@ function Tool()
   this.clear = function()
   {
     this.vertices = [];
-    dotgrid.draw();
+    dotgrid.guide.refresh();
   }
 
   this.undo = function()
   {
     this.layers = dotgrid.history.prev();
-    dotgrid.draw();
+    dotgrid.guide.refresh();
   }
 
   this.redo = function()
   {
     this.layers = dotgrid.history.next();
-    dotgrid.draw();    
+    dotgrid.guide.refresh();    
   }
 
   // I/O
@@ -56,7 +56,7 @@ function Tool()
     this.layers[this.index] = this.layers[this.index].concat(layer)
     dotgrid.history.push(this.layers);
     this.clear();
-    dotgrid.draw();
+    dotgrid.guide.refresh();
   }
   
   this.replace = function(dot)
@@ -72,7 +72,7 @@ function Tool()
     this.settings = dot.settings;
 
     this.clear();
-    dotgrid.draw();
+    dotgrid.guide.refresh();
     dotgrid.history.push(this.layers);
   }
 
@@ -84,7 +84,7 @@ function Tool()
     
     this.layer().pop();
     this.clear();
-    dotgrid.draw();
+    dotgrid.guide.refresh();
   }
 
   this.remove_segments_at = function(pos)
@@ -102,7 +102,7 @@ function Tool()
       }
     }
     this.clear();
-    dotgrid.draw();
+    dotgrid.guide.refresh();
   }
 
   this.add_vertex = function(pos)
@@ -140,7 +140,7 @@ function Tool()
     }
     
     this.clear();
-    dotgrid.draw();
+    dotgrid.guide.refresh();
     dotgrid.history.push(this.layers);
 
     console.log(`Casted ${type} -> ${this.layer().length} elements`);
@@ -177,132 +177,18 @@ function Tool()
     return this.vertices.length >= this.reqs[type];
   }
 
-  this.path = function(layer_id = 0, preview = null)
-  {
-    var layer = preview ? preview : this.layers[layer_id];
-
-    var html = "";
-    for(id in layer){
-      var segment = layer[id];
-      html += segment.type == "close" ? "Z " : this.render(segment,0);
-
-      // Horizontal Mirror
-      if(this.styles[layer_id].mirror_style == 1){
-        html += segment.type == "close" ? "Z " : this.render(segment,0,true,false);
-      }
-      // Vertical Mirror
-      if(this.styles[layer_id].mirror_style == 2){
-        html += segment.type == "close" ? "Z " : this.render(segment,0,false,true);
-      }
-      // Single-fold
-      if(this.styles[layer_id].mirror_style == 3){
-        html += segment.type == "close" ? "Z " : this.render(segment,180,false,false);
-      }
-      // Three-fold
-      if(this.styles[layer_id].mirror_style == 4){
-        html += segment.type == "close" ? "Z " : this.render(segment,120,false,false);
-        html += segment.type == "close" ? "Z " : this.render(segment,240,false,false);
-      }
-      // Four-fold
-      if(this.styles[layer_id].mirror_style == 5){
-        html += segment.type == "close" ? "Z " : this.render(segment,90,false,false);
-        html += segment.type == "close" ? "Z " : this.render(segment,180,false,false);
-        html += segment.type == "close" ? "Z " : this.render(segment,270,false,false);
-      }
-      // Five-folds
-      if(this.styles[layer_id].mirror_style == 6){
-        html += segment.type == "close" ? "Z " : this.render(segment,72,false,false);
-        html += segment.type == "close" ? "Z " : this.render(segment,72*2,false,false);
-        html += segment.type == "close" ? "Z " : this.render(segment,72*3,false,false);
-        html += segment.type == "close" ? "Z " : this.render(segment,72*4,false,false);
-      }
-      // Six-folds
-      if(this.styles[layer_id].mirror_style == 7){
-        html += segment.type == "close" ? "Z " : this.render(segment,60,false,false);
-        html += segment.type == "close" ? "Z " : this.render(segment,60*2,false,false);
-        html += segment.type == "close" ? "Z " : this.render(segment,60*3,false,false);
-        html += segment.type == "close" ? "Z " : this.render(segment,60*4,false,false);
-        html += segment.type == "close" ? "Z " : this.render(segment,60*5,false,false);
-      }
-    }
-    return html
-  }
-
   this.paths = function()
   {
-    return [this.path(0),this.path(1),this.path(2)]
+    var l1 = new Generator(dotgrid.tool.layers[0]).toString({x:0,y:0},1)
+    var l2 = new Generator(dotgrid.tool.layers[0]).toString({x:0,y:0},1)
+    var l3 = new Generator(dotgrid.tool.layers[0]).toString({x:0,y:0},1)
+
+    return [l1,l2,l3]
   }
 
-  this.paths_mod = function(offset,scale) // Returns modded paths
+  this.path = function()
   {
-    var a = []
-    var layers = copy(this.layers)
-    for(id in layers){
-      var layer = layers[id];
-      for(k1 in layer){
-        var seg = layer[k1];
-        for(k2 in seg.vertices){
-          seg.vertices[k2].x += offset.x
-          seg.vertices[k2].x *= scale
-          seg.vertices[k2].y += offset.y
-          seg.vertices[k2].y *= scale
-        }
-      }
-      a.push(this.path(id,layer))
-    }
-    return a
-  }
-
-  this.render = function(segment, angle = 0, mirror_x = false, mirror_y = false)
-  {
-    var type = segment.type;
-    var vertices = segment.vertices;
-    var html = ``;
-    var skip = 0;
-
-    for(id in vertices){
-      if(skip > 0){ skip -= 1; continue; }
-      
-      var vertex = this.mirror_mod(vertices[id],angle,mirror_x,mirror_y);
-      var next = this.mirror_mod(vertices[parseInt(id)+1],angle,mirror_x,mirror_y)
-      var after_next = this.mirror_mod(vertices[parseInt(id)+2],angle,mirror_x,mirror_y)
-
-      if(id == 0){ 
-        html += `M${vertex.x},${vertex.y} `;
-      }
-
-      if(type == "line"){
-        html += `L${vertex.x},${vertex.y} `;  
-      }
-      else if(type == "arc_c" && next){
-        html += `A${next.x - vertex.x},${next.y - vertex.y} 0 0,1 ${next.x},${next.y} `;  
-      }
-      else if(type == "arc_r" && next){
-        html += `A${next.x - vertex.x},${next.y - vertex.y} 0 0,0 ${next.x},${next.y} `;
-      }
-      else if(type == "bezier" && next && after_next){
-        html += `Q${next.x},${next.y} ${after_next.x},${after_next.y} `;  
-        skip = 1
-      }
-    }
-  
-    return html
-  }
-
-  this.mirror_mod = function(vertex,angle = 0,mirror_x = false,mirror_y = false)
-  {
-    if(!vertex){ return null; }
-
-    if(mirror_x == true){
-      return {x:(dotgrid.tool.settings.size.width - vertex.x),y:vertex.y}
-    }
-    if(mirror_y == true){
-      return {x:vertex.x,y:(dotgrid.tool.settings.size.height - vertex.y)+(dotgrid.height/2)}
-    }
-    if(angle == 0){
-      return vertex;
-    }
-    return rotate_point(vertex.x,vertex.y,dotgrid.tool.settings.size.width/2,dotgrid.tool.settings.size.height/2,angle)
+    return new Generator(dotgrid.tool.layer()).toString({x:0,y:0},1)
   }
 
   this.translate = function(a,b)
@@ -318,7 +204,7 @@ function Tool()
     }
     dotgrid.history.push(this.layers);
     this.clear();
-    dotgrid.draw();
+    dotgrid.guide.refresh();
   }
 
   this.translate_multi = function(a,b)
@@ -334,7 +220,7 @@ function Tool()
     }
     dotgrid.history.push(this.layers);
     this.clear();
-    dotgrid.draw();
+    dotgrid.guide.refresh();
   }
 
   // Style
@@ -361,7 +247,7 @@ function Tool()
   {
     this.index = clamp(id,0,2);
     this.clear();
-    dotgrid.draw();
+    dotgrid.guide.refresh();
     console.log(`layer:${this.index}`)
   }
 

@@ -32,7 +32,7 @@ function Picker()
     if(parts.color){ this.set_color(parts.color); }
     if(parts.size){ this.set_size(parts.size); }
 
-    dotgrid.draw();
+    dotgrid.guide.refresh();
     dotgrid.controller.set();
     dotgrid.interface.el.className = ""
     this.el.blur()
@@ -55,7 +55,7 @@ function Picker()
     if(!this.original){ return; }
     dotgrid.tool.style().color = this.original;
     dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? this.original : "none";
-    dotgrid.draw();
+    dotgrid.guide.refresh();
   }
 
   this.update = function()
@@ -65,7 +65,7 @@ function Picker()
 
     dotgrid.tool.style().color = parts.color;
     dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? parts.color : "none";
-    dotgrid.draw();
+    dotgrid.guide.refresh();
   }
 
   this.listen = function(e)

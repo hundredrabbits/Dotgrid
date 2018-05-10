@@ -14,35 +14,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.block_x = block_x;
   this.block_y = block_y;
 
-  this.svg_el = null;
-  this.layer_1 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_1.id = "layer_1"; this.layer_1.style.stroke = "black";
-  this.layer_2 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_2.id = "layer_2"; this.layer_2.style.stroke = "#999";
-  this.layer_3 = document.createElementNS("http://www.w3.org/2000/svg", "path"); this.layer_3.id = "layer_3"; this.layer_3.style.stroke = "#ccc";
-  
   this.cursor = { pos:{x:0,y:0},translation:null,multi:false,updated:0 }
 
   this.install = function()
   {  
     document.getElementById("app").appendChild(this.guide.el);
-    
-    // Vector
-    this.svg_el = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    this.svg_el.id = "vector"
-    this.svg_el.setAttribute("class","vector");
-    this.svg_el.setAttribute("width",this.tool.settings.size.width+"px");
-    this.svg_el.setAttribute("height",this.tool.settings.size.height+"px");
-    this.svg_el.setAttribute("xmlns","http://www.w3.org/2000/svg");
-    this.svg_el.setAttribute("baseProfile","full");
-    this.svg_el.setAttribute("version","1.1");
-
-    this.svg_el.style.width = this.tool.settings.size.width;
-    this.svg_el.style.height = this.tool.settings.size.height;
-    this.svg_el.style.fill = "none";
-    this.svg_el.style.strokeWidth = this.tool.style().thickness;
-
-    this.svg_el.appendChild(this.layer_3);
-    this.svg_el.appendChild(this.layer_2);
-    this.svg_el.appendChild(this.layer_1);
 
     this.theme.start();
     this.tool.start();
@@ -85,11 +61,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","Effect","Thicker +5",() => { dotgrid.mod_thickness(5,true) },"]");
     this.controller.add("default","Effect","Thinner -5",() => { dotgrid.mod_thickness(-5,true) },"[");
 
-    this.controller.add("default","Manual","Add Point",() => { dotgrid.tool.add_vertex(dotgrid.cursor.pos); dotgrid.draw() },"Enter");
-    this.controller.add("default","Manual","Move Up",() => { dotgrid.cursor.pos.y -= 15; dotgrid.draw() },"Up");
-    this.controller.add("default","Manual","Move Right",() => { dotgrid.cursor.pos.x -= 15; dotgrid.draw() },"Right");
-    this.controller.add("default","Manual","Move Down",() => { dotgrid.cursor.pos.y += 15; dotgrid.draw() },"Down");
-    this.controller.add("default","Manual","Move Left",() => { dotgrid.cursor.pos.x += 15; dotgrid.draw() },"Left");
+    this.controller.add("default","Manual","Add Point",() => { dotgrid.tool.add_vertex(dotgrid.cursor.pos); dotgrid.guide.refresh() },"Enter");
+    this.controller.add("default","Manual","Move Up",() => { dotgrid.cursor.pos.y -= 15; dotgrid.guide.refresh() },"Up");
+    this.controller.add("default","Manual","Move Right",() => { dotgrid.cursor.pos.x -= 15; dotgrid.guide.refresh() },"Right");
+    this.controller.add("default","Manual","Move Down",() => { dotgrid.cursor.pos.y += 15; dotgrid.guide.refresh() },"Down");
+    this.controller.add("default","Manual","Move Left",() => { dotgrid.cursor.pos.x += 15; dotgrid.guide.refresh() },"Left");
     this.controller.add("default","Manual","Remove Point",() => { dotgrid.tool.remove_segments_at(dotgrid.cursor.pos); },"CmdOrCtrl+Backspace");
 
     this.controller.add("default","Layers","Foreground",() => { dotgrid.tool.select_layer(0) },"CmdOrCtrl+1");
@@ -146,16 +122,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.save = function()
   {
-    this.draw();
-
-    var svg = dotgrid.svg_el.outerHTML;
+    dotgrid.guide.refresh();
 
     dialog.showSaveDialog((fileName) => {
       if (fileName === undefined){ return; }
-      fs.writeFile(fileName+".svg", svg);
+      fs.writeFile(fileName+".svg", dotgrid.render.to_svg());
       fs.writeFile(fileName+'.png', dotgrid.render.buffer());
       fs.writeFile(fileName+'.grid', dotgrid.tool.export());
-      dotgrid.draw()
+      dotgrid.guide.refresh()
     });
   }
 
@@ -168,7 +142,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     fs.readFile(paths[0], 'utf-8', (err, data) => {
       if(err){ alert("An error ocurred reading the file :" + err.message); return; }
       dotgrid.tool.replace(JSON.parse(data.toString().trim()));
-      dotgrid.draw();
+      dotgrid.guide.refresh();
     });
   }
 
@@ -241,14 +215,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       }
       dotgrid.cursor.translation = null;
       dotgrid.cursor.multi = null;
-      this.draw();
+      dotgrid.guide.refresh();
       e.preventDefault();
       return;
     }
 
     this.tool.add_vertex({x:pos.x * -1,y:pos.y});
     dotgrid.cursor.translation = null;
-    this.draw();
+    dotgrid.guide.refresh();
     e.preventDefault();
   }
 
@@ -272,7 +246,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     }
 
     this.tool.style().thickness = Math.max(this.tool.style().thickness+mod,0);
-    this.draw();
+    dotgrid.guide.refresh();
   }
 
   this.mod_linecap_index = 1;
@@ -282,7 +256,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     var a = ["butt","square","round"];
     this.mod_linecap_index += 1;
     this.tool.style().strokeLinecap = a[this.mod_linecap_index % a.length];
-    this.draw();
+    dotgrid.guide.refresh();
   }
 
   this.mod_linejoin_index = 1;
@@ -292,20 +266,20 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     var a = ["miter","round","bevel"];
     this.mod_linejoin_index += 1;
     this.tool.style().strokeLinejoin = a[this.mod_linejoin_index % a.length];
-    this.draw();
+    dotgrid.guide.refresh();
   }
 
   this.mod_mirror = function()
   {
     this.tool.style().mirror_style += 1;
     this.tool.style().mirror_style = this.tool.style().mirror_style > 7 ? 0 : this.tool.style().mirror_style;
-    this.draw();
+    dotgrid.guide.refresh();
   }
 
   this.mod_fill = function()
   {
     this.tool.style().fill = this.tool.style().fill == "none" ? this.tool.style().color : "none";
-    this.draw();
+    dotgrid.guide.refresh();
   }
 
   // Basics
@@ -322,50 +296,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     this.grid_x = size.width/15
     this.grid_y = size.height/15
-    this.svg_el.setAttribute("width",size.width+"px");
-    this.svg_el.setAttribute("height",size.height+"px");
 
     this.grid_width = this.tool.settings.size.width/this.grid_x;
     this.grid_height = this.tool.settings.size.height/this.grid_y;
 
     dotgrid.guide.resize(size);
     this.interface.update();
-    this.draw();
-  }
-
-  this.draw = function(exp = false)
-  {
-    var paths = this.tool.paths();
-    var d = this.tool.path();
-
-    this.layer_1.setAttribute("d",paths[0]);
-    this.layer_2.setAttribute("d",paths[1]);
-    this.layer_3.setAttribute("d",paths[2]);
-
-    this.svg_el.style.width = this.tool.settings.size.width;
-    this.svg_el.style.height = this.tool.settings.size.height;
-
-    this.layer_1.style.strokeWidth = this.tool.styles[0].thickness;
-    this.layer_1.style.strokeLinecap = this.tool.styles[0].strokeLinecap;
-    this.layer_1.style.strokeLinejoin = this.tool.styles[0].strokeLinejoin;
-    this.layer_1.style.stroke = this.tool.styles[0].color;
-    this.layer_1.style.fill = this.tool.styles[0].fill;
-  
-    this.layer_2.style.strokeWidth = this.tool.styles[1].thickness;
-    this.layer_2.style.strokeLinecap = this.tool.styles[1].strokeLinecap;
-    this.layer_2.style.strokeLinejoin = this.tool.styles[1].strokeLinejoin;
-    this.layer_2.style.stroke = this.tool.styles[1].color;
-    this.layer_2.style.fill = this.tool.styles[1].fill;
-    
-    this.layer_3.style.strokeWidth = this.tool.styles[2].thickness;
-    this.layer_3.style.strokeLinecap = this.tool.styles[2].strokeLinecap;
-    this.layer_3.style.strokeLinejoin = this.tool.styles[2].strokeLinejoin;
-    this.layer_3.style.stroke = this.tool.styles[2].color;
-    this.layer_3.style.fill = this.tool.styles[2].fill;
-
-    this.render.draw();
-    this.interface.update();
-    this.guide.refresh();
+    dotgrid.guide.refresh();
   }
 
   // Draw
@@ -380,7 +317,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.history.clear();
     this.tool.reset();
     this.reset();
-    this.draw();
+    dotgrid.guide.refresh();
   }
 
   this.drag = function(e)
@@ -395,38 +332,34 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     var reader = new FileReader();
     reader.onload = function(e){
       dotgrid.tool.replace(JSON.parse(e.target.result.toString().trim()));
-      dotgrid.draw();
+      dotgrid.guide.refresh();
     };
     reader.readAsText(file);
   }
 
   this.copy = function(e)
   {
-    dotgrid.draw();
-
-    var svg = dotgrid.svg_el.outerHTML;
+    dotgrid.guide.refresh();
 
     e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()));
     e.clipboardData.setData('text/plain', dotgrid.tool.path());
-    e.clipboardData.setData('text/html', svg);
-    e.clipboardData.setData('text/svg+xml', svg);
+    e.clipboardData.setData('text/html', dotgrid.render.to_svg());
+    e.clipboardData.setData('text/svg+xml', dotgrid.render.to_svg());
 
-    this.draw();
+    dotgrid.guide.refresh();
   }
 
   this.cut = function(e)
   {
-    dotgrid.draw();
-
-    var svg = dotgrid.svg_el.outerHTML;
+    dotgrid.guide.refresh();
 
     e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
-    e.clipboardData.setData('text/html', svg);
-    e.clipboardData.setData('text/svg+xml', svg);
+    e.clipboardData.setData('text/html', dotgrid.render.to_svg());
+    e.clipboardData.setData('text/svg+xml', dotgrid.render.to_svg());
 
     dotgrid.tool.layers[dotgrid.tool.index] = [];
 
-    this.draw();
+    dotgrid.guide.refresh();
   }
 
   this.paste = function(e)
@@ -437,7 +370,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       dotgrid.tool.import(data);
     }
     
-    this.draw();
+    dotgrid.guide.refresh();
   }
 
   // Normalizers
@@ -466,7 +399,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
 window.addEventListener('resize', function(e)
 {
-  dotgrid.draw()
+  dotgrid.guide.refresh()
 }, false);
 
 window.addEventListener('dragover',function(e)

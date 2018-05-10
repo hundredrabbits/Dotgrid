@@ -36,7 +36,8 @@ function Generator(layer)
       if(id == 0){
         html += `M${vertex.x},${vertex.y} `
       }
-      else if(type == "line"){ 
+      
+      if(type == "line"){ 
         html += `L${vertex.x},${vertex.y} `;  
       }
       else if(type == "arc_c"){ 
