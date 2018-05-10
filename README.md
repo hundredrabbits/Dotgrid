@@ -15,7 +15,10 @@ Hold `shift` to drag entire layer, hold `alt` to delete a vertex.
 ### File
 - New: `CmdOrCtrl+N`
 - Open: `CmdOrCtrl+O`
-- Save: `CmdOrCtrl+S`
+- Save(.grid): `CmdOrCtrl+S`
+- Render(.png): `CmdOrCtrl+R`
+- Export(.svg): `CmdOrCtrl+E`
+- Build Icons: `CmdOrCtrl+B`
 
 ### Edit
 - Copy: `CmdOrCtrl+C`
@@ -31,14 +34,13 @@ Hold `shift` to drag entire layer, hold `alt` to delete a vertex.
 - Arc: `S`
 - Arc Rev: `D`
 - Bezier: `F`
-- Connect: `Z`
+- Close: `Z`
 
 ### Effect
 - Linecap: `Q`
 - Linejoin: `W`
 - Mirror: `E`
 - Fill: `R`
-- Dash: `T`
 - Color: `G`
 - Thicker: `}`
 - Thinner: `{`
@@ -65,7 +67,7 @@ Hold `shift` to drag entire layer, hold `alt` to delete a vertex.
 ### Mode
 - Picker: `CmdOrCtrl+P`
 
-<img src='https://cdn.rawgit.com/hundredrabbits/Dotgrid/master/LAYOUT.svg?v=4' width="600"/>
+<img src='https://cdn.rawgit.com/hundredrabbits/Dotgrid/master/LAYOUT.svg?v=5' width="600"/>
 
 ## Extras
 

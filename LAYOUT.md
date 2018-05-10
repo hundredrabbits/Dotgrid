@@ -3,7 +3,10 @@
 ### File
 - New: `CmdOrCtrl+N`
 - Open: `CmdOrCtrl+O`
-- Save: `CmdOrCtrl+S`
+- Save(.grid): `CmdOrCtrl+S`
+- Render(.png): `CmdOrCtrl+R`
+- Export(.svg): `CmdOrCtrl+E`
+- Build Icons: `CmdOrCtrl+B`
 
 ### Edit
 - Copy: `CmdOrCtrl+C`
@@ -19,14 +22,13 @@
 - Arc: `S`
 - Arc Rev: `D`
 - Bezier: `F`
-- Connect: `Z`
+- Close: `Z`
 
 ### Effect
 - Linecap: `Q`
 - Linejoin: `W`
 - Mirror: `E`
 - Fill: `R`
-- Dash: `T`
 - Color: `G`
 - Thicker: `}`
 - Thinner: `{`
@@ -53,7 +55,6 @@
 ### Mode
 - Picker: `CmdOrCtrl+P`
 
-
 ## picker Mode
 
 ### Edit
@@ -67,5 +68,3 @@
 
 ### Mode
 - Stop Picker Mode: `Escape`
-
-
