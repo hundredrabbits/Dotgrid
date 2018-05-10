@@ -319,6 +319,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.tool.reset();
     this.reset();
     dotgrid.guide.refresh();
+    dotgrid.interface.refresh(true);
   }
 
   this.drag = function(e)

@@ -139,9 +139,11 @@ function Tool()
       this.layer().push({type:type,vertices:this.vertices.slice()})  
     }
 
+    dotgrid.history.push(this.layers);
+
     this.clear();
     dotgrid.guide.refresh();
-    dotgrid.history.push(this.layers);
+    dotgrid.interface.refresh(true);
 
     console.log(`Casted ${type} -> ${this.layer().length} elements`);
   }
@@ -258,6 +260,7 @@ function Tool()
     this.index = clamp(id,0,2);
     this.clear();
     dotgrid.guide.refresh();
+    dotgrid.interface.refresh(true);
     console.log(`layer:${this.index}`)
   }
 
@@ -267,7 +270,6 @@ function Tool()
     this.select_layer(this.index);
   }
 
-  function rotate_point(pointX, pointY, originX, originY, angle){ angle = angle * Math.PI / 180.0; return { x: (Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX).toFixed(1), y: (Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY).toFixed(1) }; }
   function copy(data){ return data ? JSON.parse(JSON.stringify(data)) : []; }
   function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }

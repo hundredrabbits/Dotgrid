@@ -2,20 +2,21 @@ function Generator(layer)
 {
   this.layer = layer;
 
-  function operate(layer,offset,scale)
+  function operate(layer,offset,scale,mirror = 0)
   {
     var l = copy(layer)
 
     for(k1 in l){
       var seg = l[k1];
       for(k2 in seg.vertices){
+        if(mirror == 1){ seg.vertices[k2].x = (dotgrid.tool.settings.size.width) - seg.vertices[k2].x }
+        if(mirror == 2){ seg.vertices[k2].y = (dotgrid.tool.settings.size.height) - seg.vertices[k2].y }
         seg.vertices[k2].x += offset.x
         seg.vertices[k2].x *= scale
         seg.vertices[k2].y += offset.y
         seg.vertices[k2].y *= scale
       }
     }
-
     return l;
   }
 
@@ -71,16 +72,19 @@ function Generator(layer)
       s += `${this.render(seg)}`
     }
 
-    return s.trim();
+    return s;
   }
 
   this.toString = function(offset = {x:0,y:0}, scale = 1, mirror = dotgrid.tool.style().mirror_style)
   {
-    var s = ""
-    var layer = operate(this.layer,offset,scale)
-    s += this.convert(layer)
+    var s = this.convert(operate(this.layer,offset,scale))
+
+    if(mirror == 1 || mirror == 2){
+      s += this.convert(operate(this.layer,offset,scale,mirror))
+    }
     return s
   }
 
   function copy(data){ return data ? JSON.parse(JSON.stringify(data)) : []; }
+  function rotate_point(pointX, pointY, originX, originY, angle){ angle = angle * Math.PI / 180.0; return { x: (Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX).toFixed(1), y: (Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY).toFixed(1) }; }
 }
