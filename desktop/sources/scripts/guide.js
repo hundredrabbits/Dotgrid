@@ -21,9 +21,8 @@ function Guide()
     this.clear();
     this.draw_markers()
     this.draw_vertices()
-    this.draw_handles()
     this.draw_paths()
-    this.draw_overlays()
+    this.draw_handles()
     this.draw_translation();
     this.draw_cursor();  
     this.draw_preview();
@@ -51,28 +50,15 @@ function Guide()
     this.refresh();
   }
 
-  this.draw_overlays = function()
-  {
-    if(!this.show_extras){ return; }
-
-    for(segment_id in dotgrid.tool.layer()){
-      var segment = dotgrid.tool.layer()[segment_id];
-      for(vertex_id in segment.vertices){
-        var vertex = segment.vertices[vertex_id];
-        this.draw_vertex(vertex,3);
-      }
-    }
-  }
-
   this.draw_handles = function()
   {
     if(!this.show_extras){ return; }
-    
+
     for(segment_id in dotgrid.tool.layer()){
       var segment = dotgrid.tool.layer()[segment_id];
       for(vertex_id in segment.vertices){
         var vertex = segment.vertices[vertex_id];
-        this.draw_handle(vertex);  
+        this.draw_handle(vertex);
       }
     }
   }
@@ -106,6 +92,34 @@ function Guide()
     ctx.lineWidth = 2;
     ctx.arc((pos.x * scale)+30, (pos.y * scale)+30, radius, 0, 2 * Math.PI, false);
     ctx.fillStyle = dotgrid.theme.active.f_med;
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  this.draw_handle = function(pos, radius = 6)
+  {
+    var ctx = this.el.getContext('2d');
+
+    ctx.beginPath();
+    ctx.setLineDash([0,0]); 
+    ctx.lineWidth = 3;
+    ctx.lineCap="round";
+    ctx.arc(Math.abs(pos.x * -scale)+30, Math.abs(pos.y * scale)+30, radius+3, 0, 2 * Math.PI, false);
+    ctx.fillStyle = dotgrid.theme.active.f_high;
+    ctx.fill();
+    ctx.strokeStyle = dotgrid.theme.active.f_high;
+    ctx.stroke(); 
+    ctx.closePath(); 
+
+    ctx.beginPath();
+    ctx.arc((pos.x * scale)+30, (pos.y * scale)+30, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = dotgrid.theme.active.f_low;
+    ctx.fill();
+    ctx.closePath();
+
+    ctx.beginPath();
+    ctx.arc((pos.x * scale)+30, (pos.y * scale)+30, radius-3, 0, 2 * Math.PI, false);
+    ctx.fillStyle = dotgrid.theme.active.f_high;
     ctx.fill();
     ctx.closePath();
   }
@@ -151,19 +165,6 @@ function Guide()
     ctx.stroke(p);
   }
 
-  this.draw_handle = function(pos,radius = 15)
-  {
-    var ctx = this.el.getContext('2d');
-    ctx.beginPath();
-    ctx.setLineDash([0,0]); 
-    ctx.lineWidth = 3;
-    ctx.lineCap="round";
-    ctx.arc((pos.x * scale)+30, (pos.y * scale)+30, radius, 0, 2 * Math.PI, false);
-    ctx.strokeStyle = pos_is_equal(pos,dotgrid.cursor.pos) ? dotgrid.theme.active.b_inv : dotgrid.theme.active.f_low;
-    ctx.stroke(); 
-    ctx.closePath(); 
-  }
-
   this.draw_translation = function()
   {   
     if(!dotgrid.cursor.translation){ return; }
@@ -185,14 +186,24 @@ function Guide()
     }
   }
 
-  this.draw_cursor = function(pos = dotgrid.cursor.pos,radius = 10)
+  this.draw_cursor = function(pos = dotgrid.cursor.pos,radius = dotgrid.tool.style().thickness-1)
   {
     var ctx = this.el.getContext('2d');
+
     ctx.beginPath();
     ctx.setLineDash([0,0]); 
     ctx.lineWidth = 3;
     ctx.lineCap="round";
-    ctx.arc(Math.abs(pos.x * -scale)+30, Math.abs(pos.y * scale)+30, radius, 0, 2 * Math.PI, false);
+    ctx.arc(Math.abs(pos.x * -scale)+30, Math.abs(pos.y * scale)+30, 3, 0, 2 * Math.PI, false);
+    ctx.fillStyle = dotgrid.theme.active.f_low;
+    ctx.fill(); 
+    ctx.closePath(); 
+
+    ctx.beginPath();
+    ctx.setLineDash([0,0]); 
+    ctx.lineWidth = 3;
+    ctx.lineCap="round";
+    ctx.arc(Math.abs(pos.x * -scale)+30, Math.abs(pos.y * scale)+30, clamp(radius,5,100), 0, 2 * Math.PI, false);
     ctx.strokeStyle = dotgrid.theme.active.f_med;
     ctx.stroke(); 
     ctx.closePath(); 
@@ -218,4 +229,5 @@ function Guide()
   }
 
   function pos_is_equal(a,b){ return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }
+  function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }

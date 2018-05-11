@@ -4,9 +4,9 @@ function Tool()
   this.settings = { size:{width:300,height:300} }
   this.layers = [[],[],[]];
   this.styles = [
-    { thickness:2,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none",mirror_style:0 },
-    { thickness:2,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none",mirror_style:0 },
-    { thickness:2,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none",mirror_style:0 }
+    { thickness:10,strokeLinecap:"round",strokeLinejoin:"round",color:"#f00",fill:"none",mirror_style:0 },
+    { thickness:10,strokeLinecap:"round",strokeLinejoin:"round",color:"#0f0",fill:"none",mirror_style:0 },
+    { thickness:10,strokeLinecap:"round",strokeLinejoin:"round",color:"#00f",fill:"none",mirror_style:0 }
   ];
   this.vertices = [];
   this.reqs = { line:2,arc_c:2,arc_r:2,bezier:3,close:0 };

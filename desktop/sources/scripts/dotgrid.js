@@ -217,7 +217,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       if(o == "bezier"){ this.tool.cast("bezier"); return; }
       if(o == "close"){ this.tool.cast("close"); return; }
 
-      if(o == "thickness"){ this.mod_thickness(); return; }
+      if(o == "thickness"){ this.mod_thickness(10,true,true); return; }
       if(o == "linecap"){ this.mod_linecap(); return; }
       if(o == "linejoin"){ this.mod_linejoin(); return; }
       if(o == "mirror"){ this.tool.toggle_mirror(); return; }
@@ -302,15 +302,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   // Toggles
 
-  this.mod_thickness = function(mod,step = false)
+  this.mod_thickness = function(mod = 10,step = false,cap = false)
   {
-    if(!mod){ mod = 1; this.tool.style().thickness = this.tool.style().thickness > 30 ? 1 : this.tool.style().thickness }
-
+    if(cap){ 
+      this.tool.style().thickness = this.tool.style().thickness > 40 ? 1 : this.tool.style().thickness 
+    }
     if(step){
       this.tool.style().thickness = parseInt(this.tool.style().thickness/5) * 5;
     }
 
-    this.tool.style().thickness = Math.max(this.tool.style().thickness+mod,0);
+    this.tool.style().thickness = clamp(this.tool.style().thickness+mod,1,40);
     dotgrid.guide.refresh();
   }
 
