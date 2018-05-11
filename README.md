@@ -1,12 +1,12 @@
 # Dotgrid
 
-Dotgrid is a simple vector drawing application. 
+[Dotgrid](http://wiki.xxiivv.com/dotgrid) is a simple vector drawing application. 
 
 <img src='https://raw.githubusercontent.com/hundredrabbits/Dotgrid/master/PREVIEW.jpg' width="600"/>
 
 ## Guide
 
-Clicking on the canvas will insert control points, up to 3CPs. CPs can be moved with the arrows. Clicking one of the path icons, or pressing one of the shortcuts, will draw a stroke between them. The newly created segment's handles can be moved by clicking and dragging them.
+Clicking on the canvas will insert **control points**. CPs can be moved with the arrows. Clicking one of the path icons, or pressing one of the shortcuts, will draw a stroke between them. The newly created segment's handles can be moved by clicking and dragging them.
 
 Hold `shift` to drag entire layer, hold `alt` to delete a vertex.
 
