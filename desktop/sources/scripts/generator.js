@@ -20,7 +20,7 @@ function Generator(layer)
     return l;
   }
 
-  this.render = function(segment)
+  this.render = function(segment,mirror = 0)
   {
     var type = segment.type;
     var vertices = segment.vertices;
@@ -42,10 +42,12 @@ function Generator(layer)
         html += `L${vertex.x},${vertex.y} `;  
       }
       else if(type == "arc_c"){ 
-        html += next ? `A${next.x - vertex.x},${next.y - vertex.y} 0 0,1 ${next.x},${next.y} ` : ''; 
+        var clock = mirror > 0 ? '0,0' : '0,1'
+        html += next ? `A${next.x - vertex.x},${next.y - vertex.y} 0 ${clock} ${next.x},${next.y} ` : ''; 
       }
       else if(type == "arc_r"){ 
-        html += next ? `A${next.x - vertex.x},${next.y - vertex.y} 0 0,0 ${next.x},${next.y} ` : ''; 
+        var clock = mirror > 0 ? '0,1' : '0,0'
+        html += next ? `A${next.x - vertex.x},${next.y - vertex.y} 0 ${clock} ${next.x},${next.y} ` : ''; 
       }
       else if(type == "bezier"){ 
         html += next && after_next ?`Q${next.x},${next.y} ${after_next.x},${after_next.y} ` : ''; 
@@ -63,13 +65,13 @@ function Generator(layer)
     return html
   }
 
-  this.convert = function(layer)
+  this.convert = function(layer,mirror)
   {
     var s = ""
 
     for(id in layer){
       var seg = layer[id];
-      s += `${this.render(seg)}`
+      s += `${this.render(seg,mirror)}`
     }
 
     return s;
@@ -80,7 +82,7 @@ function Generator(layer)
     var s = this.convert(operate(this.layer,offset,scale))
 
     if(mirror == 1 || mirror == 2){
-      s += this.convert(operate(this.layer,offset,scale,mirror))
+      s += this.convert(operate(this.layer,offset,scale,mirror),mirror)
     }
     return s
   }
