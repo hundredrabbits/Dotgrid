@@ -48,9 +48,13 @@ function Renderer()
     this.layer_3.setAttribute("d",paths[2])   
   }
 
-  this.to_png = function(size = {width:1280,height:1280},callback = dotgrid.render)
+  this.to_png = function(size = dotgrid.tool.settings.size,callback = dotgrid.render)
   {
     this.refresh();
+
+    // Upscale
+    size.width *= 2
+    size.height *= 2
 
     var xml = new XMLSerializer().serializeToString(this.svg_el);
     var svg64 = btoa(xml);

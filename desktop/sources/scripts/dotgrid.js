@@ -77,6 +77,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     this.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },"U");
     this.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
+    this.controller.add("default","View","Zoom Reset",() => { dotgrid.set_zoom(1.0) },"-");
+    this.controller.add("default","View","Zoom 150%",() => { dotgrid.set_zoom(1.5) },"Plus");
 
     this.controller.add("default","Mode","Picker",() => { dotgrid.picker.start(); },"CmdOrCtrl+P");
 
@@ -343,16 +345,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   // Basics
   
-  this.set_size = function(size = {width:300,height:300},interface = true) 
+  this.set_size = function(size = {width:300,height:300},interface = true,scale = 1) 
   {
-    size = { width:clamp(parseInt(size.width/15)*15,100,1000),height:clamp(parseInt(size.height/15)*15,100,1000)}
+    size = { width:clamp(parseInt(size.width/15)*15,120,1000),height:clamp(parseInt(size.height/15)*15,120,1000)}
 
-    var win = require('electron').remote.getCurrentWindow();
-    win.setSize(size.width+100,size.height+100+(interface ? 10 : 0),true);
-    
     this.tool.settings.size.width = size.width
     this.tool.settings.size.height = size.height
 
+    var win = require('electron').remote.getCurrentWindow();
+    win.setSize((size.width+100)*scale,(size.height+100+(interface ? 10 : 0))*scale,true);
+    
     this.grid_x = size.width/15
     this.grid_y = size.height/15
 
@@ -363,6 +365,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     this.interface.refresh();
     dotgrid.guide.refresh();
+  }
+
+  this.set_zoom = function(scale)
+  {
+    this.set_size({width:this.tool.settings.size.width,height:this.tool.settings.size.height},true,scale)
+    webFrame.setZoomFactor(scale)
   }
 
   // Draw

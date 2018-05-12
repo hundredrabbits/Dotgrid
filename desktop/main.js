@@ -29,10 +29,10 @@ app.win = null;
 
 app.on('ready', () => 
 {
-  app.win = new BrowserWindow({width: 400, height: 420, minWidth: 400, minHeight: 420, backgroundColor:"#000", frame:false, autoHideMenuBar: true, icon: __dirname + '/icon.ico'})
-
-  app.win.loadURL(`file://${__dirname}/sources/index.html`);
+  app.win = new BrowserWindow({width: 400, height: 420, minWidth: 400, minHeight: 420, backgroundColor:"#000", frame:false, autoHideMenuBar: true, icon: __dirname + '/icon.ico',webPreferences: {zoomFactor: 1.0}})
   
+  app.win.loadURL(`file://${__dirname}/sources/index.html`);
+
   app.win.on('closed', () => {
     win = null
     app.quit()
