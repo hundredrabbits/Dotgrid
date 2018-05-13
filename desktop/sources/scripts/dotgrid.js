@@ -412,8 +412,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()));
     e.clipboardData.setData('text/plain', dotgrid.tool.path());
-    e.clipboardData.setData('text/html', dotgrid.render.to_svg());
-    e.clipboardData.setData('text/svg+xml', dotgrid.render.to_svg());
+    e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
+    e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg());
 
     dotgrid.guide.refresh();
   }
@@ -423,8 +423,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     dotgrid.guide.refresh();
 
     e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
-    e.clipboardData.setData('text/html', dotgrid.render.to_svg());
-    e.clipboardData.setData('text/svg+xml', dotgrid.render.to_svg());
+    e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
+    e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg());
 
     dotgrid.tool.layers[dotgrid.tool.index] = [];
 
