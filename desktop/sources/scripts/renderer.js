@@ -52,10 +52,6 @@ function Renderer()
   {
     this.refresh();
 
-    // Upscale
-    size.width *= 2
-    size.height *= 2
-
     var xml = new XMLSerializer().serializeToString(this.svg_el);
     var svg64 = btoa(xml);
     var b64Start = 'data:image/svg+xml;base64,';

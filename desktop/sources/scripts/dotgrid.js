@@ -148,7 +148,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     });
   }
 
-  this.render = function(content = this.renderer.to_png(), ready = null, size = null)
+  this.render = function(content = this.renderer.to_png({width:dotgrid.tool.settings.size.width*2,height:dotgrid.tool.settings.size.height*2}), ready = null, size = null)
   {
     if(!ready){return; }
 
