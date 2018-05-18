@@ -19,9 +19,14 @@ function Guide()
   this.refresh = function()
   {
     this.clear();
-    this.draw_markers()
-    this.draw_vertices()
-    this.draw_paths()
+  
+    if(dotgrid.tool.index == 2){ this.draw_markers() ;this.draw_vertices() }
+    this.draw_path(new Generator(dotgrid.tool.layers[2]).toString({x:15,y:15},scale),dotgrid.tool.styles[2])
+    if(dotgrid.tool.index == 1){ this.draw_markers() ;this.draw_vertices() }
+    this.draw_path(new Generator(dotgrid.tool.layers[1]).toString({x:15,y:15},scale),dotgrid.tool.styles[1])
+    if(dotgrid.tool.index == 0){ this.draw_markers(); this.draw_vertices() }
+    this.draw_path(new Generator(dotgrid.tool.layers[0]).toString({x:15,y:15},scale),dotgrid.tool.styles[0])
+
     this.draw_handles()
     this.draw_translation();
     this.draw_cursor();  
@@ -133,13 +138,6 @@ function Guide()
     ctx.fillStyle = step ? dotgrid.theme.active.f_med : dotgrid.theme.active.f_low;
     ctx.fill();
     ctx.closePath();
-  }
-
-  this.draw_paths = function()
-  {
-    this.draw_path(new Generator(dotgrid.tool.layers[2]).toString({x:15,y:15},scale),dotgrid.tool.styles[2])
-    this.draw_path(new Generator(dotgrid.tool.layers[1]).toString({x:15,y:15},scale),dotgrid.tool.styles[1])
-    this.draw_path(new Generator(dotgrid.tool.layers[0]).toString({x:15,y:15},scale),dotgrid.tool.styles[0])
   }
 
   this.draw_path = function(path,style)

@@ -20,21 +20,21 @@ function Generator(layer)
     return l;
   }
 
-  this.render = function(segment,mirror = 0)
+  this.render = function(id,segment,mirror = 0)
   {
     var type = segment.type;
     var vertices = segment.vertices;
     var html = '';
     var skip = 0;
 
-    for(id in vertices){
+    for(i in vertices){
       if(skip > 0){ skip -= 1; continue; }
       
-      var vertex = vertices[id]
-      var next = vertices[parseInt(id)+1]
-      var after_next = vertices[parseInt(id)+2]
+      var vertex = vertices[i]
+      var next = vertices[parseInt(i)+1]
+      var after_next = vertices[parseInt(i)+2]
 
-      if(id == 0){
+      if(id == 0 && i == 0){
         html += `M${vertex.x},${vertex.y} `
       }
       
@@ -71,7 +71,7 @@ function Generator(layer)
 
     for(id in layer){
       var seg = layer[id];
-      s += `${this.render(seg,mirror)}`
+      s += `${this.render(id,seg,mirror)}`
     }
 
     return s;
