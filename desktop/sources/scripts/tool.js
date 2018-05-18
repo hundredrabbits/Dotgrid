@@ -66,7 +66,10 @@ function Tool()
   this.replace = function(dot)
   {
     if(!dot.layers || dot.layers.length != 3){ console.warn("Incompatible version"); return; }
-    
+
+    if(dot.settings.width && dot.settings.height){
+      dot.settings.size = {width:dot.settings.width,height:dot.settings.height}
+    }
     if(this.settings && (this.settings.size.width != dot.settings.size.width || this.settings.size.height != dot.settings.size.height)){
       dotgrid.set_size({width:dot.settings.size.width,height:dot.settings.size.height})
     }
@@ -161,6 +164,7 @@ function Tool()
     for(id in this.layer()){
       var stroke = this.layer()[id];
       if(stroke.type != content.type){ continue; }
+      if(!stroke.vertices){ continue; }
       if(!stroke.vertices[stroke.vertices.length-1]){ continue; }
       if(stroke.vertices[stroke.vertices.length-1].x != content.vertices[0].x){ continue; }
       if(stroke.vertices[stroke.vertices.length-1].y != content.vertices[0].y){ continue; }

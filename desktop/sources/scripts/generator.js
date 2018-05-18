@@ -20,7 +20,7 @@ function Generator(layer)
     return l;
   }
 
-  this.render = function(last_seg,segment,mirror = 0)
+  this.render = function(segment,mirror = 0)
   {
     var type = segment.type;
     var vertices = segment.vertices;
@@ -31,7 +31,6 @@ function Generator(layer)
       if(skip > 0){ skip -= 1; continue; }
       
       var vertex = vertices[id]
-      var last = last_seg && last_seg.vertices[last_seg.vertices.length-1] ? last_seg.vertices[last_seg.vertices.length-1] : null
       var next = vertices[parseInt(id)+1]
       var after_next = vertices[parseInt(id)+2]
 
@@ -71,7 +70,7 @@ function Generator(layer)
     var s = ""
     for(id in layer){
       var seg = layer[id];
-      s += `${this.render(layer[id-1],seg,mirror)}`
+      s += `${this.render(seg,mirror)}`
     }
 
     return s;
