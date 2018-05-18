@@ -20,21 +20,22 @@ function Generator(layer)
     return l;
   }
 
-  this.render = function(id,segment,mirror = 0)
+  this.render = function(last_seg,segment,mirror = 0)
   {
     var type = segment.type;
     var vertices = segment.vertices;
     var html = '';
     var skip = 0;
 
-    for(i in vertices){
+    for(id in vertices){
       if(skip > 0){ skip -= 1; continue; }
       
-      var vertex = vertices[i]
-      var next = vertices[parseInt(i)+1]
-      var after_next = vertices[parseInt(i)+2]
+      var vertex = vertices[id]
+      var last = last_seg && last_seg.vertices[last_seg.vertices.length-1] ? last_seg.vertices[last_seg.vertices.length-1] : null
+      var next = vertices[parseInt(id)+1]
+      var after_next = vertices[parseInt(id)+2]
 
-      if(id == 0 && i == 0){
+      if(id == 0 ){
         html += `M${vertex.x},${vertex.y} `
       }
       
@@ -68,10 +69,9 @@ function Generator(layer)
   this.convert = function(layer,mirror)
   {
     var s = ""
-
     for(id in layer){
       var seg = layer[id];
-      s += `${this.render(id,seg,mirror)}`
+      s += `${this.render(layer[id-1],seg,mirror)}`
     }
 
     return s;
