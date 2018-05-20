@@ -34,7 +34,7 @@ function Generator(layer)
       var next = vertices[parseInt(id)+1]
       var after_next = vertices[parseInt(id)+2]
 
-      if(id == 0 ){
+      if(id == 0){
         html += `M${vertex.x},${vertex.y} `
       }
       
@@ -51,7 +51,7 @@ function Generator(layer)
       }
       else if(type == "bezier"){ 
         html += next && after_next ?`Q${next.x},${next.y} ${after_next.x},${after_next.y} ` : ''; 
-        skip = 1
+        skip = 2
       }
       else{ 
         console.warn(`unknown type:${type}`)
