@@ -20,7 +20,7 @@ function Generator(layer)
     return l;
   }
 
-  this.render = function(segment,mirror = 0)
+  this.render = function(prev,segment,mirror = 0)
   {
     var type = segment.type;
     var vertices = segment.vertices;
@@ -34,8 +34,8 @@ function Generator(layer)
       var next = vertices[parseInt(id)+1]
       var after_next = vertices[parseInt(id)+2]
 
-      if(id == 0){
-        html += `M${vertex.x},${vertex.y} `
+      if(id == 0 && !prev || id == 0 && prev && (prev.x != vertex.x || prev.y != vertex.y)){
+        html += `M${vertex.x},${vertex.y} `  
       }
       
       if(type == "line"){ 
@@ -68,9 +68,11 @@ function Generator(layer)
   this.convert = function(layer,mirror)
   {
     var s = ""
+    var prev = null
     for(id in layer){
       var seg = layer[id];
-      s += `${this.render(seg,mirror)}`
+      s += `${this.render(prev,seg,mirror)}`
+      prev = seg.vertices ? seg.vertices[seg.vertices.length-1] : null
     }
 
     return s;
