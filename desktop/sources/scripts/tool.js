@@ -241,7 +241,7 @@ function Tool()
 
   this.toggle_mirror = function()
   {
-    this.style().mirror_style = this.style().mirror_style > 1 ? 0 : this.style().mirror_style+1;
+    this.style().mirror_style = this.style().mirror_style > 3 ? 0 : this.style().mirror_style+1;
 
     dotgrid.guide.refresh();
     dotgrid.interface.refresh(true);

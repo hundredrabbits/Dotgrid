@@ -1,8 +1,9 @@
-function Generator(layer)
+function Generator(layer,style)
 {
   this.layer = layer;
+  this.style = style;
 
-  function operate(layer,offset,scale,mirror = 0)
+  function operate(layer,offset,scale,mirror = 0,angle = 0)
   {
     var l = copy(layer)
 
@@ -11,9 +12,17 @@ function Generator(layer)
       for(k2 in seg.vertices){
         if(mirror == 1){ seg.vertices[k2].x = (dotgrid.tool.settings.size.width) - seg.vertices[k2].x }
         if(mirror == 2){ seg.vertices[k2].y = (dotgrid.tool.settings.size.height) - seg.vertices[k2].y }
+
+        // Offset
         seg.vertices[k2].x += offset.x
-        seg.vertices[k2].x *= scale
         seg.vertices[k2].y += offset.y
+
+        // Rotate
+        var center = {x:(dotgrid.tool.settings.size.width/2)+offset.x,y:(dotgrid.tool.settings.size.height/2)+offset.y}
+        seg.vertices[k2] = rotate_point(seg.vertices[k2],center,angle)
+
+        // Scale
+        seg.vertices[k2].x *= scale
         seg.vertices[k2].y *= scale
       }
     }
@@ -65,7 +74,7 @@ function Generator(layer)
     return html
   }
 
-  this.convert = function(layer,mirror)
+  this.convert = function(layer,mirror,angle)
   {
     var s = ""
     var prev = null
@@ -78,16 +87,28 @@ function Generator(layer)
     return s;
   }
 
-  this.toString = function(offset = {x:0,y:0}, scale = 1, mirror = dotgrid.tool.style().mirror_style)
+  this.toString = function(offset = {x:0,y:0}, scale = 1, mirror = this.style.mirror_style ? this.style.mirror_style : 0)
   {
     var s = this.convert(operate(this.layer,offset,scale))
 
     if(mirror == 1 || mirror == 2){
       s += this.convert(operate(this.layer,offset,scale,mirror),mirror)
     }
+
+    if(mirror == 3){
+      s += this.convert(operate(this.layer,offset,scale,mirror,120),mirror)
+      s += this.convert(operate(this.layer,offset,scale,mirror,240),mirror)  
+    }
+    if(mirror == 4){
+      s += this.convert(operate(this.layer,offset,scale,mirror,72),mirror)
+      s += this.convert(operate(this.layer,offset,scale,mirror,144),mirror)  
+      s += this.convert(operate(this.layer,offset,scale,mirror,216),mirror)  
+      s += this.convert(operate(this.layer,offset,scale,mirror,288),mirror)  
+    }
+
     return s
   }
 
   function copy(data){ return data ? JSON.parse(JSON.stringify(data)) : []; }
-  function rotate_point(pointX, pointY, originX, originY, angle){ angle = angle * Math.PI / 180.0; return { x: (Math.cos(angle) * (pointX-originX) - Math.sin(angle) * (pointY-originY) + originX).toFixed(1), y: (Math.sin(angle) * (pointX-originX) + Math.cos(angle) * (pointY-originY) + originY).toFixed(1) }; }
+  function rotate_point(point, origin, angle){ angle = angle * Math.PI / 180.0; return { x: (Math.cos(angle) * (point.x-origin.x) - Math.sin(angle) * (point.y-origin.y) + origin.x).toFixed(1), y: (Math.sin(angle) * (point.x-origin.x) + Math.cos(angle) * (point.y-origin.y) + origin.y).toFixed(1) }; }
 }
