@@ -87,7 +87,7 @@ function Generator(layer,style)
     return s;
   }
 
-  this.toString = function(offset = {x:0,y:0}, scale = 1, mirror = this.style.mirror_style ? this.style.mirror_style : 0)
+  this.toString = function(offset = {x:0,y:0}, scale = 1, mirror = this.style && this.style.mirror_style ? this.style.mirror_style : 0)
   {
     var s = this.convert(operate(this.layer,offset,scale))
 
