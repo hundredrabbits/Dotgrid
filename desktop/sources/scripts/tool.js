@@ -184,7 +184,7 @@ function Tool()
       }
     }
     if(type == "bezier"){
-      if(this.vertices.length % 2 == 0){
+      if(this.vertices.length != 3 && this.vertices.length != 5 && this.vertices.length != 7 && this.vertices.length != 9){
         return false;
       }
     }

@@ -60,7 +60,7 @@ function Generator(layer,style)
       }
       else if(type == "bezier"){ 
         html += next && after_next ?`Q${next.x},${next.y} ${after_next.x},${after_next.y} ` : ''; 
-        skip = 2
+        skip = 1
       }
       else{ 
         console.warn(`unknown type:${type}`)
