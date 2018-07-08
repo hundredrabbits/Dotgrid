@@ -52,11 +52,11 @@ function Generator(layer,style)
       }
       else if(type == "arc_c"){ 
         var clock = mirror > 0 ? '0,0' : '0,1'
-        html += next ? `A${next.x - vertex.x},${next.y - vertex.y} 0 ${clock} ${next.x},${next.y} ` : ''; 
+        html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''; 
       }
       else if(type == "arc_r"){ 
         var clock = mirror > 0 ? '0,1' : '0,0'
-        html += next ? `A${next.x - vertex.x},${next.y - vertex.y} 0 ${clock} ${next.x},${next.y} ` : ''; 
+        html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''; 
       }
       else if(type == "bezier"){ 
         html += next && after_next ?`Q${next.x},${next.y} ${after_next.x},${after_next.y} ` : ''; 
