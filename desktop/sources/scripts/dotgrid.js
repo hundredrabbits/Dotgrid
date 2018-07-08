@@ -17,7 +17,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.cursor = { pos:{x:0,y:0},translation:null,multi:false,updated:0 }
 
   this.install = function()
-  {  
+  {
     document.getElementById("app").appendChild(this.guide.el);
 
     this.theme.start();
@@ -99,7 +99,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add_role("picker","Edit","selectall");
 
     this.controller.add("picker","Mode","Stop Picker Mode",() => { dotgrid.picker.stop(); },"Escape");
-    
+
     this.controller.commit();
 
     document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
@@ -112,7 +112,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     window.addEventListener('drop', dotgrid.drag);
 
     dotgrid.set_size({width:300,height:300});
-    
+
     this.new();
   }
 
@@ -140,7 +140,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.save = function(content = this.tool.export())
   {
-    dialog.showSaveDialog({title:"Save to .grid"},(fileName) => {
+    dialog.showSaveDialog({
+      title:"Save to .grid",
+      filters: [{name: "Dotgrid", extensions: ["grid", "dot"]}]
+    },(fileName) => {
       if (fileName === undefined){ return; }
       fileName = fileName.substr(-5,5) != ".grid" ? fileName+".grid" : fileName;
       fs.writeFileSync(fileName, content);
@@ -231,15 +234,15 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       if(o == "depth"){ this.tool.select_next_layer(); return; }
 
       e.preventDefault();
-    }    
+    }
 
-    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); 
+    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5});
     pos = this.position_on_grid(pos);
 
     if(e.altKey){ dotgrid.tool.remove_segments_at(pos); return; }
-    
-    if(dotgrid.tool.vertex_at(pos)){ 
-      console.log("Begin translation"); dotgrid.cursor.translation = {from:pos,to:pos}; 
+
+    if(dotgrid.tool.vertex_at(pos)){
+      console.log("Begin translation"); dotgrid.cursor.translation = {from:pos,to:pos};
       if(e.shiftKey){ console.log("Begin translation(multi)"); dotgrid.cursor.multi = true; }
     }
 
@@ -266,7 +269,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     if(e.target.getAttribute("ar")){ return } // If clicking on interface
 
-    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); 
+    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5});
     pos = this.position_on_grid(pos);
 
     if(e.altKey || e.target.id != "guide"){ return; }
@@ -278,7 +281,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
         dotgrid.tool.translate_multi(dotgrid.cursor.translation.from,dotgrid.cursor.translation.to);
       }
       else{
-        dotgrid.tool.translate(dotgrid.cursor.translation.from,dotgrid.cursor.translation.to);  
+        dotgrid.tool.translate(dotgrid.cursor.translation.from,dotgrid.cursor.translation.to);
       }
       dotgrid.cursor.translation = null;
       dotgrid.cursor.multi = null;
@@ -309,8 +312,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.mod_thickness = function(mod = 10,step = false,cap = false)
   {
-    if(cap){ 
-      this.tool.style().thickness = this.tool.style().thickness > 40 ? 1 : this.tool.style().thickness 
+    if(cap){
+      this.tool.style().thickness = this.tool.style().thickness > 40 ? 1 : this.tool.style().thickness
     }
     if(step){
       this.tool.style().thickness = parseInt(this.tool.style().thickness/5) * 5;
@@ -347,8 +350,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   }
 
   // Basics
-  
-  this.set_size = function(size = {width:300,height:300},interface = true,scale = 1) 
+
+  this.set_size = function(size = {width:300,height:300},interface = true,scale = 1)
   {
     size = { width:clamp(parseInt(size.width/15)*15,120,1000),height:clamp(parseInt(size.height/15)*15,120,1000)}
 
@@ -357,7 +360,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     var win = require('electron').remote.getCurrentWindow();
     win.setSize((size.width+100)*scale,(size.height+100+(interface ? 10 : 0))*scale,true);
-    
+
     this.grid_x = size.width/15
     this.grid_y = size.height/15
 
@@ -377,7 +380,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   }
 
   // Draw
-  
+
   this.reset = function()
   {
     this.tool.clear();
@@ -396,7 +399,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     e.preventDefault();
     e.stopPropagation();
-    
+
     var file = e.dataTransfer.files[0];
 
     if(!file.path || file.path.indexOf(".dot") < 0 && file.path.indexOf(".grid") < 0){ console.log("Dotgrid","Not a dot file"); return; }
@@ -438,10 +441,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     var data = e.clipboardData.getData("text/source");
     if(is_json(data)){
-      data = JSON.parse(data.trim());  
+      data = JSON.parse(data.trim());
       dotgrid.tool.import(data);
     }
-    
+
     dotgrid.guide.refresh();
   }
 
