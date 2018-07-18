@@ -110,9 +110,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     document.addEventListener('cut', function(e){ dotgrid.cut(e); e.preventDefault(); }, false);
     document.addEventListener('paste', function(e){ dotgrid.paste(e); e.preventDefault(); }, false);
     window.addEventListener('drop', dotgrid.drag);
-
-    dotgrid.set_size({width:300,height:300});
-
+    
     this.new();
   }
 
@@ -120,6 +118,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.new = function()
   {
+    this.set_zoom(1.0)
     this.set_size({width:300,height:300})
     this.history.push(this.tool.layers);
     this.clear();
@@ -466,15 +465,26 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     y = clamp(y,0,this.tool.settings.size.height)
     return {x:x*-1,y:y};
   }
-
-  function is_json(text){ try{ JSON.parse(text);return true; } catch(error){ return false; }}
-  function pos_is_equal(a,b){ return a && b && a.x == b.x && a.y == b.y }
-  function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 }
 
 window.addEventListener('resize', function(e)
 {
-  dotgrid.guide.refresh()
+  var size = {width:step(window.innerWidth-90,15),height:step(window.innerHeight-120,15)}
+
+  dotgrid.tool.settings.size.width = size.width
+  dotgrid.tool.settings.size.height = size.height
+
+  dotgrid.grid_x = size.width/15
+  dotgrid.grid_y = size.height/15
+
+  dotgrid.grid_width = dotgrid.tool.settings.size.width/dotgrid.grid_x;
+  dotgrid.grid_height = dotgrid.tool.settings.size.height/dotgrid.grid_y;
+
+  dotgrid.guide.resize(size);
+
+  dotgrid.interface.refresh();
+  dotgrid.guide.refresh();
+
 }, false);
 
 window.addEventListener('dragover',function(e)
@@ -488,3 +498,10 @@ String.prototype.capitalize = function()
 {
   return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
 }
+
+
+function is_json(text){ try{ JSON.parse(text);return true; } catch(error){ return false; }}
+function pos_is_equal(a,b){ return a && b && a.x == b.x && a.y == b.y }
+function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
+function step(v,s){ return parseInt(v/s) * s; }
+
