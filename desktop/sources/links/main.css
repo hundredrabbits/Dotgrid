@@ -19,6 +19,7 @@ body { padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: non
 #interface.visible { bottom:20px; opacity: 1 }
 #interface #menu { opacity: 1; position: absolute; top:0px; transition: all 250ms; z-index: 900}
 #interface #picker { background:red; position: absolute; line-height: 30px; z-index: 0; width:250px; top:5px; opacity: 0; transition: all 250ms;}
+#interface #color_path { transition: all 500ms; fill:red; }
 #interface.picker #menu { opacity: 0; top:-5px; z-index: 0 }
 #interface.picker #picker { opacity: 1; top:0px; z-index: 900 }
 #interface .icon { width:30px; height:30px; margin-right:-2px; opacity: 1}

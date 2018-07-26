@@ -415,7 +415,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     dotgrid.guide.refresh();
 
-    if (e.target !== this.picker.el) {
+    if(e.target !== this.picker.el){
       e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()));
       e.clipboardData.setData('text/plain', dotgrid.tool.path());
       e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
@@ -430,7 +430,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     dotgrid.guide.refresh();
 
-    if (e.target !== this.picker.el) {
+    if(e.target !== this.picker.el){
       e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
       e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
       e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg());
@@ -443,7 +443,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.paste = function(e)
   {
-    if (e.target !== this.picker.el) {
+    if(e.target !== this.picker.el){
       var data = e.clipboardData.getData("text/source");
       if (is_json(data)) {
         data = JSON.parse(data.trim());
