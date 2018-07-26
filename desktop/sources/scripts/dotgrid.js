@@ -106,11 +106,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     document.addEventListener('mousemove', function(e){ dotgrid.mouse_move(e); }, false);
     document.addEventListener('contextmenu', function(e){ dotgrid.mouse_alt(e); }, false);
     document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);
-    document.addEventListener('copy', function(e){ dotgrid.copy(e); e.preventDefault(); }, false);
-    document.addEventListener('cut', function(e){ dotgrid.cut(e); e.preventDefault(); }, false);
-    document.addEventListener('paste', function(e){ dotgrid.paste(e); e.preventDefault(); }, false);
+    document.addEventListener('copy', function(e){ dotgrid.copy(e); }, false);
+    document.addEventListener('cut', function(e){ dotgrid.cut(e); }, false);
+    document.addEventListener('paste', function(e){ dotgrid.paste(e); }, false);
     window.addEventListener('drop', dotgrid.drag);
-    
+
     this.new();
   }
 
@@ -415,10 +415,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     dotgrid.guide.refresh();
 
-    e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()));
-    e.clipboardData.setData('text/plain', dotgrid.tool.path());
-    e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
-    e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg());
+    if (e.target !== this.picker.el) {
+      e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()));
+      e.clipboardData.setData('text/plain', dotgrid.tool.path());
+      e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
+      e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg());
+      e.preventDefault();
+    }
 
     dotgrid.guide.refresh();
   }
@@ -427,21 +430,26 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     dotgrid.guide.refresh();
 
-    e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
-    e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
-    e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg());
-
-    dotgrid.tool.layers[dotgrid.tool.index] = [];
+    if (e.target !== this.picker.el) {
+      e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
+      e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
+      e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg());
+      dotgrid.tool.layers[dotgrid.tool.index] = [];
+      e.preventDefault();
+    }
 
     dotgrid.guide.refresh();
   }
 
   this.paste = function(e)
   {
-    var data = e.clipboardData.getData("text/source");
-    if(is_json(data)){
-      data = JSON.parse(data.trim());
-      dotgrid.tool.import(data);
+    if (e.target !== this.picker.el) {
+      var data = e.clipboardData.getData("text/source");
+      if (is_json(data)) {
+        data = JSON.parse(data.trim());
+        dotgrid.tool.import(data);
+      }
+      e.preventDefault();
     }
 
     dotgrid.guide.refresh();
@@ -504,4 +512,3 @@ function is_json(text){ try{ JSON.parse(text);return true; } catch(error){ retur
 function pos_is_equal(a,b){ return a && b && a.x == b.x && a.y == b.y }
 function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
 function step(v,s){ return parseInt(v/s) * s; }
-
