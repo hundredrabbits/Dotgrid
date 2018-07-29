@@ -459,7 +459,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.position_in_grid = function(pos)
   {
-    return {x:(window.innerWidth/2) - (this.tool.settings.size.width/2) - pos.x,y:pos.y - (30+10)}
+    return {x:(window.innerWidth/2) - (this.tool.settings.size.width/2) - pos.x - 5,y:pos.y - (30+5)}
   }
 
   this.position_on_grid = function(pos)

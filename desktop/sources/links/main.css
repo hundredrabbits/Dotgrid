@@ -1,9 +1,9 @@
-body { padding: 5px; font-family: 'input_mono_regular'; -webkit-user-select: none; overflow: hidden; padding-left:5px; transition: background 500ms}
+body { padding: 0px; font-family: 'input_mono_regular'; -webkit-user-select: none; overflow: hidden; transition: background 500ms}
 
 /* Core */
 
-#app { display: flex; flex-direction: column; align-items: center; -webkit-app-region: drag; padding-top:30px;}
-#guide { position: absolute;width: 300px;height: 300px; transition: opacity 150ms;}
+#app { -webkit-app-region: drag; padding: 30px;width:calc(100vw - 60px);height:calc(100vh - 60px)}
+#guide { position: absolute;width: 300px;height: 300px; transition: opacity 150ms; -webkit-app-region: no-drag;}
 #render { display: none }
 #vector { z-index: 1000;position: relative;width:300px; height:300px; }
 
