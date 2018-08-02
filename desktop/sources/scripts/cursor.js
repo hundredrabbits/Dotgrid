@@ -4,7 +4,7 @@ function Cursor()
   this.translation = null,
 
   this.translate = function(from = null,to = null, multi = false)
-  {
+  {    
     if((from || to) && this.translation == null){ this.translation = {multi:multi}; console.log("Begin translation") }
 
     if(from){ this.translation.from = from; }
@@ -54,7 +54,7 @@ function Cursor()
       if(this.translation.multi){ dotgrid.tool.translate_multi(this.translation.from,this.translation.to); }
       else{ dotgrid.tool.translate(this.translation.from,this.translation.to); }
     }
-    else{
+    else if(e.target.id == "guide"){
       dotgrid.tool.add_vertex({x:this.pos.x,y:this.pos.y});
     }
     this.translate();
@@ -93,7 +93,7 @@ function Cursor()
   { 
     var grid = dotgrid.tool.settings.size.width/dotgrid.grid_x;
     return {
-      x:clamp(step(pos.x,grid),grid,dotgrid.tool.settings.size.width+grid),
+      x:clamp(step(pos.x,grid),grid,dotgrid.tool.settings.size.width),
       y:clamp(step(pos.y,grid),grid,dotgrid.tool.settings.size.height+grid)
     };
   }

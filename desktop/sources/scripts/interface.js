@@ -34,14 +34,24 @@ function Interface()
     for(id in tools){
       var tool = tools[id];
       var shortcut = tool[2];
-      html += `<svg id="${id}" ar="${id}" title="${tool[0].capitalize()}" viewBox="0 0 300 300" class="icon"><path id="${id}_path" class="icon_path" d="${tool[1]}"/>${id == "depth" ? `<path class="icon_path inactive" d=""/>` : ""}<rect ar="${id}" width="300" height="300" opacity="0"><title>${id.capitalize()}${shortcut ? '('+shortcut+')' : ''}</title></rect></svg>`
+      html += `<svg id="${id}" ar="${id}" title="${tool[0].capitalize()}" onmousedown="dotgrid.interface.down('${id}')" onmouseover="dotgrid.interface.over('${id}')" viewBox="0 0 300 300" class="icon"><path id="${id}_path" class="icon_path" d="${tool[1]}"/>${id == "depth" ? `<path class="icon_path inactive" d=""/>` : ""}<rect ar="${id}" width="300" height="300" opacity="0"><title>${id.capitalize()}${shortcut ? '('+shortcut+')' : ''}</title></rect></svg>`
     }
     this.menu_el.innerHTML = html
   }
 
+  this.over = function(id)
+  {
+    console.log("over",id)
+  }
+
+  this.down = function(id)
+  {
+    console.log("click",id)
+  }
+
   this.prev_operation = null;
 
-  this.refresh = function(force = false)
+  this.refresh = function(force = false,id)
   {
     if(this.prev_operation == dotgrid.cursor.operation && force == false){ return; }
 
