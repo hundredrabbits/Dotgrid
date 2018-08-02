@@ -507,7 +507,6 @@ String.prototype.capitalize = function()
   return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
 }
 
-
 function is_json(text){ try{ JSON.parse(text);return true; } catch(error){ return false; }}
 function pos_is_equal(a,b){ return a && b && a.x == b.x && a.y == b.y }
 function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }

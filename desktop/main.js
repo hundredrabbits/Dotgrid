@@ -32,6 +32,7 @@ app.on('ready', () =>
   app.win = new BrowserWindow({width: 400, height: 420, minWidth: 400, minHeight: 420,webPreferences: {zoomFactor: 1.0}, backgroundColor:"#000", frame:false, autoHideMenuBar: true, icon: __dirname + '/icon.ico'})
   
   app.win.loadURL(`file://${__dirname}/sources/index.html`);
+  app.win.scaleFactor = require('electron').screen.getPrimaryDisplay().scaleFactor
 
   app.win.on('closed', () => {
     win = null
