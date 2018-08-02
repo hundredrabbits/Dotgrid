@@ -21,11 +21,11 @@ function Guide()
     this.clear();
   
     if(dotgrid.tool.index == 2){ this.draw_markers() ; this.draw_vertices() }
-    this.draw_path(new Generator(dotgrid.tool.layers[2],dotgrid.tool.styles[2]).toString({x:15,y:15},this.scale),dotgrid.tool.styles[2])
+    this.draw_path(new Generator(dotgrid.tool.layers[2],dotgrid.tool.styles[2]).toString({x:0,y:0},this.scale),dotgrid.tool.styles[2])
     if(dotgrid.tool.index == 1){ this.draw_markers() ; this.draw_vertices() }
-    this.draw_path(new Generator(dotgrid.tool.layers[1],dotgrid.tool.styles[1]).toString({x:15,y:15},this.scale),dotgrid.tool.styles[1])
+    this.draw_path(new Generator(dotgrid.tool.layers[1],dotgrid.tool.styles[1]).toString({x:0,y:0},this.scale),dotgrid.tool.styles[1])
     if(dotgrid.tool.index == 0){ this.draw_markers(); this.draw_vertices() }
-    this.draw_path(new Generator(dotgrid.tool.layers[0],dotgrid.tool.styles[0]).toString({x:15,y:15},this.scale),dotgrid.tool.styles[0])
+    this.draw_path(new Generator(dotgrid.tool.layers[0],dotgrid.tool.styles[0]).toString({x:0,y:0},this.scale),dotgrid.tool.styles[0])
 
     this.draw_handles()
     this.draw_translation();
@@ -206,7 +206,7 @@ function Guide()
     if(!dotgrid.tool.can_cast(operation)){ return; }
     if(operation == "close"){ return; }
 
-    var path  = new Generator([{vertices:dotgrid.tool.vertices,type:operation}]).toString({x:15,y:15},2)
+    var path  = new Generator([{vertices:dotgrid.tool.vertices,type:operation}]).toString({x:0,y:0},2)
     var style = {
       color:dotgrid.theme.active.f_med,
       thickness:2,
