@@ -8,13 +8,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.renderer = new Renderer();
   this.tool = new Tool();
   this.picker = new Picker();
+  this.cursor = new Cursor();
 
   this.grid_x = grid_x;
   this.grid_y = grid_y;
   this.block_x = block_x;
   this.block_y = block_y;
-
-  this.cursor = { pos:{x:0,y:0},translation:null,multi:false,updated:0 }
 
   this.install = function()
   {
@@ -102,10 +101,10 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     this.controller.commit();
 
-    document.addEventListener('mousedown', function(e){ dotgrid.mouse_down(e); }, false);
-    document.addEventListener('mousemove', function(e){ dotgrid.mouse_move(e); }, false);
-    document.addEventListener('contextmenu', function(e){ dotgrid.mouse_alt(e); }, false);
-    document.addEventListener('mouseup', function(e){ dotgrid.mouse_up(e);}, false);
+    document.addEventListener('mousedown', function(e){ dotgrid.cursor.down(e); }, false);
+    document.addEventListener('mousemove', function(e){ dotgrid.cursor.move(e); }, false);
+    document.addEventListener('contextmenu', function(e){ dotgrid.cursor.alt(e); }, false);
+    document.addEventListener('mouseup', function(e){ dotgrid.cursor.up(e);}, false);
     document.addEventListener('copy', function(e){ dotgrid.copy(e); }, false);
     document.addEventListener('cut', function(e){ dotgrid.cut(e); }, false);
     document.addEventListener('paste', function(e){ dotgrid.paste(e); }, false);
@@ -209,102 +208,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
         }
       });
     }
-  }
-
-  // Cursor
-
-  this.mouse_down = function(e)
-  {
-    var o = e.target.getAttribute("ar");
-
-    if(o){
-      if(o == "line"){ this.tool.cast("line"); return; }
-      if(o == "arc_c"){ this.tool.cast("arc_c"); return;}
-      if(o == "arc_r"){ this.tool.cast("arc_r"); return; }
-      if(o == "bezier"){ this.tool.cast("bezier"); return; }
-      if(o == "close"){ this.tool.cast("close"); return; }
-
-      if(o == "thickness"){ this.mod_thickness(10,true,true); return; }
-      if(o == "linecap"){ this.mod_linecap(); return; }
-      if(o == "linejoin"){ this.mod_linejoin(); return; }
-      if(o == "mirror"){ this.tool.toggle_mirror(); return; }
-      if(o == "fill"){ this.mod_fill(); return; }
-      if(o == "color"){ setTimeout(()=>{ this.picker.start(); }, 100); return; }
-      if(o == "depth"){ this.tool.select_next_layer(); return; }
-
-      e.preventDefault();
-    }
-
-    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5});
-    pos = this.position_on_grid(pos);
-
-    if(e.altKey){ dotgrid.tool.remove_segments_at(pos); return; }
-
-    if(dotgrid.tool.vertex_at(pos)){
-      console.log("Begin translation"); dotgrid.cursor.translation = {from:pos,to:pos};
-      if(e.shiftKey){ console.log("Begin translation(multi)"); dotgrid.cursor.multi = true; }
-    }
-
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh();
-  }
-
-  this.mouse_move = function(e)
-  {
-    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
-
-    this.cursor.pos = pos;
-    this.cursor.updated = new Date().getTime();
-    this.cursor.operation = e.target.getAttribute("ar");
-
-    if(dotgrid.cursor.translation && (Math.abs(dotgrid.cursor.translation.from.x) != Math.abs(pos.x) || Math.abs(dotgrid.cursor.translation.from.y) != Math.abs(pos.y))){ dotgrid.cursor.translation.to = pos; }
-
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh();
-    e.preventDefault();
-  }
-
-  this.mouse_up = function(e)
-  {
-    if(e.target.getAttribute("ar")){ return } // If clicking on interface
-
-    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5});
-    pos = this.position_on_grid(pos);
-
-    if(e.altKey || e.target.id != "guide"){ return; }
-
-    if(pos.x > 0) { dotgrid.cursor.translation = null; return; }
-
-    if(dotgrid.cursor.translation && (Math.abs(dotgrid.cursor.translation.from.x) != Math.abs(dotgrid.cursor.translation.to.x) || Math.abs(dotgrid.cursor.translation.from.y) != Math.abs(dotgrid.cursor.translation.to.y))){
-      if(dotgrid.cursor.multi){
-        dotgrid.tool.translate_multi(dotgrid.cursor.translation.from,dotgrid.cursor.translation.to);
-      }
-      else{
-        dotgrid.tool.translate(dotgrid.cursor.translation.from,dotgrid.cursor.translation.to);
-      }
-      dotgrid.cursor.translation = null;
-      dotgrid.cursor.multi = null;
-      dotgrid.guide.refresh();
-      e.preventDefault();
-      return;
-    }
-
-    this.tool.add_vertex({x:pos.x * -1,y:pos.y});
-    dotgrid.cursor.translation = null;
-
-    dotgrid.interface.refresh();
-    dotgrid.guide.refresh();
-
-    e.preventDefault();
-  }
-
-  this.mouse_alt = function(e)
-  {
-    var pos = this.position_in_grid({x:e.clientX+5,y:e.clientY-5}); pos = this.position_on_grid(pos);
-    dotgrid.tool.remove_segments_at(pos);
-    e.preventDefault();
-
-    setTimeout(() => { dotgrid.tool.clear(); },150);
   }
 
   // Toggles
@@ -454,25 +357,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     dotgrid.guide.refresh();
   }
-
-  // Normalizers
-
-  this.position_in_grid = function(pos)
-  {
-    return {x:(window.innerWidth/2) - (this.tool.settings.size.width/2) - pos.x - 5,y:pos.y - (30+5)}
-  }
-
-  this.position_on_grid = function(pos)
-  {
-    pos.y = pos.y - 7.5
-    pos.x = pos.x + 7.5
-    x = Math.round(pos.x/this.grid_width)*this.grid_width
-    y = Math.round(pos.y/this.grid_height)*this.grid_height
-
-    x = clamp(x * -1,0,this.tool.settings.size.width)
-    y = clamp(y,0,this.tool.settings.size.height)
-    return {x:x*-1,y:y};
-  }
 }
 
 window.addEventListener('resize', function(e)
@@ -510,4 +394,4 @@ String.prototype.capitalize = function()
 function is_json(text){ try{ JSON.parse(text);return true; } catch(error){ return false; }}
 function pos_is_equal(a,b){ return a && b && a.x == b.x && a.y == b.y }
 function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
-function step(v,s){ return parseInt(v/s) * s; }
+function step(v,s){ return Math.round(v/s) * s; }
