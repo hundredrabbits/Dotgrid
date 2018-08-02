@@ -83,19 +83,15 @@ function Cursor()
 
   this.pos_relative = function(pos)
   {
-    var ratio = dotgrid.guide.scale == 1 ? 2 : 1.5;
-    var offset = {x:dotgrid.guide.el.offsetLeft * ratio,y:dotgrid.guide.el.offsetTop * ratio}
-
     return {
-      x:pos.x - offset.x,
-      y:pos.y - offset.y
+      x:pos.x - dotgrid.guide.el.offsetLeft,
+      y:pos.y - dotgrid.guide.el.offsetTop
     };
   }
 
   this.pos_snap = function(pos)
   { 
     var grid = dotgrid.tool.settings.size.width/dotgrid.grid_x;
-
     return {
       x:clamp(step(pos.x,grid),0,dotgrid.tool.settings.size.width),
       y:clamp(step(pos.y,grid),0,dotgrid.tool.settings.size.height)
