@@ -93,8 +93,8 @@ function Cursor()
   { 
     var grid = dotgrid.tool.settings.size.width/dotgrid.grid_x;
     return {
-      x:clamp(step(pos.x,grid),0,dotgrid.tool.settings.size.width),
-      y:clamp(step(pos.y,grid),0,dotgrid.tool.settings.size.height)
+      x:clamp(step(pos.x,grid),grid,dotgrid.tool.settings.size.width+grid),
+      y:clamp(step(pos.y,grid),grid,dotgrid.tool.settings.size.height+grid)
     };
   }
 }

@@ -8,7 +8,7 @@ function Guide()
   this.el.style.height = "320px";
   this.show_extras = true;
 
-  this.scale = 1; // require('electron').remote.getCurrentWindow().this.scaleFactor;
+  this.scale = 2; // require('electron').remote.getCurrentWindow().this.scaleFactor;
 
   this.start = function()
   {
@@ -79,13 +79,21 @@ function Guide()
   {
     if(!this.show_extras){ return; }
 
-    for (var x = dotgrid.grid_x; x >= 0; x--) {
+    var cursor = {x:parseInt(dotgrid.cursor.pos.x/dotgrid.grid_width),y:parseInt(dotgrid.cursor.pos.y/dotgrid.grid_width)}
+
+    for (var x = dotgrid.grid_x-1; x >= 0; x--) {
       for (var y = dotgrid.grid_y; y >= 0; y--) {
-        var pos_x = parseInt(x * dotgrid.grid_width) + dotgrid.grid_width ;
-        var pos_y = parseInt(y * dotgrid.grid_height) + dotgrid.grid_height ;
         var is_step = x % dotgrid.block_x == 0 && y % dotgrid.block_y == 0;
-        var radius = is_step ? 2.5 : 1.5;
-        this.draw_marker({x:pos_x,y:pos_y},radius,is_step);
+
+        // Color
+        var color = is_step ? dotgrid.theme.active.f_med : dotgrid.theme.active.f_low;
+        if((y == 0 || y == dotgrid.grid_y) && cursor.x == x+1){ color = dotgrid.theme.active.f_high; }
+        else if((x == 0 || x == dotgrid.grid_x-1) && cursor.y == y+1){ color = dotgrid.theme.active.f_high; }
+
+        this.draw_marker({
+          x:parseInt(x * dotgrid.grid_width) + dotgrid.grid_width,
+          y:parseInt(y * dotgrid.grid_height) + dotgrid.grid_height
+        },is_step ? 2.5 : 1.5,color);
       }
     }
   }
@@ -128,13 +136,13 @@ function Guide()
     ctx.closePath();
   }
 
-  this.draw_marker = function(pos,radius = 1,step)
+  this.draw_marker = function(pos,radius = 1,color)
   {
     var ctx = this.el.getContext('2d');
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.arc(pos.x * this.scale, pos.y * this.scale, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = step ? dotgrid.theme.active.f_med : dotgrid.theme.active.f_low;
+    ctx.fillStyle = color;
     ctx.fill();
     ctx.closePath();
   }
