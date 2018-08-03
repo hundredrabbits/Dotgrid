@@ -8,7 +8,7 @@ function Guide()
   this.el.style.height = "320px";
   this.show_extras = true;
 
-  this.scale = 2; // require('electron').remote.getCurrentWindow().this.scaleFactor;
+  this.scale = require('electron').remote.getCurrentWindow().scaleFactor;
 
   this.start = function()
   {
