@@ -18,7 +18,7 @@ function Generator(layer,style)
         seg.vertices[k2].y += offset.y
 
         // Rotate
-        var center = {x:(dotgrid.tool.settings.size.width/2)+offset.x-15,y:(dotgrid.tool.settings.size.height/2)+offset.y}
+        var center = {x:(dotgrid.tool.settings.size.width/2)+offset.x+(7.5),y:(dotgrid.tool.settings.size.height/2)+offset.y+30}
         seg.vertices[k2] = rotate_point(seg.vertices[k2],center,angle)
 
         // Scale

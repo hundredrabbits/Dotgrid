@@ -46,11 +46,11 @@ function Guide()
 
   this.resize = function(size)
   {
-    var offset = 30
+    var offset = 15
     this.el.width = (size.width+offset)*this.scale;
-    this.el.height = (size.height+offset)*this.scale;
+    this.el.height = (size.height+(offset*2))*this.scale;
     this.el.style.width = (size.width+offset)+"px";
-    this.el.style.height = (size.height+offset)+"px";
+    this.el.style.height = (size.height+(offset*2))+"px";
 
     this.refresh();
   }

@@ -17,10 +17,10 @@ function Renderer()
 
   this.refresh = function()
   {
-    this.svg_el.setAttribute("width",dotgrid.tool.settings.size.width+"px");
-    this.svg_el.setAttribute("height",dotgrid.tool.settings.size.height+"px");
-    this.svg_el.style.width = dotgrid.tool.settings.size.width;
-    this.svg_el.style.height = dotgrid.tool.settings.size.height;
+    this.svg_el.setAttribute("width",(dotgrid.tool.settings.size.width-(5))+"px");
+    this.svg_el.setAttribute("height",(dotgrid.tool.settings.size.height+(10))+"px");
+    this.svg_el.style.width = (dotgrid.tool.settings.size.width-(5));
+    this.svg_el.style.height = dotgrid.tool.settings.size.height+(10);
     this.svg_el.style.strokeWidth = dotgrid.tool.style().thickness;
 
     var styles = dotgrid.tool.styles
@@ -60,13 +60,13 @@ function Renderer()
 
     var canvas = document.createElement("canvas");
 
-    canvas.width = size.width; 
-    canvas.height = size.height;
+    canvas.width = (size.width)*2; 
+    canvas.height = (size.height+30)*2;
 
     var ctx = canvas.getContext('2d');
 
     img.onload = function(){
-      ctx.drawImage(img, 0, 0, size.width, size.height);
+      ctx.drawImage(img, 0, 0, (size.width)*2, (size.height+30)*2);
       var data = canvas.toDataURL('image/png').replace(/^data:image\/\w+;base64,/, "");
       dotgrid.renderer.to_png_ready(callback, new Buffer(data, 'base64'),size)
     };

@@ -37,7 +37,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","File","Save(.grid)",() => { dotgrid.save(); },"CmdOrCtrl+S");
     this.controller.add("default","File","Render(.png)",() => { dotgrid.render(); },"CmdOrCtrl+R");
     this.controller.add("default","File","Export(.svg)",() => { dotgrid.export(); },"CmdOrCtrl+E");
-    this.controller.add("default","File","Build Icons",() => { dotgrid.build(); },"CmdOrCtrl+B");
 
     this.controller.add("default","Edit","Copy",() => { document.execCommand('copy'); },"CmdOrCtrl+C");
     this.controller.add("default","Edit","Cut",() => { document.execCommand('cut'); },"CmdOrCtrl+X");
@@ -61,7 +60,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","Effect","Thicker",() => { dotgrid.tool.toggle("thickness",1) },"}");
     this.controller.add("default","Effect","Thinner",() => { dotgrid.tool.toggle("thickness",-1) },"{");
     this.controller.add("default","Effect","Thicker +5",() => { dotgrid.tool.toggle("thickness",5) },"]");
-    this.controller.add("default","Effect","Thinner -5",() => { dotgrid.mod_thickness("thickness",-5) },"[");
+    this.controller.add("default","Effect","Thinner -5",() => { dotgrid.tool.toggle("thickness",-5) },"[");
 
     this.controller.add("default","Manual","Add Point",() => { dotgrid.tool.add_vertex(dotgrid.cursor.pos); dotgrid.guide.refresh() },"Enter");
     this.controller.add("default","Manual","Move Up",() => { dotgrid.cursor.pos.y -= 15; dotgrid.guide.refresh() },"Up");
@@ -76,10 +75,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     this.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },"U");
     this.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
-    this.controller.add("default","View","Zoom Reset",() => { dotgrid.set_zoom(1.0) },"-");
-    this.controller.add("default","View","Zoom 150%",() => { dotgrid.set_zoom(1.5) },"Plus");
-
-    this.controller.add("default","Mode","Picker",() => { dotgrid.picker.start(); },"CmdOrCtrl+P");
 
     this.controller.add("picker","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
     this.controller.add("picker","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
@@ -171,50 +166,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     });
   }
 
-  this.bundle = {}
-
-  this.build = function()
-  {
-    this.bundle = {}
-
-    var sizes = [
-      {width:16,height:16},
-      {width:32,height:32},
-      {width:52,height:52},
-      {width:64,height:64},
-      {width:72,height:72},
-      {width:96,height:96},
-      {width:128,height:128},
-      {width:256,height:256},
-      {width:512,height:512}
-    ]
-
-    for(id in sizes){
-      this.renderer.to_png(sizes[id],dotgrid.package)
-    }
-  }
-
-  this.package = function(n = null, ready,size)
-  {
-    dotgrid.bundle[`${size.width}x${size.height}`] = ready
-
-    console.log(`Rendered ${size.width}x${size.height}`,`${Object.keys(dotgrid.bundle).length}/9`)
-
-    if(Object.keys(dotgrid.bundle).length == 9){
-      dialog.showSaveDialog({title:"Export to Icons"},(fileName) => {
-        if (fileName === undefined){ return; }
-        for(id in dotgrid.bundle){
-          fs.writeFileSync(`${fileName}.${id}.png`, dotgrid.bundle[id]);
-        }
-      });
-    }
-  }
-
   // Basics
 
   this.set_size = function(size = {width:300,height:300},interface = true,scale = 1)
   {
-    size = { width:clamp(parseInt(size.width/15)*15,120,1000),height:clamp(parseInt(size.height/15)*15,120,1000)}
+    size = { width:clamp(step(size.width,15),105,1080),height:clamp(step(size.height,15),120,1080)}
 
     this.tool.settings.size.width = size.width
     this.tool.settings.size.height = size.height

@@ -72,6 +72,13 @@ function Interface()
   {
     if(this.prev_operation == dotgrid.cursor.operation && force == false){ return; }
 
+    var multi_vertices = null;
+    var segments = dotgrid.tool.layer()
+
+    for(id in segments){
+      if(segments[id].vertices.length > 2){ multi_vertices = true; break; }
+    }
+
     document.getElementById("line").className.baseVal = !dotgrid.tool.can_cast("line") ? "icon inactive" : "icon";
     document.getElementById("arc_c").className.baseVal = !dotgrid.tool.can_cast("arc_c") ? "icon inactive" : "icon";
     document.getElementById("arc_r").className.baseVal = !dotgrid.tool.can_cast("arc_r") ? "icon inactive" : "icon";
@@ -80,7 +87,7 @@ function Interface()
     
     document.getElementById("thickness").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("linecap").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
-    document.getElementById("linejoin").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
+    document.getElementById("linejoin").className.baseVal = dotgrid.tool.layer().length < 1 || !multi_vertices ? "icon inactive" : "icon";
     document.getElementById("mirror").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     document.getElementById("fill").className.baseVal = dotgrid.tool.layer().length < 1 ? "icon inactive" : "icon";
     
