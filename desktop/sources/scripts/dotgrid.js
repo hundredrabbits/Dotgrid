@@ -53,15 +53,15 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.controller.add("default","Stroke","Bezier",() => { dotgrid.tool.cast("bezier") },"F");
     this.controller.add("default","Stroke","Close",() => { dotgrid.tool.cast("close") },"Z");
 
-    this.controller.add("default","Effect","Linecap",() => { dotgrid.mod_linecap(); },"Q");
-    this.controller.add("default","Effect","Linejoin",() => { dotgrid.mod_linejoin(); },"W");
-    this.controller.add("default","Effect","Mirror",() => { dotgrid.tool.toggle_mirror(); },"E");
-    this.controller.add("default","Effect","Fill",() => { dotgrid.mod_fill(); },"R");
+    this.controller.add("default","Effect","Linecap",() => { dotgrid.tool.toggle("linecap"); },"Q");
+    this.controller.add("default","Effect","Linejoin",() => { dotgrid.tool.toggle("linejoin"); },"W");
+    this.controller.add("default","Effect","Mirror",() => { dotgrid.tool.toggle("mirror"); },"E");
+    this.controller.add("default","Effect","Fill",() => { dotgrid.tool.toggle("fill"); },"R");
     this.controller.add("default","Effect","Color",() => { dotgrid.picker.start(); },"G");
-    this.controller.add("default","Effect","Thicker",() => { dotgrid.mod_thickness(1) },"}");
-    this.controller.add("default","Effect","Thinner",() => { dotgrid.mod_thickness(-1) },"{");
-    this.controller.add("default","Effect","Thicker +5",() => { dotgrid.mod_thickness(5,true) },"]");
-    this.controller.add("default","Effect","Thinner -5",() => { dotgrid.mod_thickness(-5,true) },"[");
+    this.controller.add("default","Effect","Thicker",() => { dotgrid.tool.toggle("thickness",1) },"}");
+    this.controller.add("default","Effect","Thinner",() => { dotgrid.tool.toggle("thickness",-1) },"{");
+    this.controller.add("default","Effect","Thicker +5",() => { dotgrid.tool.toggle("thickness",5) },"]");
+    this.controller.add("default","Effect","Thinner -5",() => { dotgrid.mod_thickness("thickness",-5) },"[");
 
     this.controller.add("default","Manual","Add Point",() => { dotgrid.tool.add_vertex(dotgrid.cursor.pos); dotgrid.guide.refresh() },"Enter");
     this.controller.add("default","Manual","Move Up",() => { dotgrid.cursor.pos.y -= 15; dotgrid.guide.refresh() },"Up");

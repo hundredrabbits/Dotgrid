@@ -10,15 +10,15 @@ function Generator(layer,style)
     for(k1 in l){
       var seg = l[k1];
       for(k2 in seg.vertices){
-        if(mirror == 1){ seg.vertices[k2].x = (dotgrid.tool.settings.size.width) - seg.vertices[k2].x }
-        if(mirror == 2){ seg.vertices[k2].y = (dotgrid.tool.settings.size.height) - seg.vertices[k2].y }
+        if(mirror == 1){ seg.vertices[k2].x = (dotgrid.tool.settings.size.width) - seg.vertices[k2].x + 15 }
+        if(mirror == 2){ seg.vertices[k2].y = (dotgrid.tool.settings.size.height) - seg.vertices[k2].y + 30 }
 
         // Offset
         seg.vertices[k2].x += offset.x
         seg.vertices[k2].y += offset.y
 
         // Rotate
-        var center = {x:(dotgrid.tool.settings.size.width/2)+offset.x,y:(dotgrid.tool.settings.size.height/2)+offset.y}
+        var center = {x:(dotgrid.tool.settings.size.width/2)+offset.x-15,y:(dotgrid.tool.settings.size.height/2)+offset.y}
         seg.vertices[k2] = rotate_point(seg.vertices[k2],center,angle)
 
         // Scale

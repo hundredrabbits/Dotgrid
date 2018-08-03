@@ -227,16 +227,16 @@ function Tool()
 
   this.paths = function()
   {
-    var l1 = new Generator(dotgrid.tool.layers[0],dotgrid.tool.styles[0]).toString({x:0,y:0},1)
-    var l2 = new Generator(dotgrid.tool.layers[1],dotgrid.tool.styles[1]).toString({x:0,y:0},1)
-    var l3 = new Generator(dotgrid.tool.layers[2],dotgrid.tool.styles[2]).toString({x:0,y:0},1)
+    var l1 = new Generator(dotgrid.tool.layers[0],dotgrid.tool.styles[0]).toString({x:-10,y:-10},1)
+    var l2 = new Generator(dotgrid.tool.layers[1],dotgrid.tool.styles[1]).toString({x:-10,y:-10},1)
+    var l3 = new Generator(dotgrid.tool.layers[2],dotgrid.tool.styles[2]).toString({x:-10,y:-10},1)
 
     return [l1,l2,l3]
   }
 
   this.path = function()
   {
-    return new Generator(dotgrid.tool.layer(),dotgrid.tool.style()).toString({x:0,y:0},1)
+    return new Generator(dotgrid.tool.layer(),dotgrid.tool.style()).toString({x:-10,y:-10},1)
   }
 
   this.translate = function(a,b)
