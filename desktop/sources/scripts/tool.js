@@ -158,6 +158,29 @@ function Tool()
     console.log(`Casted ${type} -> ${this.layer().length} elements`);
   }
 
+  this.i = { linecap:0,linejoin:0,thickness:5 }
+
+  this.toggle = function(type,mod = 1)
+  {
+    if(type == "linecap"){
+      var a = ["butt","square","round"];
+      this.i.linecap += mod;
+      this.style().strokeLinecap = a[this.i.linecap % a.length];
+    }
+    if(type == "linejoin"){
+      var a = ["miter","round","bevel"];
+      this.i.linejoin += mod;
+      this.style().strokeLinejoin = a[this.i.linejoin % a.length];
+    }
+    if(type == "fill"){
+      this.style().fill = this.style().fill == "none" ? this.style().color : "none";
+    }
+    if(type == "thickness"){
+      this.style().thickness = clamp(this.style().thickness+mod,1,40);
+    }
+    dotgrid.guide.refresh();
+  }
+
   this.can_append = function(content)
   {
     for(id in this.layer()){

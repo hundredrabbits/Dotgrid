@@ -209,7 +209,7 @@ function Guide()
 
   this.draw_preview = function()
   {
-    var operation = dotgrid.cursor.operation
+    var operation = dotgrid.cursor.operation && dotgrid.cursor.operation.cast ? dotgrid.cursor.operation.cast : null
 
     if(!dotgrid.tool.can_cast(operation)){ return; }
     if(operation == "close"){ return; }

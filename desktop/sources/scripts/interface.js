@@ -15,38 +15,55 @@ function Interface()
     this.el.appendChild(dotgrid.picker.el);
     
     var html = ""
-    var tools = {
-      line: ["line","M60,60 L240,240","A"],
-      arc_c: ["arc clockwise","M60,60 A180,180 0 0,1 240,240","S"],
-      arc_r: ["arc reverse","M60,60 A180,180 0 0,0 240,240","D"],
-      bezier: ["bezier","M60,60 Q60,150 150,150 Q240,150 240,240","F"],
-      close: ["close","M60,60 A180,180 0 0,1 240,240  M60,60 A180,180 0 0,0 240,240","Z"],
-
-      linecap: ["linecap","M60,60 L60,60 L180,180 L240,180 L240,240 L180,240 L180,180","Q"],
-      linejoin: ["linejoin","M60,60 L120,120 L180,120  M120,180 L180,180 L240,240","W"],
-      thickness: ["thickness","M120,90 L120,90 L90,120 L180,210 L210,180 Z M105,105 L105,105 L60,60 M195,195 L195,195 L240,240"],
-      
-      mirror: ["mirror","M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210","E"],
-      fill: ["fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z","R"],
-      color: ["color","M150,60 A90,90 0 0,1 240,150 A-90,90 0 0,1 150,240 A-90,-90 0 0,1 60,150 A90,-90 0 0,1 150,60","G"],
+    var options = {
+      cast:{
+        line: ["line","M60,60 L240,240","A"],
+        arc_c: ["arc clockwise","M60,60 A180,180 0 0,1 240,240","S"],
+        arc_r: ["arc reverse","M60,60 A180,180 0 0,0 240,240","D"],
+        bezier: ["bezier","M60,60 Q60,150 150,150 Q240,150 240,240","F"],
+        close: ["close","M60,60 A180,180 0 0,1 240,240  M60,60 A180,180 0 0,0 240,240","Z"]
+      },
+      toggle:{
+        linecap: ["linecap","M60,60 L60,60 L180,180 L240,180 L240,240 L180,240 L180,180","Q"],
+        linejoin: ["linejoin","M60,60 L120,120 L180,120  M120,180 L180,180 L240,240","W"],
+        thickness: ["thickness","M120,90 L120,90 L90,120 L180,210 L210,180 Z M105,105 L105,105 L60,60 M195,195 L195,195 L240,240"],
+        mirror: ["mirror","M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210","E"],
+        fill: ["fill","M60,60 L60,150 L150,150 L240,150 L240,240 Z","R"]
+      },
+      misc:{
+        color: ["color","M150,60 A90,90 0 0,1 240,150 A-90,90 0 0,1 150,240 A-90,-90 0 0,1 60,150 A90,-90 0 0,1 150,60","G"]
+      }      
     }
 
-    for(id in tools){
-      var tool = tools[id];
-      var shortcut = tool[2];
-      html += `<svg id="${id}" ar="${id}" title="${tool[0].capitalize()}" onmousedown="dotgrid.interface.down('${id}')" onmouseover="dotgrid.interface.over('${id}')" viewBox="0 0 300 300" class="icon"><path id="${id}_path" class="icon_path" d="${tool[1]}"/>${id == "depth" ? `<path class="icon_path inactive" d=""/>` : ""}<rect ar="${id}" width="300" height="300" opacity="0"><title>${id.capitalize()}${shortcut ? '('+shortcut+')' : ''}</title></rect></svg>`
+    for(type in options){
+      var tools = options[type];
+      for(name in tools){
+        var tool = tools[name];
+        var shortcut = tool[2];
+        html += `<svg id="${name}" title="${tool[0].capitalize()}" onmouseout="dotgrid.interface.out('${type}','${name}')" onmouseup="dotgrid.interface.up('${type}','${name}')" onmouseover="dotgrid.interface.over('${type}','${name}')" viewBox="0 0 300 300" class="icon"><path id="${name}_path" class="icon_path" d="${tool[1]}"/>${name == "depth" ? `<path class="icon_path inactive" d=""/>` : ""}<rect ar="${name}" width="300" height="300" opacity="0"><title>${name.capitalize()}${shortcut ? '('+shortcut+')' : ''}</title></rect></svg>`
+      }
+      
     }
     this.menu_el.innerHTML = html
   }
 
-  this.over = function(id)
+  this.over = function(type,name)
   {
-    console.log("over",id)
+    dotgrid.cursor.operation = {}
+    dotgrid.cursor.operation[type] = name;
   }
 
-  this.down = function(id)
+  this.out = function(type,name)
   {
-    console.log("click",id)
+    dotgrid.cursor.operation = ""
+  }
+
+  this.up = function(type,name)
+  {
+    if(!dotgrid.tool[type]){ console.warn(`Unknown option(type): ${type}.${name}`,dotgrid.tool); return; }
+
+    dotgrid.tool[type](name)
+    this.refresh();
   }
 
   this.prev_operation = null;

@@ -210,47 +210,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     }
   }
 
-  // Toggles
-
-  this.mod_thickness = function(mod = 10,step = false,cap = false)
-  {
-    if(cap){
-      this.tool.style().thickness = this.tool.style().thickness > 40 ? 1 : this.tool.style().thickness
-    }
-    if(step){
-      this.tool.style().thickness = parseInt(this.tool.style().thickness/5) * 5;
-    }
-
-    this.tool.style().thickness = clamp(this.tool.style().thickness+mod,1,40);
-    dotgrid.guide.refresh();
-  }
-
-  this.mod_linecap_index = 1;
-
-  this.mod_linecap = function(mod)
-  {
-    var a = ["butt","square","round"];
-    this.mod_linecap_index += 1;
-    this.tool.style().strokeLinecap = a[this.mod_linecap_index % a.length];
-    dotgrid.guide.refresh();
-  }
-
-  this.mod_linejoin_index = 1;
-
-  this.mod_linejoin = function(mod)
-  {
-    var a = ["miter","round","bevel"];
-    this.mod_linejoin_index += 1;
-    this.tool.style().strokeLinejoin = a[this.mod_linejoin_index % a.length];
-    dotgrid.guide.refresh();
-  }
-
-  this.mod_fill = function()
-  {
-    this.tool.style().fill = this.tool.style().fill == "none" ? this.tool.style().color : "none";
-    dotgrid.guide.refresh();
-  }
-
   // Basics
 
   this.set_size = function(size = {width:300,height:300},interface = true,scale = 1)
