@@ -167,18 +167,30 @@ function Tool()
       this.i.linecap += mod;
       this.style().strokeLinecap = a[this.i.linecap % a.length];
     }
-    if(type == "linejoin"){
+    else if(type == "linejoin"){
       var a = ["miter","round","bevel"];
       this.i.linejoin += mod;
       this.style().strokeLinejoin = a[this.i.linejoin % a.length];
     }
-    if(type == "fill"){
+    else if(type == "fill"){
       this.style().fill = this.style().fill == "none" ? this.style().color : "none";
     }
-    if(type == "thickness"){
+    else if(type == "thickness"){
       this.style().thickness = clamp(this.style().thickness+mod,1,40);
     }
+    else if(type == "mirror"){
+      this.style().mirror_style = this.style().mirror_style > 3 ? 0 : this.style().mirror_style+1;
+    }
+    else{
+      console.warn("Unknown",type)
+    }
+    dotgrid.interface.refresh(true);
     dotgrid.guide.refresh();
+  }
+
+  this.misc = function(type)
+  {
+    dotgrid.picker.start();
   }
 
   this.can_append = function(content)
@@ -257,16 +269,6 @@ function Tool()
     dotgrid.history.push(this.layers);
     this.clear();
     dotgrid.guide.refresh();
-  }
-
-  // Toggles
-
-  this.toggle_mirror = function()
-  {
-    this.style().mirror_style = this.style().mirror_style > 3 ? 0 : this.style().mirror_style+1;
-
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh(true);
   }
 
   // Style
