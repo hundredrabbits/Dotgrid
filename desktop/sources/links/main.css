@@ -2,7 +2,7 @@ body { padding: 0px; font-family: 'input_mono_regular'; -webkit-user-select: non
 
 /* Core */
 
-#app { -webkit-app-region: drag; padding: 30px;width:calc(100vw - 60px);height:calc(100vh - 60px)}
+#app { -webkit-app-region: drag; padding: 35px;width:calc(100vw - 60px);height:calc(100vh - 60px)}
 #guide { position: absolute;width: 300px;height: 300px; transition: opacity 150ms; -webkit-app-region: no-drag;}
 #render { display: none }
 #vector { z-index: 1000;position: relative;width:300px; height:300px; }
