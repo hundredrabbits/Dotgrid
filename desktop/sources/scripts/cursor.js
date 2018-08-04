@@ -30,6 +30,8 @@ function Cursor()
     e.preventDefault();
   }
 
+  this.last_pos = {x:0,y:0}
+
   this.move = function(e)
   {
     this.pos = this.pos_from_event(e)
@@ -39,16 +41,21 @@ function Cursor()
       this.translate(null,this.pos)
     }
 
-    dotgrid.guide.refresh();
+    if(this.last_pos.x != this.pos.x || this.last_pos.y != this.pos.y){
+      dotgrid.guide.refresh();
+    }
+
     dotgrid.interface.refresh();
     e.preventDefault();
+
+    this.last_pos = this.pos;
   }
 
   this.up = function(e)
   {
     this.pos = this.pos_from_event(e)
 
-    if(e.altKey){ dotgrid.tool.remove_segments_at(this.pos); return; }
+    if(e.altKey){ dotgrid.tool.remove_segments_at(this.pos); this.translate(); return; }
 
     // Translation
     if(this.translation){

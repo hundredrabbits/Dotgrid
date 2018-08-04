@@ -176,7 +176,7 @@ function Tool()
       this.style().fill = this.style().fill == "none" ? this.style().color : "none";
     }
     else if(type == "thickness"){
-      this.style().thickness = clamp(this.style().thickness+mod,1,40);
+      this.style().thickness = clamp(this.style().thickness+mod,1,100);
     }
     else if(type == "mirror"){
       this.style().mirror_style = this.style().mirror_style > 3 ? 0 : this.style().mirror_style+1;

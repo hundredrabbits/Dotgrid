@@ -15,9 +15,10 @@ function Guide()
     this.clear();
     this.refresh();
   }
-  
-  this.refresh = function()
+
+  this.refresh = function(force = false)
   {
+
     this.clear();
   
     if(dotgrid.tool.index == 2){ this.draw_markers() ; this.draw_vertices() }
@@ -89,6 +90,7 @@ function Guide()
         var color = is_step ? dotgrid.theme.active.f_med : dotgrid.theme.active.f_low;
         if((y == 0 || y == dotgrid.grid_y) && cursor.x == x+1){ color = dotgrid.theme.active.f_high; }
         else if((x == 0 || x == dotgrid.grid_x-1) && cursor.y == y+1){ color = dotgrid.theme.active.f_high; }
+        else if(cursor.x == x+1 && cursor.y == y+1){ color = dotgrid.theme.active.f_high; }
 
         this.draw_marker({
           x:parseInt(x * dotgrid.grid_width) + dotgrid.grid_width,
@@ -96,6 +98,17 @@ function Guide()
         },is_step ? 2.5 : 1.5,color);
       }
     }
+  }
+
+  this.draw_marker = function(pos,radius = 1,color)
+  {
+    var ctx = this.el.getContext('2d');
+    ctx.beginPath();
+    ctx.lineWidth = 2;
+    ctx.arc(pos.x * this.scale, pos.y * this.scale, radius, 0, 2 * Math.PI, false);
+    ctx.fillStyle = color;
+    ctx.fill();
+    ctx.closePath();
   }
 
   this.draw_vertex = function(pos, radius = 5)
@@ -132,17 +145,6 @@ function Guide()
     ctx.beginPath();
     ctx.arc((pos.x * this.scale), (pos.y * this.scale), radius-3, 0, 2 * Math.PI, false);
     ctx.fillStyle = dotgrid.theme.active.f_high;
-    ctx.fill();
-    ctx.closePath();
-  }
-
-  this.draw_marker = function(pos,radius = 1,color)
-  {
-    var ctx = this.el.getContext('2d');
-    ctx.beginPath();
-    ctx.lineWidth = 2;
-    ctx.arc(pos.x * this.scale, pos.y * this.scale, radius, 0, 2 * Math.PI, false);
-    ctx.fillStyle = color;
     ctx.fill();
     ctx.closePath();
   }
@@ -193,9 +195,9 @@ function Guide()
     ctx.beginPath();
     ctx.lineWidth = 3;
     ctx.lineCap = "round";
-    ctx.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), 3, 0, 2 * Math.PI, false);
-    ctx.fillStyle = dotgrid.theme.active.f_low;
-    ctx.fill(); 
+    ctx.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), 5, 0, 2 * Math.PI, false);
+    ctx.strokeStyle = dotgrid.theme.active.background;
+    ctx.stroke(); 
     ctx.closePath(); 
 
     ctx.beginPath();
