@@ -133,6 +133,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.save = function(content = this.tool.export())
   {
+    if(dotgrid.tool.length() < 1){ console.log("Nothing to save"); return; }
+
     dialog.showSaveDialog({
       title:"Save to .grid",
       filters: [{name: "Dotgrid", extensions: ["grid", "dot"]}]
@@ -147,6 +149,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.render = function(content = this.renderer.to_png({width:dotgrid.tool.settings.size.width*2,height:dotgrid.tool.settings.size.height*2}), ready = null, size = null)
   {
     if(!ready){return; }
+    if(dotgrid.tool.length() < 1){ console.log("Nothing to render"); return; }
 
     dialog.showSaveDialog({title:"Render to .png"},(fileName) => {
       if (fileName === undefined){ return; }
@@ -158,6 +161,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.export = function(content = this.renderer.to_svg())
   {
+    if(dotgrid.tool.length() < 1){ console.log("Nothing to export"); return; }
+
     dialog.showSaveDialog({title:"Export to .svg"},(fileName) => {
       if (fileName === undefined){ return; }
       fileName = fileName.substr(-4,4) != ".svg" ? fileName+".svg" : fileName;

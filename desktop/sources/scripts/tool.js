@@ -46,6 +46,11 @@ function Tool()
     dotgrid.interface.refresh(true);
   }
 
+  this.length = function()
+  {
+    return this.layers[0].length + this.layers[1].length + this.layers[2].length
+  }
+
   // I/O
 
   this.export = function(target = {settings:this.settings,layers:this.layers,styles:this.styles})
@@ -193,6 +198,17 @@ function Tool()
     dotgrid.picker.start();
   }
 
+  this.source = function(type)
+  {
+    if(type == "grid"){ dotgrid.guide.toggle(); }
+    if(type == "screen"){ app.toggle_fullscreen(); }
+
+    if(type == "open"){ dotgrid.open(); }
+    if(type == "save"){ dotgrid.save(); }
+    if(type == "render"){ dotgrid.render(); }
+    if(type == "export"){ dotgrid.export(); }
+  }
+
   this.can_append = function(content)
   {
     for(id in this.layer()){
@@ -263,7 +279,7 @@ function Tool()
       var segment = this.layer()[segment_id];
       for(vertex_id in segment.vertices){
         var vertex = segment.vertices[vertex_id];
-        segment.vertices[vertex_id] = {x:vertex.x+offset.x,y:vertex.y-offset.y};
+        segment.vertices[vertex_id] = {x:vertex.x-offset.x,y:vertex.y-offset.y};
       }
     }
     dotgrid.history.push(this.layers);
