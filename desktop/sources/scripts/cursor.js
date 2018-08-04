@@ -57,14 +57,14 @@ function Cursor()
 
     if(e.altKey){ dotgrid.tool.remove_segments_at(this.pos); this.translate(); return; }
 
-    // Translation
-    if(this.translation){
+    if(this.translation && !is_equal(this.translation.from,this.translation.to)){
       if(this.translation.multi){ dotgrid.tool.translate_multi(this.translation.from,this.translation.to); }
       else{ dotgrid.tool.translate(this.translation.from,this.translation.to); }
     }
     else if(e.target.id == "guide"){
       dotgrid.tool.add_vertex({x:this.pos.x,y:this.pos.y});
     }
+
     this.translate();
 
     dotgrid.interface.refresh();
@@ -105,4 +105,6 @@ function Cursor()
       y:clamp(step(pos.y,grid),grid,dotgrid.tool.settings.size.height+grid)
     };
   }
+
+  function is_equal(a,b){ return a.x == b.x && a.y == b.y; }
 }
