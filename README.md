@@ -74,3 +74,4 @@ Hold `shift` to drag entire layer, hold `alt` to delete a vertex.
 - Download additional [themes](https://github.com/hundredrabbits/Themes).
 - Support this project through [Patreon](https://patreon.com/100).
 - See the [License](LICENSE.md) file for license rights and limitations (MIT).
+- Pull Requests are welcome!
