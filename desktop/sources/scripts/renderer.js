@@ -102,7 +102,7 @@ function Renderer()
 
     img.onload = function(){
       ctx.drawImage(img, 0, 0, size.width*2, size.height*2);
-      win.document.write(`<img width='${size.width/2}' height='${size.height/2}' src='${canvas.toDataURL("image/png")}' alt='from canvas'/>`);
+      win.document.write(`<style>body { background:${dotgrid.theme.active.background}}</style><img width='${size.width/2}' height='${size.height/2}' src='${canvas.toDataURL("image/png")}' alt='from canvas'/>`);
     };
     img.src = image64;
   }

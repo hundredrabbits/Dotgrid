@@ -77,7 +77,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     console.info("Web Save");
     var win = window.open("", "Save", `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height-200},left=${screen.width-640}`);
-    win.document.body.innerHTML = `<p>Copy this content into a .grid file, and later drag it over this window to load it again.</p><pre>${content}</pre>`;
+    win.document.body.innerHTML = `<style>body { background:${dotgrid.theme.active.background}; color:${dotgrid.theme.active.f_med}} pre { color:${dotgrid.theme.active.f_high} }</style><p>To save: Copy this into a .grid file.<br />To load: Drag the .grid onto the browser window.</p><pre>${content}</pre>`;
   }
 
   this.render = function(content = this.renderer.to_png({width:dotgrid.tool.settings.size.width*2,height:dotgrid.tool.settings.size.height*2}), ready = null, size = null)
@@ -97,9 +97,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.render_web = function(content,window)
   {
-    console.info("Web Render");
-
     // Handled in Renderer
+    console.info("Web Render");
   }
 
   this.export = function(content = this.renderer.to_svg())
@@ -120,7 +119,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     console.info("Web Export");
     var win = window.open("", "Save", `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height-200},left=${screen.width-640}`);
-    win.document.body.innerHTML = `${dotgrid.renderer.to_svg()}`;
+    win.document.body.innerHTML = `<style>body { background:${dotgrid.theme.active.background}}</style>${dotgrid.renderer.to_svg()}`;
   }
 
   // Basics
