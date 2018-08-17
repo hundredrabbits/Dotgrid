@@ -38,7 +38,7 @@ function Interface()
         render: { key:"", icon:"M155,65 A90,90 0 0,1 245,155 A90,90 0 0,1 155,245 A90,90 0 0,1 65,155 A90,90 0 0,1 155,65 M110,155 L110,155 L200,155 "},
         export: { key:"", icon:"M155,65 A90,90 0 0,1 245,155 A90,90 0 0,1 155,245 A90,90 0 0,1 65,155 A90,90 0 0,1 155,65 M110,140 L110,140 L200,140 M110,170 L110,170 L200,170"},
         save: { key:"", icon:"M155,65 A90,90 0 0,1 245,155 A90,90 0 0,1 155,245 A90,90 0 0,1 65,155 A90,90 0 0,1 155,65 M110,155 L110,155 L200,155 M110,185 L110,185 L200,185 M110,125 L110,125 L200,125"},
-        grid: { key:"H", icon:"M95,95 L95,95 L95,95 M125,95 L125,95 L125,95 M155,95 L155,95 L155,95 M185,95 L185,95 L185,95 M215,95 L215,95 L215,95 M95,125 L95,125 L95,125 M125,125 L125,125 L125,125 M155,125 L155,125 L155,125 M185,125 L185,125 L185,125 M215,125 L215,125 L215,125 M95,155 L95,155 L95,155 M125,155 L125,155 L125,155 M155,155 L155,155 L155,155 M185,155 L185,155 L185,155 M215,155 L215,155 L215,155 M95,185 L95,185 L95,185 M125,185 L125,185 L125,185 M155,185 L155,185 L155,185 M185,185 L185,185 L185,185 M215,185 L215,185 L215,185 M95,215 L95,215 L95,215 M125,215 L125,215 L125,215 M155,215 L155,215 L155,215 M185,215 L185,215 L185,215 M215,215 L215,215 L215,215 "},
+        grid: { key:"H", icon:"M80,80 L80,80 L80,80 M230,80 L230,80 L230,80 M80,230 L80,230 L80,230 M230,230 L230,230 L230,230 M155,80 L155,80 L155,80 M155,230 L155,230 L155,230 M80,155 L80,155 L80,155 M230,155 L230,155 L230,155 M155,155 L155,155 L155,155  "},
       }      
     }
 
@@ -121,7 +121,7 @@ function Interface()
     document.getElementById("option_export").className.baseVal = sum_segments < 1 ? "icon inactive source" : "icon source";
     document.getElementById("option_render").className.baseVal = sum_segments < 1 ? "icon inactive source" : "icon source";
 
-    document.getElementById("option_grid").className.baseVal = !dotgrid.guide.show_extras ? "icon inactive source" : "icon source";
+    document.getElementById("option_grid").className.baseVal = dotgrid.guide.show_extras ? "icon inactive source" : "icon source";
     
     // Mirror
     if(dotgrid.tool.style().mirror_style == 0){ document.getElementById("mirror_path").setAttribute("d","M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210") }

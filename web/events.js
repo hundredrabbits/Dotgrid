@@ -11,8 +11,8 @@ document.onkeyup = (e) =>
   if(ch == "2"){ dotgrid.tool.select_layer(1); e.preventDefault(); }
   if(ch == "3"){ dotgrid.tool.select_layer(2); e.preventDefault(); }
 
-  if(ch == "u"){ dotgrid.interface.toggle(); e.preventDefault(); }
   if(ch == "h"){ dotgrid.guide.toggle(); e.preventDefault(); }
+  if(ch == "?"){ dotgrid.reset(); dotgrid.theme.reset(); e.preventDefault(); }
 
   if(ch == "a"){ dotgrid.tool.cast("line"); e.preventDefault(); }
   if(ch == "s"){ dotgrid.tool.cast("arc_c"); e.preventDefault(); }

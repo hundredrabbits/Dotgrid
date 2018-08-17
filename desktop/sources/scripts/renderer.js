@@ -82,8 +82,6 @@ function Renderer()
 
   this.to_png_web = function(size)
   {
-    console.log('Making!');
-
     this.refresh();
 
     var xml = new XMLSerializer().serializeToString(this.svg_el);
