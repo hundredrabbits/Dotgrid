@@ -9,7 +9,10 @@ function Picker()
   {
     this.el.setAttribute("placeholder",`${dotgrid.tool.style().color}`)
 
-    dotgrid.controller.set("picker");
+    try{ dotgrid.controller.set("picker"); }
+    catch(err){ console.log("No controller"); }
+
+
     dotgrid.interface.el.className = "picker"
     this.el.focus()
     this.original = dotgrid.tool.style().color
@@ -19,7 +22,10 @@ function Picker()
   this.stop = function()
   {
     this.cancel();
-    dotgrid.controller.set();
+
+    try{ dotgrid.controller.set(); }
+    catch(err){ console.log("No controller"); }
+
     dotgrid.interface.el.className = ""
     this.el.blur()
     this.el.value = ""
@@ -33,7 +39,10 @@ function Picker()
     if(parts.size){ this.set_size(parts.size); }
 
     dotgrid.guide.refresh();
-    dotgrid.controller.set();
+    
+    try{ dotgrid.controller.set(); }
+    catch(err){ console.log("No controller"); }
+
     dotgrid.interface.el.className = ""
     this.el.blur()
     this.el.value = ""

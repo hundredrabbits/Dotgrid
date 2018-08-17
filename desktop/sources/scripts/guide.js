@@ -164,12 +164,10 @@ function Guide()
       ctx.fillStyle = style.color
       ctx.fill(p);
     }
-    if(style.strokeLineDash){
-      ctx.setLineDash(style.strokeLineDash);
-    }
-    else{
-      ctx.setLineDash([]);
-    }
+
+    // Dash
+    if(style.strokeLineDash){ ctx.setLineDash(style.strokeLineDash); }
+    else{ ctx.setLineDash([]); }
     ctx.stroke(p);
   }
 
@@ -187,8 +185,10 @@ function Guide()
     ctx.strokeStyle = dotgrid.theme.active.b_inv;
     ctx.setLineDash([5,10]); 
     ctx.stroke();
-    ctx.setLineDash([0,0]); 
     ctx.closePath();
+
+    ctx.setLineDash([]); 
+    ctx.restore();
   }
 
   this.draw_cursor = function(pos = dotgrid.cursor.pos,radius = dotgrid.tool.style().thickness-1)
@@ -214,6 +214,7 @@ function Guide()
 
   this.draw_preview = function()
   {
+    var ctx = this.el.getContext('2d');
     var operation = dotgrid.cursor.operation && dotgrid.cursor.operation.cast ? dotgrid.cursor.operation.cast : null
 
     if(!dotgrid.tool.can_cast(operation)){ return; }
@@ -228,6 +229,9 @@ function Guide()
       strokeLineDash:[5, 15]
     }
     this.draw_path(path,style)
+
+    ctx.setLineDash([]); 
+    ctx.restore();
   }
 
   function pos_is_equal(a,b){ return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }
