@@ -63,21 +63,29 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     if(dotgrid.tool.length() < 1){ console.log("Nothing to save"); return; }
 
-    dialog.showSaveDialog({
-      title:"Save to .grid",
-      filters: [{name: "Dotgrid", extensions: ["grid", "dot"]}]
-    },(fileName) => {
+    if(!dialog){ this.save_web(content); return; }
+
+    dialog.showSaveDialog({title:"Save to .grid",filters: [{name: "Dotgrid", extensions: ["grid", "dot"]}]},(fileName) => {
       if (fileName === undefined){ return; }
       fileName = fileName.substr(-5,5) != ".grid" ? fileName+".grid" : fileName;
       fs.writeFileSync(fileName, content);
-      this.guide.refresh()
+      dotgrid.guide.refresh()
     });
+  }
+
+  this.save_web = function(content)
+  {
+    console.info("Web Save");
+    var win = window.open("", "Save", `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height-200},left=${screen.width-640}`);
+    win.document.body.innerHTML = `<p>Copy this content into a .grid file, and later drag it over this window to load it again.</p><pre>${content}</pre>`;
   }
 
   this.render = function(content = this.renderer.to_png({width:dotgrid.tool.settings.size.width*2,height:dotgrid.tool.settings.size.height*2}), ready = null, size = null)
   {
     if(!ready){return; }
     if(dotgrid.tool.length() < 1){ console.log("Nothing to render"); return; }
+
+    if(!dialog){ dotgrid.render_web(content); return; }
 
     dialog.showSaveDialog({title:"Render to .png"},(fileName) => {
       if (fileName === undefined){ return; }
@@ -87,9 +95,18 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     });
   }
 
+  this.render_web = function(content,window)
+  {
+    console.info("Web Render");
+
+    // Handled in Renderer
+  }
+
   this.export = function(content = this.renderer.to_svg())
   {
     if(dotgrid.tool.length() < 1){ console.log("Nothing to export"); return; }
+
+    if(!dialog){ this.export_web(content); return; }
 
     dialog.showSaveDialog({title:"Export to .svg"},(fileName) => {
       if (fileName === undefined){ return; }
@@ -97,6 +114,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       fs.writeFileSync(fileName, content);
       this.guide.refresh()
     });
+  }
+
+  this.export_web = function(content)
+  {
+    console.info("Web Export");
+    var win = window.open("", "Save", `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height-200},left=${screen.width-640}`);
+    win.document.body.innerHTML = `${dotgrid.renderer.to_svg()}`;
   }
 
   // Basics
@@ -174,6 +198,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     dotgrid.interface.refresh();
     dotgrid.guide.refresh();
+    document.title = `Dotgrid — ${size.width}x${size.height}`
   }
 
   this.drag = function(e)

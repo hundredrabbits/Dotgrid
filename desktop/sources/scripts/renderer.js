@@ -50,6 +50,8 @@ function Renderer()
 
   this.to_png = function(size = dotgrid.tool.settings.size,callback = dotgrid.render)
   {
+    if(!dialog){ return this.to_png_web(size); }
+
     this.refresh();
 
     var xml = new XMLSerializer().serializeToString(this.svg_el);
@@ -76,6 +78,33 @@ function Renderer()
   this.to_png_ready = function(callback, buffer, size)
   {
     callback(null,buffer,size)
+  }
+
+  this.to_png_web = function(size)
+  {
+    console.log('Making!');
+
+    this.refresh();
+
+    var xml = new XMLSerializer().serializeToString(this.svg_el);
+    var svg64 = btoa(xml);
+    var b64Start = 'data:image/svg+xml;base64,';
+    var image64 = b64Start + svg64;
+
+    var canvas = document.createElement("canvas");
+    var ctx = canvas.getContext('2d');
+    
+    var win = window.open('about:blank','image from canvas');
+    var img = new Image;
+
+    canvas.width = size.width*2; 
+    canvas.height = size.height*2;
+
+    img.onload = function(){
+      ctx.drawImage(img, 0, 0, size.width*2, size.height*2);
+      win.document.write(`<img width='${size.width/2}' height='${size.height/2}' src='${canvas.toDataURL("image/png")}' alt='from canvas'/>`);
+    };
+    img.src = image64;
   }
 
   this.to_svg = function()

@@ -1,5 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
 <html>
   <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <script type="text/javascript" src="desktop/sources/scripts/lib/theme.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/lib/history.js"></script>
 
@@ -13,6 +18,8 @@
 
     <script type="text/javascript" src="desktop/sources/scripts/picker.js"></script>
 
+    <script type="text/javascript" src="web/events.js"></script>
+
     <link rel="stylesheet" type="text/css" href="desktop/sources/links/reset.css"/>
     <link rel="stylesheet" type="text/css" href="desktop/sources/links/fonts.css"/>
     <link rel="stylesheet" type="text/css" href="desktop/sources/links/main.css"/>
@@ -20,7 +27,8 @@
   </head>
   <body>
     <div id="app">
-      <script>        
+      <script>
+        var dialog = null;
         dotgrid = new Dotgrid(300,300,20,20,4,4);
         dotgrid.install();
       </script>
