@@ -12,7 +12,6 @@ function Picker()
     try{ dotgrid.controller.set("picker"); }
     catch(err){ console.log("No controller"); }
 
-
     dotgrid.interface.el.className = "picker"
     this.el.focus()
     this.original = dotgrid.tool.style().color
