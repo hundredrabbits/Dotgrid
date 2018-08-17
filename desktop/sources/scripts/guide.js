@@ -8,7 +8,7 @@ function Guide()
   this.el.style.height = "320px";
   this.show_extras = true;
 
-  this.scale = 2; // require('electron').remote.getCurrentWindow().scaleFactor;
+  this.scale = 2;
 
   this.start = function()
   {
@@ -18,9 +18,10 @@ function Guide()
 
   this.refresh = function(force = false)
   {
-
     this.clear();
-  
+    
+    this.el.getContext('2d').restore();
+
     if(dotgrid.tool.index == 2){ this.draw_markers() ; this.draw_vertices() }
     this.draw_path(new Generator(dotgrid.tool.layers[2],dotgrid.tool.styles[2]).toString({x:0,y:0},this.scale),dotgrid.tool.styles[2])
     if(dotgrid.tool.index == 1){ this.draw_markers() ; this.draw_vertices() }
@@ -166,8 +167,10 @@ function Guide()
     if(style.strokeLineDash){
       ctx.setLineDash(style.strokeLineDash);
     }
+    else{
+      ctx.setLineDash([]);
+    }
     ctx.stroke(p);
-    ctx.setLineDash([0,0]); 
   }
 
   this.draw_translation = function()
