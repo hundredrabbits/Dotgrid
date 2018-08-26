@@ -65,7 +65,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     if(!dialog){ this.save_web(content); return; }
 
-    dialog.showSaveDialog({title:"Save to .grid",filters: [{name: "Dotgrid", extensions: ["grid", "dot"]}]},(fileName) => {
+    dialog.showSaveDialog({title:"Save to .grid",filters: [{name: "Dotgrid Format", extensions: ["grid", "dot"]}]},(fileName) => {
       if (fileName === undefined){ return; }
       fileName = fileName.substr(-5,5) != ".grid" ? fileName+".grid" : fileName;
       fs.writeFileSync(fileName, content);
@@ -87,7 +87,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     if(!dialog){ dotgrid.render_web(content); return; }
 
-    dialog.showSaveDialog({title:"Render to .png"},(fileName) => {
+    dialog.showSaveDialog({title:"Save to .png",filters: [{name: "Image Format", extensions: ["png"]}]},(fileName) => {
       if (fileName === undefined){ return; }
       fileName = fileName.substr(-4,4) != ".png" ? fileName+".png" : fileName;
       console.log(`Rendered ${size.width}x${size.height}`)
@@ -107,7 +107,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     if(!dialog){ this.export_web(content); return; }
 
-    dialog.showSaveDialog({title:"Export to .svg"},(fileName) => {
+    dialog.showSaveDialog({title:"Save to .svg",filters: [{name: "Vector Format", extensions: ["svg"]}]},(fileName) => {
       if (fileName === undefined){ return; }
       fileName = fileName.substr(-4,4) != ".svg" ? fileName+".svg" : fileName;
       fs.writeFileSync(fileName, content);
