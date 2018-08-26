@@ -32,7 +32,7 @@ function Picker()
 
   this.validate = function()
   {
-    var parts = this.parse(this.el.value)
+    let parts = this.parse(this.el.value)
 
     if(parts.color){ this.set_color(parts.color); }
     if(parts.size){ this.set_size(parts.size); }
@@ -70,7 +70,7 @@ function Picker()
 
   this.update = function()
   {
-    var parts = this.parse(this.el.value)
+    let parts = this.parse(this.el.value)
     if(!parts.color){ return; }
 
     dotgrid.tool.style().color = parts.color;
@@ -91,12 +91,12 @@ function Picker()
 
   this.parse = function(value)
   {
-    var parts = value.split(" ");
-    var color = null;
-    var size = null;
+    let parts = value.split(" ");
+    let color = null;
+    let size = null;
 
-    for(id in parts){
-      var part = parts[id];
+    for(let id in parts){
+      let part = parts[id];
       if(is_color(part) && !color){ color = part; }
       if(is_size(part) && !size){ size = { width:parseInt(part.toLowerCase().split("x")[0]),height:parseInt(part.toLowerCase().split("x")[1]) }; }
     }
@@ -116,7 +116,7 @@ function Picker()
       return false
     }
 
-    var re = /\#[0-9A-Fa-f]/g;
+    let re = /\#[0-9A-Fa-f]/g;
     return re.test(val)
   }
 

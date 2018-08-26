@@ -48,7 +48,7 @@ function Guide()
 
   this.resize = function(size)
   {
-    var offset = 15
+    let offset = 15
     this.el.width = (size.width+offset)*this.scale;
     this.el.height = (size.height+(offset*2))*this.scale;
     this.el.style.width = (size.width+offset)+"px";
@@ -61,10 +61,10 @@ function Guide()
   {
     if(!this.show_extras){ return; }
 
-    for(segment_id in dotgrid.tool.layer()){
-      var segment = dotgrid.tool.layer()[segment_id];
-      for(vertex_id in segment.vertices){
-        var vertex = segment.vertices[vertex_id];
+    for(let segment_id in dotgrid.tool.layer()){
+      let segment = dotgrid.tool.layer()[segment_id];
+      for(let vertex_id in segment.vertices){
+        let vertex = segment.vertices[vertex_id];
         this.draw_handle(vertex);
       }
     }
@@ -72,7 +72,7 @@ function Guide()
 
   this.draw_vertices = function()
   {
-    for(id in dotgrid.tool.vertices){
+    for(let id in dotgrid.tool.vertices){
       this.draw_vertex(dotgrid.tool.vertices[id]);
     }
   }
@@ -81,14 +81,14 @@ function Guide()
   {
     if(!this.show_extras){ return; }
 
-    var cursor = {x:parseInt(dotgrid.cursor.pos.x/dotgrid.grid_width),y:parseInt(dotgrid.cursor.pos.y/dotgrid.grid_width)}
+    let cursor = {x:parseInt(dotgrid.cursor.pos.x/dotgrid.grid_width),y:parseInt(dotgrid.cursor.pos.y/dotgrid.grid_width)}
 
-    for (var x = dotgrid.grid_x-1; x >= 0; x--) {
-      for (var y = dotgrid.grid_y; y >= 0; y--) {
-        var is_step = x % dotgrid.block_x == 0 && y % dotgrid.block_y == 0;
+    for (let x = dotgrid.grid_x-1; x >= 0; x--) {
+      for (let y = dotgrid.grid_y; y >= 0; y--) {
+        let is_step = x % dotgrid.block_x == 0 && y % dotgrid.block_y == 0;
 
         // Color
-        var color = is_step ? dotgrid.theme.active.f_med : dotgrid.theme.active.f_low;
+        let color = is_step ? dotgrid.theme.active.f_med : dotgrid.theme.active.f_low;
         if((y == 0 || y == dotgrid.grid_y) && cursor.x == x+1){ color = dotgrid.theme.active.f_high; }
         else if((x == 0 || x == dotgrid.grid_x-1) && cursor.y == y+1){ color = dotgrid.theme.active.f_high; }
         else if(cursor.x == x+1 && cursor.y == y+1){ color = dotgrid.theme.active.f_high; }
@@ -103,7 +103,7 @@ function Guide()
 
   this.draw_marker = function(pos,radius = 1,color)
   {
-    var ctx = this.el.getContext('2d');
+    let ctx = this.el.getContext('2d');
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.arc(pos.x * this.scale, pos.y * this.scale, radius, 0, 2 * Math.PI, false);
@@ -114,7 +114,7 @@ function Guide()
 
   this.draw_vertex = function(pos, radius = 5)
   {
-    var ctx = this.el.getContext('2d');
+    let ctx = this.el.getContext('2d');
     ctx.beginPath();
     ctx.lineWidth = 2;
     ctx.arc((pos.x * this.scale), (pos.y * this.scale), radius, 0, 2 * Math.PI, false);
@@ -125,7 +125,7 @@ function Guide()
 
   this.draw_handle = function(pos, radius = 6)
   {
-    var ctx = this.el.getContext('2d');
+    let ctx = this.el.getContext('2d');
 
     ctx.beginPath();
     ctx.lineWidth = 3;
@@ -152,8 +152,8 @@ function Guide()
 
   this.draw_path = function(path,style)
   {
-    var ctx = this.el.getContext('2d');
-    var p = new Path2D(path);
+    let ctx = this.el.getContext('2d');
+    let p = new Path2D(path);
 
     ctx.strokeStyle = style.color;
     ctx.lineWidth = style.thickness * this.scale;
@@ -175,7 +175,7 @@ function Guide()
   {   
     if(!dotgrid.cursor.translation){ return; }
 
-    var ctx = this.el.getContext('2d');
+    let ctx = this.el.getContext('2d');
     
     ctx.beginPath();
     ctx.moveTo((dotgrid.cursor.translation.from.x * this.scale),(dotgrid.cursor.translation.from.y * this.scale));
@@ -193,7 +193,7 @@ function Guide()
 
   this.draw_cursor = function(pos = dotgrid.cursor.pos,radius = dotgrid.tool.style().thickness-1)
   {
-    var ctx = this.el.getContext('2d');
+    let ctx = this.el.getContext('2d');
 
     ctx.beginPath();
     ctx.lineWidth = 3;
@@ -214,14 +214,14 @@ function Guide()
 
   this.draw_preview = function()
   {
-    var ctx = this.el.getContext('2d');
-    var operation = dotgrid.cursor.operation && dotgrid.cursor.operation.cast ? dotgrid.cursor.operation.cast : null
+    let ctx = this.el.getContext('2d');
+    let operation = dotgrid.cursor.operation && dotgrid.cursor.operation.cast ? dotgrid.cursor.operation.cast : null
 
     if(!dotgrid.tool.can_cast(operation)){ return; }
     if(operation == "close"){ return; }
 
-    var path  = new Generator([{vertices:dotgrid.tool.vertices,type:operation}]).toString({x:0,y:0},2)
-    var style = {
+    let path  = new Generator([{vertices:dotgrid.tool.vertices,type:operation}]).toString({x:0,y:0},2)
+    let style = {
       color:dotgrid.theme.active.f_med,
       thickness:2,
       strokeLinecap:"round",

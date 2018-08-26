@@ -23,8 +23,8 @@ function Renderer()
     this.svg_el.style.height = dotgrid.tool.settings.size.height+(10);
     this.svg_el.style.strokeWidth = dotgrid.tool.style().thickness;
 
-    var styles = dotgrid.tool.styles
-    var paths = dotgrid.tool.paths()
+    let styles = dotgrid.tool.styles
+    let paths = dotgrid.tool.paths()
 
     this.layer_1.style.strokeWidth = styles[0].thickness;
     this.layer_1.style.strokeLinecap = styles[0].strokeLinecap;
@@ -54,22 +54,22 @@ function Renderer()
 
     this.refresh();
 
-    var xml = new XMLSerializer().serializeToString(this.svg_el);
-    var svg64 = btoa(xml);
-    var b64Start = 'data:image/svg+xml;base64,';
-    var image64 = b64Start + svg64;
-    var img = new Image;
+    let xml = new XMLSerializer().serializeToString(this.svg_el);
+    let svg64 = btoa(xml);
+    let b64Start = 'data:image/svg+xml;base64,';
+    let image64 = b64Start + svg64;
+    let img = new Image;
 
-    var canvas = document.createElement("canvas");
+    let canvas = document.createElement("canvas");
 
     canvas.width = (size.width)*2; 
     canvas.height = (size.height+30)*2;
 
-    var ctx = canvas.getContext('2d');
+    let ctx = canvas.getContext('2d');
 
     img.onload = function(){
       ctx.drawImage(img, 0, 0, (size.width)*2, (size.height+30)*2);
-      var data = canvas.toDataURL('image/png').replace(/^data:image\/\w+;base64,/, "");
+      let data = canvas.toDataURL('image/png').replace(/^data:image\/\w+;base64,/, "");
       dotgrid.renderer.to_png_ready(callback, new Buffer(data, 'base64'),size)
     };
     img.src = image64;
@@ -84,16 +84,16 @@ function Renderer()
   {
     this.refresh();
 
-    var xml = new XMLSerializer().serializeToString(this.svg_el);
-    var svg64 = btoa(xml);
-    var b64Start = 'data:image/svg+xml;base64,';
-    var image64 = b64Start + svg64;
+    let xml = new XMLSerializer().serializeToString(this.svg_el);
+    let svg64 = btoa(xml);
+    let b64Start = 'data:image/svg+xml;base64,';
+    let image64 = b64Start + svg64;
 
-    var canvas = document.createElement("canvas");
-    var ctx = canvas.getContext('2d');
+    let canvas = document.createElement("canvas");
+    let ctx = canvas.getContext('2d');
     
-    var win = window.open('about:blank','image from canvas');
-    var img = new Image;
+    let win = window.open('about:blank','image from canvas');
+    let img = new Image;
 
     canvas.width = size.width*2; 
     canvas.height = size.height*2;

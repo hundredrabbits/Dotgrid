@@ -1,6 +1,6 @@
 function Theme()
 {
-  var app = this;
+  let app = this;
 
   this.el = document.createElement("style");
   this.el.type = 'text/css';
@@ -17,7 +17,7 @@ function Theme()
 
   this.load = function(t, fall_back)
   {
-    var theme = is_json(t) ? JSON.parse(t).data : t.data;
+    let theme = is_json(t) ? JSON.parse(t).data : t.data;
 
     if(!theme || !theme.background){
       if(fall_back) {
@@ -27,7 +27,7 @@ function Theme()
       }
     }
 
-    var css = `
+    let css = `
     :root {
       --background: ${theme.background};
       --f_high: ${theme.f_high};
@@ -62,11 +62,11 @@ function Theme()
     e.preventDefault();
     e.stopPropagation();
 
-    var file = e.dataTransfer.files[0];
+    let file = e.dataTransfer.files[0];
 
     if(!file.name || !file.name.indexOf(".thm") < 0){ console.log("Theme","Not a theme"); return; }
 
-    var reader = new FileReader();
+    let reader = new FileReader();
     reader.onload = function(e){
       app.load(e.target.result);
     };

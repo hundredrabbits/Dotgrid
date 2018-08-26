@@ -14,8 +14,8 @@ function Interface()
     document.getElementById("app").appendChild(this.el);
     this.el.appendChild(dotgrid.picker.el);
     
-    var html = ""
-    var options = {
+    let html = ""
+    let options = {
       cast:{
         line: { key:"A",icon:"M60,60 L240,240" },
         arc_c: { key:"S",icon:"M60,60 A180,180 0 0,1 240,240" },
@@ -42,10 +42,10 @@ function Interface()
       }      
     }
 
-    for(type in options){
-      var tools = options[type];
-      for(name in tools){
-        var tool = tools[name];
+    for(let type in options){
+      let tools = options[type];
+      for(let name in tools){
+        let tool = tools[name];
         html += `
         <svg 
           id="option_${name}" 
@@ -91,12 +91,12 @@ function Interface()
   {
     if(this.prev_operation == dotgrid.cursor.operation && force == false){ return; }
 
-    var multi_vertices = null;
-    var segments = dotgrid.tool.layer()
-    var sum_segments = dotgrid.tool.length();
+    let multi_vertices = null;
+    let segments = dotgrid.tool.layer()
+    let sum_segments = dotgrid.tool.length();
 
-    for(id in segments){
-      if(segments[id].vertices.length > 2){ multi_vertices = true; break; }
+    for(let i in segments){
+      if(segments[i].vertices.length > 2){ multi_vertices = true; break; }
     }
 
     document.getElementById("option_line").className.baseVal = !dotgrid.tool.can_cast("line") ? "icon inactive" : "icon";

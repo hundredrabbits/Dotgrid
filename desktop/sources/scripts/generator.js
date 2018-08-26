@@ -5,11 +5,11 @@ function Generator(layer,style)
 
   function operate(layer,offset,scale,mirror = 0,angle = 0)
   {
-    var l = copy(layer)
+    let l = copy(layer)
 
-    for(k1 in l){
-      var seg = l[k1];
-      for(k2 in seg.vertices){
+    for(let k1 in l){
+      let seg = l[k1];
+      for(let k2 in seg.vertices){
         if(mirror == 1){ seg.vertices[k2].x = (dotgrid.tool.settings.size.width) - seg.vertices[k2].x + 15 }
         if(mirror == 2){ seg.vertices[k2].y = (dotgrid.tool.settings.size.height) - seg.vertices[k2].y + 30 }
 
@@ -18,7 +18,7 @@ function Generator(layer,style)
         seg.vertices[k2].y += offset.y
 
         // Rotate
-        var center = {x:(dotgrid.tool.settings.size.width/2)+offset.x+(7.5),y:(dotgrid.tool.settings.size.height/2)+offset.y+30}
+        let center = {x:(dotgrid.tool.settings.size.width/2)+offset.x+(7.5),y:(dotgrid.tool.settings.size.height/2)+offset.y+30}
         seg.vertices[k2] = rotate_point(seg.vertices[k2],center,angle)
 
         // Scale
@@ -31,17 +31,17 @@ function Generator(layer,style)
 
   this.render = function(prev,segment,mirror = 0)
   {
-    var type = segment.type;
-    var vertices = segment.vertices;
-    var html = '';
-    var skip = 0;
+    let type = segment.type;
+    let vertices = segment.vertices;
+    let html = '';
+    let skip = 0;
 
-    for(id in vertices){
+    for(let id in vertices){
       if(skip > 0){ skip -= 1; continue; }
       
-      var vertex = vertices[id]
-      var next = vertices[parseInt(id)+1]
-      var after_next = vertices[parseInt(id)+2]
+      let vertex = vertices[id]
+      let next = vertices[parseInt(id)+1]
+      let after_next = vertices[parseInt(id)+2]
 
       if(id == 0 && !prev || id == 0 && prev && (prev.x != vertex.x || prev.y != vertex.y)){
         html += `M${vertex.x},${vertex.y} `  
@@ -51,11 +51,11 @@ function Generator(layer,style)
         html += `L${vertex.x},${vertex.y} `;  
       }
       else if(type == "arc_c"){ 
-        var clock = mirror > 0 ? '0,0' : '0,1'
+        let clock = mirror > 0 ? '0,0' : '0,1'
         html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''; 
       }
       else if(type == "arc_r"){ 
-        var clock = mirror > 0 ? '0,1' : '0,0'
+        let clock = mirror > 0 ? '0,1' : '0,0'
         html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''; 
       }
       else if(type == "bezier"){ 
@@ -76,10 +76,10 @@ function Generator(layer,style)
 
   this.convert = function(layer,mirror,angle)
   {
-    var s = ""
-    var prev = null
-    for(id in layer){
-      var seg = layer[id];
+    let s = ""
+    let prev = null
+    for(let id in layer){
+      let seg = layer[id];
       s += `${this.render(prev,seg,mirror)}`
       prev = seg.vertices ? seg.vertices[seg.vertices.length-1] : null
     }
@@ -89,7 +89,7 @@ function Generator(layer,style)
 
   this.toString = function(offset = {x:0,y:0}, scale = 1, mirror = this.style && this.style.mirror_style ? this.style.mirror_style : 0)
   {
-    var s = this.convert(operate(this.layer,offset,scale))
+    let s = this.convert(operate(this.layer,offset,scale))
 
     if(mirror == 1 || mirror == 2){
       s += this.convert(operate(this.layer,offset,scale,mirror),mirror)

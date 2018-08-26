@@ -1,6 +1,6 @@
 document.onkeyup = (e) =>
 {
-  var ch = e.key.toLowerCase();
+  let ch = e.key.toLowerCase();
 
   if(e.target && e.target.id == "picker"){ return; }
 

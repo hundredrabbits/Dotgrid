@@ -102,10 +102,10 @@ function Tool()
 
   this.remove_segments_at = function(pos)
   {
-    for(segment_id in this.layer()){
-      var segment = this.layer()[segment_id];
-      for(vertex_id in segment.vertices){
-        var vertex = segment.vertices[vertex_id];
+    for(let segment_id in this.layer()){
+      let segment = this.layer()[segment_id];
+      for(let vertex_id in segment.vertices){
+        let vertex = segment.vertices[vertex_id];
         if(Math.abs(pos.x) == Math.abs(vertex.x) && Math.abs(pos.y) == Math.abs(vertex.y)){
           segment.vertices.splice(vertex_id,1)
         }
@@ -128,10 +128,10 @@ function Tool()
 
   this.vertex_at = function(pos)
   {
-    for(segment_id in this.layer()){
-      var segment = this.layer()[segment_id];
-      for(vertex_id in segment.vertices){
-        var vertex = segment.vertices[vertex_id];
+    for(let segment_id in this.layer()){
+      let segment = this.layer()[segment_id];
+      for(let vertex_id in segment.vertices){
+        let vertex = segment.vertices[vertex_id];
         if(vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)){
           return vertex;
         }
@@ -145,7 +145,7 @@ function Tool()
     if(!this.layer()){ this.layers[this.index] = []; }
     if(!this.can_cast(type)){ console.warn("Cannot cast"); return; }
 
-    var append_target = this.can_append({type:type,vertices:this.vertices.slice()})
+    let append_target = this.can_append({type:type,vertices:this.vertices.slice()})
 
     if(append_target){
       this.layers[this.index][append_target].vertices = this.layers[this.index][append_target].vertices.concat(this.vertices.slice())
@@ -168,12 +168,12 @@ function Tool()
   this.toggle = function(type,mod = 1)
   {
     if(type == "linecap"){
-      var a = ["butt","square","round"];
+      let a = ["butt","square","round"];
       this.i.linecap += mod;
       this.style().strokeLinecap = a[this.i.linecap % a.length];
     }
     else if(type == "linejoin"){
-      var a = ["miter","round","bevel"];
+      let a = ["miter","round","bevel"];
       this.i.linejoin += mod;
       this.style().strokeLinejoin = a[this.i.linejoin % a.length];
     }
@@ -211,8 +211,8 @@ function Tool()
 
   this.can_append = function(content)
   {
-    for(id in this.layer()){
-      var stroke = this.layer()[id];
+    for(let id in this.layer()){
+      let stroke = this.layer()[id];
       if(stroke.type != content.type){ continue; }
       if(!stroke.vertices){ continue; }
       if(!stroke.vertices[stroke.vertices.length-1]){ continue; }
@@ -228,7 +228,7 @@ function Tool()
     if(!type){ return false; }
     // Cannot cast close twice
     if(type == "close"){
-      var prev = this.layer()[this.layer().length-1];
+      let prev = this.layer()[this.layer().length-1];
       if(!prev || prev.type == "close"){
         return false;
       }
@@ -243,9 +243,9 @@ function Tool()
 
   this.paths = function()
   {
-    var l1 = new Generator(dotgrid.tool.layers[0],dotgrid.tool.styles[0]).toString({x:-10,y:-10},1)
-    var l2 = new Generator(dotgrid.tool.layers[1],dotgrid.tool.styles[1]).toString({x:-10,y:-10},1)
-    var l3 = new Generator(dotgrid.tool.layers[2],dotgrid.tool.styles[2]).toString({x:-10,y:-10},1)
+    let l1 = new Generator(dotgrid.tool.layers[0],dotgrid.tool.styles[0]).toString({x:-10,y:-10},1)
+    let l2 = new Generator(dotgrid.tool.layers[1],dotgrid.tool.styles[1]).toString({x:-10,y:-10},1)
+    let l3 = new Generator(dotgrid.tool.layers[2],dotgrid.tool.styles[2]).toString({x:-10,y:-10},1)
 
     return [l1,l2,l3]
   }
@@ -257,10 +257,10 @@ function Tool()
 
   this.translate = function(a,b)
   {
-    for(segment_id in this.layer()){
-      var segment = this.layer()[segment_id];
-      for(vertex_id in segment.vertices){
-        var vertex = segment.vertices[vertex_id];
+    for(let segment_id in this.layer()){
+      let segment = this.layer()[segment_id];
+      for(let vertex_id in segment.vertices){
+        let vertex = segment.vertices[vertex_id];
         if(vertex.x == Math.abs(a.x) && vertex.y == Math.abs(a.y)){
           segment.vertices[vertex_id] = {x:Math.abs(b.x),y:Math.abs(b.y)};
         }
@@ -273,12 +273,12 @@ function Tool()
 
   this.translate_multi = function(a,b)
   {
-    var offset = {x:a.x - b.x,y:a.y - b.y}
+    let offset = {x:a.x - b.x,y:a.y - b.y}
 
-    for(segment_id in this.layer()){
-      var segment = this.layer()[segment_id];
-      for(vertex_id in segment.vertices){
-        var vertex = segment.vertices[vertex_id];
+    for(let segment_id in this.layer()){
+      let segment = this.layer()[segment_id];
+      for(let vertex_id in segment.vertices){
+        let vertex = segment.vertices[vertex_id];
         segment.vertices[vertex_id] = {x:vertex.x-offset.x,y:vertex.y-offset.y};
       }
     }
