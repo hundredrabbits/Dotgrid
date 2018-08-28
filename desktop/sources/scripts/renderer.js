@@ -1,3 +1,5 @@
+'use strict';
+
 function Renderer()
 {
   // Create SVG parts

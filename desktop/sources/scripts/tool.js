@@ -1,3 +1,5 @@
+'use strict';
+
 function Tool()
 {
   this.index = 0;

@@ -1,3 +1,5 @@
+'use strict';
+
 function Picker()
 {
   this.memory = "";

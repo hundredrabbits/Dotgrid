@@ -1,3 +1,5 @@
+'use strict';
+
 function Cursor()
 {
   this.pos = {x:0,y:0};

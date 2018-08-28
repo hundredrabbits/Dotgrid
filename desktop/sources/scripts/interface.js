@@ -1,3 +1,5 @@
+'use strict';
+
 function Interface()
 {
   this.el = document.createElement("div");

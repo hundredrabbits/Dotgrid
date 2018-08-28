@@ -1,3 +1,5 @@
+'use strict';
+
 function History()
 {
   this.index = 0;

@@ -1,3 +1,5 @@
+'use strict';
+
 function Controller()
 {
   this.menu = {default:{}};

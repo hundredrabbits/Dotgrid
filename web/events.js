@@ -1,3 +1,5 @@
+'use strict';
+
 document.onkeyup = (e) =>
 {
   let ch = e.key.toLowerCase();

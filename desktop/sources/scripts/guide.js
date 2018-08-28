@@ -1,3 +1,5 @@
+'use strict';
+
 function Guide()
 {
   this.el = document.createElement("canvas");

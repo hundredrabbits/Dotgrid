@@ -1,3 +1,5 @@
+'use strict';
+
 function Generator(layer,style)
 {
   this.layer = layer;
