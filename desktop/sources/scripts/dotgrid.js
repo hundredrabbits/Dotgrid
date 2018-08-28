@@ -54,7 +54,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     let paths = dialog.showOpenDialog({properties: ['openFile'],filters:[{name:"Dotgrid Image",extensions:["dot","grid"]}]});
 
-    if(!paths){ console.log("Nothing to load"); return; }
+    if(!paths){ console.warn("Nothing to load"); return; }
 
     fs.readFile(paths[0], 'utf-8', (err, data) => {
       if(err){ alert("An error ocurred reading the file :" + err.message); return; }
@@ -65,7 +65,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.save = function(content = this.tool.export())
   {
-    if(dotgrid.tool.length() < 1){ console.log("Nothing to save"); return; }
+    if(dotgrid.tool.length() < 1){ console.warn("Nothing to save"); return; }
 
     if(!dialog){ this.save_web(content); return; }
 
@@ -87,7 +87,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.render = function(content = this.renderer.to_png({width:dotgrid.tool.settings.size.width*2,height:dotgrid.tool.settings.size.height*2}), ready = null, size = null)
   {
     if(!ready){return; }
-    if(dotgrid.tool.length() < 1){ console.log("Nothing to render"); return; }
+    if(dotgrid.tool.length() < 1){ console.warn("Nothing to render"); return; }
 
     if(!dialog){ dotgrid.render_web(content); return; }
 
@@ -107,7 +107,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.export = function(content = this.renderer.to_svg())
   {
-    if(dotgrid.tool.length() < 1){ console.log("Nothing to export"); return; }
+    if(dotgrid.tool.length() < 1){ console.warn("Nothing to export"); return; }
 
     if(!dialog){ this.export_web(content); return; }
 

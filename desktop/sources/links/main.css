@@ -25,6 +25,8 @@ body { padding: 0px; font-family: 'input_mono_regular'; -webkit-user-select: non
 #interface.picker #menu { opacity: 0; top:-5px; z-index: 0 }
 #interface.picker #picker { opacity: 1; top:0px; z-index: 900 }
 
+#app.web #interface #menu #option_open { display: none; }
+
 /* Theme Overrides */
 
 :root { --background: "#222"; --f_high: "#fff";--f_med: "#777";--f_low: "#444";--f_inv: "#000";--b_high: "#000";--b_med: "#affec7";--b_low: "#000";--b_inv: "#affec7"; }  

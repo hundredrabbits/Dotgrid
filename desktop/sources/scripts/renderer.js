@@ -84,6 +84,7 @@ function Renderer()
 
   this.to_png_web = function(size)
   {
+    if(dotgrid.tool.length() < 1){ console.warn('Nothing to render'); return; }
     this.refresh();
 
     let xml = new XMLSerializer().serializeToString(this.svg_el);

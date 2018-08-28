@@ -12,7 +12,7 @@ function Picker()
     this.el.setAttribute("placeholder",`${dotgrid.tool.style().color}`)
 
     try{ dotgrid.controller.set("picker"); }
-    catch(err){ console.log("No controller"); }
+    catch(err){ }
 
     dotgrid.interface.el.className = "picker"
     this.el.focus()
@@ -42,7 +42,7 @@ function Picker()
     dotgrid.guide.refresh();
     
     try{ dotgrid.controller.set(); }
-    catch(err){ console.log("No controller"); }
+    catch(err){ }
 
     dotgrid.interface.el.className = ""
     this.el.blur()
@@ -84,6 +84,12 @@ function Picker()
   {
     if(e.key == "Enter"){
       this.validate();
+      e.preventDefault();
+      return;
+    }
+
+    if(e.key == "Escape"){
+      this.stop();
       e.preventDefault();
       return;
     }

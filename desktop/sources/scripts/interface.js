@@ -40,7 +40,7 @@ function Interface()
         render: { key:"", icon:"M155,65 A90,90 0 0,1 245,155 A90,90 0 0,1 155,245 A90,90 0 0,1 65,155 A90,90 0 0,1 155,65 M110,155 L110,155 L200,155 "},
         export: { key:"", icon:"M155,65 A90,90 0 0,1 245,155 A90,90 0 0,1 155,245 A90,90 0 0,1 65,155 A90,90 0 0,1 155,65 M110,140 L110,140 L200,140 M110,170 L110,170 L200,170"},
         save: { key:"", icon:"M155,65 A90,90 0 0,1 245,155 A90,90 0 0,1 155,245 A90,90 0 0,1 65,155 A90,90 0 0,1 155,65 M110,155 L110,155 L200,155 M110,185 L110,185 L200,185 M110,125 L110,125 L200,125"},
-        grid: { key:"H", icon:"M80,80 L80,80 L80,80 M230,80 L230,80 L230,80 M80,230 L80,230 L80,230 M230,230 L230,230 L230,230 M155,80 L155,80 L155,80 M155,230 L155,230 L155,230 M80,155 L80,155 L80,155 M230,155 L230,155 L230,155 M155,155 L155,155 L155,155  "},
+        grid: { key:"H", icon:"M65,155 Q155,245 245,155 M65,155 Q155,65 245,155 M155,125 A30,30 0 0,1 185,155 A30,30 0 0,1 155,185 A30,30 0 0,1 125,155 A30,30 0 0,1 155,125 "},
       }      
     }
 
@@ -54,6 +54,8 @@ function Interface()
           title="${name.capitalize()}" 
           onmouseout="dotgrid.interface.out('${type}','${name}')" 
           onmouseup="dotgrid.interface.up('${type}','${name}')" 
+          onmousedown="dotgrid.interface.down('${type}','${name}')" 
+          onclick="dotgrid.interface.click('${type}','${name}')" 
           onmouseover="dotgrid.interface.over('${type}','${name}')" 
           viewBox="0 0 300 300" 
           class="icon ${type}">
@@ -83,8 +85,23 @@ function Interface()
   {
     if(!dotgrid.tool[type]){ console.warn(`Unknown option(type): ${type}.${name}`,dotgrid.tool); return; }
 
+    this.refresh(true);
+  }
+
+  this.down = function(type,name)
+  {
+    if(!dotgrid.tool[type]){ console.warn(`Unknown option(type): ${type}.${name}`,dotgrid.tool); return; }
+
     dotgrid.tool[type](name)
-    this.refresh();
+    this.refresh(true);
+  }
+
+  this.click = function(type,name)
+  {
+    // if(!dotgrid.tool[type]){ console.warn(`Unknown option(type): ${type}.${name}`,dotgrid.tool); return; }
+
+    // dotgrid.tool[type](name)
+    // this.refresh();
   }
 
   this.prev_operation = null;
@@ -125,6 +142,10 @@ function Interface()
 
     document.getElementById("option_grid").className.baseVal = dotgrid.guide.show_extras ? "icon inactive source" : "icon source";
     
+    // Grid
+    if(dotgrid.guide.show_extras){ document.getElementById("grid_path").setAttribute("d","M65,155 Q155,245 245,155 M65,155 Q155,65 245,155 M155,125 A30,30 0 0,1 185,155 A30,30 0 0,1 155,185 A30,30 0 0,1 125,155 A30,30 0 0,1 155,125 ") }
+    else{ document.getElementById("grid_path").setAttribute("d","M65,155 Q155,245 245,155 M65,155 ") }
+
     // Mirror
     if(dotgrid.tool.style().mirror_style == 0){ document.getElementById("mirror_path").setAttribute("d","M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210") }
     else if(dotgrid.tool.style().mirror_style == 1){ document.getElementById("mirror_path").setAttribute("d","M60,60 L240,240 M180,120 L210,90 M120,180 L90,210") }
