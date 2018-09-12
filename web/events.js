@@ -4,10 +4,10 @@ document.onkeyup = (e) =>
 {
   let ch = e.key.toLowerCase();
 
-  if(e.target && e.target.id == "picker"){ return; }
+  if(e.target && e.target.id == "picker_input"){ return; }
 
   if(ch == "backspace"){ dotgrid.tool.remove_segment(); e.preventDefault(); }
-  if(ch == "escape"){ dotgrid.tool.clear(); e.preventDefault(); }
+  if(ch == "escape"){ dotgrid.tool.clear(); dotgrid.picker.stop(); e.preventDefault(); }
 
   if(ch == "1"){ dotgrid.tool.select_layer(0); e.preventDefault(); }
   if(ch == "2"){ dotgrid.tool.select_layer(1); e.preventDefault(); }

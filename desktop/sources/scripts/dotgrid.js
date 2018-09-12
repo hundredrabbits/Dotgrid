@@ -17,15 +17,18 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.block_x = block_x;
   this.block_y = block_y;
 
-  this.install = function()
-  {
-    document.getElementById("app").appendChild(this.guide.el);
+  // ISU
 
+  this.install = function(host)
+  {
+    host.appendChild(this.guide.el);
+
+    this.interface.install(document.body);
     this.theme.install(document.body,this.update);
   }
 
   this.start = function()
-  {
+  {    
     this.theme.start();
     this.tool.start();
     this.guide.start();
@@ -41,6 +44,15 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     window.addEventListener('drop', dotgrid.drag);
 
     this.new();
+
+    setTimeout(() => { document.body.className += ' ready'; }, 250)
+  }
+
+  this.update = function()
+  {
+    dotgrid.resize();
+    dotgrid.interface.update();
+    dotgrid.guide.update();
   }
 
   // File
@@ -189,10 +201,16 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     dotgrid.interface.update(true);
   }
 
-  this.update = function()
+  this.resize = function()
   {
     let size = {width:step(window.innerWidth-90,15),height:step(window.innerHeight-120,15)}
 
+    if(size.width == dotgrid.tool.settings.size.width && size.height == dotgrid.tool.settings.size.height){
+      return;
+    }
+
+    console.log(`Resized: ${size.width}x${size.height}`)
+    
     dotgrid.tool.settings.size.width = size.width
     dotgrid.tool.settings.size.height = size.height
 
@@ -204,8 +222,6 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     dotgrid.guide.resize(size);
 
-    dotgrid.interface.update();
-    dotgrid.guide.update();
     document.title = `Dotgrid — ${size.width}x${size.height}`
   }
 
@@ -230,7 +246,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     dotgrid.guide.update();
 
-    if(e.target !== this.picker.el){
+    if(e.target !== this.picker.input){
       e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()));
       e.clipboardData.setData('text/plain', dotgrid.tool.path());
       e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
@@ -245,7 +261,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     dotgrid.guide.update();
 
-    if(e.target !== this.picker.el){
+    if(e.target !== this.picker.input){
       e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
       e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
       e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg());

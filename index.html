@@ -26,15 +26,12 @@
     <link rel="stylesheet" type="text/css" href="desktop/sources/links/theme.css"/>
     <title>Dotgrid(Icon)</title>
   </head>
-  <body>
-    <div id="app">
-      <script>
-        let dialog = null;
-        dotgrid = new Dotgrid(300,300,20,20,4,4);
-        dotgrid.install();
-        dotgrid.start();
-        document.getElementById("app").className = "web";
-      </script>
-    </div>
+  <body class='web'>
+    <script>
+      let dialog = null;
+      dotgrid = new Dotgrid(300,300,20,20,4,4);
+      dotgrid.install(document.body);
+      dotgrid.start();
+    </script>
   </body>
 </html>

@@ -25,8 +25,7 @@
     <title>Dotgrid(Icon)</title>
   </head>
   <body>
-    <div id="app">
-      <script>
+    <script>
         const webFrame = require('electron').webFrame
         const {dialog,app} = require('electron').remote;
         const fs = require('fs');
@@ -104,9 +103,8 @@
 
         dotgrid.controller.commit();
 
-        dotgrid.install();
+        dotgrid.install(document.body);
         dotgrid.start();
       </script>
-    </div>
   </body>
 </html>

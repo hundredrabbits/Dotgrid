@@ -3,21 +3,26 @@
 function Picker()
 {
   this.memory = "";
-  this.el = document.createElement("input");
+  this.el = document.createElement("div");
   this.el.id = "picker"
+  this.input = document.createElement("input");
+  this.input.id = "picker_input"
   this.original = null;
+
+  this.el.appendChild(this.input)
 
   this.start = function()
   {
-    this.el.setAttribute("placeholder",`${dotgrid.tool.style().color}`)
+    this.input.setAttribute("placeholder",`${dotgrid.tool.style().color.replace("#","").trim()}`)
+    this.input.setAttribute("maxlength",6)
 
     try{ dotgrid.controller.set("picker"); }
     catch(err){ }
 
     dotgrid.interface.el.className = "picker"
-    this.el.focus()
+    this.input.focus()
     this.original = dotgrid.tool.style().color
-    this.el.value = ""
+    this.input.value = ""
   }
 
   this.stop = function()
@@ -28,27 +33,28 @@ function Picker()
     catch(err){ console.log("No controller"); }
 
     dotgrid.interface.el.className = ""
-    this.el.blur()
-    this.el.value = ""
+    this.input.blur()
+    this.input.value = ""
   }
 
   this.validate = function()
   {
-    let parts = this.parse(this.el.value)
+    if(!is_color(this.input.value)){ return; }
 
-    if(parts.color){ this.set_color(parts.color); }
-    if(parts.size){ this.set_size(parts.size); }
+    let hex = `#${this.input.value}`;
+
+    this.set_color(hex);
 
     dotgrid.guide.update();
     
     try{ dotgrid.controller.set(); }
-    catch(err){ }
+    catch(err){ console.log("No controller"); }
 
     dotgrid.interface.el.className = ""
-    this.el.blur()
-    this.el.value = ""
+    this.input.blur()
+    this.input.value = ""
 
-    setTimeout(() => { dotgrid.interface.update(true); }, 500)
+    setTimeout(() => { dotgrid.interface.update(true); }, 250)
   }
 
   this.set_color = function(color)
@@ -72,12 +78,14 @@ function Picker()
 
   this.update = function()
   {
-    let parts = this.parse(this.el.value)
-    if(!parts.color){ return; }
+    if(!is_color(this.input.value)){ return; }
 
-    dotgrid.tool.style().color = parts.color;
-    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? parts.color : "none";
+    let hex = `#${this.input.value}`;
+
+    dotgrid.tool.style().color = hex;
+    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? hex : "none";
     dotgrid.guide.update();
+    dotgrid.interface.update(true);
   }
 
   this.listen = function(e)
@@ -97,36 +105,15 @@ function Picker()
     this.update();
   }
 
-  this.parse = function(value)
-  {
-    let parts = value.split(" ");
-    let color = null;
-    let size = null;
-
-    for(let id in parts){
-      let part = parts[id];
-      if(is_color(part) && !color){ color = part; }
-      if(is_size(part) && !size){ size = { width:parseInt(part.toLowerCase().split("x")[0]),height:parseInt(part.toLowerCase().split("x")[1]) }; }
-    }
-    return {color:color,size:size}
-  }
-
-  function is_size(val)
-  {
-    if(val.toLowerCase().indexOf("x") < 1){ return false; }
-
-    return true
-  }
-
   function is_color(val)
   {
-    if(val.length != 4 && val.length != 7){
+    if(val.length != 3 && val.length != 6){
       return false
     }
 
-    let re = /\#[0-9A-Fa-f]/g;
+    let re = /[0-9A-Fa-f]/g;
     return re.test(val)
   }
 
-  this.el.onkeyup = function(event){ dotgrid.picker.listen(event); };
+  this.input.onkeyup = function(event){ dotgrid.picker.listen(event); };
 }

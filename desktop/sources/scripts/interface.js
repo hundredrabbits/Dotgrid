@@ -11,11 +11,13 @@ function Interface()
   this.is_visible = true;
   this.zoom = false;
 
-  this.start = function()
+  this.install = function(host)
   {
-    document.getElementById("app").appendChild(this.el);
-    this.el.appendChild(dotgrid.picker.el);
-    
+    host.appendChild(this.el);
+  }
+
+  this.start = function(host)
+  { 
     let html = ""
     let options = {
       cast:{
@@ -55,7 +57,6 @@ function Interface()
           onmouseout="dotgrid.interface.out('${type}','${name}')" 
           onmouseup="dotgrid.interface.up('${type}','${name}')" 
           onmousedown="dotgrid.interface.down('${type}','${name}')" 
-          onclick="dotgrid.interface.click('${type}','${name}')" 
           onmouseover="dotgrid.interface.over('${type}','${name}')" 
           viewBox="0 0 300 300" 
           class="icon ${type}">
@@ -68,6 +69,7 @@ function Interface()
       
     }
     this.menu_el.innerHTML = html
+    this.menu_el.appendChild(dotgrid.picker.el)
   }
 
   this.over = function(type,name)
@@ -94,14 +96,6 @@ function Interface()
 
     dotgrid.tool[type](name)
     this.update(true);
-  }
-
-  this.click = function(type,name)
-  {
-    // if(!dotgrid.tool[type]){ console.warn(`Unknown option(type): ${type}.${name}`,dotgrid.tool); return; }
-
-    // dotgrid.tool[type](name)
-    // this.update();
   }
 
   this.prev_operation = null;
