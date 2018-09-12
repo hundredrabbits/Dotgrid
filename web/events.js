@@ -31,4 +31,6 @@ document.onkeyup = (e) =>
   if(ch == "{"){ dotgrid.tool.toggle("thickness",-1); e.preventDefault(); }
   if(ch == "]"){ dotgrid.tool.toggle("thickness",5); e.preventDefault(); }
   if(ch == "["){ dotgrid.tool.toggle("thickness",-5); e.preventDefault(); }
+  
+  if(ch == "i"){ dotgrid.theme.invert(); e.preventDefault(); }
 }

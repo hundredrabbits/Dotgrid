@@ -2,22 +2,31 @@
 
 function Theme()
 {
-  let app = this;
+  let theme = this;
 
   this.el = document.createElement("style");
   this.el.type = 'text/css';
-  this.default = {meta:{}, data: { background: "#222", f_high: "#fff", f_med: "#777", f_low: "#444", f_inv: "#000", b_high: "#000", b_med: "#affec7", b_low: "#000", b_inv: "#affec7" }}
-  this.active = this.default;
+  this.callback = null;
+
+  this.collection = {
+    noir: {meta:{}, data: { background: "#222", f_high: "#fff", f_med: "#777", f_low: "#444", f_inv: "#000", b_high: "#000", b_med: "#aaa", b_low: "#000", b_inv: "#aaa" }},
+    pale: {meta:{}, data: { background: "#e1e1e1", f_high: "#222", f_med: "#777", f_low: "#aaa", f_inv: "#000", b_high: "#000", b_med: "#aaa", b_low: "#ccc", b_inv: "#fff" }}
+  }
+
+  this.active = this.collection.noir;
+
+  this.install = function(host = document.body,callback)
+  {
+    host.appendChild(this.el)
+    this.callback = callback;
+  }
 
   this.start = function()
   {
-    this.load(localStorage.theme ? localStorage.theme : this.default, this.default);
-    window.addEventListener('dragover',this.drag_enter);
-    window.addEventListener('drop', this.drag);
-    document.head.appendChild(this.el)
+    this.load(localStorage.theme ? localStorage.theme : this.collection.noir, this.collection.noir);
   }
 
-  this.load = function(t, fall_back)
+  this.load = function(t, fall_back = this.collection.noir)
   {
     let theme = is_json(t) ? JSON.parse(t).data : t.data;
 
@@ -43,14 +52,37 @@ function Theme()
     }`;
 
     this.active = theme;
-    this.el.textContent = css;
+    this.el.innerHTML = css;
     localStorage.setItem("theme", JSON.stringify({data: theme}));
+
+    if(this.callback){
+      this.callback();  
+    }
   }
 
   this.reset = function()
   {
-    this.load(this.default);
+    this.load(this.collection.noir);
   }
+
+  // Defaults
+
+  this.pale = function()
+  {
+    this.load(this.collection.pale)
+  }
+
+  this.noir = function()
+  {
+    this.load(this.collection.noir)
+  }
+
+  this.invert = function()
+  {
+    this.load(this.active.background == this.collection.noir.data.background ? this.collection.pale : this.collection.noir)
+  }
+
+  // Drag
 
   this.drag_enter = function(e)
   {
@@ -70,19 +102,13 @@ function Theme()
 
     let reader = new FileReader();
     reader.onload = function(e){
-      app.load(e.target.result);
+      theme.load(e.target.result);
     };
     reader.readAsText(file);
   }
 
-  function is_json(text)
-  {
-    try{
-      JSON.parse(text);
-      return true;
-    }
-    catch (error){
-      return false;
-    }
-  }
+  window.addEventListener('dragover',this.drag_enter);
+  window.addEventListener('drop', this.drag);
+
+  function is_json(text){ try{ JSON.parse(text); return true; } catch (error){ return false; } }
 }

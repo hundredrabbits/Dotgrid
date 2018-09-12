@@ -30,22 +30,22 @@ function Tool()
   this.clear = function()
   {
     this.vertices = [];
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh(true);
+    dotgrid.guide.update();
+    dotgrid.interface.update(true);
   }
 
   this.undo = function()
   {
     this.layers = dotgrid.history.prev();
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh(true);
+    dotgrid.guide.update();
+    dotgrid.interface.update(true);
   }
 
   this.redo = function()
   {
     this.layers = dotgrid.history.next();
-    dotgrid.guide.refresh();    
-    dotgrid.interface.refresh(true);
+    dotgrid.guide.update();    
+    dotgrid.interface.update(true);
   }
 
   this.length = function()
@@ -65,8 +65,8 @@ function Tool()
     this.layers[this.index] = this.layers[this.index].concat(layer)
     dotgrid.history.push(this.layers);
     this.clear();
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh(true);
+    dotgrid.guide.update();
+    dotgrid.interface.update(true);
   }
   
   this.replace = function(dot)
@@ -85,8 +85,8 @@ function Tool()
     this.settings = dot.settings;
 
     this.clear();
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh(true);
+    dotgrid.guide.update();
+    dotgrid.interface.update(true);
     dotgrid.history.push(this.layers);
   }
 
@@ -98,8 +98,8 @@ function Tool()
     
     this.layer().pop();
     this.clear();
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh(true);
+    dotgrid.guide.update();
+    dotgrid.interface.update(true);
   }
 
   this.remove_segments_at = function(pos)
@@ -117,15 +117,15 @@ function Tool()
       }
     }
     this.clear();
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh(true);
+    dotgrid.guide.update();
+    dotgrid.interface.update(true);
   }
 
   this.add_vertex = function(pos)
   {
     pos = {x:Math.abs(pos.x),y:Math.abs(pos.y)}
     this.vertices.push(pos);
-    dotgrid.interface.refresh(true);
+    dotgrid.interface.update(true);
   }
 
   this.vertex_at = function(pos)
@@ -159,8 +159,8 @@ function Tool()
     dotgrid.history.push(this.layers);
 
     this.clear();
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh(true);
+    dotgrid.guide.update();
+    dotgrid.interface.update(true);
 
     console.log(`Casted ${type} -> ${this.layer().length} elements`);
   }
@@ -191,8 +191,8 @@ function Tool()
     else{
       console.warn("Unknown",type)
     }
-    dotgrid.interface.refresh(true);
-    dotgrid.guide.refresh();
+    dotgrid.interface.update(true);
+    dotgrid.guide.update();
   }
 
   this.misc = function(type)
@@ -270,7 +270,7 @@ function Tool()
     }
     dotgrid.history.push(this.layers);
     this.clear();
-    dotgrid.guide.refresh();
+    dotgrid.guide.update();
   }
 
   this.translate_multi = function(a,b)
@@ -286,7 +286,7 @@ function Tool()
     }
     dotgrid.history.push(this.layers);
     this.clear();
-    dotgrid.guide.refresh();
+    dotgrid.guide.update();
   }
 
   // Style
@@ -313,8 +313,8 @@ function Tool()
   {
     this.index = clamp(id,0,2);
     this.clear();
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh(true);
+    dotgrid.guide.update();
+    dotgrid.interface.update(true);
     console.log(`layer:${this.index}`)
   }
 

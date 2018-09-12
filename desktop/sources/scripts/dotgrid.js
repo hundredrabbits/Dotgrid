@@ -21,6 +21,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     document.getElementById("app").appendChild(this.guide.el);
 
+    this.theme.install(document.body,this.update);
+  }
+
+  this.start = function()
+  {
     this.theme.start();
     this.tool.start();
     this.guide.start();
@@ -59,7 +64,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     fs.readFile(paths[0], 'utf-8', (err, data) => {
       if(err){ alert("An error ocurred reading the file :" + err.message); return; }
       this.tool.replace(JSON.parse(data.toString().trim()));
-      this.guide.refresh();
+      this.guide.update();
     });
   }
 
@@ -73,7 +78,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       if (fileName === undefined){ return; }
       fileName = fileName.substr(-5,5) != ".grid" ? fileName+".grid" : fileName;
       fs.writeFileSync(fileName, content);
-      dotgrid.guide.refresh()
+      dotgrid.guide.update()
     });
   }
 
@@ -115,7 +120,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       if (fileName === undefined){ return; }
       fileName = fileName.substr(-4,4) != ".svg" ? fileName+".svg" : fileName;
       fs.writeFileSync(fileName, content);
-      this.guide.refresh()
+      this.guide.update()
     });
   }
 
@@ -151,8 +156,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     dotgrid.guide.resize(size);
 
-    this.interface.refresh();
-    dotgrid.guide.refresh();
+    this.interface.update();
+    dotgrid.guide.update();
   }
 
   this.set_zoom = function(scale)
@@ -172,7 +177,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.reset = function()
   {
     this.tool.clear();
-    this.refresh();
+    this.update();
   }
 
   this.clear = function()
@@ -180,11 +185,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.history.clear();
     this.tool.reset();
     this.reset();
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh(true);
+    dotgrid.guide.update();
+    dotgrid.interface.update(true);
   }
 
-  this.refresh = function()
+  this.update = function()
   {
     let size = {width:step(window.innerWidth-90,15),height:step(window.innerHeight-120,15)}
 
@@ -199,8 +204,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     dotgrid.guide.resize(size);
 
-    dotgrid.interface.refresh();
-    dotgrid.guide.refresh();
+    dotgrid.interface.update();
+    dotgrid.guide.update();
     document.title = `Dotgrid — ${size.width}x${size.height}`
   }
 
@@ -216,14 +221,14 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     let reader = new FileReader();
     reader.onload = function(e){
       dotgrid.tool.replace(JSON.parse(e.target.result.toString().trim()));
-      dotgrid.guide.refresh();
+      dotgrid.guide.update();
     };
     reader.readAsText(file);
   }
 
   this.copy = function(e)
   {
-    dotgrid.guide.refresh();
+    dotgrid.guide.update();
 
     if(e.target !== this.picker.el){
       e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()));
@@ -233,12 +238,12 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       e.preventDefault();
     }
 
-    dotgrid.guide.refresh();
+    dotgrid.guide.update();
   }
 
   this.cut = function(e)
   {
-    dotgrid.guide.refresh();
+    dotgrid.guide.update();
 
     if(e.target !== this.picker.el){
       e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
@@ -248,7 +253,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       e.preventDefault();
     }
 
-    dotgrid.guide.refresh();
+    dotgrid.guide.update();
   }
 
   this.paste = function(e)
@@ -262,13 +267,13 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
       e.preventDefault();
     }
 
-    dotgrid.guide.refresh();
+    dotgrid.guide.update();
   }
 }
 
 window.addEventListener('resize', function(e)
 {
-  dotgrid.refresh();
+  dotgrid.update();
 }, false);
 
 window.addEventListener('dragover',function(e)

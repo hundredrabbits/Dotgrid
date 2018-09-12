@@ -39,7 +39,7 @@ function Picker()
     if(parts.color){ this.set_color(parts.color); }
     if(parts.size){ this.set_size(parts.size); }
 
-    dotgrid.guide.refresh();
+    dotgrid.guide.update();
     
     try{ dotgrid.controller.set(); }
     catch(err){ }
@@ -48,7 +48,7 @@ function Picker()
     this.el.blur()
     this.el.value = ""
 
-    setTimeout(() => { dotgrid.interface.refresh(true); }, 500)
+    setTimeout(() => { dotgrid.interface.update(true); }, 500)
   }
 
   this.set_color = function(color)
@@ -67,7 +67,7 @@ function Picker()
     if(!this.original){ return; }
     dotgrid.tool.style().color = this.original;
     dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? this.original : "none";
-    dotgrid.guide.refresh();
+    dotgrid.guide.update();
   }
 
   this.update = function()
@@ -77,7 +77,7 @@ function Picker()
 
     dotgrid.tool.style().color = parts.color;
     dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? parts.color : "none";
-    dotgrid.guide.refresh();
+    dotgrid.guide.update();
   }
 
   this.listen = function(e)

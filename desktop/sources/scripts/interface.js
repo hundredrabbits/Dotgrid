@@ -85,7 +85,7 @@ function Interface()
   {
     if(!dotgrid.tool[type]){ console.warn(`Unknown option(type): ${type}.${name}`,dotgrid.tool); return; }
 
-    this.refresh(true);
+    this.update(true);
   }
 
   this.down = function(type,name)
@@ -93,7 +93,7 @@ function Interface()
     if(!dotgrid.tool[type]){ console.warn(`Unknown option(type): ${type}.${name}`,dotgrid.tool); return; }
 
     dotgrid.tool[type](name)
-    this.refresh(true);
+    this.update(true);
   }
 
   this.click = function(type,name)
@@ -101,12 +101,12 @@ function Interface()
     // if(!dotgrid.tool[type]){ console.warn(`Unknown option(type): ${type}.${name}`,dotgrid.tool); return; }
 
     // dotgrid.tool[type](name)
-    // this.refresh();
+    // this.update();
   }
 
   this.prev_operation = null;
 
-  this.refresh = function(force = false,id)
+  this.update = function(force = false,id)
   {
     if(this.prev_operation == dotgrid.cursor.operation && force == false){ return; }
 

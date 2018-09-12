@@ -17,7 +17,7 @@ function Renderer()
   this.svg_el.appendChild(this.layer_2);
   this.svg_el.appendChild(this.layer_1);
 
-  this.refresh = function()
+  this.update = function()
   {
     this.svg_el.setAttribute("width",(dotgrid.tool.settings.size.width-(5))+"px");
     this.svg_el.setAttribute("height",(dotgrid.tool.settings.size.height+(10))+"px");
@@ -54,7 +54,7 @@ function Renderer()
   {
     if(!dialog){ return this.to_png_web(size); }
 
-    this.refresh();
+    this.update();
 
     let xml = new XMLSerializer().serializeToString(this.svg_el);
     let svg64 = btoa(xml);
@@ -85,7 +85,7 @@ function Renderer()
   this.to_png_web = function(size)
   {
     if(dotgrid.tool.length() < 1){ console.warn('Nothing to render'); return; }
-    this.refresh();
+    this.update();
 
     let xml = new XMLSerializer().serializeToString(this.svg_el);
     let svg64 = btoa(xml);
@@ -110,7 +110,7 @@ function Renderer()
 
   this.to_svg = function()
   {
-    this.refresh();
+    this.update();
 
     return this.svg_el.outerHTML;
   }

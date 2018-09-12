@@ -27,8 +27,8 @@ function Cursor()
       this.translate(this.pos,this.pos,e.shiftKey)
     }
 
-    dotgrid.guide.refresh();
-    dotgrid.interface.refresh();
+    dotgrid.guide.update();
+    dotgrid.interface.update();
     e.preventDefault();
   }
 
@@ -44,10 +44,10 @@ function Cursor()
     }
 
     if(this.last_pos.x != this.pos.x || this.last_pos.y != this.pos.y){
-      dotgrid.guide.refresh();
+      dotgrid.guide.update();
     }
 
-    dotgrid.interface.refresh();
+    dotgrid.interface.update();
     e.preventDefault();
 
     this.last_pos = this.pos;
@@ -69,8 +69,8 @@ function Cursor()
 
     this.translate();
 
-    dotgrid.interface.refresh();
-    dotgrid.guide.refresh();
+    dotgrid.interface.update();
+    dotgrid.guide.update();
     e.preventDefault();
   }
 

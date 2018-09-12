@@ -15,10 +15,10 @@ function Guide()
   this.start = function()
   {
     this.clear();
-    this.refresh();
+    this.update();
   }
 
-  this.refresh = function(force = false)
+  this.update = function(force = false)
   {
     this.clear();
     
@@ -45,7 +45,7 @@ function Guide()
   this.toggle = function()
   {
     this.show_extras = this.show_extras ? false : true;
-    this.refresh()
+    this.update()
   }
 
   this.resize = function(size)
@@ -56,7 +56,7 @@ function Guide()
     this.el.style.width = (size.width+offset)+"px";
     this.el.style.height = (size.height+(offset*2))+"px";
 
-    this.refresh();
+    this.update();
   }
 
   this.draw_handles = function()
