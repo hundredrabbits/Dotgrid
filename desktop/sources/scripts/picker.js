@@ -35,6 +35,8 @@ function Picker()
     dotgrid.interface.el.className = ""
     this.input.blur()
     this.input.value = ""
+
+    setTimeout(() => { dotgrid.interface.update(true); }, 250)
   }
 
   this.validate = function()
@@ -71,9 +73,8 @@ function Picker()
   this.cancel = function()
   {
     if(!this.original){ return; }
-    dotgrid.tool.style().color = this.original;
-    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? this.original : "none";
     dotgrid.guide.update();
+    setTimeout(() => { dotgrid.interface.update(true); }, 250)
   }
 
   this.update = function()
@@ -82,10 +83,8 @@ function Picker()
 
     let hex = `#${this.input.value}`;
 
-    dotgrid.tool.style().color = hex;
-    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? hex : "none";
-    dotgrid.guide.update();
-    dotgrid.interface.update(true);
+    document.getElementById("option_color").children[0].style.fill = hex;
+    document.getElementById("option_color").children[0].style.stroke = hex;
   }
 
   this.listen = function(e)
