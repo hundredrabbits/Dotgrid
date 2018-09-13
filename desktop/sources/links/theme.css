@@ -1,6 +1,7 @@
 body { background:var(--background) !important; }
 #picker { background-color:var(--b_inv) !important; color:var(--f_inv) !important; }
 #picker:before { color:var(--f_med) !important; }
+#picker input::placeholder { color:var(--f_med) !important; }
 .fh { color:var(--f_high) !important; stroke:var(--f_high) !important; }
 .fm { color:var(--f_med) !important ; stroke:var(--f_med) !important; }
 .fl { color:var(--f_low) !important ; stroke:var(--f_low) !important; }

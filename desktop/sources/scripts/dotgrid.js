@@ -23,8 +23,8 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     host.appendChild(this.guide.el);
 
-    this.interface.install(document.body);
-    this.theme.install(document.body,this.update);
+    this.interface.install(host);
+    this.theme.install(host,this.update);
   }
 
   this.start = function()
