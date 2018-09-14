@@ -87,8 +87,13 @@ function Picker()
     document.getElementById("option_color").children[0].style.stroke = hex;
   }
 
-  this.listen = function(e)
+  this.listen = function(e,is_down = false)
   {
+    if(is_down && !is_color_char(e.key)){
+      e.preventDefault();
+      return;
+    }
+
     if(e.key == "Enter"){
       this.validate();
       e.preventDefault();
@@ -114,5 +119,12 @@ function Picker()
     return re.test(val)
   }
 
+  function is_color_char(val)
+  {
+    let re = /[0-9A-Fa-f]/g;
+    return re.test(val)
+  }
+
+  this.input.onkeydown = function(event){ dotgrid.picker.listen(event,true); }
   this.input.onkeyup = function(event){ dotgrid.picker.listen(event); };
 }

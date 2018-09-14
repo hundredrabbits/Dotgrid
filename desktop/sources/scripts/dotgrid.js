@@ -232,7 +232,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
     let file = e.dataTransfer.files[0];
 
-    if(!file.path || file.path.indexOf(".dot") < 0 && file.path.indexOf(".grid") < 0){ console.log("Dotgrid","Not a dot file"); return; }
+    if(!file || !file.path || file.path.indexOf(".dot") < 0 && file.path.indexOf(".grid") < 0){ console.warn("Dotgrid","Not a dot file"); return; }
 
     let reader = new FileReader();
     reader.onload = function(e){

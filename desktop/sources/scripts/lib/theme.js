@@ -18,18 +18,21 @@ function Theme(default_theme = {background: "#222", f_high: "#fff", f_med: "#777
 
   this.install = function(host = document.body,callback)
   {
+    console.log("Theme","Installing..")
     host.appendChild(this.el)
     this.callback = callback
   }
 
   this.start = function()
   {
+    console.log("Theme","Starting..")
     let storage = is_json(localStorage.theme) ? JSON.parse(localStorage.theme) : this.collection.default;
     this.load(!storage.background ? this.collection.default : storage)
   }
 
   this.save = function(theme)
   {
+    console.log("Theme","Saving..")
     this.active = theme;
     localStorage.setItem("theme", JSON.stringify(theme));
   }
@@ -133,7 +136,7 @@ function Theme(default_theme = {background: "#222", f_high: "#fff", f_med: "#777
 
     let file = e.dataTransfer.files[0];
 
-    if(!file.name){ console.warn("Theme","Unnamed file."); return; }
+    if(!file || !file.name){ console.warn("Theme","Unnamed file."); return; }
     if(file.name.indexOf(".thm") < 0 && file.name.indexOf(".svg") < 0){ console.warn("Theme","Skipped, not a theme"); return; }
 
     let reader = new FileReader();
