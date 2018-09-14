@@ -1,4 +1,4 @@
-body { padding: 0px; font-family: 'input_mono_regular'; -webkit-user-select: none; overflow: hidden; transition: background 500ms; -webkit-app-region: drag; padding: 35px;width:calc(100vw - 60px);height:calc(100vh - 60px)}
+body { padding: 0px; font-family: 'input_mono_regular'; -webkit-user-select: none; overflow: hidden; transition: background-color 500ms; -webkit-app-region: drag; padding: 35px;width:calc(100vw - 60px);height:calc(100vh - 60px)}
 
 /* Core */
 
