@@ -1,44 +1,62 @@
 'use strict';
 
-function Theme()
+function Theme(default_theme = {background: "#222", f_high: "#fff", f_med: "#777", f_low: "#444", f_inv: "#fff", b_high: "#000", b_med: "#aaa", b_low: "#000", b_inv: "#000"})
 {
-  let theme = this;
+  let themer = this;
 
-  this.el = document.createElement("style");
-  this.el.type = 'text/css';
-  this.callback = null;
+  this.el = document.createElement("style")
+  this.el.type = 'text/css'
+  this.callback;
+  this.active;
 
   this.collection = {
-    noir: {meta:{}, data: { background: "#222", f_high: "#fff", f_med: "#777", f_low: "#444", f_inv: "#fff", b_high: "#000", b_med: "#aaa", b_low: "#000", b_inv: "#000" }},
-    pale: {meta:{}, data: { background: "#e1e1e1", f_high: "#000", f_med: "#777", f_low: "#aaa", f_inv: "#000", b_high: "#000", b_med: "#aaa", b_low: "#ccc", b_inv: "#fff" }}
+    default: default_theme,
+    noir: {background: "#222", f_high: "#fff", f_med: "#777", f_low: "#444", f_inv: "#fff", b_high: "#000", b_med: "#aaa", b_low: "#000", b_inv: "#000" },
+    pale: {background: "#e1e1e1", f_high: "#000", f_med: "#777", f_low: "#aaa", f_inv: "#000", b_high: "#000", b_med: "#aaa", b_low: "#ccc", b_inv: "#fff" }
   }
-
-  this.active = this.collection.noir;
 
   this.install = function(host = document.body,callback)
   {
     host.appendChild(this.el)
-    this.callback = callback;
+    this.callback = callback
   }
 
   this.start = function()
   {
-    this.load(localStorage.theme ? localStorage.theme : this.collection.noir, this.collection.noir);
+    this.restore();
   }
 
-  this.load = function(t, fall_back = this.collection.noir)
+  this.restore = function()
   {
-    let theme = is_json(t) ? JSON.parse(t).data : t.data;
+    let storage = is_json(localStorage.theme) ? JSON.parse(localStorage.theme) : this.collection.default;
 
-    if(!theme || !theme.background){
-      if(fall_back) {
-        theme = fall_back.data;
-      } else {
-        return;
-      }
-    }
+    this.load(!storage.background ? this.collection.default : storage)
+  }
 
-    let css = `
+  this.parse = function(any)
+  {
+    let theme;
+
+    if(any && any.data){ return any; }
+    else if(any && is_json(any)){ return JSON.parse(any); }
+    else if(any && is_html(any)){ return this.extract(any); }
+
+    return null;
+  }
+
+  this.unwrap = function(t)
+  {
+    return t.data ? t.data : t;
+  }
+
+  this.load = function(theme, fall_back = this.collection.noir)
+  {
+    if(!theme || !theme.background){ console.warn("Theme","Not a theme",theme); return; }
+
+    this.active = theme;
+    localStorage.setItem("theme", JSON.stringify(theme));
+
+    this.el.innerHTML = `
     :root {
       --background: ${theme.background};
       --f_high: ${theme.f_high};
@@ -51,10 +69,6 @@ function Theme()
       --b_inv: ${theme.b_inv};
     }`;
 
-    this.active = theme;
-    this.el.innerHTML = css;
-    localStorage.setItem("theme", JSON.stringify({data: theme}));
-
     if(this.callback){
       this.callback();  
     }
@@ -62,10 +76,15 @@ function Theme()
 
   this.reset = function()
   {
-    this.load(this.collection.noir);
+    this.load(this.collection.default);
   }
 
   // Defaults
+
+  this.default = function()
+  {
+    this.load(this.collection.default)
+  }
 
   this.pale = function()
   {
@@ -82,33 +101,61 @@ function Theme()
     this.load(this.active.background == this.collection.noir.data.background ? this.collection.pale : this.collection.noir)
   }
 
+  // Parser
+
+  this.extract = function(text)
+  {
+    let svg = new DOMParser().parseFromString(text,"text/xml")
+    
+    try{
+      return {
+        "background": svg.getElementById("background").getAttribute("fill"),
+        "f_high": svg.getElementById("f_high").getAttribute("fill"),
+        "f_med": svg.getElementById("f_med").getAttribute("fill"),
+        "f_low": svg.getElementById("f_low").getAttribute("fill"),
+        "f_inv": svg.getElementById("f_inv").getAttribute("fill"),
+        "b_high": svg.getElementById("b_high").getAttribute("fill"),
+        "b_med": svg.getElementById("b_med").getAttribute("fill"),
+        "b_low": svg.getElementById("b_low").getAttribute("fill"),
+        "b_inv": svg.getElementById("b_inv").getAttribute("fill")
+      };
+    }
+    catch(err){
+      console.warn("Theme","Incomplete SVG Theme", err)
+    }
+  }
+
   // Drag
 
-  this.drag_enter = function(e)
+  this.drag = function(e)
   {
     e.stopPropagation();
     e.preventDefault();
     e.dataTransfer.dropEffect = 'copy';
   }
 
-  this.drag = function(e)
+  this.drop = function(e)
   {
     e.preventDefault();
     e.stopPropagation();
 
     let file = e.dataTransfer.files[0];
 
-    if(!file.name || !file.name.indexOf(".thm") < 0){ console.log("Theme","Not a theme"); return; }
+    if(!file.name){ console.warn("Theme","Unnamed file."); return; }
+    if(file.name.indexOf(".thm") < 0 && file.name.indexOf(".svg") < 0){ console.warn("Theme","Skipped, not a theme"); return; }
 
     let reader = new FileReader();
     reader.onload = function(e){
-      theme.load(e.target.result);
+      let theme = themer.parse(e.target.result);
+      themer.load(theme);
     };
     reader.readAsText(file);
   }
 
-  window.addEventListener('dragover',this.drag_enter);
-  window.addEventListener('drop', this.drag);
+  window.addEventListener('dragover',this.drag);
+  window.addEventListener('drop', this.drop);
 
   function is_json(text){ try{ JSON.parse(text); return true; } catch (error){ return false; } }
+  function is_html(text){ try{ new DOMParser().parseFromString(text,"text/xml"); return true; } catch (error){ return false; } }
+  function is_embed(text){ return text.indexOf("<!-- THEME") > -1 && text.indexOf("-->") > -1; }
 }
