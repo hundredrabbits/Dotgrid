@@ -52,12 +52,13 @@
         dotgrid.controller.add("default","Stroke","Arc Rev",() => { dotgrid.tool.cast("arc_r")},"D"); // 0,0
         dotgrid.controller.add("default","Stroke","Bezier",() => { dotgrid.tool.cast("bezier") },"F");
         dotgrid.controller.add("default","Stroke","Close",() => { dotgrid.tool.cast("close") },"Z");
+        dotgrid.controller.add("default","Stroke","Undo",() => { dotgrid.tool.undo() },"CmdOrCtrl+Z");
+        dotgrid.controller.add("default","Stroke","Redo",() => { dotgrid.tool.redo() },"CmdOrCtrl+Shift+Z");
 
         dotgrid.controller.add("default","Effect","Linecap",() => { dotgrid.tool.toggle("linecap"); },"Q");
         dotgrid.controller.add("default","Effect","Linejoin",() => { dotgrid.tool.toggle("linejoin"); },"W");
         dotgrid.controller.add("default","Effect","Mirror",() => { dotgrid.tool.toggle("mirror"); },"E");
         dotgrid.controller.add("default","Effect","Fill",() => { dotgrid.tool.toggle("fill"); },"R");
-        dotgrid.controller.add("default","Effect","Color",() => { dotgrid.picker.start(); },"G");
         dotgrid.controller.add("default","Effect","Thicker",() => { dotgrid.tool.toggle("thickness",1) },"}");
         dotgrid.controller.add("default","Effect","Thinner",() => { dotgrid.tool.toggle("thickness",-1) },"{");
         dotgrid.controller.add("default","Effect","Thicker +5",() => { dotgrid.tool.toggle("thickness",5) },"]");
@@ -75,8 +76,8 @@
         dotgrid.controller.add("default","Layers","Middleground",() => { dotgrid.tool.select_layer(1) },"CmdOrCtrl+2");
         dotgrid.controller.add("default","Layers","Background",() => { dotgrid.tool.select_layer(2) },"CmdOrCtrl+3");
 
-        dotgrid.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },"U");
-        dotgrid.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
+        dotgrid.controller.add("default","View","Color Picker",() => { dotgrid.picker.start(); },"G");
+        dotgrid.controller.add("default","View","Toggle Grid",() => { dotgrid.guide.toggle(); },"H");
 
         dotgrid.controller.add("default","Theme","Noir",() => { dotgrid.theme.noir(); },"CmdOrCtrl+Shift+1");
         dotgrid.controller.add("default","Theme","Pale",() => { dotgrid.theme.pale(); },"CmdOrCtrl+Shift+2");
