@@ -14,7 +14,7 @@ npm start
 
 ## Extras
 
-- Download additional [themes](https://github.com/hundredrabbits/Themes).
+- This application supports the [Ecosystem Theme](https://github.com/hundredrabbits/Themes).
 - Support this project through [Patreon](https://patreon.com/100).
 - See the [License](LICENSE.md) file for license rights and limitations (MIT).
 - Pull Requests are welcome!

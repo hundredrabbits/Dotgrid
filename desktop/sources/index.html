@@ -78,9 +78,8 @@
         dotgrid.controller.add("default","View","Tools",() => { dotgrid.interface.toggle(); },"U");
         dotgrid.controller.add("default","View","Grid",() => { dotgrid.guide.toggle(); },"H");
 
-        dotgrid.controller.add("default","Theme","Default",() => { dotgrid.theme.default(); },"CmdOrCtrl+Shift+1");
-        dotgrid.controller.add("default","Theme","Noir",() => { dotgrid.theme.noir(); },"CmdOrCtrl+Shift+2");
-        dotgrid.controller.add("default","Theme","Pale",() => { dotgrid.theme.pale(); },"CmdOrCtrl+Shift+3");
+        dotgrid.controller.add("default","Theme","Noir",() => { dotgrid.theme.noir(); },"CmdOrCtrl+Shift+1");
+        dotgrid.controller.add("default","Theme","Pale",() => { dotgrid.theme.pale(); },"CmdOrCtrl+Shift+2");
         dotgrid.controller.add("default","Theme","Invert",() => { dotgrid.theme.invert(); },"CmdOrCtrl+Shift+I");
         dotgrid.controller.add("default","Theme","Install",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Themes'); });
 

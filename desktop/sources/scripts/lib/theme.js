@@ -6,6 +6,7 @@ function Theme(default_theme = {background: "#222", f_high: "#fff", f_med: "#777
 
   this.el = document.createElement("style")
   this.el.type = 'text/css'
+
   this.callback;
   this.active;
 
@@ -23,39 +24,30 @@ function Theme(default_theme = {background: "#222", f_high: "#fff", f_med: "#777
 
   this.start = function()
   {
-    this.restore();
-  }
-
-  this.restore = function()
-  {
     let storage = is_json(localStorage.theme) ? JSON.parse(localStorage.theme) : this.collection.default;
-
     this.load(!storage.background ? this.collection.default : storage)
   }
 
-  this.parse = function(any)
+  this.save = function(theme)
   {
-    let theme;
-
-    if(any && any.data){ return any; }
-    else if(any && is_json(any)){ return JSON.parse(any); }
-    else if(any && is_html(any)){ return this.extract(any); }
-
-    return null;
-  }
-
-  this.unwrap = function(t)
-  {
-    return t.data ? t.data : t;
+    this.active = theme;
+    localStorage.setItem("theme", JSON.stringify(theme));
   }
 
   this.load = function(theme, fall_back = this.collection.noir)
   {
     if(!theme || !theme.background){ console.warn("Theme","Not a theme",theme); return; }
 
-    this.active = theme;
-    localStorage.setItem("theme", JSON.stringify(theme));
+    this.save(theme);
+    this.apply(theme);
 
+    if(this.callback){
+      this.callback();  
+    }
+  }
+
+  this.apply = function(theme)
+  {
     this.el.innerHTML = `
     :root {
       --background: ${theme.background};
@@ -68,40 +60,18 @@ function Theme(default_theme = {background: "#222", f_high: "#fff", f_med: "#777
       --b_low: ${theme.b_low};
       --b_inv: ${theme.b_inv};
     }`;
-
-    if(this.callback){
-      this.callback();  
-    }
   }
 
-  this.reset = function()
+  this.parse = function(any)
   {
-    this.load(this.collection.default);
+    let theme;
+
+    if(any && any.data){ return any; }
+    else if(any && is_json(any)){ return JSON.parse(any); }
+    else if(any && is_html(any)){ return this.extract(any); }
+
+    return null;
   }
-
-  // Defaults
-
-  this.default = function()
-  {
-    this.load(this.collection.default)
-  }
-
-  this.pale = function()
-  {
-    this.load(this.collection.pale)
-  }
-
-  this.noir = function()
-  {
-    this.load(this.collection.noir)
-  }
-
-  this.invert = function()
-  {
-    this.load(this.active.background == this.collection.noir.data.background ? this.collection.pale : this.collection.noir)
-  }
-
-  // Parser
 
   this.extract = function(text)
   {
@@ -125,6 +95,28 @@ function Theme(default_theme = {background: "#222", f_high: "#fff", f_med: "#777
     }
   }
 
+  this.reset = function()
+  {
+    this.load(this.collection.default);
+  }
+
+  // Defaults
+
+  this.pale = function()
+  {
+    this.load(this.collection.pale)
+  }
+
+  this.noir = function()
+  {
+    this.load(this.collection.noir)
+  }
+
+  this.invert = function()
+  {
+    this.load(this.active.background == this.collection.noir.data.background ? this.collection.pale : this.collection.noir)
+  }
+
   // Drag
 
   this.drag = function(e)
@@ -146,8 +138,7 @@ function Theme(default_theme = {background: "#222", f_high: "#fff", f_med: "#777
 
     let reader = new FileReader();
     reader.onload = function(e){
-      let theme = themer.parse(e.target.result);
-      themer.load(theme);
+      themer.load(themer.parse(e.target.result));
     };
     reader.readAsText(file);
   }
@@ -157,5 +148,4 @@ function Theme(default_theme = {background: "#222", f_high: "#fff", f_med: "#777
 
   function is_json(text){ try{ JSON.parse(text); return true; } catch (error){ return false; } }
   function is_html(text){ try{ new DOMParser().parseFromString(text,"text/xml"); return true; } catch (error){ return false; } }
-  function is_embed(text){ return text.indexOf("<!-- THEME") > -1 && text.indexOf("-->") > -1; }
 }
