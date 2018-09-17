@@ -5,38 +5,54 @@ function Picker()
   this.memory = "";
   this.el = document.createElement("div");
   this.el.id = "picker"
+  this.is_active = false;
   this.input = document.createElement("input");
   this.input.id = "picker_input"
-  this.original = null;
 
   this.el.appendChild(this.input)
 
   this.start = function()
   {
+    if(this.is_active){ return; }
+
+    this.is_active = true;
+
     this.input.setAttribute("placeholder",`${dotgrid.tool.style().color.replace("#","").trim()}`)
     this.input.setAttribute("maxlength",6)
 
-    try{ dotgrid.controller.set("picker"); }
-    catch(err){ }
-
     dotgrid.interface.el.className = "picker"
     this.input.focus()
-    this.original = dotgrid.tool.style().color
     this.input.value = ""
+
+    try{ dotgrid.controller.set("picker"); }
+    catch(err){ }
+  }
+
+  this.update = function()
+  {
+    if(!this.is_active){ return; }
+    if(!is_color(this.input.value)){ return; }
+
+    let hex = `#${this.input.value}`;
+
+    document.getElementById("option_color").children[0].style.fill = hex;
+    document.getElementById("option_color").children[0].style.stroke = hex;
   }
 
   this.stop = function()
   {
-    this.cancel();
+    if(!this.is_active){ return; }
 
-    try{ dotgrid.controller.set(); }
-    catch(err){ console.log("No controller"); }
-
+    this.is_active = false;
+  
     dotgrid.interface.el.className = ""
     this.input.blur()
     this.input.value = ""
 
-    setTimeout(() => { dotgrid.interface.update(true); }, 250)
+    try{ dotgrid.controller.set(); }
+    catch(err){ console.log("No controller"); }
+
+    setTimeout(() => { dotgrid.interface.update(true); dotgrid.guide.update(); }, 250)
   }
 
   this.validate = function()
@@ -45,46 +61,10 @@ function Picker()
 
     let hex = `#${this.input.value}`;
 
-    this.set_color(hex);
-
-    dotgrid.guide.update();
-    
-    try{ dotgrid.controller.set(); }
-    catch(err){ console.log("No controller"); }
-
-    dotgrid.interface.el.className = ""
-    this.input.blur()
-    this.input.value = ""
-
-    setTimeout(() => { dotgrid.interface.update(true); }, 250)
-  }
-
-  this.set_color = function(color)
-  {
     dotgrid.tool.style().color = color;
     dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? color : "none";
-  }
 
-  this.set_size = function(size)
-  {
-    dotgrid.set_size(size);
-  }
-
-  this.cancel = function()
-  {
-    if(!this.original){ return; }
-    dotgrid.guide.update();
-    setTimeout(() => { dotgrid.interface.update(true); }, 250)
-  }
-
-  this.update = function()
-  {
-    if(!is_color(this.input.value)){ return; }
-
-    let hex = `#${this.input.value}`;
-
-    document.getElementById("option_color").children[0].style.fill = hex;
-    document.getElementById("option_color").children[0].style.stroke = hex;
+    this.stop();
   }
 
   this.listen = function(e,is_down = false)

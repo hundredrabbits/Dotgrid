@@ -20,7 +20,7 @@ function Cursor()
 
   this.down = function(e)
   {
-    this.pos = this.pos_from_event(e)
+    this.pos = this.pos_from_event(e);
 
     // Translation
     if(dotgrid.tool.vertex_at(this.pos)){
@@ -65,6 +65,7 @@ function Cursor()
     }
     else if(e.target.id == "guide"){
       dotgrid.tool.add_vertex({x:this.pos.x,y:this.pos.y});
+      dotgrid.picker.stop();
     }
 
     this.translate();

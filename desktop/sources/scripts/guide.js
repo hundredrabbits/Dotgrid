@@ -183,7 +183,7 @@ function Guide()
     ctx.lineTo((dotgrid.cursor.translation.to.x * this.scale),(dotgrid.cursor.translation.to.y * this.scale));
     ctx.lineCap="round";
     ctx.lineWidth = 5;
-    ctx.strokeStyle = dotgrid.theme.active.b_inv;
+    ctx.strokeStyle = dotgrid.theme.active.f_low;
     ctx.setLineDash([5,10]); 
     ctx.stroke();
     ctx.closePath();
