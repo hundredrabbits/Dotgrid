@@ -61,8 +61,8 @@ function Picker()
 
     let hex = `#${this.input.value}`;
 
-    dotgrid.tool.style().color = color;
-    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? color : "none";
+    dotgrid.tool.style().color = hex;
+    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? hex : "none";
 
     this.stop();
   }
