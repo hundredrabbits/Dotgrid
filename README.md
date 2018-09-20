@@ -4,6 +4,10 @@
 
 <img src='https://raw.githubusercontent.com/hundredrabbits/Dotgrid/master/PREVIEW.jpg' width="600"/>
 
+## Guide
+
+View the [guide](https://100r.co/blog.html#dotgrid)
+
 ## Install
 
 ```
