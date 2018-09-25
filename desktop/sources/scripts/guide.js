@@ -24,6 +24,8 @@ function Guide()
     
     this.el.getContext('2d').restore();
 
+    this.draw_rulers();
+    
     if(dotgrid.tool.index == 2){ this.draw_markers() ; this.draw_vertices() }
     this.draw_path(new Generator(dotgrid.tool.layers[2],dotgrid.tool.styles[2]).toString({x:0,y:0},this.scale),dotgrid.tool.styles[2])
     if(dotgrid.tool.index == 1){ this.draw_markers() ; this.draw_vertices() }
@@ -122,6 +124,45 @@ function Guide()
     ctx.fillStyle = dotgrid.theme.active.f_med;
     ctx.fill();
     ctx.closePath();
+  }
+
+  this.draw_rule = function(from,to)
+  {
+    let ctx = this.el.getContext('2d');
+
+    ctx.beginPath();
+    ctx.moveTo(from.x,from.y);
+    ctx.lineTo(to.x,to.y);
+    ctx.lineCap="round";
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = dotgrid.theme.active.b_low;
+    ctx.stroke();
+    ctx.closePath();
+  }
+
+  this.draw_ruler = function(pos)
+  {
+    let offset = 15 * this.scale;
+    let top = offset
+    let bottom = (dotgrid.tool.settings.size.height * this.scale)+offset
+    let left = offset
+    let right = (dotgrid.tool.settings.size.width * this.scale)
+
+    // Translation
+    this.draw_rule({x:pos.x * this.scale,y:top},{x:pos.x * this.scale,y:bottom});
+    this.draw_rule({x:left,y:pos.y * this.scale},{x:right,y:pos.y * this.scale});
+  }
+
+  this.draw_rulers = function()
+  {   
+    if(!dotgrid.cursor.translation){ return; }
+
+    let ctx = this.el.getContext('2d');
+
+    this.draw_ruler(dotgrid.cursor.translation.to)
+
+    ctx.setLineDash([]); 
+    ctx.restore();
   }
 
   this.draw_handle = function(pos, radius = 6)
