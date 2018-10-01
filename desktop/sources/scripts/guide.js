@@ -52,7 +52,7 @@ function Guide()
 
   this.resize = function(size)
   {
-    let offset = 15
+    const offset = 15
     this.el.width = (size.width+offset)*this.scale;
     this.el.height = (size.height+(offset*2))*this.scale;
     this.el.style.width = (size.width+offset)+"px";
@@ -65,10 +65,10 @@ function Guide()
   {
     if(!this.show_extras){ return; }
 
-    for(let segment_id in dotgrid.tool.layer()){
-      let segment = dotgrid.tool.layer()[segment_id];
-      for(let vertex_id in segment.vertices){
-        let vertex = segment.vertices[vertex_id];
+    for(const segment_id in dotgrid.tool.layer()){
+      const segment = dotgrid.tool.layer()[segment_id];
+      for(const vertex_id in segment.vertices){
+        const vertex = segment.vertices[vertex_id];
         this.draw_handle(vertex);
       }
     }
@@ -76,7 +76,7 @@ function Guide()
 
   this.draw_vertices = function()
   {
-    for(let id in dotgrid.tool.vertices){
+    for(const id in dotgrid.tool.vertices){
       this.draw_vertex(dotgrid.tool.vertices[id]);
     }
   }

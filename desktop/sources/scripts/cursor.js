@@ -102,7 +102,7 @@ function Cursor()
 
   this.pos_snap = function(pos)
   { 
-    let grid = dotgrid.tool.settings.size.width/dotgrid.grid_x;
+    const grid = dotgrid.tool.settings.size.width/dotgrid.grid_x;
     return {
       x:clamp(step(pos.x,grid),grid,dotgrid.tool.settings.size.width),
       y:clamp(step(pos.y,grid),grid,dotgrid.tool.settings.size.height+grid)

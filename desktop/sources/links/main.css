@@ -44,3 +44,7 @@ body #guide { opacity: 0; transition: opacity 500ms; }
 body.ready #guide { opacity: 1 }
 body #interface { opacity: 0; transition: opacity 250ms, bottom 500ms; bottom:15px; }
 body.ready #interface { opacity: 1; bottom:20px; }
+
+@media (max-width: 560px) {
+  #interface #menu svg.icon.source { opacity: 0; } 
+}

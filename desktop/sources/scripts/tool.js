@@ -104,9 +104,9 @@ function Tool()
 
   this.remove_segments_at = function(pos)
   {
-    for(let segment_id in this.layer()){
+    for(const segment_id in this.layer()){
       let segment = this.layer()[segment_id];
-      for(let vertex_id in segment.vertices){
+      for(const vertex_id in segment.vertices){
         let vertex = segment.vertices[vertex_id];
         if(Math.abs(pos.x) == Math.abs(vertex.x) && Math.abs(pos.y) == Math.abs(vertex.y)){
           segment.vertices.splice(vertex_id,1)
@@ -130,9 +130,9 @@ function Tool()
 
   this.vertex_at = function(pos)
   {
-    for(let segment_id in this.layer()){
+    for(const segment_id in this.layer()){
       let segment = this.layer()[segment_id];
-      for(let vertex_id in segment.vertices){
+      for(const vertex_id in segment.vertices){
         let vertex = segment.vertices[vertex_id];
         if(vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)){
           return vertex;
@@ -213,7 +213,7 @@ function Tool()
 
   this.can_append = function(content)
   {
-    for(let id in this.layer()){
+    for(const id in this.layer()){
       let stroke = this.layer()[id];
       if(stroke.type != content.type){ continue; }
       if(!stroke.vertices){ continue; }
@@ -259,9 +259,9 @@ function Tool()
 
   this.translate = function(a,b)
   {
-    for(let segment_id in this.layer()){
+    for(const segment_id in this.layer()){
       let segment = this.layer()[segment_id];
-      for(let vertex_id in segment.vertices){
+      for(const vertex_id in segment.vertices){
         let vertex = segment.vertices[vertex_id];
         if(vertex.x == Math.abs(a.x) && vertex.y == Math.abs(a.y)){
           segment.vertices[vertex_id] = {x:Math.abs(b.x),y:Math.abs(b.y)};
@@ -277,9 +277,9 @@ function Tool()
   {
     let offset = {x:a.x - b.x,y:a.y - b.y}
 
-    for(let segment_id in this.layer()){
+    for(const segment_id in this.layer()){
       let segment = this.layer()[segment_id];
-      for(let vertex_id in segment.vertices){
+      for(const vertex_id in segment.vertices){
         let vertex = segment.vertices[vertex_id];
         segment.vertices[vertex_id] = {x:vertex.x-offset.x,y:vertex.y-offset.y};
       }
@@ -320,7 +320,13 @@ function Tool()
 
   this.select_next_layer = function()
   {
-    this.index = this.index >= 2 ? 0 : this.index+1
+    this.index = this.index >= 2 ? 0 : this.index++
+    this.select_layer(this.index);
+  }
+
+  this.select_prev_layer = function()
+  {
+    this.index = this.index >= 0 ? 2 : this.index--
     this.select_layer(this.index);
   }
 

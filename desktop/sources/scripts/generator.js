@@ -7,11 +7,11 @@ function Generator(layer,style)
 
   function operate(layer,offset,scale,mirror = 0,angle = 0)
   {
-    let l = copy(layer)
+    const l = copy(layer)
 
-    for(let k1 in l){
-      let seg = l[k1];
-      for(let k2 in seg.vertices){
+    for(const k1 in l){
+      const seg = l[k1];
+      for(const k2 in seg.vertices){
         if(mirror == 1){ seg.vertices[k2].x = (dotgrid.tool.settings.size.width) - seg.vertices[k2].x + 15 }
         if(mirror == 2){ seg.vertices[k2].y = (dotgrid.tool.settings.size.height) - seg.vertices[k2].y + 30 }
 
@@ -20,7 +20,7 @@ function Generator(layer,style)
         seg.vertices[k2].y += offset.y
 
         // Rotate
-        let center = {x:(dotgrid.tool.settings.size.width/2)+offset.x+(7.5),y:(dotgrid.tool.settings.size.height/2)+offset.y+30}
+        const center = {x:(dotgrid.tool.settings.size.width/2)+offset.x+(7.5),y:(dotgrid.tool.settings.size.height/2)+offset.y+30}
         seg.vertices[k2] = rotate_point(seg.vertices[k2],center,angle)
 
         // Scale
@@ -33,12 +33,12 @@ function Generator(layer,style)
 
   this.render = function(prev,segment,mirror = 0)
   {
-    let type = segment.type;
-    let vertices = segment.vertices;
+    const type = segment.type;
+    const vertices = segment.vertices;
     let html = '';
     let skip = 0;
 
-    for(let id in vertices){
+    for(const id in vertices){
       if(skip > 0){ skip -= 1; continue; }
       
       let vertex = vertices[id]
@@ -80,8 +80,8 @@ function Generator(layer,style)
   {
     let s = ""
     let prev = null
-    for(let id in layer){
-      let seg = layer[id];
+    for(const id in layer){
+      const seg = layer[id];
       s += `${this.render(prev,seg,mirror)}`
       prev = seg.vertices ? seg.vertices[seg.vertices.length-1] : null
     }

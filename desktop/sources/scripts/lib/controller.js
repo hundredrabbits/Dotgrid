@@ -36,9 +36,9 @@ function Controller()
   {
     let f = [];
     let m = this.menu[this.mode];
-    for(let cat in m){
+    for(const cat in m){
       let submenu = [];
-      for(let name in m[cat]){
+      for(const name in m[cat]){
         let option = m[cat][name];
         if(option.role){
           submenu.push({role:option.role})
@@ -74,7 +74,7 @@ function Controller()
   {
     let svg_html = "";
 
-    for(let id in this.layout){
+    for(const id in this.layout){
       let key = this.layout[id];
       let acc = this.accelerator_for_key(key.name,m);
       svg_html += `<rect x="${key.x + 1}" y="${key.y + 1}" width="${key.width - 2}" height="${key.height - 2}" rx="4" ry="4" title="${key.name}" stroke="#ccc" fill="none" stroke-width="1"/>`;
@@ -103,10 +103,10 @@ function Controller()
   {
     let txt = `## ${name} Mode\n\n`;
 
-    for(let id in mode){
+    for(const id in mode){
       if(id == "*"){ continue; }
       txt += `### ${id}\n`;
-      for(let name in mode[id]){
+      for(const name in mode[id]){
         let option = mode[id][name];
         txt += `- ${name}: \`${option.accelerator}\`\n`;
       }
@@ -119,9 +119,9 @@ function Controller()
   this.accelerator_for_key = function(key,menu)
   {
     let acc = {basic:null,ctrl:null}
-    for(let cat in menu){
+    for(const cat in menu){
       let options = menu[cat];
-      for(let id in options.submenu){
+      for(const id in options.submenu){
         let option = options.submenu[id]; if(option.role){ continue; }
         acc.basic = (option.accelerator.toLowerCase() == key.toLowerCase()) ? option.label.toUpperCase().replace("TOGGLE ","").substr(0,8).trim() : acc.basic;
         acc.ctrl = (option.accelerator.toLowerCase() == ("CmdOrCtrl+"+key).toLowerCase()) ? option.label.toUpperCase().replace("TOGGLE ","").substr(0,8).trim() : acc.ctrl;

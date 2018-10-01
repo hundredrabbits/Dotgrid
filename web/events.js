@@ -2,16 +2,17 @@
 
 document.onkeyup = (e) =>
 {
-  let ch = e.key.toLowerCase();
+  const ch = e.key.toLowerCase();
 
   if(e.target && e.target.id == "picker_input"){ return; }
 
+  if(ch == "backspace" && e.ctrlKey){ dotgrid.theme.reset(); e.preventDefault(); }
   if(ch == "backspace"){ dotgrid.tool.remove_segment(); e.preventDefault(); }
   if(ch == "escape"){ dotgrid.tool.clear(); dotgrid.picker.stop(); e.preventDefault(); }
 
   if(ch == "1"){ dotgrid.tool.select_layer(0); e.preventDefault(); }
   if(ch == "2"){ dotgrid.tool.select_layer(1); e.preventDefault(); }
-  if(ch == "3"){ dotgrid.tool.select_layer(2); e.preventDefault(); }
+  if(ch == "3"){ dotgrid.tool.select_layer(2); e.preventDefault(); }  
 
   if(ch == "h"){ dotgrid.guide.toggle(); e.preventDefault(); }
   if(ch == "?"){ dotgrid.reset(); dotgrid.theme.reset(); e.preventDefault(); }
@@ -33,4 +34,9 @@ document.onkeyup = (e) =>
   if(ch == "["){ dotgrid.tool.toggle("thickness",-5); e.preventDefault(); }
   
   if(ch == "i"){ dotgrid.theme.invert(); e.preventDefault(); }
+}
+
+document.onkeydown = (e) => 
+{
+  if(e.keyCode == 9){ dotgrid.tool.select_next_layer(); e.preventDefault(); }
 }

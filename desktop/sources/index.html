@@ -26,11 +26,13 @@
   </head>
   <body>
     <script>
+        'use strict';
+
         const webFrame = require('electron').webFrame
         const {dialog,app} = require('electron').remote;
         const fs = require('fs');
         
-        dotgrid = new Dotgrid(300,300,20,20,4,4);
+        const dotgrid = new Dotgrid(300,300,20,20,4,4);
         dotgrid.controller = new Controller();
 
         dotgrid.controller.add("default","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
@@ -46,13 +48,15 @@
         dotgrid.controller.add("default","File","Render(.png)",() => { dotgrid.render(); },"CmdOrCtrl+R");
         dotgrid.controller.add("default","File","Export(.svg)",() => { dotgrid.export(); },"CmdOrCtrl+E");
 
+        dotgrid.controller.add_role("default","Edit","copy");
+        dotgrid.controller.add("default","Edit","Undo",() => { dotgrid.tool.undo() },"CmdOrCtrl+Z");
+        dotgrid.controller.add("default","Edit","Redo",() => { dotgrid.tool.redo() },"CmdOrCtrl+Shift+Z");
+
         dotgrid.controller.add("default","Stroke","Line",() => { dotgrid.tool.cast("line"); },"A");
         dotgrid.controller.add("default","Stroke","Arc",() => { dotgrid.tool.cast("arc_c"); },"S"); // 0,1
         dotgrid.controller.add("default","Stroke","Arc Rev",() => { dotgrid.tool.cast("arc_r")},"D"); // 0,0
         dotgrid.controller.add("default","Stroke","Bezier",() => { dotgrid.tool.cast("bezier") },"F");
         dotgrid.controller.add("default","Stroke","Close",() => { dotgrid.tool.cast("close") },"Z");
-        dotgrid.controller.add("default","Stroke","Undo",() => { dotgrid.tool.undo() },"CmdOrCtrl+Z");
-        dotgrid.controller.add("default","Stroke","Redo",() => { dotgrid.tool.redo() },"CmdOrCtrl+Shift+Z");
 
         dotgrid.controller.add("default","Effect","Linecap",() => { dotgrid.tool.toggle("linecap"); },"Q");
         dotgrid.controller.add("default","Effect","Linejoin",() => { dotgrid.tool.toggle("linejoin"); },"W");
@@ -74,6 +78,8 @@
         dotgrid.controller.add("default","Layers","Foreground",() => { dotgrid.tool.select_layer(0) },"CmdOrCtrl+1");
         dotgrid.controller.add("default","Layers","Middleground",() => { dotgrid.tool.select_layer(1) },"CmdOrCtrl+2");
         dotgrid.controller.add("default","Layers","Background",() => { dotgrid.tool.select_layer(2) },"CmdOrCtrl+3");
+        dotgrid.controller.add("default","Layers","Next Layer",() => { dotgrid.tool.select_next_layer() },"Tab");
+        dotgrid.controller.add("default","Layers","Prev Layer",() => { dotgrid.tool.select_prev_layer() },"Shift+Tab");
 
         dotgrid.controller.add("default","View","Color Picker",() => { dotgrid.picker.start(); },"G");
         dotgrid.controller.add("default","View","Toggle Grid",() => { dotgrid.guide.toggle(); },"H");

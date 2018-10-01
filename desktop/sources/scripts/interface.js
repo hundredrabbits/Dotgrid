@@ -46,9 +46,9 @@ function Interface()
       }      
     }
 
-    for(let type in options){
+    for(const type in options){
       let tools = options[type];
-      for(let name in tools){
+      for(const name in tools){
         let tool = tools[name];
         html += `
         <svg 
@@ -108,7 +108,7 @@ function Interface()
     let segments = dotgrid.tool.layer()
     let sum_segments = dotgrid.tool.length();
 
-    for(let i in segments){
+    for(const i in segments){
       if(segments[i].vertices.length > 2){ multi_vertices = true; break; }
     }
 

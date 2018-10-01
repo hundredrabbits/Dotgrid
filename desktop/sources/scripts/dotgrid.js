@@ -69,7 +69,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   {
     if(!dialog){ return; }
 
-    let paths = dialog.showOpenDialog({properties: ['openFile'],filters:[{name:"Dotgrid Image",extensions:["dot","grid"]}]});
+    const paths = dialog.showOpenDialog({properties: ['openFile'],filters:[{name:"Dotgrid Image",extensions:["dot","grid"]}]});
 
     if(!paths){ console.warn("Nothing to load"); return; }
 
@@ -97,7 +97,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.save_web = function(content)
   {
     console.info("Web Save");
-    let win = window.open("", "Save", `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height-200},left=${screen.width-640}`);
+    const win = window.open("", "Save", `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height-200},left=${screen.width-640}`);
     win.document.body.innerHTML = `<style>body { background:${dotgrid.theme.active.background}; color:${dotgrid.theme.active.f_med}} pre { color:${dotgrid.theme.active.f_high} }</style><p>To save: Copy this into a .grid file.<br />To load: Drag the .grid onto the browser window.</p><pre>${content}</pre>`;
   }
 
@@ -139,7 +139,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.export_web = function(content)
   {
     console.info("Web Export");
-    let win = window.open("", "Save", `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height-200},left=${screen.width-640}`);
+    const win = window.open("", "Save", `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height-200},left=${screen.width-640}`);
     win.document.body.innerHTML = `<style>body { background:${dotgrid.theme.active.background}}</style>${dotgrid.renderer.to_svg()}`;
   }
 
@@ -153,7 +153,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     this.tool.settings.size.height = size.height
 
     try{
-      let win = require('electron').remote.getCurrentWindow();
+      const win = require('electron').remote.getCurrentWindow();
       win.setSize((size.width+100)*scale,(size.height+100+(ui ? 10 : 0))*scale,true);  
     }
     catch(err){
@@ -203,7 +203,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
 
   this.resize = function()
   {
-    let size = {width:step(window.innerWidth-90,15),height:step(window.innerHeight-120,15)}
+    const size = {width:step(window.innerWidth-90,15),height:step(window.innerHeight-120,15)}
 
     if(size.width == dotgrid.tool.settings.size.width && size.height == dotgrid.tool.settings.size.height){
       return;
@@ -230,11 +230,11 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
     e.preventDefault();
     e.stopPropagation();
 
-    let file = e.dataTransfer.files[0];
+    const file = e.dataTransfer.files[0];
 
     if(!file || !file.path || file.path.indexOf(".dot") < 0 && file.path.indexOf(".grid") < 0){ console.warn("Dotgrid","Not a dot file"); return; }
 
-    let reader = new FileReader();
+    const reader = new FileReader();
     reader.onload = function(e){
       dotgrid.tool.replace(JSON.parse(e.target.result.toString().trim()));
       dotgrid.guide.update();
@@ -275,7 +275,7 @@ function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
   this.paste = function(e)
   {
     if(e.target !== this.picker.el){
-      let data = e.clipboardData.getData("text/source");
+      const data = e.clipboardData.getData("text/source");
       if (is_json(data)) {
         data = JSON.parse(data.trim());
         dotgrid.tool.import(data);
