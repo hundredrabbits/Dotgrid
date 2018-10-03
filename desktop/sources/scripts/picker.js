@@ -1,110 +1,100 @@
-'use strict';
+'use strict'
 
-function Picker()
-{
-  this.memory = "";
-  this.el = document.createElement("div");
-  this.el.id = "picker"
-  this.is_active = false;
-  this.input = document.createElement("input");
-  this.input.id = "picker_input"
+function Picker () {
+  this.memory = ''
+  this.el = document.createElement('div')
+  this.el.id = 'picker'
+  this.is_active = false
+  this.input = document.createElement('input')
+  this.input.id = 'picker_input'
 
   this.el.appendChild(this.input)
 
-  this.start = function()
-  {
-    if(this.is_active){ return; }
+  this.start = function () {
+    if (this.is_active) { return }
 
-    this.is_active = true;
+    this.is_active = true
 
-    this.input.setAttribute("placeholder",`${dotgrid.tool.style().color.replace("#","").trim()}`)
-    this.input.setAttribute("maxlength",6)
+    this.input.setAttribute('placeholder', `${dotgrid.tool.style().color.replace('#', '').trim()}`)
+    this.input.setAttribute('maxlength', 6)
 
-    dotgrid.interface.el.className = "picker"
+    dotgrid.interface.el.className = 'picker'
     this.input.focus()
-    this.input.value = ""
+    this.input.value = ''
 
-    try{ dotgrid.controller.set("picker"); }
-    catch(err){ }
+    try { dotgrid.controller.set('picker') } catch (err) { }
   }
 
-  this.update = function()
-  {
-    if(!this.is_active){ return; }
-    if(!is_color(this.input.value)){ return; }
+  this.update = function () {
+    if (!this.is_active) { return }
+    if (!is_color(this.input.value)) { return }
 
-    const hex = `#${this.input.value}`;
+    const hex = `#${this.input.value}`
 
-    document.getElementById("option_color").children[0].style.fill = hex;
-    document.getElementById("option_color").children[0].style.stroke = hex;
+    document.getElementById('option_color').children[0].style.fill = hex
+    document.getElementById('option_color').children[0].style.stroke = hex
   }
 
-  this.stop = function()
-  {
-    if(!this.is_active){ return; }
+  this.stop = function () {
+    if (!this.is_active) { return }
 
-    this.is_active = false;
-  
-    dotgrid.interface.el.className = ""
+    this.is_active = false
+
+    dotgrid.interface.el.className = ''
     this.input.blur()
-    this.input.value = ""
+    this.input.value = ''
 
-    try{ dotgrid.controller.set(); }
-    catch(err){ console.log("No controller"); }
+    try { dotgrid.controller.set() } catch (err) { console.log('No controller') }
 
-    setTimeout(() => { dotgrid.interface.update(true); dotgrid.guide.update(); }, 250)
+    setTimeout(() => { dotgrid.interface.update(true); dotgrid.guide.update() }, 250)
   }
 
-  this.validate = function()
-  {
-    if(!is_color(this.input.value)){ return; }
+  this.validate = function () {
+    if (!is_color(this.input.value)) { return }
 
-    const hex = `#${this.input.value}`;
+    const hex = `#${this.input.value}`
 
-    dotgrid.tool.style().color = hex;
-    dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? hex : "none";
+    dotgrid.tool.style().color = hex
+    dotgrid.tool.style().fill = dotgrid.tool.style().fill != 'none' ? hex : 'none'
 
-    this.stop();
+    this.stop()
   }
 
-  this.listen = function(e,is_down = false)
-  {
-    if(is_down && !is_color_char(e.key)){
-      e.preventDefault();
-      return;
+  this.listen = function (e, is_down = false) {
+    if (is_down && !is_color_char(e.key)) {
+      e.preventDefault()
+      return
     }
 
-    if(e.key == "Enter"){
-      this.validate();
-      e.preventDefault();
-      return;
+    if (e.key == 'Enter') {
+      this.validate()
+      e.preventDefault()
+      return
     }
 
-    if(e.key == "Escape"){
-      this.stop();
-      e.preventDefault();
-      return;
+    if (e.key == 'Escape') {
+      this.stop()
+      e.preventDefault()
+      return
     }
 
-    this.update();
+    this.update()
   }
 
-  function is_color(val)
-  {
-    if(val.length != 3 && val.length != 6){
+  function is_color (val) {
+    if (val.length != 3 && val.length != 6) {
       return false
     }
 
-    const re = /[0-9A-Fa-f]/g;
+    const re = /[0-9A-Fa-f]/g
     return re.test(val)
   }
 
-  function is_color_char(val)
-  {
-    const re = /[0-9A-Fa-f]/g;
+  function is_color_char (val) {
+    const re = /[0-9A-Fa-f]/g
     return re.test(val)
   }
 
-  this.input.onkeydown = function(event){ dotgrid.picker.listen(event,true); }
-  this.input.onkeyup = function(event){ dotgrid.picker.listen(event); };
+  this.input.onkeydown = function (event) { dotgrid.picker.listen(event, true) }
+  this.input.onkeyup = function (event) { dotgrid.picker.listen(event) }
 }

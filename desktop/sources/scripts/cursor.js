@@ -1,113 +1,102 @@
-'use strict';
+'use strict'
 
-function Cursor()
-{
-  this.pos = {x:0,y:0};
-  this.translation = null;
-  this.operation = null;
+function Cursor () {
+  this.pos = { x: 0, y: 0 }
+  this.translation = null
+  this.operation = null
 
-  this.translate = function(from = null,to = null, multi = false)
-  {    
-    if((from || to) && this.translation == null){ this.translation = {multi:multi}; console.log("Begin translation") }
+  this.translate = function (from = null, to = null, multi = false) {
+    if ((from || to) && this.translation == null) { this.translation = { multi: multi }; console.log('Begin translation') }
 
-    if(from){ this.translation.from = from; }
-    if(to){ this.translation.to = to; }
+    if (from) { this.translation.from = from }
+    if (to) { this.translation.to = to }
 
-    if(!from && !to){
-      this.translation = null;
+    if (!from && !to) {
+      this.translation = null
     }
   }
 
-  this.down = function(e)
-  {
-    this.pos = this.pos_from_event(e);
-
-    // Translation
-    if(dotgrid.tool.vertex_at(this.pos)){
-      this.translate(this.pos,this.pos,e.shiftKey)
-    }
-
-    dotgrid.guide.update();
-    dotgrid.interface.update();
-    e.preventDefault();
-  }
-
-  this.last_pos = {x:0,y:0}
-
-  this.move = function(e)
-  {
+  this.down = function (e) {
     this.pos = this.pos_from_event(e)
 
     // Translation
-    if(this.translation){
-      this.translate(null,this.pos)
+    if (dotgrid.tool.vertex_at(this.pos)) {
+      this.translate(this.pos, this.pos, e.shiftKey)
     }
 
-    if(this.last_pos.x != this.pos.x || this.last_pos.y != this.pos.y){
-      dotgrid.guide.update();
-    }
-
-    dotgrid.interface.update();
-    e.preventDefault();
-
-    this.last_pos = this.pos;
+    dotgrid.guide.update()
+    dotgrid.interface.update()
+    e.preventDefault()
   }
 
-  this.up = function(e)
-  {
+  this.last_pos = { x: 0, y: 0 }
+
+  this.move = function (e) {
     this.pos = this.pos_from_event(e)
 
-    if(e.altKey){ dotgrid.tool.remove_segments_at(this.pos); this.translate(); return; }
-
-    if(this.translation && !is_equal(this.translation.from,this.translation.to)){
-      if(this.translation.multi){ dotgrid.tool.translate_multi(this.translation.from,this.translation.to); }
-      else{ dotgrid.tool.translate(this.translation.from,this.translation.to); }
-    }
-    else if(e.target.id == "guide"){
-      dotgrid.tool.add_vertex({x:this.pos.x,y:this.pos.y});
-      dotgrid.picker.stop();
+    // Translation
+    if (this.translation) {
+      this.translate(null, this.pos)
     }
 
-    this.translate();
+    if (this.last_pos.x != this.pos.x || this.last_pos.y != this.pos.y) {
+      dotgrid.guide.update()
+    }
 
-    dotgrid.interface.update();
-    dotgrid.guide.update();
-    e.preventDefault();
+    dotgrid.interface.update()
+    e.preventDefault()
+
+    this.last_pos = this.pos
   }
 
-  this.alt = function(e)
-  {
+  this.up = function (e) {
     this.pos = this.pos_from_event(e)
 
-    dotgrid.tool.remove_segments_at(this.pos);
-    e.preventDefault();
+    if (e.altKey) { dotgrid.tool.remove_segments_at(this.pos); this.translate(); return }
 
-    setTimeout(() => { dotgrid.tool.clear(); },150);
+    if (this.translation && !is_equal(this.translation.from, this.translation.to)) {
+      if (this.translation.multi) { dotgrid.tool.translate_multi(this.translation.from, this.translation.to) } else { dotgrid.tool.translate(this.translation.from, this.translation.to) }
+    } else if (e.target.id == 'guide') {
+      dotgrid.tool.add_vertex({ x: this.pos.x, y: this.pos.y })
+      dotgrid.picker.stop()
+    }
+
+    this.translate()
+
+    dotgrid.interface.update()
+    dotgrid.guide.update()
+    e.preventDefault()
+  }
+
+  this.alt = function (e) {
+    this.pos = this.pos_from_event(e)
+
+    dotgrid.tool.remove_segments_at(this.pos)
+    e.preventDefault()
+
+    setTimeout(() => { dotgrid.tool.clear() }, 150)
   }
 
   // Position Mods
 
-  this.pos_from_event = function(e)
-  {
-    return this.pos_snap(this.pos_relative({x:e.clientX,y:e.clientY}))
+  this.pos_from_event = function (e) {
+    return this.pos_snap(this.pos_relative({ x: e.clientX, y: e.clientY }))
   }
 
-  this.pos_relative = function(pos)
-  {
+  this.pos_relative = function (pos) {
     return {
-      x:pos.x - dotgrid.guide.el.offsetLeft,
-      y:pos.y - dotgrid.guide.el.offsetTop
-    };
+      x: pos.x - dotgrid.guide.el.offsetLeft,
+      y: pos.y - dotgrid.guide.el.offsetTop
+    }
   }
 
-  this.pos_snap = function(pos)
-  { 
-    const grid = dotgrid.tool.settings.size.width/dotgrid.grid_x;
+  this.pos_snap = function (pos) {
+    const grid = dotgrid.tool.settings.size.width / dotgrid.grid_x
     return {
-      x:clamp(step(pos.x,grid),grid,dotgrid.tool.settings.size.width),
-      y:clamp(step(pos.y,grid),grid,dotgrid.tool.settings.size.height+grid)
-    };
+      x: clamp(step(pos.x, grid), grid, dotgrid.tool.settings.size.width),
+      y: clamp(step(pos.y, grid), grid, dotgrid.tool.settings.size.height + grid)
+    }
   }
 
-  function is_equal(a,b){ return a.x == b.x && a.y == b.y; }
+  function is_equal (a, b) { return a.x == b.x && a.y == b.y }
 }

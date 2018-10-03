@@ -1,310 +1,284 @@
-'use strict';
+'use strict'
 
-function Dotgrid(width,height,grid_x,grid_y,block_x,block_y)
-{
-  this.controller = null;
-  this.theme = new Theme();
-  this.interface = new Interface();
-  this.history = new History();
-  this.guide = new Guide();
-  this.renderer = new Renderer();
-  this.tool = new Tool();
-  this.picker = new Picker();
-  this.cursor = new Cursor();
+function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
+  this.controller = null
+  this.theme = new Theme()
+  this.interface = new Interface()
+  this.history = new History()
+  this.guide = new Guide()
+  this.renderer = new Renderer()
+  this.tool = new Tool()
+  this.picker = new Picker()
+  this.cursor = new Cursor()
 
-  this.grid_x = grid_x;
-  this.grid_y = grid_y;
-  this.block_x = block_x;
-  this.block_y = block_y;
+  this.grid_x = grid_x
+  this.grid_y = grid_y
+  this.block_x = block_x
+  this.block_y = block_y
 
   // ISU
 
-  this.install = function(host)
-  {
-    host.appendChild(this.guide.el);
+  this.install = function (host) {
+    host.appendChild(this.guide.el)
 
-    this.interface.install(host);
-    this.theme.install(host,this.update);
+    this.interface.install(host)
+    this.theme.install(host, this.update)
   }
 
-  this.start = function()
-  {    
-    this.theme.start();
-    this.tool.start();
-    this.guide.start();
-    this.interface.start();
+  this.start = function () {
+    this.theme.start()
+    this.tool.start()
+    this.guide.start()
+    this.interface.start()
 
-    document.addEventListener('mousedown', function(e){ dotgrid.cursor.down(e); }, false);
-    document.addEventListener('mousemove', function(e){ dotgrid.cursor.move(e); }, false);
-    document.addEventListener('contextmenu', function(e){ dotgrid.cursor.alt(e); }, false);
-    document.addEventListener('mouseup', function(e){ dotgrid.cursor.up(e);}, false);
-    document.addEventListener('copy', function(e){ dotgrid.copy(e); }, false);
-    document.addEventListener('cut', function(e){ dotgrid.cut(e); }, false);
-    document.addEventListener('paste', function(e){ dotgrid.paste(e); }, false);
-    window.addEventListener('drop', dotgrid.drag);
+    document.addEventListener('mousedown', function (e) { dotgrid.cursor.down(e) }, false)
+    document.addEventListener('mousemove', function (e) { dotgrid.cursor.move(e) }, false)
+    document.addEventListener('contextmenu', function (e) { dotgrid.cursor.alt(e) }, false)
+    document.addEventListener('mouseup', function (e) { dotgrid.cursor.up(e) }, false)
+    document.addEventListener('copy', function (e) { dotgrid.copy(e) }, false)
+    document.addEventListener('cut', function (e) { dotgrid.cut(e) }, false)
+    document.addEventListener('paste', function (e) { dotgrid.paste(e) }, false)
+    window.addEventListener('drop', dotgrid.drag)
 
-    this.new();
+    this.new()
 
-    setTimeout(() => { document.body.className += ' ready'; }, 250)
+    setTimeout(() => { document.body.className += ' ready' }, 250)
   }
 
-  this.update = function()
-  {
-    dotgrid.resize();
-    dotgrid.interface.update();
-    dotgrid.guide.update();
+  this.update = function () {
+    dotgrid.resize()
+    dotgrid.interface.update()
+    dotgrid.guide.update()
   }
 
   // File
 
-  this.new = function()
-  {
+  this.new = function () {
     this.set_zoom(1.0)
-    this.set_size({width:300,height:300})
-    this.history.push(this.tool.layers);
-    this.clear();
+    this.set_size({ width: 300, height: 300 })
+    this.history.push(this.tool.layers)
+    this.clear()
   }
 
-  this.open = function()
-  {
-    if(!dialog){ return; }
+  this.open = function () {
+    if (!dialog) { return }
 
-    const paths = dialog.showOpenDialog({properties: ['openFile'],filters:[{name:"Dotgrid Image",extensions:["dot","grid"]}]});
+    const paths = dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: 'Dotgrid Image', extensions: ['dot', 'grid'] }] })
 
-    if(!paths){ console.warn("Nothing to load"); return; }
+    if (!paths) { console.warn('Nothing to load'); return }
 
     fs.readFile(paths[0], 'utf-8', (err, data) => {
-      if(err){ alert("An error ocurred reading the file :" + err.message); return; }
-      this.tool.replace(JSON.parse(data.toString().trim()));
-      this.guide.update();
-    });
-  }
-
-  this.save = function(content = this.tool.export())
-  {
-    if(dotgrid.tool.length() < 1){ console.warn("Nothing to save"); return; }
-
-    if(!dialog){ this.save_web(content); return; }
-
-    dialog.showSaveDialog({title:"Save to .grid",filters: [{name: "Dotgrid Format", extensions: ["grid", "dot"]}]},(fileName) => {
-      if (fileName === undefined){ return; }
-      fileName = fileName.substr(-5,5) != ".grid" ? fileName+".grid" : fileName;
-      fs.writeFileSync(fileName, content);
-      dotgrid.guide.update()
-    });
-  }
-
-  this.save_web = function(content)
-  {
-    console.info("Web Save");
-    const win = window.open("", "Save", `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height-200},left=${screen.width-640}`);
-    win.document.body.innerHTML = `<style>body { background:${dotgrid.theme.active.background}; color:${dotgrid.theme.active.f_med}} pre { color:${dotgrid.theme.active.f_high} }</style><p>To save: Copy this into a .grid file.<br />To load: Drag the .grid onto the browser window.</p><pre>${content}</pre>`;
-  }
-
-  this.render = function(content = this.renderer.to_png({width:dotgrid.tool.settings.size.width*2,height:dotgrid.tool.settings.size.height*2}), ready = null, size = null)
-  {
-    if(!ready){return; }
-    if(dotgrid.tool.length() < 1){ console.warn("Nothing to render"); return; }
-
-    if(!dialog){ dotgrid.render_web(content); return; }
-
-    dialog.showSaveDialog({title:"Save to .png",filters: [{name: "Image Format", extensions: ["png"]}]},(fileName) => {
-      if (fileName === undefined){ return; }
-      fileName = fileName.substr(-4,4) != ".png" ? fileName+".png" : fileName;
-      console.log(`Rendered ${size.width}x${size.height}`)
-      fs.writeFileSync(fileName, ready);
-    });
-  }
-
-  this.render_web = function(content,window)
-  {
-    // Handled in Renderer
-    console.info("Web Render");
-  }
-
-  this.export = function(content = this.renderer.to_svg())
-  {
-    if(dotgrid.tool.length() < 1){ console.warn("Nothing to export"); return; }
-
-    if(!dialog){ this.export_web(content); return; }
-
-    dialog.showSaveDialog({title:"Save to .svg",filters: [{name: "Vector Format", extensions: ["svg"]}]},(fileName) => {
-      if (fileName === undefined){ return; }
-      fileName = fileName.substr(-4,4) != ".svg" ? fileName+".svg" : fileName;
-      fs.writeFileSync(fileName, content);
+      if (err) { alert('An error ocurred reading the file :' + err.message); return }
+      this.tool.replace(JSON.parse(data.toString().trim()))
       this.guide.update()
-    });
+    })
   }
 
-  this.export_web = function(content)
-  {
-    console.info("Web Export");
-    const win = window.open("", "Save", `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height-200},left=${screen.width-640}`);
-    win.document.body.innerHTML = `<style>body { background:${dotgrid.theme.active.background}}</style>${dotgrid.renderer.to_svg()}`;
+  this.save = function (content = this.tool.export()) {
+    if (dotgrid.tool.length() < 1) { console.warn('Nothing to save'); return }
+
+    if (!dialog) { this.save_web(content); return }
+
+    dialog.showSaveDialog({ title: 'Save to .grid', filters: [{ name: 'Dotgrid Format', extensions: ['grid', 'dot'] }] }, (fileName) => {
+      if (fileName === undefined) { return }
+      fileName = fileName.substr(-5, 5) != '.grid' ? fileName + '.grid' : fileName
+      fs.writeFileSync(fileName, content)
+      dotgrid.guide.update()
+    })
+  }
+
+  this.save_web = function (content) {
+    console.info('Web Save')
+    const win = window.open('', 'Save', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height - 200},left=${screen.width - 640}`)
+    win.document.body.innerHTML = `<style>body { background:${dotgrid.theme.active.background}; color:${dotgrid.theme.active.f_med}} pre { color:${dotgrid.theme.active.f_high} }</style><p>To save: Copy this into a .grid file.<br />To load: Drag the .grid onto the browser window.</p><pre>${content}</pre>`
+  }
+
+  this.render = function (content = this.renderer.to_png({ width: dotgrid.tool.settings.size.width * 2, height: dotgrid.tool.settings.size.height * 2 }), ready = null, size = null) {
+    if (!ready) { return }
+    if (dotgrid.tool.length() < 1) { console.warn('Nothing to render'); return }
+
+    if (!dialog) { dotgrid.render_web(content); return }
+
+    dialog.showSaveDialog({ title: 'Save to .png', filters: [{ name: 'Image Format', extensions: ['png'] }] }, (fileName) => {
+      if (fileName === undefined) { return }
+      fileName = fileName.substr(-4, 4) != '.png' ? fileName + '.png' : fileName
+      console.log(`Rendered ${size.width}x${size.height}`)
+      fs.writeFileSync(fileName, ready)
+    })
+  }
+
+  this.render_web = function (content, window) {
+    // Handled in Renderer
+    console.info('Web Render')
+  }
+
+  this.export = function (content = this.renderer.to_svg()) {
+    if (dotgrid.tool.length() < 1) { console.warn('Nothing to export'); return }
+
+    if (!dialog) { this.export_web(content); return }
+
+    dialog.showSaveDialog({ title: 'Save to .svg', filters: [{ name: 'Vector Format', extensions: ['svg'] }] }, (fileName) => {
+      if (fileName === undefined) { return }
+      fileName = fileName.substr(-4, 4) != '.svg' ? fileName + '.svg' : fileName
+      fs.writeFileSync(fileName, content)
+      this.guide.update()
+    })
+  }
+
+  this.export_web = function (content) {
+    console.info('Web Export')
+    const win = window.open('', 'Save', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height - 200},left=${screen.width - 640}`)
+    win.document.body.innerHTML = `<style>body { background:${dotgrid.theme.active.background}}</style>${dotgrid.renderer.to_svg()}`
   }
 
   // Basics
 
-  this.set_size = function(size = {width:300,height:300},ui = true,scale = 1)
-  {
-    size = { width:clamp(step(size.width,15),105,1080),height:clamp(step(size.height,15),120,1080)}
+  this.set_size = function (size = { width: 300, height: 300 }, ui = true, scale = 1) {
+    size = { width: clamp(step(size.width, 15), 105, 1080), height: clamp(step(size.height, 15), 120, 1080) }
 
     this.tool.settings.size.width = size.width
     this.tool.settings.size.height = size.height
 
-    try{
-      const win = require('electron').remote.getCurrentWindow();
-      win.setSize((size.width+100)*scale,(size.height+100+(ui ? 10 : 0))*scale,true);  
+    try {
+      const win = require('electron').remote.getCurrentWindow()
+      win.setSize((size.width + 100) * scale, (size.height + 100 + (ui ? 10 : 0)) * scale, true)
+    } catch (err) {
+      console.log('No window')
     }
-    catch(err){
-      console.log("No window")
-    }
-    
-    this.grid_x = size.width/15
-    this.grid_y = size.height/15
 
-    this.grid_width = this.tool.settings.size.width/this.grid_x;
-    this.grid_height = this.tool.settings.size.height/this.grid_y;
+    this.grid_x = size.width / 15
+    this.grid_y = size.height / 15
 
-    dotgrid.guide.resize(size);
+    this.grid_width = this.tool.settings.size.width / this.grid_x
+    this.grid_height = this.tool.settings.size.height / this.grid_y
 
-    this.interface.update();
-    dotgrid.guide.update();
+    dotgrid.guide.resize(size)
+
+    this.interface.update()
+    dotgrid.guide.update()
   }
 
-  this.set_zoom = function(scale)
-  {
-    this.set_size({width:this.tool.settings.size.width,height:this.tool.settings.size.height},true,scale)
+  this.set_zoom = function (scale) {
+    this.set_size({ width: this.tool.settings.size.width, height: this.tool.settings.size.height }, true, scale)
 
-    try{
-      webFrame.setZoomFactor(scale)  
-    }
-    catch(err){
-      console.log("Cannot zoom")
+    try {
+      webFrame.setZoomFactor(scale)
+    } catch (err) {
+      console.log('Cannot zoom')
     }
   }
 
   // Draw
 
-  this.reset = function()
-  {
-    this.tool.clear();
-    this.update();
+  this.reset = function () {
+    this.tool.clear()
+    this.update()
   }
 
-  this.clear = function()
-  {
-    this.history.clear();
-    this.tool.reset();
-    this.reset();
-    dotgrid.guide.update();
-    dotgrid.interface.update(true);
+  this.clear = function () {
+    this.history.clear()
+    this.tool.reset()
+    this.reset()
+    dotgrid.guide.update()
+    dotgrid.interface.update(true)
   }
 
-  this.resize = function()
-  {
-    const size = {width:step(window.innerWidth-90,15),height:step(window.innerHeight-120,15)}
+  this.resize = function () {
+    const size = { width: step(window.innerWidth - 90, 15), height: step(window.innerHeight - 120, 15) }
 
-    if(size.width == dotgrid.tool.settings.size.width && size.height == dotgrid.tool.settings.size.height){
-      return;
+    if (size.width == dotgrid.tool.settings.size.width && size.height == dotgrid.tool.settings.size.height) {
+      return
     }
 
     console.log(`Resized: ${size.width}x${size.height}`)
-    
+
     dotgrid.tool.settings.size.width = size.width
     dotgrid.tool.settings.size.height = size.height
 
-    dotgrid.grid_x = size.width/15
-    dotgrid.grid_y = size.height/15
+    dotgrid.grid_x = size.width / 15
+    dotgrid.grid_y = size.height / 15
 
-    dotgrid.grid_width = dotgrid.tool.settings.size.width/dotgrid.grid_x;
-    dotgrid.grid_height = dotgrid.tool.settings.size.height/dotgrid.grid_y;
+    dotgrid.grid_width = dotgrid.tool.settings.size.width / dotgrid.grid_x
+    dotgrid.grid_height = dotgrid.tool.settings.size.height / dotgrid.grid_y
 
-    dotgrid.guide.resize(size);
+    dotgrid.guide.resize(size)
 
     document.title = `Dotgrid — ${size.width}x${size.height}`
   }
 
-  this.drag = function(e)
-  {
-    e.preventDefault();
-    e.stopPropagation();
+  this.drag = function (e) {
+    e.preventDefault()
+    e.stopPropagation()
 
-    const file = e.dataTransfer.files[0];
+    const file = e.dataTransfer.files[0]
 
-    if(!file || !file.path || file.path.indexOf(".dot") < 0 && file.path.indexOf(".grid") < 0){ console.warn("Dotgrid","Not a dot file"); return; }
+    if (!file || !file.path || file.path.indexOf('.dot') < 0 && file.path.indexOf('.grid') < 0) { console.warn('Dotgrid', 'Not a dot file'); return }
 
-    const reader = new FileReader();
-    reader.onload = function(e){
-      dotgrid.tool.replace(JSON.parse(e.target.result.toString().trim()));
-      dotgrid.guide.update();
-    };
-    reader.readAsText(file);
+    const reader = new FileReader()
+    reader.onload = function (e) {
+      dotgrid.tool.replace(JSON.parse(e.target.result.toString().trim()))
+      dotgrid.guide.update()
+    }
+    reader.readAsText(file)
   }
 
-  this.copy = function(e)
-  {
-    dotgrid.guide.update();
+  this.copy = function (e) {
+    dotgrid.guide.update()
 
-    if(e.target !== this.picker.input){
-      e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()));
-      e.clipboardData.setData('text/plain', dotgrid.tool.path());
-      e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
-      e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg());
-      e.preventDefault();
+    if (e.target !== this.picker.input) {
+      e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()))
+      e.clipboardData.setData('text/plain', dotgrid.tool.path())
+      e.clipboardData.setData('text/html', dotgrid.renderer.to_svg())
+      e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg())
+      e.preventDefault()
     }
 
-    dotgrid.guide.update();
+    dotgrid.guide.update()
   }
 
-  this.cut = function(e)
-  {
-    dotgrid.guide.update();
+  this.cut = function (e) {
+    dotgrid.guide.update()
 
-    if(e.target !== this.picker.input){
-      e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()));
-      e.clipboardData.setData('text/html', dotgrid.renderer.to_svg());
-      e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg());
-      dotgrid.tool.layers[dotgrid.tool.index] = [];
-      e.preventDefault();
+    if (e.target !== this.picker.input) {
+      e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()))
+      e.clipboardData.setData('text/html', dotgrid.renderer.to_svg())
+      e.clipboardData.setData('text/svg+xml', dotgrid.renderer.to_svg())
+      dotgrid.tool.layers[dotgrid.tool.index] = []
+      e.preventDefault()
     }
 
-    dotgrid.guide.update();
+    dotgrid.guide.update()
   }
 
-  this.paste = function(e)
-  {
-    if(e.target !== this.picker.el){
-      const data = e.clipboardData.getData("text/source");
+  this.paste = function (e) {
+    if (e.target !== this.picker.el) {
+      const data = e.clipboardData.getData('text/source')
       if (is_json(data)) {
-        data = JSON.parse(data.trim());
-        dotgrid.tool.import(data);
+        data = JSON.parse(data.trim())
+        dotgrid.tool.import(data)
       }
-      e.preventDefault();
+      e.preventDefault()
     }
 
-    dotgrid.guide.update();
+    dotgrid.guide.update()
   }
 }
 
-window.addEventListener('resize', function(e)
-{
-  dotgrid.update();
-}, false);
+window.addEventListener('resize', function (e) {
+  dotgrid.update()
+}, false)
 
-window.addEventListener('dragover',function(e)
-{
-  e.stopPropagation();
-  e.preventDefault();
-  e.dataTransfer.dropEffect = 'copy';
-});
+window.addEventListener('dragover', function (e) {
+  e.stopPropagation()
+  e.preventDefault()
+  e.dataTransfer.dropEffect = 'copy'
+})
 
-String.prototype.capitalize = function()
-{
-  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase();
+String.prototype.capitalize = function () {
+  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
 }
 
-function is_json(text){ try{ JSON.parse(text);return true; } catch(error){ return false; }}
-function pos_is_equal(a,b){ return a && b && a.x == b.x && a.y == b.y }
-function clamp(v, min, max) { return v < min ? min : v > max ? max : v; }
-function step(v,s){ return Math.round(v/s) * s; }
+function is_json (text) { try { JSON.parse(text); return true } catch (error) { return false } }
+function pos_is_equal (a, b) { return a && b && a.x == b.x && a.y == b.y }
+function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
+function step (v, s) { return Math.round(v / s) * s }
