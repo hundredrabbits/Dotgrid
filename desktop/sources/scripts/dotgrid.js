@@ -252,7 +252,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
 
   this.paste = function (e) {
     if (e.target !== this.picker.el) {
-      const data = e.clipboardData.getData('text/source')
+      let data = e.clipboardData.getData('text/source')
       if (is_json(data)) {
         data = JSON.parse(data.trim())
         dotgrid.tool.import(data)

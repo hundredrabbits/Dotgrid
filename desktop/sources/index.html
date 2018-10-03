@@ -49,6 +49,7 @@
         dotgrid.controller.add("default","File","Export(.svg)",() => { dotgrid.export(); },"CmdOrCtrl+E");
 
         dotgrid.controller.add_role("default","Edit","copy");
+        dotgrid.controller.add_role("default","Edit","paste");
         dotgrid.controller.add("default","Edit","Undo",() => { dotgrid.tool.undo() },"CmdOrCtrl+Z");
         dotgrid.controller.add("default","Edit","Redo",() => { dotgrid.tool.redo() },"CmdOrCtrl+Shift+Z");
 
