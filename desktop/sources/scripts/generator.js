@@ -85,7 +85,6 @@ function Generator(layer,style)
       s += `${this.render(prev,seg,mirror)}`
       prev = seg.vertices ? seg.vertices[seg.vertices.length-1] : null
     }
-
     return s;
   }
 

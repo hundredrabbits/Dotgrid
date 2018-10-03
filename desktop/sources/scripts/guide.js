@@ -85,7 +85,7 @@ function Guide()
   {
     if(!this.show_extras){ return; }
 
-    let cursor = {x:parseInt(dotgrid.cursor.pos.x/dotgrid.grid_width),y:parseInt(dotgrid.cursor.pos.y/dotgrid.grid_width)}
+    const cursor = {x:parseInt(dotgrid.cursor.pos.x/dotgrid.grid_width),y:parseInt(dotgrid.cursor.pos.y/dotgrid.grid_width)}
 
     for (let x = dotgrid.grid_x-1; x >= 0; x--) {
       for (let y = dotgrid.grid_y; y >= 0; y--) {

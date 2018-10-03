@@ -33,7 +33,7 @@ function Picker()
     if(!this.is_active){ return; }
     if(!is_color(this.input.value)){ return; }
 
-    let hex = `#${this.input.value}`;
+    const hex = `#${this.input.value}`;
 
     document.getElementById("option_color").children[0].style.fill = hex;
     document.getElementById("option_color").children[0].style.stroke = hex;
@@ -59,7 +59,7 @@ function Picker()
   {
     if(!is_color(this.input.value)){ return; }
 
-    let hex = `#${this.input.value}`;
+    const hex = `#${this.input.value}`;
 
     dotgrid.tool.style().color = hex;
     dotgrid.tool.style().fill = dotgrid.tool.style().fill != "none" ? hex : "none";
@@ -95,13 +95,13 @@ function Picker()
       return false
     }
 
-    let re = /[0-9A-Fa-f]/g;
+    const re = /[0-9A-Fa-f]/g;
     return re.test(val)
   }
 
   function is_color_char(val)
   {
-    let re = /[0-9A-Fa-f]/g;
+    const re = /[0-9A-Fa-f]/g;
     return re.test(val)
   }
 
