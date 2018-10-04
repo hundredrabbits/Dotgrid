@@ -71,16 +71,20 @@ function Interface () {
   this.over = function (type, name) {
     dotgrid.cursor.operation = {}
     dotgrid.cursor.operation[type] = name
+    this.update(true)
+    dotgrid.guide.update(true);
   }
 
   this.out = function (type, name) {
     dotgrid.cursor.operation = ''
+    dotgrid.guide.update(true)
   }
 
   this.up = function (type, name) {
     if (!dotgrid.tool[type]) { console.warn(`Unknown option(type): ${type}.${name}`, dotgrid.tool); return }
 
     this.update(true)
+    dotgrid.guide.update(true)
   }
 
   this.down = function (type, name) {
@@ -88,6 +92,7 @@ function Interface () {
 
     dotgrid.tool[type](name)
     this.update(true)
+    dotgrid.guide.update(true);
   }
 
   this.prev_operation = null

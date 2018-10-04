@@ -26,7 +26,7 @@
   </head>
   <body>
     <script>
-        'use strict';
+        'use strict'
 
         const webFrame = require('electron').webFrame
         const {dialog,app} = require('electron').remote;
@@ -52,6 +52,7 @@
         dotgrid.controller.add_role("default","Edit","paste");
         dotgrid.controller.add("default","Edit","Undo",() => { dotgrid.tool.undo() },"CmdOrCtrl+Z");
         dotgrid.controller.add("default","Edit","Redo",() => { dotgrid.tool.redo() },"CmdOrCtrl+Shift+Z");
+        dotgrid.controller.add("default","Edit","Redo",() => { dotgrid.tool.clear() },"Escape");
 
         dotgrid.controller.add("default","Stroke","Line",() => { dotgrid.tool.cast("line"); },"A");
         dotgrid.controller.add("default","Stroke","Arc",() => { dotgrid.tool.cast("arc_c"); },"S"); // 0,1
