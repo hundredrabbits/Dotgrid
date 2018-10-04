@@ -1,6 +1,6 @@
 'use strict'
 
-function Cursor () {
+DOTGRID.Cursor = function() {
   this.pos = { x: 0, y: 0 }
   this.translation = null
   this.operation = null
@@ -20,12 +20,12 @@ function Cursor () {
     this.pos = this.pos_from_event(e)
 
     // Translation
-    if (dotgrid.tool.vertex_at(this.pos)) {
+    if (DOTGRID.tool.vertex_at(this.pos)) {
       this.translate(this.pos, this.pos, e.shiftKey)
     }
 
-    dotgrid.guide.update()
-    dotgrid.interface.update()
+    DOTGRID.guide.update()
+    DOTGRID.interface.update()
     e.preventDefault()
   }
 
@@ -40,10 +40,10 @@ function Cursor () {
     }
 
     if (this.last_pos.x != this.pos.x || this.last_pos.y != this.pos.y) {
-      dotgrid.guide.update()
+      DOTGRID.guide.update()
     }
 
-    dotgrid.interface.update()
+    DOTGRID.interface.update()
     e.preventDefault()
 
     this.last_pos = this.pos
@@ -52,29 +52,29 @@ function Cursor () {
   this.up = function (e) {
     this.pos = this.pos_from_event(e)
 
-    if (e.altKey) { dotgrid.tool.remove_segments_at(this.pos); this.translate(); return }
+    if (e.altKey) { DOTGRID.tool.remove_segments_at(this.pos); this.translate(); return }
 
     if (this.translation && !is_equal(this.translation.from, this.translation.to)) {
-      if (this.translation.multi) { dotgrid.tool.translate_multi(this.translation.from, this.translation.to) } else { dotgrid.tool.translate(this.translation.from, this.translation.to) }
+      if (this.translation.multi) { DOTGRID.tool.translate_multi(this.translation.from, this.translation.to) } else { DOTGRID.tool.translate(this.translation.from, this.translation.to) }
     } else if (e.target.id == 'guide') {
-      dotgrid.tool.add_vertex({ x: this.pos.x, y: this.pos.y })
-      dotgrid.picker.stop()
+      DOTGRID.tool.add_vertex({ x: this.pos.x, y: this.pos.y })
+      DOTGRID.picker.stop()
     }
 
     this.translate()
 
-    dotgrid.interface.update()
-    dotgrid.guide.update()
+    DOTGRID.interface.update()
+    DOTGRID.guide.update()
     e.preventDefault()
   }
 
   this.alt = function (e) {
     this.pos = this.pos_from_event(e)
 
-    dotgrid.tool.remove_segments_at(this.pos)
+    DOTGRID.tool.remove_segments_at(this.pos)
     e.preventDefault()
 
-    setTimeout(() => { dotgrid.tool.clear() }, 150)
+    setTimeout(() => { DOTGRID.tool.clear() }, 150)
   }
 
   // Position Mods
@@ -85,16 +85,16 @@ function Cursor () {
 
   this.pos_relative = function (pos) {
     return {
-      x: pos.x - dotgrid.guide.el.offsetLeft,
-      y: pos.y - dotgrid.guide.el.offsetTop
+      x: pos.x - DOTGRID.guide.el.offsetLeft,
+      y: pos.y - DOTGRID.guide.el.offsetTop
     }
   }
 
   this.pos_snap = function (pos) {
-    const grid = dotgrid.tool.settings.size.width / dotgrid.grid_x
+    const grid = DOTGRID.tool.settings.size.width / DOTGRID.grid_x
     return {
-      x: clamp(step(pos.x, grid), grid, dotgrid.tool.settings.size.width),
-      y: clamp(step(pos.y, grid), grid, dotgrid.tool.settings.size.height + grid)
+      x: clamp(step(pos.x, grid), grid, DOTGRID.tool.settings.size.width),
+      y: clamp(step(pos.y, grid), grid, DOTGRID.tool.settings.size.height + grid)
     }
   }
 

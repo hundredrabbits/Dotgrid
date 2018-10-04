@@ -1,6 +1,6 @@
 'use strict'
 
-function Tool () {
+DOTGRID.Tool = function(){
   this.index = 0
   this.settings = { size: { width: 300, height: 300 } }
   this.layers = [[], [], []]
@@ -13,9 +13,9 @@ function Tool () {
   this.reqs = { line: 2, arc_c: 2, arc_r: 2, bezier: 3, close: 0 }
 
   this.start = function () {
-    this.styles[0].color = dotgrid.theme.active.f_high
-    this.styles[1].color = dotgrid.theme.active.f_med
-    this.styles[2].color = dotgrid.theme.active.f_low
+    this.styles[0].color = DOTGRID.theme.active.f_high
+    this.styles[1].color = DOTGRID.theme.active.f_med
+    this.styles[2].color = DOTGRID.theme.active.f_low
   }
 
   this.reset = function () {
@@ -26,20 +26,20 @@ function Tool () {
 
   this.clear = function () {
     this.vertices = []
-    dotgrid.guide.update()
-    dotgrid.interface.update(true)
+    DOTGRID.guide.update()
+    DOTGRID.interface.update(true)
   }
 
   this.undo = function () {
-    this.layers = dotgrid.history.prev()
-    dotgrid.guide.update()
-    dotgrid.interface.update(true)
+    this.layers = DOTGRID.history.prev()
+    DOTGRID.guide.update()
+    DOTGRID.interface.update(true)
   }
 
   this.redo = function () {
-    this.layers = dotgrid.history.next()
-    dotgrid.guide.update()
-    dotgrid.interface.update(true)
+    this.layers = DOTGRID.history.next()
+    DOTGRID.guide.update()
+    DOTGRID.interface.update(true)
   }
 
   this.length = function () {
@@ -54,10 +54,10 @@ function Tool () {
 
   this.import = function (layer) {
     this.layers[this.index] = this.layers[this.index].concat(layer)
-    dotgrid.history.push(this.layers)
+    DOTGRID.history.push(this.layers)
     this.clear()
-    dotgrid.guide.update()
-    dotgrid.interface.update(true)
+    DOTGRID.guide.update()
+    DOTGRID.interface.update(true)
   }
 
   this.replace = function (dot) {
@@ -67,7 +67,7 @@ function Tool () {
       dot.settings.size = { width: dot.settings.width, height: dot.settings.height }
     }
     if (this.settings && (this.settings.size.width != dot.settings.size.width || this.settings.size.height != dot.settings.size.height)) {
-      dotgrid.set_size({ width: dot.settings.size.width, height: dot.settings.size.height })
+      DOTGRID.set_size({ width: dot.settings.size.width, height: dot.settings.size.height })
     }
 
     this.layers = dot.layers
@@ -75,9 +75,9 @@ function Tool () {
     this.settings = dot.settings
 
     this.clear()
-    dotgrid.guide.update()
-    dotgrid.interface.update(true)
-    dotgrid.history.push(this.layers)
+    DOTGRID.guide.update()
+    DOTGRID.interface.update(true)
+    DOTGRID.history.push(this.layers)
   }
 
   // EDIT
@@ -87,8 +87,8 @@ function Tool () {
 
     this.layer().pop()
     this.clear()
-    dotgrid.guide.update()
-    dotgrid.interface.update(true)
+    DOTGRID.guide.update()
+    DOTGRID.interface.update(true)
   }
 
   this.remove_segments_at = function (pos) {
@@ -105,14 +105,14 @@ function Tool () {
       }
     }
     this.clear()
-    dotgrid.guide.update()
-    dotgrid.interface.update(true)
+    DOTGRID.guide.update()
+    DOTGRID.interface.update(true)
   }
 
   this.add_vertex = function (pos) {
     pos = { x: Math.abs(pos.x), y: Math.abs(pos.y) }
     this.vertices.push(pos)
-    dotgrid.interface.update(true)
+    DOTGRID.interface.update(true)
   }
 
   this.vertex_at = function (pos) {
@@ -140,11 +140,11 @@ function Tool () {
       this.layer().push({ type: type, vertices: this.vertices.slice() })
     }
 
-    dotgrid.history.push(this.layers)
+    DOTGRID.history.push(this.layers)
 
     this.clear()
-    dotgrid.guide.update()
-    dotgrid.interface.update(true)
+    DOTGRID.guide.update()
+    DOTGRID.interface.update(true)
 
     console.log(`Casted ${type} -> ${this.layer().length} elements`)
   }
@@ -169,22 +169,22 @@ function Tool () {
     } else {
       console.warn('Unknown', type)
     }
-    dotgrid.interface.update(true)
-    dotgrid.guide.update()
+    DOTGRID.interface.update(true)
+    DOTGRID.guide.update()
   }
 
   this.misc = function (type) {
-    dotgrid.picker.start()
+    DOTGRID.picker.start()
   }
 
   this.source = function (type) {
-    if (type == 'grid') { dotgrid.guide.toggle() }
+    if (type == 'grid') { DOTGRID.guide.toggle() }
     if (type == 'screen') { app.toggle_fullscreen() }
 
-    if (type == 'open') { dotgrid.open() }
-    if (type == 'save') { dotgrid.save() }
-    if (type == 'render') { dotgrid.render() }
-    if (type == 'export') { dotgrid.export() }
+    if (type == 'open') { DOTGRID.open() }
+    if (type == 'save') { DOTGRID.save() }
+    if (type == 'render') { DOTGRID.render() }
+    if (type == 'export') { DOTGRID.export() }
   }
 
   this.can_append = function (content) {
@@ -218,15 +218,15 @@ function Tool () {
   }
 
   this.paths = function () {
-    let l1 = new Generator(dotgrid.tool.layers[0], dotgrid.tool.styles[0]).toString({ x: -10, y: -10 }, 1)
-    let l2 = new Generator(dotgrid.tool.layers[1], dotgrid.tool.styles[1]).toString({ x: -10, y: -10 }, 1)
-    let l3 = new Generator(dotgrid.tool.layers[2], dotgrid.tool.styles[2]).toString({ x: -10, y: -10 }, 1)
+    let l1 = new Generator(DOTGRID.tool.layers[0], DOTGRID.tool.styles[0]).toString({ x: -10, y: -10 }, 1)
+    let l2 = new Generator(DOTGRID.tool.layers[1], DOTGRID.tool.styles[1]).toString({ x: -10, y: -10 }, 1)
+    let l3 = new Generator(DOTGRID.tool.layers[2], DOTGRID.tool.styles[2]).toString({ x: -10, y: -10 }, 1)
 
     return [l1, l2, l3]
   }
 
   this.path = function () {
-    return new Generator(dotgrid.tool.layer(), dotgrid.tool.style()).toString({ x: -10, y: -10 }, 1)
+    return new Generator(DOTGRID.tool.layer(), DOTGRID.tool.style()).toString({ x: -10, y: -10 }, 1)
   }
 
   this.translate = function (a, b) {
@@ -239,9 +239,9 @@ function Tool () {
         }
       }
     }
-    dotgrid.history.push(this.layers)
+    DOTGRID.history.push(this.layers)
     this.clear()
-    dotgrid.guide.update()
+    DOTGRID.guide.update()
   }
 
   this.translate_multi = function (a, b) {
@@ -254,9 +254,9 @@ function Tool () {
         segment.vertices[vertex_id] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
       }
     }
-    dotgrid.history.push(this.layers)
+    DOTGRID.history.push(this.layers)
     this.clear()
-    dotgrid.guide.update()
+    DOTGRID.guide.update()
   }
 
   // Style
@@ -280,8 +280,8 @@ function Tool () {
   this.select_layer = function (id) {
     this.index = clamp(id, 0, 2)
     this.clear()
-    dotgrid.guide.update()
-    dotgrid.interface.update(true)
+    DOTGRID.guide.update()
+    DOTGRID.interface.update(true)
     console.log(`layer:${this.index}`)
   }
 

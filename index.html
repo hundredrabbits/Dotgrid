@@ -8,7 +8,7 @@
     <script type="text/javascript" src="desktop/sources/scripts/lib/theme.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/lib/history.js"></script>
 
-    <script type="text/javascript" src="desktop/sources/scripts/dotgrid.js"></script>
+    <script type="text/javascript" src="desktop/sources/scripts/DOTGRID.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/cursor.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/guide.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/renderer.js"></script>
@@ -30,9 +30,8 @@
     <script>
       'use strict';
       const dialog = null;
-      const dotgrid = new Dotgrid(300,300,20,20,4,4);
-      dotgrid.install(document.body);
-      dotgrid.start();
+      DOTGRID.install(document.body);
+      DOTGRID.start();
     </script>
   </body>
 </html>

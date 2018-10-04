@@ -1,6 +1,6 @@
 'use strict'
 
-function Picker () {
+DOTGRID.Picker = function() {
   this.memory = ''
   this.el = document.createElement('div')
   this.el.id = 'picker'
@@ -15,14 +15,14 @@ function Picker () {
 
     this.is_active = true
 
-    this.input.setAttribute('placeholder', `${dotgrid.tool.style().color.replace('#', '').trim()}`)
+    this.input.setAttribute('placeholder', `${DOTGRID.tool.style().color.replace('#', '').trim()}`)
     this.input.setAttribute('maxlength', 6)
 
-    dotgrid.interface.el.className = 'picker'
+    DOTGRID.interface.el.className = 'picker'
     this.input.focus()
     this.input.value = ''
 
-    try { dotgrid.controller.set('picker') } catch (err) { }
+    try { DOTGRID.controller.set('picker') } catch (err) { }
   }
 
   this.update = function () {
@@ -40,13 +40,13 @@ function Picker () {
 
     this.is_active = false
 
-    dotgrid.interface.el.className = ''
+    DOTGRID.interface.el.className = ''
     this.input.blur()
     this.input.value = ''
 
-    try { dotgrid.controller.set() } catch (err) { console.log('No controller') }
+    try { DOTGRID.controller.set() } catch (err) { console.log('No controller') }
 
-    setTimeout(() => { dotgrid.interface.update(true); dotgrid.guide.update() }, 250)
+    setTimeout(() => { DOTGRID.interface.update(true); DOTGRID.guide.update() }, 250)
   }
 
   this.validate = function () {
@@ -54,8 +54,8 @@ function Picker () {
 
     const hex = `#${this.input.value}`
 
-    dotgrid.tool.style().color = hex
-    dotgrid.tool.style().fill = dotgrid.tool.style().fill != 'none' ? hex : 'none'
+    DOTGRID.tool.style().color = hex
+    DOTGRID.tool.style().fill = DOTGRID.tool.style().fill != 'none' ? hex : 'none'
 
     this.stop()
   }
@@ -95,6 +95,6 @@ function Picker () {
     return re.test(val)
   }
 
-  this.input.onkeydown = function (event) { dotgrid.picker.listen(event, true) }
-  this.input.onkeyup = function (event) { dotgrid.picker.listen(event) }
+  this.input.onkeydown = function (event) { DOTGRID.picker.listen(event, true) }
+  this.input.onkeyup = function (event) { DOTGRID.picker.listen(event) }
 }

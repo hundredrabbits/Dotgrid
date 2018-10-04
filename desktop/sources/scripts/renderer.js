@@ -1,6 +1,6 @@
 'use strict'
 
-function Renderer () {
+DOTGRID.Renderer = function(){
   // Create SVG parts
   this.svg_el = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   this.svg_el.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
@@ -17,14 +17,14 @@ function Renderer () {
   this.svg_el.appendChild(this.layer_1)
 
   this.update = function () {
-    this.svg_el.setAttribute('width', (dotgrid.tool.settings.size.width - (5)) + 'px')
-    this.svg_el.setAttribute('height', (dotgrid.tool.settings.size.height + (10)) + 'px')
-    this.svg_el.style.width = (dotgrid.tool.settings.size.width - (5))
-    this.svg_el.style.height = dotgrid.tool.settings.size.height + (10)
-    this.svg_el.style.strokeWidth = dotgrid.tool.style().thickness
+    this.svg_el.setAttribute('width', (DOTGRID.tool.settings.size.width - (5)) + 'px')
+    this.svg_el.setAttribute('height', (DOTGRID.tool.settings.size.height + (10)) + 'px')
+    this.svg_el.style.width = (DOTGRID.tool.settings.size.width - (5))
+    this.svg_el.style.height = DOTGRID.tool.settings.size.height + (10)
+    this.svg_el.style.strokeWidth = DOTGRID.tool.style().thickness
 
-    let styles = dotgrid.tool.styles
-    let paths = dotgrid.tool.paths()
+    let styles = DOTGRID.tool.styles
+    let paths = DOTGRID.tool.paths()
 
     this.layer_1.style.strokeWidth = styles[0].thickness
     this.layer_1.style.strokeLinecap = styles[0].strokeLinecap
@@ -48,7 +48,7 @@ function Renderer () {
     this.layer_3.setAttribute('d', paths[2])
   }
 
-  this.to_png = function (size = dotgrid.tool.settings.size, callback = dotgrid.render) {
+  this.to_png = function (size = DOTGRID.tool.settings.size, callback = DOTGRID.render) {
     if (!dialog) { return this.to_png_web(size) }
 
     this.update()
@@ -69,7 +69,7 @@ function Renderer () {
     img.onload = function () {
       ctx.drawImage(img, 0, 0, (size.width) * 2, (size.height + 30) * 2)
       let data = canvas.toDataURL('image/png').replace(/^data:image\/\w+;base64,/, '')
-      dotgrid.renderer.to_png_ready(callback, new Buffer(data, 'base64'), size)
+      DOTGRID.renderer.to_png_ready(callback, new Buffer(data, 'base64'), size)
     }
     img.src = image64
   }
@@ -79,7 +79,7 @@ function Renderer () {
   }
 
   this.to_png_web = function (size) {
-    if (dotgrid.tool.length() < 1) { console.warn('Nothing to render'); return }
+    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to render'); return }
     this.update()
 
     let xml = new XMLSerializer().serializeToString(this.svg_el)
@@ -98,7 +98,7 @@ function Renderer () {
 
     img.onload = function () {
       ctx.drawImage(img, 0, 0, size.width * 2, size.height * 2)
-      win.document.write(`<style>body { background:${dotgrid.theme.active.background}}</style><img width='${size.width / 2}' height='${size.height / 2}' src='${canvas.toDataURL('image/png')}' alt='from canvas'/>`)
+      win.document.write(`<style>body { background:${DOTGRID.theme.active.background}}</style><img width='${size.width / 2}' height='${size.height / 2}' src='${canvas.toDataURL('image/png')}' alt='from canvas'/>`)
     }
     img.src = image64
   }

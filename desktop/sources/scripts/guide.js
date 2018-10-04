@@ -1,6 +1,6 @@
 'use strict'
 
-function Guide () {
+DOTGRID.Guide = function(){
   this.el = document.createElement('canvas')
   this.el.id = 'guide'
   this.el.width = 640
@@ -23,12 +23,12 @@ function Guide () {
 
     this.draw_rulers()
 
-    if (dotgrid.tool.index == 2) { this.draw_markers(); this.draw_vertices() }
-    this.draw_path(new Generator(dotgrid.tool.layers[2], dotgrid.tool.styles[2]).toString({ x: 0, y: 0 }, this.scale), dotgrid.tool.styles[2])
-    if (dotgrid.tool.index == 1) { this.draw_markers(); this.draw_vertices() }
-    this.draw_path(new Generator(dotgrid.tool.layers[1], dotgrid.tool.styles[1]).toString({ x: 0, y: 0 }, this.scale), dotgrid.tool.styles[1])
-    if (dotgrid.tool.index == 0) { this.draw_markers(); this.draw_vertices() }
-    this.draw_path(new Generator(dotgrid.tool.layers[0], dotgrid.tool.styles[0]).toString({ x: 0, y: 0 }, this.scale), dotgrid.tool.styles[0])
+    if (DOTGRID.tool.index == 2) { this.draw_markers(); this.draw_vertices() }
+    this.draw_path(new Generator(DOTGRID.tool.layers[2], DOTGRID.tool.styles[2]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[2])
+    if (DOTGRID.tool.index == 1) { this.draw_markers(); this.draw_vertices() }
+    this.draw_path(new Generator(DOTGRID.tool.layers[1], DOTGRID.tool.styles[1]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[1])
+    if (DOTGRID.tool.index == 0) { this.draw_markers(); this.draw_vertices() }
+    this.draw_path(new Generator(DOTGRID.tool.layers[0], DOTGRID.tool.styles[0]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[0])
 
     this.draw_handles()
     this.draw_translation()
@@ -58,8 +58,8 @@ function Guide () {
   this.draw_handles = function () {
     if (!this.show_extras) { return }
 
-    for (const segment_id in dotgrid.tool.layer()) {
-      const segment = dotgrid.tool.layer()[segment_id]
+    for (const segment_id in DOTGRID.tool.layer()) {
+      const segment = DOTGRID.tool.layer()[segment_id]
       for (const vertex_id in segment.vertices) {
         const vertex = segment.vertices[vertex_id]
         this.draw_handle(vertex)
@@ -68,26 +68,26 @@ function Guide () {
   }
 
   this.draw_vertices = function () {
-    for (const id in dotgrid.tool.vertices) {
-      this.draw_vertex(dotgrid.tool.vertices[id])
+    for (const id in DOTGRID.tool.vertices) {
+      this.draw_vertex(DOTGRID.tool.vertices[id])
     }
   }
 
   this.draw_markers = function () {
     if (!this.show_extras) { return }
 
-    const cursor = { x: parseInt(dotgrid.cursor.pos.x / dotgrid.grid_width), y: parseInt(dotgrid.cursor.pos.y / dotgrid.grid_width) }
+    const cursor = { x: parseInt(DOTGRID.cursor.pos.x / DOTGRID.grid_width), y: parseInt(DOTGRID.cursor.pos.y / DOTGRID.grid_width) }
 
-    for (let x = dotgrid.grid_x - 1; x >= 0; x--) {
-      for (let y = dotgrid.grid_y; y >= 0; y--) {
-        let is_step = x % dotgrid.block_x == 0 && y % dotgrid.block_y == 0
+    for (let x = DOTGRID.grid_x - 1; x >= 0; x--) {
+      for (let y = DOTGRID.grid_y; y >= 0; y--) {
+        let is_step = x % DOTGRID.block_x == 0 && y % DOTGRID.block_y == 0
         // Color
-        let color = is_step ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low
-        if ((y == 0 || y == dotgrid.grid_y) && cursor.x == x + 1) { color = dotgrid.theme.active.b_high } else if ((x == 0 || x == dotgrid.grid_x - 1) && cursor.y == y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x == x + 1 && cursor.y == y + 1) { color = dotgrid.theme.active.b_high }
+        let color = is_step ? DOTGRID.theme.active.b_med : DOTGRID.theme.active.b_low
+        if ((y == 0 || y == DOTGRID.grid_y) && cursor.x == x + 1) { color = DOTGRID.theme.active.b_high } else if ((x == 0 || x == DOTGRID.grid_x - 1) && cursor.y == y + 1) { color = DOTGRID.theme.active.b_high } else if (cursor.x == x + 1 && cursor.y == y + 1) { color = DOTGRID.theme.active.b_high }
 
         this.draw_marker({
-          x: parseInt(x * dotgrid.grid_width) + dotgrid.grid_width,
-          y: parseInt(y * dotgrid.grid_height) + dotgrid.grid_height
+          x: parseInt(x * DOTGRID.grid_width) + DOTGRID.grid_width,
+          y: parseInt(y * DOTGRID.grid_height) + DOTGRID.grid_height
         }, is_step ? 2.5 : 1.5, color)
       }
     }
@@ -108,7 +108,7 @@ function Guide () {
     ctx.beginPath()
     ctx.lineWidth = 2
     ctx.arc((pos.x * this.scale), (pos.y * this.scale), radius, 0, 2 * Math.PI, false)
-    ctx.fillStyle = dotgrid.theme.active.f_med
+    ctx.fillStyle = DOTGRID.theme.active.f_med
     ctx.fill()
     ctx.closePath()
   }
@@ -121,7 +121,7 @@ function Guide () {
     ctx.lineTo(to.x, to.y)
     ctx.lineCap = 'round'
     ctx.lineWidth = 3
-    ctx.strokeStyle = dotgrid.theme.active.b_low
+    ctx.strokeStyle = DOTGRID.theme.active.b_low
     ctx.stroke()
     ctx.closePath()
   }
@@ -129,9 +129,9 @@ function Guide () {
   this.draw_ruler = function (pos) {
     let offset = 15 * this.scale
     let top = offset
-    let bottom = (dotgrid.tool.settings.size.height * this.scale) + offset
+    let bottom = (DOTGRID.tool.settings.size.height * this.scale) + offset
     let left = offset
-    let right = (dotgrid.tool.settings.size.width * this.scale)
+    let right = (DOTGRID.tool.settings.size.width * this.scale)
 
     // Translation
     this.draw_rule({ x: pos.x * this.scale, y: top }, { x: pos.x * this.scale, y: bottom })
@@ -139,11 +139,11 @@ function Guide () {
   }
 
   this.draw_rulers = function () {
-    if (!dotgrid.cursor.translation) { return }
+    if (!DOTGRID.cursor.translation) { return }
 
     let ctx = this.el.getContext('2d')
 
-    this.draw_ruler(dotgrid.cursor.translation.to)
+    this.draw_ruler(DOTGRID.cursor.translation.to)
 
     ctx.setLineDash([])
     ctx.restore()
@@ -156,21 +156,21 @@ function Guide () {
     ctx.lineWidth = 3
     ctx.lineCap = 'round'
     ctx.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), radius + 3, 0, 2 * Math.PI, false)
-    ctx.fillStyle = dotgrid.theme.active.f_high
+    ctx.fillStyle = DOTGRID.theme.active.f_high
     ctx.fill()
-    ctx.strokeStyle = dotgrid.theme.active.f_high
+    ctx.strokeStyle = DOTGRID.theme.active.f_high
     ctx.stroke()
     ctx.closePath()
 
     ctx.beginPath()
     ctx.arc((pos.x * this.scale), (pos.y * this.scale), radius, 0, 2 * Math.PI, false)
-    ctx.fillStyle = dotgrid.theme.active.f_low
+    ctx.fillStyle = DOTGRID.theme.active.f_low
     ctx.fill()
     ctx.closePath()
 
     ctx.beginPath()
     ctx.arc((pos.x * this.scale), (pos.y * this.scale), radius - 3, 0, 2 * Math.PI, false)
-    ctx.fillStyle = dotgrid.theme.active.f_high
+    ctx.fillStyle = DOTGRID.theme.active.f_high
     ctx.fill()
     ctx.closePath()
   }
@@ -195,16 +195,16 @@ function Guide () {
   }
 
   this.draw_translation = function () {
-    if (!dotgrid.cursor.translation) { return }
+    if (!DOTGRID.cursor.translation) { return }
 
     let ctx = this.el.getContext('2d')
 
     ctx.beginPath()
-    ctx.moveTo((dotgrid.cursor.translation.from.x * this.scale), (dotgrid.cursor.translation.from.y * this.scale))
-    ctx.lineTo((dotgrid.cursor.translation.to.x * this.scale), (dotgrid.cursor.translation.to.y * this.scale))
+    ctx.moveTo((DOTGRID.cursor.translation.from.x * this.scale), (DOTGRID.cursor.translation.from.y * this.scale))
+    ctx.lineTo((DOTGRID.cursor.translation.to.x * this.scale), (DOTGRID.cursor.translation.to.y * this.scale))
     ctx.lineCap = 'round'
     ctx.lineWidth = 5
-    ctx.strokeStyle = dotgrid.theme.active.f_low
+    ctx.strokeStyle = DOTGRID.theme.active.f_low
     ctx.setLineDash([5, 10])
     ctx.stroke()
     ctx.closePath()
@@ -213,14 +213,14 @@ function Guide () {
     ctx.restore()
   }
 
-  this.draw_cursor = function (pos = dotgrid.cursor.pos, radius = dotgrid.tool.style().thickness - 1) {
+  this.draw_cursor = function (pos = DOTGRID.cursor.pos, radius = DOTGRID.tool.style().thickness - 1) {
     let ctx = this.el.getContext('2d')
 
     ctx.beginPath()
     ctx.lineWidth = 3
     ctx.lineCap = 'round'
     ctx.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), 5, 0, 2 * Math.PI, false)
-    ctx.strokeStyle = dotgrid.theme.active.background
+    ctx.strokeStyle = DOTGRID.theme.active.background
     ctx.stroke()
     ctx.closePath()
 
@@ -228,21 +228,21 @@ function Guide () {
     ctx.lineWidth = 3
     ctx.lineCap = 'round'
     ctx.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), clamp(radius, 5, 100), 0, 2 * Math.PI, false)
-    ctx.strokeStyle = dotgrid.theme.active.f_med
+    ctx.strokeStyle = DOTGRID.theme.active.f_med
     ctx.stroke()
     ctx.closePath()
   }
 
   this.draw_preview = function () {
     let ctx = this.el.getContext('2d')
-    let operation = dotgrid.cursor.operation && dotgrid.cursor.operation.cast ? dotgrid.cursor.operation.cast : null
+    let operation = DOTGRID.cursor.operation && DOTGRID.cursor.operation.cast ? DOTGRID.cursor.operation.cast : null
 
-    if (!dotgrid.tool.can_cast(operation)) { return }
+    if (!DOTGRID.tool.can_cast(operation)) { return }
     if (operation == 'close') { return }
 
-    let path = new Generator([{ vertices: dotgrid.tool.vertices, type: operation }]).toString({ x: 0, y: 0 }, 2)
+    let path = new Generator([{ vertices: DOTGRID.tool.vertices, type: operation }]).toString({ x: 0, y: 0 }, 2)
     let style = {
-      color: dotgrid.theme.active.f_med,
+      color: DOTGRID.theme.active.f_med,
       thickness: 2,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
