@@ -78,7 +78,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     const link = document.createElement('a')
     link.setAttribute('href', base64)
     link.setAttribute('download', name)
-    link.click()
+    link.dispatchEvent(new MouseEvent(`click`, {bubbles: true, cancelable: true, view: window}));
   }
 
   this.save = function () {
