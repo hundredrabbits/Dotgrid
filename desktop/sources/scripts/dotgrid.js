@@ -1,7 +1,6 @@
 'use strict'
 
 function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
-
   this.controller = null
   this.theme = new Theme()
   this.history = new History()
@@ -14,7 +13,6 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
   // ISU
 
   this.install = function (host) {
-    
     this.guide = new this.Guide()
     this.tool = new this.Tool()
     this.interface = new this.Interface()
@@ -76,61 +74,30 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     })
   }
 
-  this.save = function (content = this.tool.export()) {
+  function grab (base64, name) {
+    const link = document.createElement('a')
+    link.setAttribute('href', base64)
+    link.setAttribute('download', name)
+    link.click()
+  }
+
+  this.save = function () {
     if (DOTGRID.tool.length() < 1) { console.warn('Nothing to save'); return }
 
-    if (!dialog) { this.save_web(content); return }
-
-    dialog.showSaveDialog({ title: 'Save to .grid', filters: [{ name: 'Dotgrid Format', extensions: ['grid', 'dot'] }] }, (fileName) => {
-      if (fileName === undefined) { return }
-      fileName = fileName.substr(-5, 5) != '.grid' ? fileName + '.grid' : fileName
-      fs.writeFileSync(fileName, content)
-      DOTGRID.guide.update()
-    })
+    this.renderer.to_grid(grab)
   }
 
-  this.save_web = function (content) {
-    console.info('Web Save')
-    const win = window.open('', 'Save', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height - 200},left=${screen.width - 640}`)
-    win.document.body.innerHTML = `<style>body { background:${DOTGRID.theme.active.background}; color:${DOTGRID.theme.active.f_med}} pre { color:${DOTGRID.theme.active.f_high} }</style><p>To save: Copy this into a .grid file.<br />To load: Drag the .grid onto the browser window.</p><pre>${content}</pre>`
-  }
-
-  this.render = function (content = this.renderer.to_png({ width: DOTGRID.tool.settings.size.width * 2, height: DOTGRID.tool.settings.size.height * 2 }), ready = null, size = null) {
-    if (!ready) { return }
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to render'); return }
-
-    if (!dialog) { DOTGRID.render_web(content); return }
-
-    dialog.showSaveDialog({ title: 'Save to .png', filters: [{ name: 'Image Format', extensions: ['png'] }] }, (fileName) => {
-      if (fileName === undefined) { return }
-      fileName = fileName.substr(-4, 4) != '.png' ? fileName + '.png' : fileName
-      console.log(`Rendered ${size.width}x${size.height}`)
-      fs.writeFileSync(fileName, ready)
-    })
-  }
-
-  this.render_web = function (content, window) {
-    // Handled in Renderer
-    console.info('Web Render')
-  }
-
-  this.export = function (content = this.renderer.to_svg()) {
+  this.export = function () {
     if (DOTGRID.tool.length() < 1) { console.warn('Nothing to export'); return }
 
-    if (!dialog) { this.export_web(content); return }
-
-    dialog.showSaveDialog({ title: 'Save to .svg', filters: [{ name: 'Vector Format', extensions: ['svg'] }] }, (fileName) => {
-      if (fileName === undefined) { return }
-      fileName = fileName.substr(-4, 4) != '.svg' ? fileName + '.svg' : fileName
-      fs.writeFileSync(fileName, content)
-      this.guide.update()
-    })
+    this.renderer.to_svg(grab)
   }
 
-  this.export_web = function (content) {
-    console.info('Web Export')
-    const win = window.open('', 'Save', `toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,width=640,height=480,top=${screen.height - 200},left=${screen.width - 640}`)
-    win.document.body.innerHTML = `<style>body { background:${DOTGRID.theme.active.background}}</style>${DOTGRID.renderer.to_svg()}`
+  this.render = function () {
+    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to render'); return }
+
+    const size = { width: DOTGRID.tool.settings.size.width * 2, height: DOTGRID.tool.settings.size.height * 2 }
+    this.renderer.to_png(size, grab)
   }
 
   // Basics
@@ -230,8 +197,8 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     if (e.target !== this.picker.input) {
       e.clipboardData.setData('text/source', DOTGRID.tool.export(DOTGRID.tool.layer()))
       e.clipboardData.setData('text/plain', DOTGRID.tool.path())
-      e.clipboardData.setData('text/html', DOTGRID.renderer.to_svg())
-      e.clipboardData.setData('text/svg+xml', DOTGRID.renderer.to_svg())
+      e.clipboardData.setData('text/html', DOTGRID.renderer.svg_el.outerHTML)
+      e.clipboardData.setData('text/svg+xml', DOTGRID.renderer.svg_el.outerHTML)
       e.preventDefault()
     }
 
@@ -243,8 +210,8 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
 
     if (e.target !== this.picker.input) {
       e.clipboardData.setData('text/plain', DOTGRID.tool.export(DOTGRID.tool.layer()))
-      e.clipboardData.setData('text/html', DOTGRID.renderer.to_svg())
-      e.clipboardData.setData('text/svg+xml', DOTGRID.renderer.to_svg())
+      e.clipboardData.setData('text/html', DOTGRID.renderer.svg_el.outerHTML)
+      e.clipboardData.setData('text/svg+xml', DOTGRID.renderer.svg_el.outerHTML)
       DOTGRID.tool.layers[DOTGRID.tool.index] = []
       e.preventDefault()
     }
@@ -285,6 +252,4 @@ function pos_is_equal (a, b) { return a && b && a.x == b.x && a.y == b.y }
 function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 function step (v, s) { return Math.round(v / s) * s }
 
-const DOTGRID = new Dotgrid(300,300,20,20,4,4);
-
-
+const DOTGRID = new Dotgrid(300, 300, 20, 20, 4, 4)

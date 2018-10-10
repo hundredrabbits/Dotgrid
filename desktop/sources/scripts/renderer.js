@@ -1,6 +1,6 @@
 'use strict'
 
-DOTGRID.Renderer = function(){
+DOTGRID.Renderer = function () {
   // Create SVG parts
   this.svg_el = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   this.svg_el.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
@@ -48,15 +48,17 @@ DOTGRID.Renderer = function(){
     this.layer_3.setAttribute('d', paths[2])
   }
 
-  this.to_png = function (size = DOTGRID.tool.settings.size, callback = DOTGRID.render) {
-    if (!dialog) { return this.to_png_web(size) }
-
+  this.svg64 = function () {
     this.update()
 
     let xml = new XMLSerializer().serializeToString(this.svg_el)
     let svg64 = btoa(xml)
     let b64Start = 'data:image/svg+xml;base64,'
-    let image64 = b64Start + svg64
+    return b64Start + svg64
+  }
+
+  this.to_png = function (size = DOTGRID.tool.settings.size, callback) {
+    let image64 = this.svg64()
     let img = new Image()
 
     let canvas = document.createElement('canvas')
@@ -68,44 +70,20 @@ DOTGRID.Renderer = function(){
 
     img.onload = function () {
       ctx.drawImage(img, 0, 0, (size.width) * 2, (size.height + 30) * 2)
-      let data = canvas.toDataURL('image/png').replace(/^data:image\/\w+;base64,/, '')
-      DOTGRID.renderer.to_png_ready(callback, new Buffer(data, 'base64'), size)
+      let data = canvas.toDataURL('image/png')
+      callback(data, 'export.png')
     }
     img.src = image64
   }
 
-  this.to_png_ready = function (callback, buffer, size) {
-    callback(null, buffer, size)
+  this.to_svg = function (callback) {
+    const image64 = this.svg64()
+    callback(image64, 'export.svg')
   }
 
-  this.to_png_web = function (size) {
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to render'); return }
-    this.update()
-
-    let xml = new XMLSerializer().serializeToString(this.svg_el)
-    let svg64 = btoa(xml)
-    let b64Start = 'data:image/svg+xml;base64,'
-    let image64 = b64Start + svg64
-
-    let canvas = document.createElement('canvas')
-    let ctx = canvas.getContext('2d')
-
-    let win = window.open('about:blank', 'image from canvas')
-    let img = new Image()
-
-    canvas.width = size.width * 2
-    canvas.height = size.height * 2
-
-    img.onload = function () {
-      ctx.drawImage(img, 0, 0, size.width * 2, size.height * 2)
-      win.document.write(`<style>body { background:${DOTGRID.theme.active.background}}</style><img width='${size.width / 2}' height='${size.height / 2}' src='${canvas.toDataURL('image/png')}' alt='from canvas'/>`)
-    }
-    img.src = image64
-  }
-
-  this.to_svg = function () {
-    this.update()
-
-    return this.svg_el.outerHTML
+  this.to_grid = function (callback) {
+    const text = DOTGRID.tool.export()
+    const file = new Blob([text], { type: 'text/plain' })
+    callback(URL.createObjectURL(file), 'export.grid')
   }
 }

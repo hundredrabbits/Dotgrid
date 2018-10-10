@@ -1,6 +1,6 @@
 'use strict'
 
-DOTGRID.Guide = function(){
+DOTGRID.Guide = function () {
   this.el = document.createElement('canvas')
   this.el.id = 'guide'
   this.el.width = 640

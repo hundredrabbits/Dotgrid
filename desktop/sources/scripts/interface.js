@@ -1,6 +1,6 @@
 'use strict'
 
-DOTGRID.Interface = function(){
+DOTGRID.Interface = function () {
   this.el = document.createElement('div')
   this.el.id = 'interface'
 
@@ -72,7 +72,7 @@ DOTGRID.Interface = function(){
     DOTGRID.cursor.operation = {}
     DOTGRID.cursor.operation[type] = name
     this.update(true)
-    DOTGRID.guide.update(true);
+    DOTGRID.guide.update(true)
   }
 
   this.out = function (type, name) {
@@ -92,7 +92,7 @@ DOTGRID.Interface = function(){
 
     DOTGRID.tool[type](name)
     this.update(true)
-    DOTGRID.guide.update(true);
+    DOTGRID.guide.update(true)
   }
 
   this.prev_operation = null

@@ -1,6 +1,6 @@
 'use strict'
 
-DOTGRID.Tool = function(){
+DOTGRID.Tool = function () {
   this.index = 0
   this.settings = { size: { width: 300, height: 300 } }
   this.layers = [[], [], []]

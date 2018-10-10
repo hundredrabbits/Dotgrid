@@ -1,6 +1,6 @@
 'use strict'
 
-DOTGRID.Picker = function() {
+DOTGRID.Picker = function () {
   this.memory = ''
   this.el = document.createElement('div')
   this.el.id = 'picker'
