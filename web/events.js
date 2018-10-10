@@ -6,6 +6,11 @@ document.onkeyup = (e) =>
 
   if(e.target && e.target.id == "picker_input"){ return; }
 
+  // Output
+  if((e.ctrlKey || e.metaKey) && ch == "s"){ DOTGRID.save(); e.preventDefault(); return; }
+  if((e.ctrlKey || e.metaKey) && ch == "r"){ DOTGRID.render(); e.preventDefault(); return; }
+  if((e.ctrlKey || e.metaKey) && ch == "e"){ DOTGRID.export(); e.preventDefault(); return; }
+
   if(ch == "backspace" && e.ctrlKey){ DOTGRID.theme.reset(); e.preventDefault(); }
   if(ch == "backspace"){ DOTGRID.tool.remove_segment(); e.preventDefault(); }
   if(ch == "escape"){ DOTGRID.tool.clear(); DOTGRID.picker.stop(); e.preventDefault(); }
