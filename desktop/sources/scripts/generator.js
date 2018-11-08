@@ -54,6 +54,12 @@ function Generator (layer, style) {
       } else if (type == 'arc_r') {
         let clock = mirror > 0 ? '0,1' : '0,0'
         html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''
+      } else if (type == 'arc_c_full') {
+        let clock = mirror > 0 ? '1,0' : '1,1'
+        html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''
+      } else if (type == 'arc_r_full') {
+        let clock = mirror > 0 ? '1,1' : '1,0'
+        html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''
       } else if (type == 'bezier') {
         html += next && after_next ? `Q${next.x},${next.y} ${after_next.x},${after_next.y} ` : ''
         skip = 1

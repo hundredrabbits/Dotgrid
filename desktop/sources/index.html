@@ -58,6 +58,8 @@
         DOTGRID.controller.add("default","Stroke","Arc Rev",() => { DOTGRID.tool.cast("arc_r")},"D"); // 0,0
         DOTGRID.controller.add("default","Stroke","Bezier",() => { DOTGRID.tool.cast("bezier") },"F");
         DOTGRID.controller.add("default","Stroke","Close",() => { DOTGRID.tool.cast("close") },"Z");
+        DOTGRID.controller.add("default","Stroke","Arc(full)",() => { DOTGRID.tool.cast("arc_c_full"); },"S+Shift"); // 1,1
+        DOTGRID.controller.add("default","Stroke","Arc Rev(full)",() => { DOTGRID.tool.cast("arc_r_full")},"D+Shift"); // 1,0
 
         DOTGRID.controller.add("default","Effect","Linecap",() => { DOTGRID.tool.toggle("linecap"); },"Q");
         DOTGRID.controller.add("default","Effect","Linejoin",() => { DOTGRID.tool.toggle("linejoin"); },"W");

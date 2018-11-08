@@ -10,7 +10,7 @@ DOTGRID.Tool = function () {
     { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#00f', fill: 'none', mirror_style: 0 }
   ]
   this.vertices = []
-  this.reqs = { line: 2, arc_c: 2, arc_r: 2, bezier: 3, close: 0 }
+  this.reqs = { line: 2, arc_c: 2, arc_r: 2, arc_c_full: 2, arc_r_full: 2, bezier: 3, close: 0 }
 
   this.start = function () {
     this.styles[0].color = DOTGRID.theme.active.f_high
