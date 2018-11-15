@@ -25,6 +25,8 @@ document.onkeyup = (e) =>
   if(ch == "a"){ DOTGRID.tool.cast("line"); e.preventDefault(); }
   if(ch == "s"){ DOTGRID.tool.cast("arc_c"); e.preventDefault(); }
   if(ch == "d"){ DOTGRID.tool.cast("arc_r"); e.preventDefault(); }
+  if(ch == "t"){ DOTGRID.tool.cast("arc_c_full"); e.preventDefault(); }
+  if(ch == "y"){ DOTGRID.tool.cast("arc_r_full"); e.preventDefault(); }
   if(ch == "f"){ DOTGRID.tool.cast("bezier"); e.preventDefault(); }
   if(ch == "z"){ DOTGRID.tool.cast("close"); e.preventDefault(); }
 
