@@ -51,7 +51,6 @@
         DOTGRID.controller.add_role("default","Edit","paste");
         DOTGRID.controller.add("default","Edit","Undo",() => { DOTGRID.tool.undo() },"CmdOrCtrl+Z");
         DOTGRID.controller.add("default","Edit","Redo",() => { DOTGRID.tool.redo() },"CmdOrCtrl+Shift+Z");
-        DOTGRID.controller.add("default","Edit","Redo",() => { DOTGRID.tool.clear() },"Escape");
 
         DOTGRID.controller.add("default","Stroke","Line",() => { DOTGRID.tool.cast("line"); },"A");
         DOTGRID.controller.add("default","Stroke","Arc",() => { DOTGRID.tool.cast("arc_c"); },"S"); // 0,1
