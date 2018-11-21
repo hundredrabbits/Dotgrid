@@ -6,6 +6,7 @@
   "scripts": {
     "start": "electron .",
     "lint": "eslint --ignore-path ../.gitignore .",
+    "fix": "standard --fix",
     "clean": "rm -r ~/Desktop/Dotgrid-darwin-x64/ ; rm -r ~/Desktop/Dotgrid-linux-x64/ ; rm -r ~/Desktop/Dotgrid-win32-x64/ ; rm -r ~/Desktop/Dotgrid-linux-armv7l/ ; echo 'cleaned build location'",
     "build_osx": "electron-packager . Dotgrid --platform=darwin --arch=x64 --out ~/Desktop/ --overwrite --icon=icon.icns ; echo 'Built for OSX'",
     "build_linux": "electron-packager . Dotgrid --platform=linux  --arch=x64 --out ~/Desktop/ --overwrite --icon=icon.ico ; echo 'Built for LINUX'",

@@ -10,8 +10,8 @@ function Generator (layer, style) {
     for (const k1 in l) {
       const seg = l[k1]
       for (const k2 in seg.vertices) {
-        if (mirror == 1) { seg.vertices[k2].x = (DOTGRID.tool.settings.size.width) - seg.vertices[k2].x + 15 }
-        if (mirror == 2) { seg.vertices[k2].y = (DOTGRID.tool.settings.size.height) - seg.vertices[k2].y + 30 }
+        if (mirror == 1 || mirror == 3) { seg.vertices[k2].x = (DOTGRID.tool.settings.size.width) - seg.vertices[k2].x + 15 }
+        if (mirror == 2 || mirror == 3) { seg.vertices[k2].y = (DOTGRID.tool.settings.size.height) - seg.vertices[k2].y + 30 }
 
         // Offset
         seg.vertices[k2].x += offset.x
@@ -89,20 +89,20 @@ function Generator (layer, style) {
   this.toString = function (offset = { x: 0, y: 0 }, scale = 1, mirror = this.style && this.style.mirror_style ? this.style.mirror_style : 0) {
     let s = this.convert(operate(this.layer, offset, scale))
 
-    if (mirror == 1 || mirror == 2) {
+    if (mirror == 1 || mirror == 2 || mirror == 3) {
       s += this.convert(operate(this.layer, offset, scale, mirror), mirror)
     }
 
-    if (mirror == 3) {
-      s += this.convert(operate(this.layer, offset, scale, mirror, 120), mirror)
-      s += this.convert(operate(this.layer, offset, scale, mirror, 240), mirror)
-    }
-    if (mirror == 4) {
-      s += this.convert(operate(this.layer, offset, scale, mirror, 72), mirror)
-      s += this.convert(operate(this.layer, offset, scale, mirror, 144), mirror)
-      s += this.convert(operate(this.layer, offset, scale, mirror, 216), mirror)
-      s += this.convert(operate(this.layer, offset, scale, mirror, 288), mirror)
-    }
+    // if (mirror == 3) {
+    //   s += this.convert(operate(this.layer, offset, scale, mirror, 120), mirror)
+    //   s += this.convert(operate(this.layer, offset, scale, mirror, 240), mirror)
+    // }
+    // if (mirror == 4) {
+    //   s += this.convert(operate(this.layer, offset, scale, mirror, 72), mirror)
+    //   s += this.convert(operate(this.layer, offset, scale, mirror, 144), mirror)
+    //   s += this.convert(operate(this.layer, offset, scale, mirror, 216), mirror)
+    //   s += this.convert(operate(this.layer, offset, scale, mirror, 288), mirror)
+    // }
 
     return s
   }
