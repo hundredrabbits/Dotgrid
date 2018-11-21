@@ -109,6 +109,20 @@ DOTGRID.Tool = function () {
     DOTGRID.interface.update(true)
   }
 
+  this.select_segment_at = function (pos, source = this.layer()) {
+    let target_segment = null
+    for (const segment_id in source) {
+      let segment = source[segment_id]
+      for (const vertex_id in segment.vertices) {
+        let vertex = segment.vertices[vertex_id]
+        if (vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)) {
+          return segment
+        }
+      }
+    }
+    return null
+  }
+
   this.add_vertex = function (pos) {
     pos = { x: Math.abs(pos.x), y: Math.abs(pos.y) }
     this.vertices.push(pos)
@@ -245,15 +259,33 @@ DOTGRID.Tool = function () {
   }
 
   this.translate_multi = function (a, b) {
-    let offset = { x: a.x - b.x, y: a.y - b.y }
+    const offset = { x: a.x - b.x, y: a.y - b.y }
+    const segment = this.select_segment_at(a)
 
-    for (const segment_id in this.layer()) {
-      let segment = this.layer()[segment_id]
-      for (const vertex_id in segment.vertices) {
-        let vertex = segment.vertices[vertex_id]
-        segment.vertices[vertex_id] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
-      }
+    if (!segment) { return }
+
+    for (const vertex_id in segment.vertices) {
+      let vertex = segment.vertices[vertex_id]
+      segment.vertices[vertex_id] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
     }
+
+    DOTGRID.history.push(this.layers)
+    this.clear()
+    DOTGRID.guide.update()
+  }
+
+  this.translate_copy = function (a, b) {
+    const offset = { x: a.x - b.x, y: a.y - b.y }
+    const segment = this.select_segment_at(a, copy(this.layer()))
+
+    if (!segment) { return }
+
+    for (const vertex_id in segment.vertices) {
+      let vertex = segment.vertices[vertex_id]
+      segment.vertices[vertex_id] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
+    }
+    this.layer().push(segment)
+
     DOTGRID.history.push(this.layers)
     this.clear()
     DOTGRID.guide.update()
