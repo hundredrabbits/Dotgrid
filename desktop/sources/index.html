@@ -48,6 +48,7 @@
         DOTGRID.controller.add("default","File","Export(.svg)",() => { DOTGRID.export(); },"CmdOrCtrl+E");
 
         DOTGRID.controller.add_role("default","Edit","copy");
+        DOTGRID.controller.add_role("default","Edit","cut");
         DOTGRID.controller.add_role("default","Edit","paste");
         DOTGRID.controller.add("default","Edit","Undo",() => { DOTGRID.tool.undo() },"CmdOrCtrl+Z");
         DOTGRID.controller.add("default","Edit","Redo",() => { DOTGRID.tool.redo() },"CmdOrCtrl+Shift+Z");

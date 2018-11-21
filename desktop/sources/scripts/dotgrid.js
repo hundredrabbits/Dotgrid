@@ -209,6 +209,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     DOTGRID.guide.update()
 
     if (e.target !== this.picker.input) {
+      e.clipboardData.setData('text/source', DOTGRID.tool.export(DOTGRID.tool.layer()))
       e.clipboardData.setData('text/plain', DOTGRID.tool.export(DOTGRID.tool.layer()))
       e.clipboardData.setData('text/html', DOTGRID.renderer.svg_el.outerHTML)
       e.clipboardData.setData('text/svg+xml', DOTGRID.renderer.svg_el.outerHTML)
