@@ -142,17 +142,20 @@ DOTGRID.Tool = function () {
     return null
   }
 
+  this.add_segment = function (type, vertices) {
+    let append_target = this.can_append({ type: type, vertices: vertices })
+    if (append_target) {
+      this.layer()[append_target].vertices = this.layer()[append_target].vertices.concat(vertices)
+    } else {
+      this.layer().push({ type: type, vertices: vertices })
+    }
+  }
+
   this.cast = function (type) {
     if (!this.layer()) { this.layers[this.index] = [] }
     if (!this.can_cast(type)) { console.warn('Cannot cast'); return }
 
-    let append_target = this.can_append({ type: type, vertices: this.vertices.slice() })
-
-    if (append_target) {
-      this.layers[this.index][append_target].vertices = this.layers[this.index][append_target].vertices.concat(this.vertices.slice())
-    } else {
-      this.layer().push({ type: type, vertices: this.vertices.slice() })
-    }
+    this.add_segment(type, this.vertices.slice())
 
     DOTGRID.history.push(this.layers)
 

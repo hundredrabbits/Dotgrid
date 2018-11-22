@@ -47,24 +47,22 @@ function Generator (layer, style) {
       }
 
       if (type == 'line') {
-        html += `L${vertex.x},${vertex.y} `
+        html += this._line(vertex)
       } else if (type == 'arc_c') {
         let clock = mirror > 0 ? '0,0' : '0,1'
-        html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''
+        html += this._arc(vertex, next, clock)
       } else if (type == 'arc_r') {
         let clock = mirror > 0 ? '0,1' : '0,0'
-        html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''
+        html += this._arc(vertex, next, clock)
       } else if (type == 'arc_c_full') {
         let clock = mirror > 0 ? '1,0' : '1,1'
-        html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''
+        html += this._arc(vertex, next, clock)
       } else if (type == 'arc_r_full') {
         let clock = mirror > 0 ? '1,1' : '1,0'
-        html += next ? `A${Math.abs(next.x - vertex.x)},${Math.abs(next.y - vertex.y)} 0 ${clock} ${next.x},${next.y} ` : ''
+        html += this._arc(vertex, next, clock)
       } else if (type == 'bezier') {
-        html += next && after_next ? `Q${next.x},${next.y} ${after_next.x},${after_next.y} ` : ''
+        html += this._bezier(next, after_next)
         skip = 1
-      } else {
-        console.warn(`unknown type:${type}`)
       }
     }
 
@@ -73,6 +71,24 @@ function Generator (layer, style) {
     }
 
     return html
+  }
+
+  this._line = function (a) {
+    return `L${a.x},${a.y} `
+  }
+
+  this._arc = function (a, b, c) {
+    if (!a || !b || !c) { return '' }
+
+    const offset = { x: b.x - a.x, y: b.y - a.y }
+
+    if (offset.x === 0 || offset.y === 0) { return this._line(b) }
+    return `A${Math.abs(b.x - a.x)},${Math.abs(b.y - a.y)} 0 ${c} ${b.x},${b.y} `
+  }
+
+  this._bezier = function (a, b) {
+    if (!a || !b) { return '' }
+    return `Q${a.x},${a.y} ${b.x},${b.y} `
   }
 
   this.convert = function (layer, mirror, angle) {
