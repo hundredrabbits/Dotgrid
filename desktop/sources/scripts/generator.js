@@ -13,6 +13,8 @@ function Generator (layer, style) {
         if (mirror == 1 || mirror == 3) { seg.vertices[k2].x = (DOTGRID.tool.settings.size.width) - seg.vertices[k2].x + 15 }
         if (mirror == 2 || mirror == 3) { seg.vertices[k2].y = (DOTGRID.tool.settings.size.height) - seg.vertices[k2].y + 30 }
 
+        console.log(seg)
+
         // Offset
         seg.vertices[k2].x += offset.x
         seg.vertices[k2].y += offset.y
@@ -49,10 +51,10 @@ function Generator (layer, style) {
       if (type == 'line') {
         html += this._line(vertex)
       } else if (type == 'arc_c') {
-        let clock = mirror > 0 ? '0,0' : '0,1'
+        let clock = mirror > 0 && mirror < 3 ? '0,0' : '0,1'
         html += this._arc(vertex, next, clock)
       } else if (type == 'arc_r') {
-        let clock = mirror > 0 ? '0,1' : '0,0'
+        let clock = mirror > 0 && mirror < 3 ? '0,1' : '0,0'
         html += this._arc(vertex, next, clock)
       } else if (type == 'arc_c_full') {
         let clock = mirror > 0 ? '1,0' : '1,1'
