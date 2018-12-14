@@ -19,6 +19,12 @@ DOTGRID.Tool = function () {
   }
 
   this.reset = function () {
+    this.styles[0].mirror_style = 0
+    this.styles[1].mirror_style = 0
+    this.styles[2].mirror_style = 0
+    this.styles[0].fill = 'none'
+    this.styles[1].fill = 'none'
+    this.styles[2].fill = 'none'
     this.layers = [[], [], []]
     this.vertices = []
     this.index = 0
