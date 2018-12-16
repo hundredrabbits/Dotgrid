@@ -5,8 +5,8 @@ DOTGRID.Cursor = function () {
   this.translation = null
   this.operation = null
 
-  this.translate = function (from = null, to = null, multi = false, copy = false) {
-    if ((from || to) && this.translation == null) { this.translation = { multi: multi, copy: copy }; console.log('Begin translation', multi, copy) }
+  this.translate = function (from = null, to = null, multi = false, copy = false, layer = false) {
+    if ((from || to) && this.translation == null) { this.translation = { multi: multi, copy: copy, layer: layer }; console.log('Begin translation', multi, copy, layer) }
 
     if (from) { this.translation.from = from }
     if (to) { this.translation.to = to }
@@ -21,7 +21,7 @@ DOTGRID.Cursor = function () {
 
     // Translation
     if (DOTGRID.tool.vertex_at(this.pos)) {
-      this.translate(this.pos, this.pos, e.shiftKey, e.ctrlKey || e.metaKey)
+      this.translate(this.pos, this.pos, e.shiftKey, e.ctrlKey || e.metaKey, e.altKey)
     }
 
     DOTGRID.guide.update()
@@ -52,10 +52,8 @@ DOTGRID.Cursor = function () {
   this.up = function (e) {
     this.pos = this.pos_from_event(e)
 
-    if (e.altKey) { DOTGRID.tool.remove_segments_at(this.pos); this.translate(); return }
-
     if (this.translation && !is_equal(this.translation.from, this.translation.to)) {
-      if (this.translation.copy) { DOTGRID.tool.translate_copy(this.translation.from, this.translation.to) } else if (this.translation.multi) { DOTGRID.tool.translate_multi(this.translation.from, this.translation.to) } else { DOTGRID.tool.translate(this.translation.from, this.translation.to) }
+      if (this.translation.layer === true) { DOTGRID.tool.translate_layer(this.translation.from, this.translation.to) } else if (this.translation.copy) { DOTGRID.tool.translate_copy(this.translation.from, this.translation.to) } else if (this.translation.multi) { DOTGRID.tool.translate_multi(this.translation.from, this.translation.to) } else { DOTGRID.tool.translate(this.translation.from, this.translation.to) }
     } else if (e.target.id == 'guide') {
       DOTGRID.tool.add_vertex({ x: this.pos.x, y: this.pos.y })
       DOTGRID.picker.stop()

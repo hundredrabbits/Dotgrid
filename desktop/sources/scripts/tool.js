@@ -283,6 +283,21 @@ DOTGRID.Tool = function () {
     DOTGRID.guide.update()
   }
 
+  this.translate_layer = function (a, b) {
+    console.log(a, b)
+    const offset = { x: a.x - b.x, y: a.y - b.y }
+    for (const segment_id in this.layer()) {
+      let segment = this.layer()[segment_id]
+      for (const vertex_id in segment.vertices) {
+        let vertex = segment.vertices[vertex_id]
+        segment.vertices[vertex_id] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
+      }
+    }
+    DOTGRID.history.push(this.layers)
+    this.clear()
+    DOTGRID.guide.update()
+  }
+
   this.translate_copy = function (a, b) {
     const offset = { x: a.x - b.x, y: a.y - b.y }
     const segment = this.select_segment_at(a, copy(this.layer()))
