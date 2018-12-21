@@ -1,14 +1,14 @@
 # Dotgrid
 
-[Dotgrid](http://wiki.xxiivv.com/dotgrid) is a simple vector drawing application. 
+[Dotgrid](http://wiki.xxiivv.com/dotgrid) is a simple vector drawing application that works directly [in the browser](https://hundredrabbits.github.io/Dotgrid/).
 
 <img src='https://raw.githubusercontent.com/hundredrabbits/Dotgrid/master/PREVIEW.jpg' width="600"/>
 
 ## Guide
 
-View the [guide](https://100r.co/blog.html#dotgrid)
+View the [guide](https://100r.co/blog.html#dotgrid).
 
-## Install
+## Electron Build
 
 ```
 cd desktop
