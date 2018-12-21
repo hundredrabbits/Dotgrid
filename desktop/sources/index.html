@@ -88,10 +88,9 @@
         DOTGRID.controller.add("default","View","Color Picker",() => { DOTGRID.picker.start(); },"G");
         DOTGRID.controller.add("default","View","Toggle Grid",() => { DOTGRID.guide.toggle(); },"H");
 
-        DOTGRID.controller.add("default","Theme","Noir",() => { DOTGRID.theme.noir(); },"CmdOrCtrl+Shift+1");
-        DOTGRID.controller.add("default","Theme","Pale",() => { DOTGRID.theme.pale(); },"CmdOrCtrl+Shift+2");
-        DOTGRID.controller.add("default","Theme","Invert",() => { DOTGRID.theme.invert(); },"CmdOrCtrl+Shift+I");
-        DOTGRID.controller.add("default","Theme","Install",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Themes'); });
+        DOTGRID.controller.add("default","Theme","Open Theme",() => { DOTGRID.theme.open(); },"CmdOrCtrl+Shift+o")
+        DOTGRID.controller.add("default","Theme","Reset Theme",() => { DOTGRID.theme.reset(); },"CmdOrCtrl+Shift+Backspace")
+        DOTGRID.controller.add("default","Theme","Download Themes..",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Themes'); })
 
         DOTGRID.controller.add("picker","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
         DOTGRID.controller.add("picker","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");

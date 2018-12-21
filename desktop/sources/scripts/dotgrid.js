@@ -2,7 +2,10 @@
 
 function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
   this.controller = null
-  this.theme = new Theme()
+
+  const defaultTheme = { background: '#eee', f_high: '#000', f_med: '#999', f_low: '#ccc', f_inv: '#000', b_high: '#000', b_med: '#888', b_low: '#aaa', b_inv: '#ffb545' }
+
+  this.theme = new Theme(defaultTheme)
   this.history = new History()
 
   this.grid_x = grid_x

@@ -21,6 +21,7 @@ DOTGRID.Guide = function () {
 
     this.el.getContext('2d').restore()
 
+    this.draw_mirror()
     this.draw_rulers()
 
     if (DOTGRID.tool.index == 2) { this.draw_markers(); this.draw_vertices() }
@@ -53,6 +54,19 @@ DOTGRID.Guide = function () {
     this.el.style.height = (size.height + (offset * 2)) + 'px'
 
     this.update()
+  }
+
+  this.draw_mirror = function () {
+    if (DOTGRID.tool.style().mirror_style === 0) { return }
+
+    const middle = { x: DOTGRID.tool.settings.size.width + (DOTGRID.grid_width), y: DOTGRID.tool.settings.size.height + (2 * DOTGRID.grid_height) }
+
+    if (DOTGRID.tool.style().mirror_style === 1 || DOTGRID.tool.style().mirror_style === 3) {
+      this.draw_rule({ x: middle.x, y: DOTGRID.grid_height * 2 }, { x: middle.x, y: (DOTGRID.tool.settings.size.height + DOTGRID.grid_height) * 2 })
+    }
+    if (DOTGRID.tool.style().mirror_style === 2 || DOTGRID.tool.style().mirror_style === 3) {
+      this.draw_rule({ x: DOTGRID.grid_width * 2, y: middle.y }, { x: (DOTGRID.tool.settings.size.width + DOTGRID.grid_width) * 2, y: middle.y })
+    }
   }
 
   this.draw_handles = function () {
@@ -197,6 +211,8 @@ DOTGRID.Guide = function () {
   this.draw_translation = function () {
     if (!DOTGRID.cursor.translation) { return }
 
+    console.log(DOTGRID.cursor.translation)
+
     let ctx = this.el.getContext('2d')
 
     ctx.beginPath()
@@ -204,7 +220,7 @@ DOTGRID.Guide = function () {
     ctx.lineTo((DOTGRID.cursor.translation.to.x * this.scale), (DOTGRID.cursor.translation.to.y * this.scale))
     ctx.lineCap = 'round'
     ctx.lineWidth = 5
-    ctx.strokeStyle = DOTGRID.theme.active.f_low
+    ctx.strokeStyle = DOTGRID.cursor.translation.multi === true ? DOTGRID.theme.active.b_inv : DOTGRID.cursor.translation.copy === true ? DOTGRID.theme.active.f_med : DOTGRID.theme.active.f_low
     ctx.setLineDash([5, 10])
     ctx.stroke()
     ctx.closePath()
