@@ -44,6 +44,7 @@ DOTGRID.Guide = function () {
   this.toggle = function () {
     this.show_extras = !this.show_extras
     this.update()
+    DOTGRID.interface.update(true)
   }
 
   this.resize = function (size) {
