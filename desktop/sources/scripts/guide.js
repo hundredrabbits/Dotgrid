@@ -44,6 +44,7 @@ DOTGRID.Guide = function () {
   this.toggle = function () {
     this.show_extras = !this.show_extras
     this.update()
+    DOTGRID.interface.update(true)
   }
 
   this.resize = function (size) {
@@ -57,6 +58,8 @@ DOTGRID.Guide = function () {
   }
 
   this.draw_mirror = function () {
+    if (!this.show_extras) { return }
+
     if (DOTGRID.tool.style().mirror_style === 0) { return }
 
     const middle = { x: DOTGRID.tool.settings.size.width + (DOTGRID.grid_width), y: DOTGRID.tool.settings.size.height + (2 * DOTGRID.grid_height) }
