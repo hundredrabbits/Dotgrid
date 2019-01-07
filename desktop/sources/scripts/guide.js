@@ -214,8 +214,6 @@ DOTGRID.Guide = function () {
   this.draw_translation = function () {
     if (!DOTGRID.cursor.translation) { return }
 
-    console.log(DOTGRID.cursor.translation)
-
     let ctx = this.el.getContext('2d')
 
     ctx.beginPath()

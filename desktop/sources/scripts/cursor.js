@@ -6,7 +6,7 @@ DOTGRID.Cursor = function () {
   this.operation = null
 
   this.translate = function (from = null, to = null, multi = false, copy = false, layer = false) {
-    if ((from || to) && this.translation == null) { this.translation = { multi: multi, copy: copy, layer: layer }; console.log('Begin translation', multi, copy, layer) }
+    if ((from || to) && this.translation == null) { this.translation = { multi: multi, copy: copy, layer: layer }; }
 
     if (from) { this.translation.from = from }
     if (to) { this.translation.to = to }
