@@ -84,6 +84,7 @@
         DOTGRID.controller.add("default","Layers","Background",() => { DOTGRID.tool.select_layer(2) },"CmdOrCtrl+3");
         DOTGRID.controller.add("default","Layers","Next Layer",() => { DOTGRID.tool.select_next_layer() },"Tab");
         DOTGRID.controller.add("default","Layers","Prev Layer",() => { DOTGRID.tool.select_prev_layer() },"Shift+Tab");
+        DOTGRID.controller.add("default","Layers","Merge Layers",() => { DOTGRID.tool.merge() },"M");
 
         DOTGRID.controller.add("default","View","Color Picker",() => { DOTGRID.picker.start(); },"G");
         DOTGRID.controller.add("default","View","Toggle Grid",() => { DOTGRID.guide.toggle(); },"H");

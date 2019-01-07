@@ -40,6 +40,8 @@ document.onkeyup = (e) =>
   if(ch == "]"){ DOTGRID.tool.toggle("thickness",5); e.preventDefault(); }
   if(ch == "["){ DOTGRID.tool.toggle("thickness",-5); e.preventDefault(); }
   
+  if(ch == "m"){ DOTGRID.tool.merge(); e.preventDefault(); }
+  
   if(ch == "i"){ DOTGRID.theme.invert(); e.preventDefault(); }
 }
 

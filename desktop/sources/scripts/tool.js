@@ -18,6 +18,10 @@ DOTGRID.Tool = function () {
     this.styles[2].color = DOTGRID.theme.active.f_low
   }
 
+  this.erase = function () {
+    this.layers = [[], [], []]
+  }
+
   this.reset = function () {
     this.styles[0].mirror_style = 0
     this.styles[1].mirror_style = 0
@@ -25,7 +29,7 @@ DOTGRID.Tool = function () {
     this.styles[0].fill = 'none'
     this.styles[1].fill = 'none'
     this.styles[2].fill = 'none'
-    this.layers = [[], [], []]
+    this.erase()
     this.vertices = []
     this.index = 0
   }
@@ -309,6 +313,16 @@ DOTGRID.Tool = function () {
       segment.vertices[vertex_id] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
     }
     this.layer().push(segment)
+
+    DOTGRID.history.push(this.layers)
+    this.clear()
+    DOTGRID.guide.update()
+  }
+
+  this.merge = function () {
+    const merged = [].concat(this.layers[0]).concat(this.layers[1]).concat(this.layers[2])
+    this.erase()
+    this.layers[this.index] = merged
 
     DOTGRID.history.push(this.layers)
     this.clear()
