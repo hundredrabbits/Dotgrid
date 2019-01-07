@@ -183,12 +183,16 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     e.stopPropagation()
 
     const file = e.dataTransfer.files[0]
+    const filename = file.path ? file.path : file.name ? file.name : ''
 
-    if (!file || !file.path || file.path.indexOf('.dot') < 0 && file.path.indexOf('.grid') < 0) { console.warn('Dotgrid', 'Not a dot file'); return }
+    if (filename.indexOf('.grid') < 0) { console.warn('Dotgrid', 'Not a .grid file'); return }
 
     const reader = new FileReader()
+
     reader.onload = function (e) {
-      DOTGRID.tool.replace(JSON.parse(e.target.result.toString().trim()))
+      const data = e.target && e.target.result ? e.target.result : ''
+      if (data && !isJson(data)) { return }
+      DOTGRID.tool.replace(JSON.parse(`${data}`))
       DOTGRID.guide.update()
     }
     reader.readAsText(file)
@@ -226,7 +230,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
   this.paste = function (e) {
     if (e.target !== this.picker.el) {
       let data = e.clipboardData.getData('text/source')
-      if (is_json(data)) {
+      if (isJson(data)) {
         data = JSON.parse(data.trim())
         DOTGRID.tool.import(data)
       }
@@ -251,8 +255,8 @@ String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
 }
 
-function is_json (text) { try { JSON.parse(text); return true } catch (error) { return false } }
-function pos_is_equal (a, b) { return a && b && a.x == b.x && a.y == b.y }
+function isJson (text) { try { JSON.parse(text); return true } catch (error) { return false } }
+function isEqual (a, b) { return a && b && a.x == b.x && a.y == b.y }
 function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 function step (v, s) { return Math.round(v / s) * s }
 

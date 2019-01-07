@@ -273,6 +273,6 @@ DOTGRID.Guide = function () {
     ctx.restore()
   }
 
-  function pos_is_equal (a, b) { return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }
+  function isEqual (a, b) { return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 }
