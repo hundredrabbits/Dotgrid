@@ -163,7 +163,7 @@ DOTGRID.Tool = function () {
 
   this.cast = function (type) {
     if (!this.layer()) { this.layers[this.index] = [] }
-    if (!this.can_cast(type)) { console.warn('Cannot cast'); return }
+    if (!this.canCast(type)) { console.warn('Cannot cast'); return }
 
     this.add_segment(type, this.vertices.slice())
 
@@ -227,7 +227,7 @@ DOTGRID.Tool = function () {
     return false
   }
 
-  this.can_cast = function (type) {
+  this.canCast = function (type) {
     if (!type) { return false }
     // Cannot cast close twice
     if (type == 'close') {

@@ -108,11 +108,11 @@ DOTGRID.Interface = function () {
       if (segments[i].vertices.length > 2) { multi_vertices = true; break }
     }
 
-    document.getElementById('option_line').className.baseVal = !DOTGRID.tool.can_cast('line') ? 'icon inactive' : 'icon'
-    document.getElementById('option_arc_c').className.baseVal = !DOTGRID.tool.can_cast('arc_c') ? 'icon inactive' : 'icon'
-    document.getElementById('option_arc_r').className.baseVal = !DOTGRID.tool.can_cast('arc_r') ? 'icon inactive' : 'icon'
-    document.getElementById('option_bezier').className.baseVal = !DOTGRID.tool.can_cast('bezier') ? 'icon inactive' : 'icon'
-    document.getElementById('option_close').className.baseVal = !DOTGRID.tool.can_cast('close') ? 'icon inactive' : 'icon'
+    document.getElementById('option_line').className.baseVal = !DOTGRID.tool.canCast('line') ? 'icon inactive' : 'icon'
+    document.getElementById('option_arc_c').className.baseVal = !DOTGRID.tool.canCast('arc_c') ? 'icon inactive' : 'icon'
+    document.getElementById('option_arc_r').className.baseVal = !DOTGRID.tool.canCast('arc_r') ? 'icon inactive' : 'icon'
+    document.getElementById('option_bezier').className.baseVal = !DOTGRID.tool.canCast('bezier') ? 'icon inactive' : 'icon'
+    document.getElementById('option_close').className.baseVal = !DOTGRID.tool.canCast('close') ? 'icon inactive' : 'icon'
 
     document.getElementById('option_thickness').className.baseVal = DOTGRID.tool.layer().length < 1 ? 'icon inactive' : 'icon'
     document.getElementById('option_linecap').className.baseVal = DOTGRID.tool.layer().length < 1 ? 'icon inactive' : 'icon'
@@ -130,10 +130,10 @@ DOTGRID.Interface = function () {
     document.getElementById('option_export').className.baseVal = sum_segments < 1 ? 'icon inactive source' : 'icon source'
     document.getElementById('option_render').className.baseVal = sum_segments < 1 ? 'icon inactive source' : 'icon source'
 
-    document.getElementById('option_grid').className.baseVal = DOTGRID.guide.show_extras ? 'icon inactive source' : 'icon source'
+    document.getElementById('option_grid').className.baseVal = DOTGRID.guide.showExtras ? 'icon inactive source' : 'icon source'
 
     // Grid
-    if (DOTGRID.guide.show_extras) { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 Q155,65 245,155 M155,125 A30,30 0 0,1 185,155 A30,30 0 0,1 155,185 A30,30 0 0,1 125,155 A30,30 0 0,1 155,125 ') } else { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 ') }
+    if (DOTGRID.guide.showExtras) { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 Q155,65 245,155 M155,125 A30,30 0 0,1 185,155 A30,30 0 0,1 155,185 A30,30 0 0,1 125,155 A30,30 0 0,1 155,125 ') } else { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 ') }
 
     // Mirror
     if (DOTGRID.tool.style().mirror_style == 0) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210') } else if (DOTGRID.tool.style().mirror_style == 1) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L240,240 M180,120 L210,90 M120,180 L90,210') } else if (DOTGRID.tool.style().mirror_style == 2) { document.getElementById('mirror_path').setAttribute('d', 'M210,90 L210,90 L90,210 M60,60 L60,60 L120,120 M180,180 L180,180 L240,240') } else if (DOTGRID.tool.style().mirror_style == 3) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L60,60 L120,120 L180,120 L210,90 M240,240 L240,240 L180,180 L120,180 L90,210') } else if (DOTGRID.tool.style().mirror_style == 4) { document.getElementById('mirror_path').setAttribute('d', 'M120,120 L120,120 L120,120 L180,120 M120,150 L120,150 L180,150 M120,180 L120,180 L180,180 L180,180 L180,180 L240,240 M120,210 L120,210 L180,210 M120,90 L120,90 L180,90 M60,60 L60,60 L120,120  ') }
