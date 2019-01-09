@@ -18,9 +18,8 @@ DOTGRID.Guide = function () {
   }
 
   this.update = function (force = false) {
+    DOTGRID.manager.update()
 
-    DOTGRID.renderer.update()
-    
     this.clear()
 
     this.context.restore()
@@ -274,7 +273,7 @@ DOTGRID.Guide = function () {
 
   this.drawRender = function(ctx = this.context){
     let img = new Image()
-    img.src = DOTGRID.renderer.svg64()
+    img.src = DOTGRID.manager.svg64()
     this.context.drawImage(img, 0, 0, this.el.width, this.el.height)
   }
 

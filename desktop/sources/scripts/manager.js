@@ -1,6 +1,8 @@
 'use strict'
 
-DOTGRID.Renderer = function () {
+// Manages the SVG file
+
+function Manager (dotgrid) {
   // Create SVG parts
   this.el = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   this.el.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
