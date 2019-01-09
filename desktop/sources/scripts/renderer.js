@@ -23,13 +23,14 @@ function Renderer (dotgrid) {
 
     this.drawMirror()
     this.drawRulers()
-    this.drawRender()
+    this.drawRender() //
     this.drawGrid()
     this.drawVertices()
     this.drawHandles()
     this.drawTranslation()
     this.drawCursor()
     this.drawPreview()
+    this.drawDebug()
   }
 
   this.clear = function () {
@@ -43,10 +44,11 @@ function Renderer (dotgrid) {
   }
 
   this.resize = function (size) {
-    this.el.width = size.width * this.scale
-    this.el.height = size.height * this.scale
-    this.el.style.width = size.width + 'px'
-    this.el.style.height = size.height + 'px'
+    const pad = 15
+    this.el.width = (size.width + pad) * this.scale
+    this.el.height = (size.height + pad) * this.scale
+    this.el.style.width = (size.width + pad) + 'px'
+    this.el.style.height = (size.height + pad) + 'px'
 
     this.update()
   }
@@ -71,10 +73,10 @@ function Renderer (dotgrid) {
   this.drawHandles = function () {
     if (!this.showExtras) { return }
 
-    for (const segment_id in dotgrid.tool.layer()) {
-      const segment = dotgrid.tool.layer()[segment_id]
-      for (const vertex_id in segment.vertices) {
-        const vertex = segment.vertices[vertex_id]
+    for (const segmentId in dotgrid.tool.layer()) {
+      const segment = dotgrid.tool.layer()[segmentId]
+      for (const vertexId in segment.vertices) {
+        const vertex = segment.vertices[vertexId]
         this.drawHandle(vertex)
       }
     }
@@ -254,6 +256,12 @@ function Renderer (dotgrid) {
     let img = new Image()
     img.src = dotgrid.manager.svg64()
     this.context.drawImage(img, 0, 0, this.el.width, this.el.height)
+  }
+
+  this.drawDebug = function () {
+    this.context.strokeRect(0, 0, this.el.width, this.el.height)
+    this.context.strokeRect(this.el.width / 2, 0, this.el.width, this.el.height)
+    this.context.strokeRect(0, this.el.height / 2, this.el.width, this.el.height)
   }
 
   function isEqual (a, b) { return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }

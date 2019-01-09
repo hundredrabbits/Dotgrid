@@ -18,7 +18,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
   this.install = function (host) {
     this.manager = new Manager(this)
     this.renderer = new Renderer(this)
-    this.tool = new this.Tool()
+    this.tool = new Tool(this)
     this.interface = new this.Interface()
 
     this.picker = new this.Picker()

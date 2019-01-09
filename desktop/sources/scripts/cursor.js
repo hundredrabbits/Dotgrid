@@ -20,7 +20,7 @@ DOTGRID.Cursor = function () {
     this.pos = this.pos_from_event(e)
 
     // Translation
-    if (DOTGRID.tool.vertex_at(this.pos)) {
+    if (DOTGRID.tool.vertexAt(this.pos)) {
       this.translate(this.pos, this.pos, e.shiftKey, e.ctrlKey || e.metaKey, e.altKey)
     }
 
@@ -53,9 +53,9 @@ DOTGRID.Cursor = function () {
     this.pos = this.pos_from_event(e)
 
     if (this.translation && !is_equal(this.translation.from, this.translation.to)) {
-      if (this.translation.layer === true) { DOTGRID.tool.translate_layer(this.translation.from, this.translation.to) } else if (this.translation.copy) { DOTGRID.tool.translate_copy(this.translation.from, this.translation.to) } else if (this.translation.multi) { DOTGRID.tool.translate_multi(this.translation.from, this.translation.to) } else { DOTGRID.tool.translate(this.translation.from, this.translation.to) }
+      if (this.translation.layer === true) { DOTGRID.tool.translateLayer(this.translation.from, this.translation.to) } else if (this.translation.copy) { DOTGRID.tool.translateCopy(this.translation.from, this.translation.to) } else if (this.translation.multi) { DOTGRID.tool.translateMulti(this.translation.from, this.translation.to) } else { DOTGRID.tool.translate(this.translation.from, this.translation.to) }
     } else if (e.target.id == 'guide') {
-      DOTGRID.tool.add_vertex({ x: this.pos.x, y: this.pos.y })
+      DOTGRID.tool.addVertex({ x: this.pos.x, y: this.pos.y })
       DOTGRID.picker.stop()
     }
 
@@ -69,7 +69,7 @@ DOTGRID.Cursor = function () {
   this.alt = function (e) {
     this.pos = this.pos_from_event(e)
 
-    DOTGRID.tool.remove_segments_at(this.pos)
+    DOTGRID.tool.removeSegmentsAt(this.pos)
     e.preventDefault()
 
     setTimeout(() => { DOTGRID.tool.clear() }, 150)

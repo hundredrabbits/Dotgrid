@@ -109,17 +109,6 @@ function Generator (layer, style) {
       s += this.convert(operate(this.layer, offset, scale, mirror), mirror)
     }
 
-    // if (mirror == 3) {
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 120), mirror)
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 240), mirror)
-    // }
-    // if (mirror == 4) {
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 72), mirror)
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 144), mirror)
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 216), mirror)
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 288), mirror)
-    // }
-
     return s
   }
 

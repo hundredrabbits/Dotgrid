@@ -71,19 +71,19 @@
         DOTGRID.controller.add("default","Effect","Thicker +5",() => { DOTGRID.tool.toggle("thickness",5) },"]");
         DOTGRID.controller.add("default","Effect","Thinner -5",() => { DOTGRID.tool.toggle("thickness",-5) },"[");
 
-        DOTGRID.controller.add("default","Manual","Add Point",() => { DOTGRID.tool.add_vertex(DOTGRID.cursor.pos); DOTGRID.renderer.update() },"Enter");
+        DOTGRID.controller.add("default","Manual","Add Point",() => { DOTGRID.tool.addVertex(DOTGRID.cursor.pos); DOTGRID.renderer.update() },"Enter");
         DOTGRID.controller.add("default","Manual","Move Up",() => { DOTGRID.cursor.pos.y -= 15; DOTGRID.renderer.update() },"Up");
         DOTGRID.controller.add("default","Manual","Move Right",() => { DOTGRID.cursor.pos.x += 15; DOTGRID.renderer.update() },"Right");
         DOTGRID.controller.add("default","Manual","Move Down",() => { DOTGRID.cursor.pos.y += 15; DOTGRID.renderer.update() },"Down");
         DOTGRID.controller.add("default","Manual","Move Left",() => { DOTGRID.cursor.pos.x -= 15; DOTGRID.renderer.update() },"Left");
-        DOTGRID.controller.add("default","Manual","Remove Point",() => { DOTGRID.tool.remove_segments_at(DOTGRID.cursor.pos); },"Shift+Backspace");
-        DOTGRID.controller.add("default","Manual","Remove Segment",() => { DOTGRID.tool.remove_segment(); },"Backspace");
+        DOTGRID.controller.add("default","Manual","Remove Point",() => { DOTGRID.tool.removeSegmentsAt(DOTGRID.cursor.pos); },"Shift+Backspace");
+        DOTGRID.controller.add("default","Manual","Remove Segment",() => { DOTGRID.tool.removeSegment(); },"Backspace");
 
-        DOTGRID.controller.add("default","Layers","Foreground",() => { DOTGRID.tool.select_layer(0) },"CmdOrCtrl+1");
-        DOTGRID.controller.add("default","Layers","Middleground",() => { DOTGRID.tool.select_layer(1) },"CmdOrCtrl+2");
-        DOTGRID.controller.add("default","Layers","Background",() => { DOTGRID.tool.select_layer(2) },"CmdOrCtrl+3");
-        DOTGRID.controller.add("default","Layers","Next Layer",() => { DOTGRID.tool.select_next_layer() },"Tab");
-        DOTGRID.controller.add("default","Layers","Prev Layer",() => { DOTGRID.tool.select_prev_layer() },"Shift+Tab");
+        DOTGRID.controller.add("default","Layers","Foreground",() => { DOTGRID.tool.selectLayer(0) },"CmdOrCtrl+1");
+        DOTGRID.controller.add("default","Layers","Middleground",() => { DOTGRID.tool.selectLayer(1) },"CmdOrCtrl+2");
+        DOTGRID.controller.add("default","Layers","Background",() => { DOTGRID.tool.selectLayer(2) },"CmdOrCtrl+3");
+        DOTGRID.controller.add("default","Layers","Next Layer",() => { DOTGRID.tool.selectNextLayer() },"Tab");
+        DOTGRID.controller.add("default","Layers","Prev Layer",() => { DOTGRID.tool.selectPrevLayer() },"Shift+Tab");
         DOTGRID.controller.add("default","Layers","Merge Layers",() => { DOTGRID.tool.merge() },"M");
 
         DOTGRID.controller.add("default","View","Color Picker",() => { DOTGRID.picker.start(); },"G");

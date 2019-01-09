@@ -8,7 +8,7 @@ body { padding: 0px; font-family: 'input_mono_regular'; -webkit-user-select: non
 
 /* Interface */
 
-#interface { font-size: 11px;line-height: 30px;text-transform: uppercase;-webkit-app-region: no-drag; transition: all 150ms; width: 100%; position:fixed; bottom:20px; left:45px; height:30px; max-width:calc(100vw - 90px); overflow: hidden;}
+#interface { font-size: 11px;line-height: 30px;text-transform: uppercase;-webkit-app-region: no-drag; transition: all 150ms; width: 100%; position:fixed; bottom:20px; left:35px; height:30px; max-width:calc(100vw - 80px); overflow: hidden;}
 #interface.hidden { bottom:10px;opacity: 0 }
 #interface.visible { bottom:20px; opacity: 1 }
 #interface #menu { opacity: 1; position: absolute; top:0px; transition: all 250ms; z-index: 900; overflow: hidden; height:30px; width:100%;}
