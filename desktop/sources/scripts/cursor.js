@@ -91,7 +91,7 @@ function Cursor () {
   this.snapPos = function (pos) {
     return {
       x: clamp(step(pos.x, 15), 15, DOTGRID.tool.settings.size.width),
-      y: clamp(step(pos.y, 15), 15, DOTGRID.tool.settings.size.height + 15)
+      y: clamp(step(pos.y, 15), 15, DOTGRID.tool.settings.size.height)
     }
   }
 

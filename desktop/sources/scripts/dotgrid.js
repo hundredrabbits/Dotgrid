@@ -72,6 +72,28 @@ function Dotgrid (width, height) {
     })
   }
 
+  this.save = function () {
+    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to save'); return }
+    this.manager.toGRID(grab)
+  }
+
+  this.export = function () {
+    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to export'); return }
+    this.manager.toSVG(grab)
+  }
+
+  this.render = function () {
+    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to render'); return }
+    this.manager.toPNG({ width: DOTGRID.tool.settings.size.width * 2, height: DOTGRID.tool.settings.size.height * 2 }, grab)
+  }
+
+  function grab (base64, name) {
+    const link = document.createElement('a')
+    link.setAttribute('href', base64)
+    link.setAttribute('download', name)
+    link.dispatchEvent(new MouseEvent(`click`, { bubbles: true, cancelable: true, view: window }))
+  }
+
   // Basics
 
   this.getSize = function () {
