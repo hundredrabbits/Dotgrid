@@ -19,7 +19,7 @@ document.onkeyup = (e) =>
   if(ch == "2"){ DOTGRID.tool.select_layer(1); e.preventDefault(); }
   if(ch == "3"){ DOTGRID.tool.select_layer(2); e.preventDefault(); }  
 
-  if(ch == "h"){ DOTGRID.guide.toggle(); e.preventDefault(); }
+  if(ch == "h"){ DOTGRID.renderer.toggle(); e.preventDefault(); }
   if(ch == "?"){ DOTGRID.reset(); DOTGRID.theme.reset(); e.preventDefault(); }
 
   if(ch == "a"){ DOTGRID.tool.cast("line"); e.preventDefault(); }

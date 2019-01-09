@@ -71,11 +71,11 @@
         DOTGRID.controller.add("default","Effect","Thicker +5",() => { DOTGRID.tool.toggle("thickness",5) },"]");
         DOTGRID.controller.add("default","Effect","Thinner -5",() => { DOTGRID.tool.toggle("thickness",-5) },"[");
 
-        DOTGRID.controller.add("default","Manual","Add Point",() => { DOTGRID.tool.add_vertex(DOTGRID.cursor.pos); DOTGRID.guide.update() },"Enter");
-        DOTGRID.controller.add("default","Manual","Move Up",() => { DOTGRID.cursor.pos.y -= 15; DOTGRID.guide.update() },"Up");
-        DOTGRID.controller.add("default","Manual","Move Right",() => { DOTGRID.cursor.pos.x += 15; DOTGRID.guide.update() },"Right");
-        DOTGRID.controller.add("default","Manual","Move Down",() => { DOTGRID.cursor.pos.y += 15; DOTGRID.guide.update() },"Down");
-        DOTGRID.controller.add("default","Manual","Move Left",() => { DOTGRID.cursor.pos.x -= 15; DOTGRID.guide.update() },"Left");
+        DOTGRID.controller.add("default","Manual","Add Point",() => { DOTGRID.tool.add_vertex(DOTGRID.cursor.pos); DOTGRID.renderer.update() },"Enter");
+        DOTGRID.controller.add("default","Manual","Move Up",() => { DOTGRID.cursor.pos.y -= 15; DOTGRID.renderer.update() },"Up");
+        DOTGRID.controller.add("default","Manual","Move Right",() => { DOTGRID.cursor.pos.x += 15; DOTGRID.renderer.update() },"Right");
+        DOTGRID.controller.add("default","Manual","Move Down",() => { DOTGRID.cursor.pos.y += 15; DOTGRID.renderer.update() },"Down");
+        DOTGRID.controller.add("default","Manual","Move Left",() => { DOTGRID.cursor.pos.x -= 15; DOTGRID.renderer.update() },"Left");
         DOTGRID.controller.add("default","Manual","Remove Point",() => { DOTGRID.tool.remove_segments_at(DOTGRID.cursor.pos); },"Shift+Backspace");
         DOTGRID.controller.add("default","Manual","Remove Segment",() => { DOTGRID.tool.remove_segment(); },"Backspace");
 
@@ -87,7 +87,7 @@
         DOTGRID.controller.add("default","Layers","Merge Layers",() => { DOTGRID.tool.merge() },"M");
 
         DOTGRID.controller.add("default","View","Color Picker",() => { DOTGRID.picker.start(); },"G");
-        DOTGRID.controller.add("default","View","Toggle Grid",() => { DOTGRID.guide.toggle(); },"H");
+        DOTGRID.controller.add("default","View","Toggle Grid",() => { DOTGRID.renderer.toggle(); },"H");
 
         DOTGRID.controller.add("default","Theme","Open Theme",() => { DOTGRID.theme.open(); },"CmdOrCtrl+Shift+o")
         DOTGRID.controller.add("default","Theme","Reset Theme",() => { DOTGRID.theme.reset(); },"CmdOrCtrl+Shift+Backspace")

@@ -46,7 +46,7 @@ DOTGRID.Picker = function () {
 
     try { DOTGRID.controller.set() } catch (err) { console.log('No controller') }
 
-    setTimeout(() => { DOTGRID.interface.update(true); DOTGRID.guide.update() }, 250)
+    setTimeout(() => { DOTGRID.interface.update(true); DOTGRID.renderer.update() }, 250)
   }
 
   this.validate = function () {

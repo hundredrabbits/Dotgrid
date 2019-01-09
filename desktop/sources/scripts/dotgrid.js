@@ -17,13 +17,13 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
 
   this.install = function (host) {
     this.manager = new Manager(this)
-    this.guide = new this.Guide()
+    this.renderer = new Renderer(this)
     this.tool = new this.Tool()
     this.interface = new this.Interface()
-    
+
     this.picker = new this.Picker()
     this.cursor = new this.Cursor()
-    host.appendChild(this.guide.el)
+    host.appendChild(this.renderer.el)
 
     this.manager.install()
     this.interface.install(host)
@@ -33,7 +33,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
   this.start = function () {
     this.theme.start()
     this.tool.start()
-    this.guide.start()
+    this.renderer.start()
     this.interface.start()
 
     document.addEventListener('mousedown', function (e) { DOTGRID.cursor.down(e) }, false)
@@ -54,7 +54,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     DOTGRID.resize()
     DOTGRID.manager.update()
     DOTGRID.interface.update()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 
   // File
@@ -76,7 +76,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     fs.readFile(paths[0], 'utf-8', (err, data) => {
       if (err) { alert('An error ocurred reading the file :' + err.message); return }
       this.tool.replace(JSON.parse(data.toString().trim()))
-      this.guide.update()
+      this.renderer.update()
     })
   }
 
@@ -127,10 +127,10 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     this.grid_width = this.tool.settings.size.width / this.grid_x
     this.grid_height = this.tool.settings.size.height / this.grid_y
 
-    DOTGRID.guide.resize(size)
+    DOTGRID.renderer.resize(size)
 
     this.interface.update()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 
   this.set_zoom = function (scale) {
@@ -154,7 +154,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     this.history.clear()
     this.tool.reset()
     this.reset()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update(true)
   }
 
@@ -176,7 +176,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     DOTGRID.grid_width = DOTGRID.tool.settings.size.width / DOTGRID.grid_x
     DOTGRID.grid_height = DOTGRID.tool.settings.size.height / DOTGRID.grid_y
 
-    DOTGRID.guide.resize(size)
+    DOTGRID.renderer.resize(size)
 
     document.title = `Dotgrid — ${size.width}x${size.height}`
   }
@@ -196,13 +196,13 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
       const data = e.target && e.target.result ? e.target.result : ''
       if (data && !isJson(data)) { return }
       DOTGRID.tool.replace(JSON.parse(`${data}`))
-      DOTGRID.guide.update()
+      DOTGRID.renderer.update()
     }
     reader.readAsText(file)
   }
 
   this.copy = function (e) {
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
 
     if (e.target !== this.picker.input) {
       e.clipboardData.setData('text/source', DOTGRID.tool.export(DOTGRID.tool.layer()))
@@ -212,11 +212,11 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
       e.preventDefault()
     }
 
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 
   this.cut = function (e) {
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
 
     if (e.target !== this.picker.input) {
       e.clipboardData.setData('text/source', DOTGRID.tool.export(DOTGRID.tool.layer()))
@@ -227,7 +227,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
       e.preventDefault()
     }
 
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 
   this.paste = function (e) {
@@ -240,7 +240,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
       e.preventDefault()
     }
 
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 }
 

@@ -13,13 +13,9 @@ function Manager (dotgrid) {
   this.layers = []
 
   this.install = function () {
-    this.layers[0] = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-    this.layers[1] = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-    this.layers[2] = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-
-    this.el.appendChild(this.layers[2])
-    this.el.appendChild(this.layers[1])
-    this.el.appendChild(this.layers[0])
+    this.el.appendChild(this.layers[2] = document.createElementNS('http://www.w3.org/2000/svg', 'path'))
+    this.el.appendChild(this.layers[1] = document.createElementNS('http://www.w3.org/2000/svg', 'path'))
+    this.el.appendChild(this.layers[0] = document.createElementNS('http://www.w3.org/2000/svg', 'path'))
   }
 
   this.update = function () {

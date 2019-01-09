@@ -5,9 +5,9 @@ DOTGRID.Tool = function () {
   this.settings = { size: { width: 300, height: 300 } }
   this.layers = [[], [], []]
   this.styles = [
-    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0, transform:'rotate(45)' },
-    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#0f0', fill: 'none', mirror_style: 0, transform:'rotate(45)' },
-    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#00f', fill: 'none', mirror_style: 0, transform:'rotate(45)' }
+    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },
+    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#0f0', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },
+    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#00f', fill: 'none', mirror_style: 0, transform: 'rotate(45)' }
   ]
   this.vertices = []
   this.reqs = { line: 2, arc_c: 2, arc_r: 2, arc_c_full: 2, arc_r_full: 2, bezier: 3, close: 0 }
@@ -36,19 +36,19 @@ DOTGRID.Tool = function () {
 
   this.clear = function () {
     this.vertices = []
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update(true)
   }
 
   this.undo = function () {
     this.layers = DOTGRID.history.prev()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update(true)
   }
 
   this.redo = function () {
     this.layers = DOTGRID.history.next()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update(true)
   }
 
@@ -66,7 +66,7 @@ DOTGRID.Tool = function () {
     this.layers[this.index] = this.layers[this.index].concat(layer)
     DOTGRID.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update(true)
   }
 
@@ -85,7 +85,7 @@ DOTGRID.Tool = function () {
     this.settings = dot.settings
 
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update(true)
     DOTGRID.history.push(this.layers)
   }
@@ -97,7 +97,7 @@ DOTGRID.Tool = function () {
 
     this.layer().pop()
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update(true)
   }
 
@@ -115,7 +115,7 @@ DOTGRID.Tool = function () {
       }
     }
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update(true)
   }
 
@@ -170,7 +170,7 @@ DOTGRID.Tool = function () {
     DOTGRID.history.push(this.layers)
 
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update(true)
 
     console.log(`Casted ${type} -> ${this.layer().length} elements`)
@@ -197,7 +197,7 @@ DOTGRID.Tool = function () {
       console.warn('Unknown', type)
     }
     DOTGRID.interface.update(true)
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 
   this.misc = function (type) {
@@ -205,7 +205,7 @@ DOTGRID.Tool = function () {
   }
 
   this.source = function (type) {
-    if (type == 'grid') { DOTGRID.guide.toggle() }
+    if (type == 'grid') { DOTGRID.renderer.toggle() }
     if (type == 'screen') { app.toggle_fullscreen() }
 
     if (type == 'open') { DOTGRID.open() }
@@ -268,7 +268,7 @@ DOTGRID.Tool = function () {
     }
     DOTGRID.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 
   this.translate_multi = function (a, b) {
@@ -284,7 +284,7 @@ DOTGRID.Tool = function () {
 
     DOTGRID.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 
   this.translate_layer = function (a, b) {
@@ -299,7 +299,7 @@ DOTGRID.Tool = function () {
     }
     DOTGRID.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 
   this.translate_copy = function (a, b) {
@@ -316,7 +316,7 @@ DOTGRID.Tool = function () {
 
     DOTGRID.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 
   this.merge = function () {
@@ -326,7 +326,7 @@ DOTGRID.Tool = function () {
 
     DOTGRID.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
   }
 
   // Style
@@ -350,7 +350,7 @@ DOTGRID.Tool = function () {
   this.select_layer = function (id) {
     this.index = clamp(id, 0, 2)
     this.clear()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update(true)
     console.log(`layer:${this.index}`)
   }

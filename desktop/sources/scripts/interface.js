@@ -72,19 +72,19 @@ DOTGRID.Interface = function () {
     DOTGRID.cursor.operation = {}
     DOTGRID.cursor.operation[type] = name
     this.update(true)
-    DOTGRID.guide.update(true)
+    DOTGRID.renderer.update(true)
   }
 
   this.out = function (type, name) {
     DOTGRID.cursor.operation = ''
-    DOTGRID.guide.update(true)
+    DOTGRID.renderer.update(true)
   }
 
   this.up = function (type, name) {
     if (!DOTGRID.tool[type]) { console.warn(`Unknown option(type): ${type}.${name}`, DOTGRID.tool); return }
 
     this.update(true)
-    DOTGRID.guide.update(true)
+    DOTGRID.renderer.update(true)
   }
 
   this.down = function (type, name) {
@@ -92,7 +92,7 @@ DOTGRID.Interface = function () {
 
     DOTGRID.tool[type](name)
     this.update(true)
-    DOTGRID.guide.update(true)
+    DOTGRID.renderer.update(true)
   }
 
   this.prev_operation = null
@@ -130,10 +130,10 @@ DOTGRID.Interface = function () {
     document.getElementById('option_export').className.baseVal = sum_segments < 1 ? 'icon inactive source' : 'icon source'
     document.getElementById('option_render').className.baseVal = sum_segments < 1 ? 'icon inactive source' : 'icon source'
 
-    document.getElementById('option_grid').className.baseVal = DOTGRID.guide.showExtras ? 'icon inactive source' : 'icon source'
+    document.getElementById('option_grid').className.baseVal = DOTGRID.renderer.showExtras ? 'icon inactive source' : 'icon source'
 
     // Grid
-    if (DOTGRID.guide.showExtras) { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 Q155,65 245,155 M155,125 A30,30 0 0,1 185,155 A30,30 0 0,1 155,185 A30,30 0 0,1 125,155 A30,30 0 0,1 155,125 ') } else { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 ') }
+    if (DOTGRID.renderer.showExtras) { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 Q155,65 245,155 M155,125 A30,30 0 0,1 185,155 A30,30 0 0,1 155,185 A30,30 0 0,1 125,155 A30,30 0 0,1 155,125 ') } else { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 ') }
 
     // Mirror
     if (DOTGRID.tool.style().mirror_style == 0) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210') } else if (DOTGRID.tool.style().mirror_style == 1) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L240,240 M180,120 L210,90 M120,180 L90,210') } else if (DOTGRID.tool.style().mirror_style == 2) { document.getElementById('mirror_path').setAttribute('d', 'M210,90 L210,90 L90,210 M60,60 L60,60 L120,120 M180,180 L180,180 L240,240') } else if (DOTGRID.tool.style().mirror_style == 3) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L60,60 L120,120 L180,120 L210,90 M240,240 L240,240 L180,180 L120,180 L90,210') } else if (DOTGRID.tool.style().mirror_style == 4) { document.getElementById('mirror_path').setAttribute('d', 'M120,120 L120,120 L120,120 L180,120 M120,150 L120,150 L180,150 M120,180 L120,180 L180,180 L180,180 L180,180 L240,240 M120,210 L120,210 L180,210 M120,90 L120,90 L180,90 M60,60 L60,60 L120,120  ') }

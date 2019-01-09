@@ -24,7 +24,7 @@ DOTGRID.Cursor = function () {
       this.translate(this.pos, this.pos, e.shiftKey, e.ctrlKey || e.metaKey, e.altKey)
     }
 
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update()
     e.preventDefault()
   }
@@ -40,7 +40,7 @@ DOTGRID.Cursor = function () {
     }
 
     if (this.last_pos.x != this.pos.x || this.last_pos.y != this.pos.y) {
-      DOTGRID.guide.update()
+      DOTGRID.renderer.update()
     }
 
     DOTGRID.interface.update()
@@ -62,7 +62,7 @@ DOTGRID.Cursor = function () {
     this.translate()
 
     DOTGRID.interface.update()
-    DOTGRID.guide.update()
+    DOTGRID.renderer.update()
     e.preventDefault()
   }
 
@@ -83,8 +83,8 @@ DOTGRID.Cursor = function () {
 
   this.pos_relative = function (pos) {
     return {
-      x: pos.x - DOTGRID.guide.el.offsetLeft,
-      y: pos.y - DOTGRID.guide.el.offsetTop
+      x: pos.x - DOTGRID.renderer.el.offsetLeft,
+      y: pos.y - DOTGRID.renderer.el.offsetTop
     }
   }
 

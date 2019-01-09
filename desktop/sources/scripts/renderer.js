@@ -1,6 +1,6 @@
 'use strict'
 
-DOTGRID.Guide = function () {
+function Renderer () {
   this.el = document.createElement('canvas')
   this.el.id = 'guide'
   this.el.width = 640
@@ -21,15 +21,10 @@ DOTGRID.Guide = function () {
     DOTGRID.manager.update()
 
     this.clear()
-
-    this.context.restore()
-
     this.drawMirror()
     this.drawRulers()
-
     this.drawRender()
-
-    this.drawMarkers() 
+    this.drawMarkers()
     this.drawVertices()
     this.drawHandles()
     this.drawTranslation()
@@ -271,7 +266,7 @@ DOTGRID.Guide = function () {
     ctx.restore()
   }
 
-  this.drawRender = function(ctx = this.context){
+  this.drawRender = function (ctx = this.context) {
     let img = new Image()
     img.src = DOTGRID.manager.svg64()
     this.context.drawImage(img, 0, 0, this.el.width, this.el.height)
