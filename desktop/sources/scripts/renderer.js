@@ -17,10 +17,10 @@ DOTGRID.Renderer = function () {
   this.svg_el.appendChild(this.layer_1)
 
   this.update = function () {
-    this.svg_el.setAttribute('width', (DOTGRID.tool.settings.size.width - (5)) + 'px')
-    this.svg_el.setAttribute('height', (DOTGRID.tool.settings.size.height + (10)) + 'px')
-    this.svg_el.style.width = (DOTGRID.tool.settings.size.width - (5))
-    this.svg_el.style.height = DOTGRID.tool.settings.size.height + (10)
+    this.svg_el.setAttribute('width', (DOTGRID.tool.settings.size.width) + 'px')
+    this.svg_el.setAttribute('height', (DOTGRID.tool.settings.size.height) + 'px')
+    this.svg_el.style.width = (DOTGRID.tool.settings.size.width)
+    this.svg_el.style.height = DOTGRID.tool.settings.size.height
     this.svg_el.style.strokeWidth = DOTGRID.tool.style().thickness
 
     let styles = DOTGRID.tool.styles
@@ -57,31 +57,31 @@ DOTGRID.Renderer = function () {
     return b64Start + svg64
   }
 
-  this.to_png = function (size = DOTGRID.tool.settings.size, callback) {
+  this.toPNG = function (size = DOTGRID.tool.settings.size, callback) {
     let image64 = this.svg64()
     let img = new Image()
 
     let canvas = document.createElement('canvas')
 
     canvas.width = (size.width) * 2
-    canvas.height = (size.height + 30) * 2
+    canvas.height = (size.height) * 2
 
     let ctx = canvas.getContext('2d')
 
     img.onload = function () {
-      ctx.drawImage(img, 0, 0, (size.width) * 2, (size.height + 30) * 2)
+      ctx.drawImage(img, 0, 0, (size.width) * 2, (size.height) * 2)
       let data = canvas.toDataURL('image/png')
       callback(data, 'export.png')
     }
     img.src = image64
   }
 
-  this.to_svg = function (callback) {
+  this.toSVG = function (callback) {
     const image64 = this.svg64()
     callback(image64, 'export.svg')
   }
 
-  this.to_grid = function (callback) {
+  this.toGRID = function (callback) {
     const text = DOTGRID.tool.export()
     const file = new Blob([text], { type: 'text/plain' })
     callback(URL.createObjectURL(file), 'export.grid')

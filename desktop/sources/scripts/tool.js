@@ -77,7 +77,7 @@ DOTGRID.Tool = function () {
       dot.settings.size = { width: dot.settings.width, height: dot.settings.height }
     }
     if (this.settings && (this.settings.size.width != dot.settings.size.width || this.settings.size.height != dot.settings.size.height)) {
-      DOTGRID.set_size({ width: dot.settings.size.width, height: dot.settings.size.height })
+      DOTGRID.setSize({ width: dot.settings.size.width, height: dot.settings.size.height })
     }
 
     this.layers = dot.layers

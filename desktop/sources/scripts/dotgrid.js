@@ -58,7 +58,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
 
   this.new = function () {
     this.set_zoom(1.0)
-    this.set_size({ width: 300, height: 300 })
+    this.setSize({ width: 300, height: 300 })
     this.history.push(this.tool.layers)
     this.clear()
   }
@@ -87,25 +87,25 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
   this.save = function () {
     if (DOTGRID.tool.length() < 1) { console.warn('Nothing to save'); return }
 
-    this.renderer.to_grid(grab)
+    this.renderer.toGRID(grab)
   }
 
   this.export = function () {
     if (DOTGRID.tool.length() < 1) { console.warn('Nothing to export'); return }
 
-    this.renderer.to_svg(grab)
+    this.renderer.toSVG(grab)
   }
 
   this.render = function () {
     if (DOTGRID.tool.length() < 1) { console.warn('Nothing to render'); return }
 
     const size = { width: DOTGRID.tool.settings.size.width * 2, height: DOTGRID.tool.settings.size.height * 2 }
-    this.renderer.to_png(size, grab)
+    this.renderer.toPNG(size, grab)
   }
 
   // Basics
 
-  this.set_size = function (size = { width: 300, height: 300 }, ui = true, scale = 1) {
+  this.setSize = function (size = { width: 300, height: 300 }, ui = true, scale = 1) {
     size = { width: clamp(step(size.width, 15), 105, 1080), height: clamp(step(size.height, 15), 120, 1080) }
 
     this.tool.settings.size.width = size.width
@@ -131,7 +131,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
   }
 
   this.set_zoom = function (scale) {
-    this.set_size({ width: this.tool.settings.size.width, height: this.tool.settings.size.height }, true, scale)
+    this.setSize({ width: this.tool.settings.size.width, height: this.tool.settings.size.height }, true, scale)
 
     try {
       webFrame.setZoomFactor(scale)

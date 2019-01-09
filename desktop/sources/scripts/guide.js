@@ -24,12 +24,19 @@ DOTGRID.Guide = function () {
     this.drawMirror()
     this.drawRulers()
 
+    DOTGRID.renderer.update()
+    let ctx = this.el.getContext('2d')
+    let image64 = DOTGRID.renderer.svg64()
+    let img = new Image()
+    img.src = image64
+    ctx.drawImage(img, 0, 0, this.el.width, this.el.height)
+
     if (DOTGRID.tool.index == 2) { this.drawMarkers(); this.drawVertices() }
-    this.drawPath(new Generator(DOTGRID.tool.layers[2], DOTGRID.tool.styles[2]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[2])
+    // this.drawPath(new Generator(DOTGRID.tool.layers[2], DOTGRID.tool.styles[2]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[2])
     if (DOTGRID.tool.index == 1) { this.drawMarkers(); this.drawVertices() }
-    this.drawPath(new Generator(DOTGRID.tool.layers[1], DOTGRID.tool.styles[1]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[1])
+    // this.drawPath(new Generator(DOTGRID.tool.layers[1], DOTGRID.tool.styles[1]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[1])
     if (DOTGRID.tool.index == 0) { this.drawMarkers(); this.drawVertices() }
-    this.drawPath(new Generator(DOTGRID.tool.layers[0], DOTGRID.tool.styles[0]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[0])
+    // this.drawPath(new Generator(DOTGRID.tool.layers[0], DOTGRID.tool.styles[0]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[0])
 
     this.drawHandles()
     this.drawTranslation()
