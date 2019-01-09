@@ -5,9 +5,9 @@ DOTGRID.Tool = function () {
   this.settings = { size: { width: 300, height: 300 } }
   this.layers = [[], [], []]
   this.styles = [
-    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0 },
-    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#0f0', fill: 'none', mirror_style: 0 },
-    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#00f', fill: 'none', mirror_style: 0 }
+    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0, transform:'rotate(45)' },
+    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#0f0', fill: 'none', mirror_style: 0, transform:'rotate(45)' },
+    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#00f', fill: 'none', mirror_style: 0, transform:'rotate(45)' }
   ]
   this.vertices = []
   this.reqs = { line: 2, arc_c: 2, arc_r: 2, arc_c_full: 2, arc_r_full: 2, bezier: 3, close: 0 }

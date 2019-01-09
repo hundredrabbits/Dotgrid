@@ -38,6 +38,7 @@ DOTGRID.Renderer = function () {
       layer.style.strokeLinejoin = style.strokeLinejoin
       layer.style.stroke = style.color
       layer.style.fill = style.fill
+      layer.style.transform = style.transform
       layer.setAttribute('d', paths[id])
     }
   }

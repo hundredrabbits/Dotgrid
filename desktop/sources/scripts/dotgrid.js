@@ -51,6 +51,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
 
   this.update = function () {
     DOTGRID.resize()
+    DOTGRID.renderer.update()
     DOTGRID.interface.update()
     DOTGRID.guide.update()
   }

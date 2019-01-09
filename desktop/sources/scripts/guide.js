@@ -7,6 +7,7 @@ DOTGRID.Guide = function () {
   this.el.height = 640
   this.el.style.width = '320px'
   this.el.style.height = '320px'
+  this.context = this.el.getContext('2d')
   this.showExtras = true
 
   this.scale = 2
@@ -17,27 +18,20 @@ DOTGRID.Guide = function () {
   }
 
   this.update = function (force = false) {
+
+    DOTGRID.renderer.update()
+    
     this.clear()
 
-    this.el.getContext('2d').restore()
+    this.context.restore()
 
     this.drawMirror()
     this.drawRulers()
 
-    DOTGRID.renderer.update()
-    let ctx = this.el.getContext('2d')
-    let image64 = DOTGRID.renderer.svg64()
-    let img = new Image()
-    img.src = image64
-    ctx.drawImage(img, 0, 0, this.el.width, this.el.height)
+    this.drawRender()
 
-    if (DOTGRID.tool.index == 2) { this.drawMarkers(); this.drawVertices() }
-    // this.drawPath(new Generator(DOTGRID.tool.layers[2], DOTGRID.tool.styles[2]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[2])
-    if (DOTGRID.tool.index == 1) { this.drawMarkers(); this.drawVertices() }
-    // this.drawPath(new Generator(DOTGRID.tool.layers[1], DOTGRID.tool.styles[1]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[1])
-    if (DOTGRID.tool.index == 0) { this.drawMarkers(); this.drawVertices() }
-    // this.drawPath(new Generator(DOTGRID.tool.layers[0], DOTGRID.tool.styles[0]).toString({ x: 0, y: 0 }, this.scale), DOTGRID.tool.styles[0])
-
+    this.drawMarkers() 
+    this.drawVertices()
     this.drawHandles()
     this.drawTranslation()
     this.drawCursor()
@@ -276,6 +270,12 @@ DOTGRID.Guide = function () {
 
     ctx.setLineDash([])
     ctx.restore()
+  }
+
+  this.drawRender = function(ctx = this.context){
+    let img = new Image()
+    img.src = DOTGRID.renderer.svg64()
+    this.context.drawImage(img, 0, 0, this.el.width, this.el.height)
   }
 
   function isEqual (a, b) { return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }
