@@ -100,12 +100,12 @@ function Interface (dotgrid) {
   this.update = function (force = false, id) {
     if (this.prev_operation == dotgrid.cursor.operation && force == false) { return }
 
-    let multi_vertices = null
+    let multiVertices = null
     let segments = dotgrid.tool.layer()
-    const sum_segments = dotgrid.tool.length()
+    const sumSegments = dotgrid.tool.length()
 
     for (const i in segments) {
-      if (segments[i].vertices.length > 2) { multi_vertices = true; break }
+      if (segments[i].vertices.length > 2) { multiVertices = true; break }
     }
 
     document.getElementById('option_line').className.baseVal = !dotgrid.tool.canCast('line') ? 'icon inactive' : 'icon'
@@ -116,7 +116,7 @@ function Interface (dotgrid) {
 
     document.getElementById('option_thickness').className.baseVal = dotgrid.tool.layer().length < 1 ? 'icon inactive' : 'icon'
     document.getElementById('option_linecap').className.baseVal = dotgrid.tool.layer().length < 1 ? 'icon inactive' : 'icon'
-    document.getElementById('option_linejoin').className.baseVal = dotgrid.tool.layer().length < 1 || !multi_vertices ? 'icon inactive' : 'icon'
+    document.getElementById('option_linejoin').className.baseVal = dotgrid.tool.layer().length < 1 || !multiVertices ? 'icon inactive' : 'icon'
     document.getElementById('option_mirror').className.baseVal = dotgrid.tool.layer().length < 1 ? 'icon inactive' : 'icon'
     document.getElementById('option_fill').className.baseVal = dotgrid.tool.layer().length < 1 ? 'icon inactive' : 'icon'
 
@@ -126,9 +126,9 @@ function Interface (dotgrid) {
 
     // Source
 
-    document.getElementById('option_save').className.baseVal = sum_segments < 1 ? 'icon inactive source' : 'icon source'
-    document.getElementById('option_export').className.baseVal = sum_segments < 1 ? 'icon inactive source' : 'icon source'
-    document.getElementById('option_render').className.baseVal = sum_segments < 1 ? 'icon inactive source' : 'icon source'
+    document.getElementById('option_save').className.baseVal = sumSegments < 1 ? 'icon inactive source' : 'icon source'
+    document.getElementById('option_export').className.baseVal = sumSegments < 1 ? 'icon inactive source' : 'icon source'
+    document.getElementById('option_render').className.baseVal = sumSegments < 1 ? 'icon inactive source' : 'icon source'
 
     document.getElementById('option_grid').className.baseVal = dotgrid.renderer.showExtras ? 'icon inactive source' : 'icon source'
 

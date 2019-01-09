@@ -61,7 +61,7 @@ function Picker (dotgrid) {
   }
 
   this.listen = function (e, is_down = false) {
-    if (is_down && !is_color_char(e.key)) {
+    if (is_down && !isColorChar(e.key)) {
       e.preventDefault()
       return
     }
@@ -90,7 +90,7 @@ function Picker (dotgrid) {
     return re.test(val)
   }
 
-  function is_color_char (val) {
+  function isColorChar (val) {
     const re = /[0-9A-Fa-f]/g
     return re.test(val)
   }
