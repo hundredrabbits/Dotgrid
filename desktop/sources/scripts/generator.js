@@ -19,7 +19,7 @@ function Generator (layer, style) {
 
         // Rotate
         const center = { x: (DOTGRID.tool.settings.size.width / 2) + offset.x + (7.5), y: (DOTGRID.tool.settings.size.height / 2) + offset.y + 30 }
-        seg.vertices[k2] = rotate_point(seg.vertices[k2], center, angle)
+        seg.vertices[k2] = rotatePoint(seg.vertices[k2], center, angle)
 
         // Scale
         seg.vertices[k2].x *= scale
@@ -40,7 +40,7 @@ function Generator (layer, style) {
 
       let vertex = vertices[id]
       let next = vertices[parseInt(id) + 1]
-      let after_next = vertices[parseInt(id) + 2]
+      let afterNext = vertices[parseInt(id) + 2]
 
       if (id == 0 && !prev || id == 0 && prev && (prev.x != vertex.x || prev.y != vertex.y)) {
         html += `M${vertex.x},${vertex.y} `
@@ -61,7 +61,7 @@ function Generator (layer, style) {
         let clock = mirror > 0 ? '1,1' : '1,0'
         html += this._arc(vertex, next, clock)
       } else if (type == 'bezier') {
-        html += this._bezier(next, after_next)
+        html += this._bezier(next, afterNext)
         skip = 1
       }
     }
@@ -109,20 +109,9 @@ function Generator (layer, style) {
       s += this.convert(operate(this.layer, offset, scale, mirror), mirror)
     }
 
-    // if (mirror == 3) {
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 120), mirror)
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 240), mirror)
-    // }
-    // if (mirror == 4) {
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 72), mirror)
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 144), mirror)
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 216), mirror)
-    //   s += this.convert(operate(this.layer, offset, scale, mirror, 288), mirror)
-    // }
-
     return s
   }
 
   function copy (data) { return data ? JSON.parse(JSON.stringify(data)) : [] }
-  function rotate_point (point, origin, angle) { angle = angle * Math.PI / 180.0; return { x: (Math.cos(angle) * (point.x - origin.x) - Math.sin(angle) * (point.y - origin.y) + origin.x).toFixed(1), y: (Math.sin(angle) * (point.x - origin.x) + Math.cos(angle) * (point.y - origin.y) + origin.y).toFixed(1) } }
+  function rotatePoint (point, origin, angle) { angle = angle * Math.PI / 180.0; return { x: (Math.cos(angle) * (point.x - origin.x) - Math.sin(angle) * (point.y - origin.y) + origin.x).toFixed(1), y: (Math.sin(angle) * (point.x - origin.x) + Math.cos(angle) * (point.y - origin.y) + origin.y).toFixed(1) } }
 }

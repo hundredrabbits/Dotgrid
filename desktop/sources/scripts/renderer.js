@@ -1,89 +1,267 @@
 'use strict'
 
-DOTGRID.Renderer = function () {
-  // Create SVG parts
-  this.svg_el = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
-  this.svg_el.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-  this.svg_el.setAttribute('baseProfile', 'full')
-  this.svg_el.setAttribute('version', '1.1')
-  this.svg_el.style.fill = 'none'
+function Renderer (dotgrid) {
+  this.el = document.createElement('canvas')
+  this.el.id = 'guide'
+  this.el.width = 640
+  this.el.height = 640
+  this.el.style.width = '320px'
+  this.el.style.height = '320px'
+  this.context = this.el.getContext('2d')
+  this.showExtras = true
 
-  this.layer_1 = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-  this.layer_2 = document.createElementNS('http://www.w3.org/2000/svg', 'path')
-  this.layer_3 = document.createElementNS('http://www.w3.org/2000/svg', 'path')
+  this.scale = 2
 
-  this.svg_el.appendChild(this.layer_3)
-  this.svg_el.appendChild(this.layer_2)
-  this.svg_el.appendChild(this.layer_1)
-
-  this.update = function () {
-    this.svg_el.setAttribute('width', (DOTGRID.tool.settings.size.width - (5)) + 'px')
-    this.svg_el.setAttribute('height', (DOTGRID.tool.settings.size.height + (10)) + 'px')
-    this.svg_el.style.width = (DOTGRID.tool.settings.size.width - (5))
-    this.svg_el.style.height = DOTGRID.tool.settings.size.height + (10)
-    this.svg_el.style.strokeWidth = DOTGRID.tool.style().thickness
-
-    let styles = DOTGRID.tool.styles
-    let paths = DOTGRID.tool.paths()
-
-    this.layer_1.style.strokeWidth = styles[0].thickness
-    this.layer_1.style.strokeLinecap = styles[0].strokeLinecap
-    this.layer_1.style.strokeLinejoin = styles[0].strokeLinejoin
-    this.layer_1.style.stroke = styles[0].color
-    this.layer_1.style.fill = styles[0].fill
-    this.layer_1.setAttribute('d', paths[0])
-
-    this.layer_2.style.strokeWidth = styles[1].thickness
-    this.layer_2.style.strokeLinecap = styles[1].strokeLinecap
-    this.layer_2.style.strokeLinejoin = styles[1].strokeLinejoin
-    this.layer_2.style.stroke = styles[1].color
-    this.layer_2.style.fill = styles[1].fill
-    this.layer_2.setAttribute('d', paths[1])
-
-    this.layer_3.style.strokeWidth = styles[2].thickness
-    this.layer_3.style.strokeLinecap = styles[2].strokeLinecap
-    this.layer_3.style.strokeLinejoin = styles[2].strokeLinejoin
-    this.layer_3.style.stroke = styles[2].color
-    this.layer_3.style.fill = styles[2].fill
-    this.layer_3.setAttribute('d', paths[2])
-  }
-
-  this.svg64 = function () {
+  this.start = function () {
     this.update()
-
-    let xml = new XMLSerializer().serializeToString(this.svg_el)
-    let svg64 = btoa(xml)
-    let b64Start = 'data:image/svg+xml;base64,'
-    return b64Start + svg64
   }
 
-  this.to_png = function (size = DOTGRID.tool.settings.size, callback) {
-    let image64 = this.svg64()
-    let img = new Image()
-
-    let canvas = document.createElement('canvas')
-
-    canvas.width = (size.width) * 2
-    canvas.height = (size.height + 30) * 2
-
-    let ctx = canvas.getContext('2d')
-
-    img.onload = function () {
-      ctx.drawImage(img, 0, 0, (size.width) * 2, (size.height + 30) * 2)
-      let data = canvas.toDataURL('image/png')
-      callback(data, 'export.png')
+  this.update = function (force = false) {
+    dotgrid.manager.update()
+    let render = new Image()
+    render.onload = () => {
+      this.draw(render)
     }
-    img.src = image64
+    render.src = dotgrid.manager.svg64()
   }
 
-  this.to_svg = function (callback) {
-    const image64 = this.svg64()
-    callback(image64, 'export.svg')
+  this.draw = function (render) {
+    this.clear()
+    this.drawMirror()
+    this.drawRulers()
+    this.drawGrid()
+    this.drawRender(render) //
+    this.drawVertices()
+    this.drawHandles()
+    this.drawTranslation()
+    this.drawCursor()
+    this.drawPreview()
   }
 
-  this.to_grid = function (callback) {
-    const text = DOTGRID.tool.export()
-    const file = new Blob([text], { type: 'text/plain' })
-    callback(URL.createObjectURL(file), 'export.grid')
+  this.clear = function () {
+    this.context.clearRect(0, 0, this.el.width * this.scale, this.el.height * this.scale)
   }
+
+  this.toggle = function () {
+    this.showExtras = !this.showExtras
+    this.update()
+    dotgrid.interface.update(true)
+  }
+
+  this.resize = function (size) {
+    const pad = 15
+    this.el.width = (size.width + pad) * this.scale
+    this.el.height = (size.height + pad) * this.scale
+    this.el.style.width = (size.width + pad) + 'px'
+    this.el.style.height = (size.height + pad) + 'px'
+
+    this.update()
+  }
+
+  // Collections
+
+  this.drawMirror = function () {
+    if (!this.showExtras) { return }
+
+    if (dotgrid.tool.style().mirror_style === 0) { return }
+
+    const middle = { x: dotgrid.tool.settings.size.width + 15, y: dotgrid.tool.settings.size.height + (this.scale * 15) }
+
+    if (dotgrid.tool.style().mirror_style === 1 || dotgrid.tool.style().mirror_style === 3) {
+      this.drawRule({ x: middle.x, y: 15 * this.scale }, { x: middle.x, y: (dotgrid.tool.settings.size.height + 15) * this.scale })
+    }
+    if (dotgrid.tool.style().mirror_style === 2 || dotgrid.tool.style().mirror_style === 3) {
+      this.drawRule({ x: 15 * this.scale, y: middle.y }, { x: (dotgrid.tool.settings.size.width + 15) * this.scale, y: middle.y })
+    }
+  }
+
+  this.drawHandles = function () {
+    if (!this.showExtras) { return }
+
+    for (const segmentId in dotgrid.tool.layer()) {
+      const segment = dotgrid.tool.layer()[segmentId]
+      for (const vertexId in segment.vertices) {
+        const vertex = segment.vertices[vertexId]
+        this.drawHandle(vertex)
+      }
+    }
+  }
+
+  this.drawVertices = function () {
+    for (const id in dotgrid.tool.vertices) {
+      this.drawVertex(dotgrid.tool.vertices[id])
+    }
+  }
+
+  this.drawGrid = function () {
+    if (!this.showExtras) { return }
+
+    const cursor = { x: parseInt(dotgrid.cursor.pos.x / 15), y: parseInt(dotgrid.cursor.pos.y / 15) }
+    const markers = dotgrid.getSize().markers
+
+    for (let x = markers.w - 1; x >= 0; x--) {
+      for (let y = markers.h; y >= 0; y--) {
+        let is_step = x % 4 == 0 && y % 4 == 0
+        // Color
+        let color = is_step ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low
+        if ((y == 0 || y == markers.h) && cursor.x == x + 1) { color = dotgrid.theme.active.b_high } else if ((x == 0 || x == markers.w - 1) && cursor.y == y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x == x + 1 && cursor.y == y + 1) { color = dotgrid.theme.active.b_high }
+
+        this.drawMarker({
+          x: parseInt(x * 15) + 15,
+          y: parseInt(y * 15) + 15
+        }, is_step ? 2.5 : 1.5, color)
+      }
+    }
+  }
+
+  this.drawRulers = function () {
+    if (!dotgrid.cursor.translation) { return }
+
+    const pos = dotgrid.cursor.translation.to
+    const bottom = (dotgrid.tool.settings.size.height * this.scale)
+    const right = (dotgrid.tool.settings.size.width * this.scale)
+
+    this.drawRule({ x: pos.x * this.scale, y: 0 }, { x: pos.x * this.scale, y: bottom })
+    this.drawRule({ x: 0, y: pos.y * this.scale }, { x: right, y: pos.y * this.scale })
+  }
+
+  this.drawPreview = function () {
+    let operation = dotgrid.cursor.operation && dotgrid.cursor.operation.cast ? dotgrid.cursor.operation.cast : null
+
+    if (!dotgrid.tool.canCast(operation)) { return }
+    if (operation == 'close') { return }
+
+    let path = new Generator([{ vertices: dotgrid.tool.vertices, type: operation }]).toString({ x: 0, y: 0 }, 2)
+    let style = {
+      color: dotgrid.theme.active.f_med,
+      thickness: 2,
+      strokeLinecap: 'round',
+      strokeLinejoin: 'round',
+      strokeLineDash: [5, 15]
+    }
+    this.drawPath(path, style)
+  }
+
+  // Elements
+
+  this.drawMarker = function (pos, radius = 1, color) {
+    this.context.beginPath()
+    this.context.lineWidth = 2
+    this.context.arc(pos.x * this.scale, pos.y * this.scale, radius, 0, 2 * Math.PI, false)
+    this.context.fillStyle = color
+    this.context.fill()
+    this.context.closePath()
+  }
+
+  this.drawVertex = function (pos, radius = 5) {
+    this.context.beginPath()
+    this.context.lineWidth = 2
+    this.context.arc((pos.x * this.scale), (pos.y * this.scale), radius, 0, 2 * Math.PI, false)
+    this.context.fillStyle = dotgrid.theme.active.f_med
+    this.context.fill()
+    this.context.closePath()
+  }
+
+  this.drawRule = function (from, to) {
+    this.context.beginPath()
+    this.context.moveTo(from.x, from.y)
+    this.context.lineTo(to.x, to.y)
+    this.context.lineCap = 'round'
+    this.context.lineWidth = 3
+    this.context.strokeStyle = dotgrid.theme.active.b_low
+    this.context.stroke()
+    this.context.closePath()
+  }
+
+  this.drawHandle = function (pos, radius = 6) {
+    this.context.beginPath()
+    this.context.lineWidth = 3
+    this.context.lineCap = 'round'
+    this.context.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), radius + 3, 0, 2 * Math.PI, false)
+    this.context.fillStyle = dotgrid.theme.active.f_high
+    this.context.fill()
+    this.context.strokeStyle = dotgrid.theme.active.f_high
+    this.context.stroke()
+    this.context.closePath()
+
+    this.context.beginPath()
+    this.context.arc((pos.x * this.scale), (pos.y * this.scale), radius, 0, 2 * Math.PI, false)
+    this.context.fillStyle = dotgrid.theme.active.f_low
+    this.context.fill()
+    this.context.closePath()
+
+    this.context.beginPath()
+    this.context.arc((pos.x * this.scale), (pos.y * this.scale), radius - 3, 0, 2 * Math.PI, false)
+    this.context.fillStyle = dotgrid.theme.active.f_high
+    this.context.fill()
+    this.context.closePath()
+  }
+
+  this.drawPath = function (path, style) {
+    let p = new Path2D(path)
+
+    this.context.strokeStyle = style.color
+    this.context.lineWidth = style.thickness * this.scale
+    this.context.lineCap = style.strokeLinecap
+    this.context.lineJoin = style.strokeLinejoin
+
+    if (style.fill && style.fill != 'none') {
+      this.context.fillStyle = style.color
+      this.context.fill(p)
+    }
+
+    // Dash
+    this.context.save()
+    if (style.strokeLineDash) { this.context.setLineDash(style.strokeLineDash) } else { this.context.setLineDash([]) }
+    this.context.stroke(p)
+    this.context.restore()
+  }
+
+  this.drawTranslation = function () {
+    if (!dotgrid.cursor.translation) { return }
+
+    this.context.save()
+
+    this.context.beginPath()
+    this.context.moveTo((dotgrid.cursor.translation.from.x * this.scale), (dotgrid.cursor.translation.from.y * this.scale))
+    this.context.lineTo((dotgrid.cursor.translation.to.x * this.scale), (dotgrid.cursor.translation.to.y * this.scale))
+    this.context.lineCap = 'round'
+    this.context.lineWidth = 5
+    this.context.strokeStyle = dotgrid.cursor.translation.multi === true ? dotgrid.theme.active.b_inv : dotgrid.cursor.translation.copy === true ? dotgrid.theme.active.f_med : dotgrid.theme.active.f_low
+    this.context.setLineDash([5, 10])
+    this.context.stroke()
+    this.context.closePath()
+
+    this.context.setLineDash([])
+    this.context.restore()
+  }
+
+  this.drawCursor = function (pos = dotgrid.cursor.pos, radius = dotgrid.tool.style().thickness - 1) {
+    this.context.save()
+
+    this.context.beginPath()
+    this.context.lineWidth = 3
+    this.context.lineCap = 'round'
+    this.context.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), 5, 0, 2 * Math.PI, false)
+    this.context.strokeStyle = dotgrid.theme.active.background
+    this.context.stroke()
+    this.context.closePath()
+
+    this.context.beginPath()
+    this.context.lineWidth = 3
+    this.context.lineCap = 'round'
+    this.context.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), clamp(radius, 5, 100), 0, 2 * Math.PI, false)
+    this.context.strokeStyle = dotgrid.theme.active.f_med
+    this.context.stroke()
+    this.context.closePath()
+
+    this.context.restore()
+  }
+
+  this.drawRender = function (render) {
+    this.context.drawImage(render, 0, 0, this.el.width, this.el.height)
+  }
+
+  function isEqual (a, b) { return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }
+  function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 }

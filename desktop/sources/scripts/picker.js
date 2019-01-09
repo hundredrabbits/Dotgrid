@@ -1,6 +1,6 @@
 'use strict'
 
-DOTGRID.Picker = function () {
+function Picker (dotgrid) {
   this.memory = ''
   this.el = document.createElement('div')
   this.el.id = 'picker'
@@ -46,7 +46,7 @@ DOTGRID.Picker = function () {
 
     try { DOTGRID.controller.set() } catch (err) { console.log('No controller') }
 
-    setTimeout(() => { DOTGRID.interface.update(true); DOTGRID.guide.update() }, 250)
+    setTimeout(() => { DOTGRID.interface.update(true); DOTGRID.renderer.update() }, 250)
   }
 
   this.validate = function () {
@@ -61,7 +61,7 @@ DOTGRID.Picker = function () {
   }
 
   this.listen = function (e, is_down = false) {
-    if (is_down && !is_color_char(e.key)) {
+    if (is_down && !isColorChar(e.key)) {
       e.preventDefault()
       return
     }
@@ -90,7 +90,7 @@ DOTGRID.Picker = function () {
     return re.test(val)
   }
 
-  function is_color_char (val) {
+  function isColorChar (val) {
     const re = /[0-9A-Fa-f]/g
     return re.test(val)
   }

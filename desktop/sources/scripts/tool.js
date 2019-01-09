@@ -1,21 +1,21 @@
 'use strict'
 
-DOTGRID.Tool = function () {
+function Tool (dotgrid) {
   this.index = 0
   this.settings = { size: { width: 300, height: 300 } }
   this.layers = [[], [], []]
   this.styles = [
-    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0 },
-    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#0f0', fill: 'none', mirror_style: 0 },
-    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#00f', fill: 'none', mirror_style: 0 }
+    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },
+    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#0f0', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },
+    { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#00f', fill: 'none', mirror_style: 0, transform: 'rotate(45)' }
   ]
   this.vertices = []
   this.reqs = { line: 2, arc_c: 2, arc_r: 2, arc_c_full: 2, arc_r_full: 2, bezier: 3, close: 0 }
 
   this.start = function () {
-    this.styles[0].color = DOTGRID.theme.active.f_high
-    this.styles[1].color = DOTGRID.theme.active.f_med
-    this.styles[2].color = DOTGRID.theme.active.f_low
+    this.styles[0].color = dotgrid.theme.active.f_high
+    this.styles[1].color = dotgrid.theme.active.f_med
+    this.styles[2].color = dotgrid.theme.active.f_low
   }
 
   this.erase = function () {
@@ -36,20 +36,20 @@ DOTGRID.Tool = function () {
 
   this.clear = function () {
     this.vertices = []
-    DOTGRID.guide.update()
-    DOTGRID.interface.update(true)
+    dotgrid.renderer.update()
+    dotgrid.interface.update(true)
   }
 
   this.undo = function () {
-    this.layers = DOTGRID.history.prev()
-    DOTGRID.guide.update()
-    DOTGRID.interface.update(true)
+    this.layers = dotgrid.history.prev()
+    dotgrid.renderer.update()
+    dotgrid.interface.update(true)
   }
 
   this.redo = function () {
-    this.layers = DOTGRID.history.next()
-    DOTGRID.guide.update()
-    DOTGRID.interface.update(true)
+    this.layers = dotgrid.history.next()
+    dotgrid.renderer.update()
+    dotgrid.interface.update(true)
   }
 
   this.length = function () {
@@ -64,10 +64,10 @@ DOTGRID.Tool = function () {
 
   this.import = function (layer) {
     this.layers[this.index] = this.layers[this.index].concat(layer)
-    DOTGRID.history.push(this.layers)
+    dotgrid.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
-    DOTGRID.interface.update(true)
+    dotgrid.renderer.update()
+    dotgrid.interface.update(true)
   }
 
   this.replace = function (dot) {
@@ -77,7 +77,7 @@ DOTGRID.Tool = function () {
       dot.settings.size = { width: dot.settings.width, height: dot.settings.height }
     }
     if (this.settings && (this.settings.size.width != dot.settings.size.width || this.settings.size.height != dot.settings.size.height)) {
-      DOTGRID.set_size({ width: dot.settings.size.width, height: dot.settings.size.height })
+      dotgrid.setSize({ width: dot.settings.size.width, height: dot.settings.size.height })
     }
 
     this.layers = dot.layers
@@ -85,46 +85,46 @@ DOTGRID.Tool = function () {
     this.settings = dot.settings
 
     this.clear()
-    DOTGRID.guide.update()
-    DOTGRID.interface.update(true)
-    DOTGRID.history.push(this.layers)
+    dotgrid.renderer.update()
+    dotgrid.interface.update(true)
+    dotgrid.history.push(this.layers)
   }
 
   // EDIT
 
-  this.remove_segment = function () {
+  this.removeSegment = function () {
     if (this.vertices.length > 0) { this.clear(); return }
 
     this.layer().pop()
     this.clear()
-    DOTGRID.guide.update()
-    DOTGRID.interface.update(true)
+    dotgrid.renderer.update()
+    dotgrid.interface.update(true)
   }
 
-  this.remove_segments_at = function (pos) {
-    for (const segment_id in this.layer()) {
-      let segment = this.layer()[segment_id]
-      for (const vertex_id in segment.vertices) {
-        let vertex = segment.vertices[vertex_id]
+  this.removeSegmentsAt = function (pos) {
+    for (const segmentId in this.layer()) {
+      let segment = this.layer()[segmentId]
+      for (const vertexId in segment.vertices) {
+        let vertex = segment.vertices[vertexId]
         if (Math.abs(pos.x) == Math.abs(vertex.x) && Math.abs(pos.y) == Math.abs(vertex.y)) {
-          segment.vertices.splice(vertex_id, 1)
+          segment.vertices.splice(vertexId, 1)
         }
       }
       if (segment.vertices.length < 2) {
-        this.layers[this.index].splice(segment_id, 1)
+        this.layers[this.index].splice(segmentId, 1)
       }
     }
     this.clear()
-    DOTGRID.guide.update()
-    DOTGRID.interface.update(true)
+    dotgrid.renderer.update()
+    dotgrid.interface.update(true)
   }
 
-  this.select_segment_at = function (pos, source = this.layer()) {
+  this.selectSegmentAt = function (pos, source = this.layer()) {
     let target_segment = null
-    for (const segment_id in source) {
-      let segment = source[segment_id]
-      for (const vertex_id in segment.vertices) {
-        let vertex = segment.vertices[vertex_id]
+    for (const segmentId in source) {
+      let segment = source[segmentId]
+      for (const vertexId in segment.vertices) {
+        let vertex = segment.vertices[vertexId]
         if (vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)) {
           return segment
         }
@@ -133,17 +133,17 @@ DOTGRID.Tool = function () {
     return null
   }
 
-  this.add_vertex = function (pos) {
+  this.addVertex = function (pos) {
     pos = { x: Math.abs(pos.x), y: Math.abs(pos.y) }
     this.vertices.push(pos)
-    DOTGRID.interface.update(true)
+    dotgrid.interface.update(true)
   }
 
-  this.vertex_at = function (pos) {
-    for (const segment_id in this.layer()) {
-      let segment = this.layer()[segment_id]
-      for (const vertex_id in segment.vertices) {
-        let vertex = segment.vertices[vertex_id]
+  this.vertexAt = function (pos) {
+    for (const segmentId in this.layer()) {
+      let segment = this.layer()[segmentId]
+      for (const vertexId in segment.vertices) {
+        let vertex = segment.vertices[vertexId]
         if (vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)) {
           return vertex
         }
@@ -152,8 +152,8 @@ DOTGRID.Tool = function () {
     return null
   }
 
-  this.add_segment = function (type, vertices) {
-    let append_target = this.can_append({ type: type, vertices: vertices })
+  this.addSegment = function (type, vertices) {
+    let append_target = this.canAppend({ type: type, vertices: vertices })
     if (append_target) {
       this.layer()[append_target].vertices = this.layer()[append_target].vertices.concat(vertices)
     } else {
@@ -165,13 +165,13 @@ DOTGRID.Tool = function () {
     if (!this.layer()) { this.layers[this.index] = [] }
     if (!this.canCast(type)) { console.warn('Cannot cast'); return }
 
-    this.add_segment(type, this.vertices.slice())
+    this.addSegment(type, this.vertices.slice())
 
-    DOTGRID.history.push(this.layers)
+    dotgrid.history.push(this.layers)
 
     this.clear()
-    DOTGRID.guide.update()
-    DOTGRID.interface.update(true)
+    dotgrid.renderer.update()
+    dotgrid.interface.update(true)
 
     console.log(`Casted ${type} -> ${this.layer().length} elements`)
   }
@@ -196,25 +196,25 @@ DOTGRID.Tool = function () {
     } else {
       console.warn('Unknown', type)
     }
-    DOTGRID.interface.update(true)
-    DOTGRID.guide.update()
+    dotgrid.interface.update(true)
+    dotgrid.renderer.update()
   }
 
   this.misc = function (type) {
-    DOTGRID.picker.start()
+    dotgrid.picker.start()
   }
 
   this.source = function (type) {
-    if (type == 'grid') { DOTGRID.guide.toggle() }
-    if (type == 'screen') { app.toggle_fullscreen() }
+    if (type == 'grid') { dotgrid.renderer.toggle() }
+    if (type == 'screen') { app.toggleFullscreen() }
 
-    if (type == 'open') { DOTGRID.open() }
-    if (type == 'save') { DOTGRID.save() }
-    if (type == 'render') { DOTGRID.render() }
-    if (type == 'export') { DOTGRID.export() }
+    if (type == 'open') { dotgrid.open() }
+    if (type == 'save') { dotgrid.save() }
+    if (type == 'render') { dotgrid.render() }
+    if (type == 'export') { dotgrid.export() }
   }
 
-  this.can_append = function (content) {
+  this.canAppend = function (content) {
     for (const id in this.layer()) {
       let stroke = this.layer()[id]
       if (stroke.type != content.type) { continue }
@@ -245,78 +245,77 @@ DOTGRID.Tool = function () {
   }
 
   this.paths = function () {
-    let l1 = new Generator(DOTGRID.tool.layers[0], DOTGRID.tool.styles[0]).toString({ x: -10, y: -10 }, 1)
-    let l2 = new Generator(DOTGRID.tool.layers[1], DOTGRID.tool.styles[1]).toString({ x: -10, y: -10 }, 1)
-    let l3 = new Generator(DOTGRID.tool.layers[2], DOTGRID.tool.styles[2]).toString({ x: -10, y: -10 }, 1)
+    let l1 = new Generator(dotgrid.tool.layers[0], dotgrid.tool.styles[0]).toString({ x: 0, y: 0 }, 1)
+    let l2 = new Generator(dotgrid.tool.layers[1], dotgrid.tool.styles[1]).toString({ x: 0, y: 0 }, 1)
+    let l3 = new Generator(dotgrid.tool.layers[2], dotgrid.tool.styles[2]).toString({ x: 0, y: 0 }, 1)
 
     return [l1, l2, l3]
   }
 
   this.path = function () {
-    return new Generator(DOTGRID.tool.layer(), DOTGRID.tool.style()).toString({ x: -10, y: -10 }, 1)
+    return new Generator(dotgrid.tool.layer(), dotgrid.tool.style()).toString({ x: 0, y: 0 }, 1)
   }
 
   this.translate = function (a, b) {
-    for (const segment_id in this.layer()) {
-      let segment = this.layer()[segment_id]
-      for (const vertex_id in segment.vertices) {
-        let vertex = segment.vertices[vertex_id]
+    for (const segmentId in this.layer()) {
+      let segment = this.layer()[segmentId]
+      for (const vertexId in segment.vertices) {
+        let vertex = segment.vertices[vertexId]
         if (vertex.x == Math.abs(a.x) && vertex.y == Math.abs(a.y)) {
-          segment.vertices[vertex_id] = { x: Math.abs(b.x), y: Math.abs(b.y) }
+          segment.vertices[vertexId] = { x: Math.abs(b.x), y: Math.abs(b.y) }
         }
       }
     }
-    DOTGRID.history.push(this.layers)
+    dotgrid.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    dotgrid.renderer.update()
   }
 
-  this.translate_multi = function (a, b) {
+  this.translateMulti = function (a, b) {
     const offset = { x: a.x - b.x, y: a.y - b.y }
-    const segment = this.select_segment_at(a)
+    const segment = this.selectSegmentAt(a)
 
     if (!segment) { return }
 
-    for (const vertex_id in segment.vertices) {
-      let vertex = segment.vertices[vertex_id]
-      segment.vertices[vertex_id] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
+    for (const vertexId in segment.vertices) {
+      let vertex = segment.vertices[vertexId]
+      segment.vertices[vertexId] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
     }
 
-    DOTGRID.history.push(this.layers)
+    dotgrid.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    dotgrid.renderer.update()
   }
 
-  this.translate_layer = function (a, b) {
-    console.log(a, b)
+  this.translateLayer = function (a, b) {
     const offset = { x: a.x - b.x, y: a.y - b.y }
-    for (const segment_id in this.layer()) {
-      let segment = this.layer()[segment_id]
-      for (const vertex_id in segment.vertices) {
-        let vertex = segment.vertices[vertex_id]
-        segment.vertices[vertex_id] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
+    for (const segmentId in this.layer()) {
+      let segment = this.layer()[segmentId]
+      for (const vertexId in segment.vertices) {
+        let vertex = segment.vertices[vertexId]
+        segment.vertices[vertexId] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
       }
     }
-    DOTGRID.history.push(this.layers)
+    dotgrid.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    dotgrid.renderer.update()
   }
 
-  this.translate_copy = function (a, b) {
+  this.translateCopy = function (a, b) {
     const offset = { x: a.x - b.x, y: a.y - b.y }
-    const segment = this.select_segment_at(a, copy(this.layer()))
+    const segment = this.selectSegmentAt(a, copy(this.layer()))
 
     if (!segment) { return }
 
-    for (const vertex_id in segment.vertices) {
-      let vertex = segment.vertices[vertex_id]
-      segment.vertices[vertex_id] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
+    for (const vertexId in segment.vertices) {
+      let vertex = segment.vertices[vertexId]
+      segment.vertices[vertexId] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
     }
     this.layer().push(segment)
 
-    DOTGRID.history.push(this.layers)
+    dotgrid.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    dotgrid.renderer.update()
   }
 
   this.merge = function () {
@@ -324,9 +323,9 @@ DOTGRID.Tool = function () {
     this.erase()
     this.layers[this.index] = merged
 
-    DOTGRID.history.push(this.layers)
+    dotgrid.history.push(this.layers)
     this.clear()
-    DOTGRID.guide.update()
+    dotgrid.renderer.update()
   }
 
   // Style
@@ -347,22 +346,22 @@ DOTGRID.Tool = function () {
     return this.layers[this.index]
   }
 
-  this.select_layer = function (id) {
+  this.selectLayer = function (id) {
     this.index = clamp(id, 0, 2)
     this.clear()
-    DOTGRID.guide.update()
-    DOTGRID.interface.update(true)
+    dotgrid.renderer.update()
+    dotgrid.interface.update(true)
     console.log(`layer:${this.index}`)
   }
 
-  this.select_next_layer = function () {
+  this.selectNextLayer = function () {
     this.index = this.index >= 2 ? 0 : this.index++
-    this.select_layer(this.index)
+    this.selectLayer(this.index)
   }
 
-  this.select_prev_layer = function () {
+  this.selectPrevLayer = function () {
     this.index = this.index >= 0 ? 2 : this.index--
-    this.select_layer(this.index)
+    this.selectLayer(this.index)
   }
 
   function copy (data) { return data ? JSON.parse(JSON.stringify(data)) : [] }
