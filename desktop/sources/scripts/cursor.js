@@ -89,10 +89,9 @@ function Cursor () {
   }
 
   this.pos_snap = function (pos) {
-    const grid = DOTGRID.tool.settings.size.width / DOTGRID.grid.x
     return {
-      x: clamp(step(pos.x, grid), grid, DOTGRID.tool.settings.size.width),
-      y: clamp(step(pos.y, grid), grid, DOTGRID.tool.settings.size.height + grid)
+      x: clamp(step(pos.x, 15), 15, DOTGRID.tool.settings.size.width),
+      y: clamp(step(pos.y, 15), 15, DOTGRID.tool.settings.size.height + 15)
     }
   }
 

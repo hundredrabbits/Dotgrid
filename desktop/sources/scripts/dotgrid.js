@@ -3,8 +3,6 @@
 function Dotgrid (width, height) {
   const defaultTheme = { background: '#eee', f_high: '#000', f_med: '#999', f_low: '#ccc', f_inv: '#000', b_high: '#000', b_med: '#888', b_low: '#aaa', b_inv: '#ffb545' }
 
-  this.grid = { x: 20, y: 20, width: 0, height: 0 }
-
   // ISU
 
   this.install = function (host) {
@@ -102,6 +100,13 @@ function Dotgrid (width, height) {
 
   // Basics
 
+  this.getSize = function () {
+    return { markers: {
+      w: parseInt(this.tool.settings.size.width / 15),
+      h: parseInt(this.tool.settings.size.height / 15) }
+    }
+  }
+
   this.setSize = function (size = { width: 300, height: 300 }, ui = true, scale = 1) {
     size = { width: clamp(step(size.width, 15), 105, 1080), height: clamp(step(size.height, 15), 120, 1080) }
 
@@ -113,13 +118,6 @@ function Dotgrid (width, height) {
       win.setSize((size.width + 100) * scale, (size.height + 100) * scale, true)
     } catch (err) {
       console.log('No window')
-    }
-
-    this.grid = {
-      x: size.width / 15,
-      y: size.height / 15,
-      width: 15,
-      height: 15
     }
 
     this.renderer.resize(size)
@@ -163,13 +161,6 @@ function Dotgrid (width, height) {
 
     this.tool.settings.size.width = size.width
     this.tool.settings.size.height = size.height
-
-    this.grid = {
-      x: size.width / 15,
-      y: size.height / 15,
-      width: 15,
-      height: 15
-    }
 
     this.renderer.resize(size)
 

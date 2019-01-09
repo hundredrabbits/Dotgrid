@@ -18,13 +18,19 @@ function Renderer (dotgrid) {
 
   this.update = function (force = false) {
     dotgrid.manager.update()
+    let render = new Image()
+    render.onload = () => {
+      this.draw(render)
+    }
+    render.src = dotgrid.manager.svg64()
+  }
 
+  this.draw = function (render) {
     this.clear()
-
     this.drawMirror()
     this.drawRulers()
     this.drawGrid()
-    this.drawRender() //
+    this.drawRender(render) //
     this.drawVertices()
     this.drawHandles()
     this.drawTranslation()
@@ -59,13 +65,13 @@ function Renderer (dotgrid) {
 
     if (dotgrid.tool.style().mirror_style === 0) { return }
 
-    const middle = { x: dotgrid.tool.settings.size.width + (dotgrid.grid.width), y: dotgrid.tool.settings.size.height + (this.scale * dotgrid.grid.height) }
+    const middle = { x: dotgrid.tool.settings.size.width + 15, y: dotgrid.tool.settings.size.height + (this.scale * 15) }
 
     if (dotgrid.tool.style().mirror_style === 1 || dotgrid.tool.style().mirror_style === 3) {
-      this.drawRule({ x: middle.x, y: dotgrid.grid.height * this.scale }, { x: middle.x, y: (dotgrid.tool.settings.size.height + dotgrid.grid.height) * this.scale })
+      this.drawRule({ x: middle.x, y: 15 * this.scale }, { x: middle.x, y: (dotgrid.tool.settings.size.height + 15) * this.scale })
     }
     if (dotgrid.tool.style().mirror_style === 2 || dotgrid.tool.style().mirror_style === 3) {
-      this.drawRule({ x: dotgrid.grid.width * this.scale, y: middle.y }, { x: (dotgrid.tool.settings.size.width + dotgrid.grid.width) * this.scale, y: middle.y })
+      this.drawRule({ x: 15 * this.scale, y: middle.y }, { x: (dotgrid.tool.settings.size.width + 15) * this.scale, y: middle.y })
     }
   }
 
@@ -90,18 +96,19 @@ function Renderer (dotgrid) {
   this.drawGrid = function () {
     if (!this.showExtras) { return }
 
-    const cursor = { x: parseInt(dotgrid.cursor.pos.x / dotgrid.grid.width), y: parseInt(dotgrid.cursor.pos.y / dotgrid.grid.width) }
+    const cursor = { x: parseInt(dotgrid.cursor.pos.x / 15), y: parseInt(dotgrid.cursor.pos.y / 15) }
+    const markers = dotgrid.getSize().markers
 
-    for (let x = dotgrid.grid.x - 1; x >= 0; x--) {
-      for (let y = dotgrid.grid.y; y >= 0; y--) {
+    for (let x = markers.w - 1; x >= 0; x--) {
+      for (let y = markers.h; y >= 0; y--) {
         let is_step = x % 4 == 0 && y % 4 == 0
         // Color
         let color = is_step ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low
-        if ((y == 0 || y == dotgrid.grid.y) && cursor.x == x + 1) { color = dotgrid.theme.active.b_high } else if ((x == 0 || x == dotgrid.grid.x - 1) && cursor.y == y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x == x + 1 && cursor.y == y + 1) { color = dotgrid.theme.active.b_high }
+        if ((y == 0 || y == markers.h) && cursor.x == x + 1) { color = dotgrid.theme.active.b_high } else if ((x == 0 || x == markers.w - 1) && cursor.y == y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x == x + 1 && cursor.y == y + 1) { color = dotgrid.theme.active.b_high }
 
         this.drawMarker({
-          x: parseInt(x * dotgrid.grid.width) + dotgrid.grid.width,
-          y: parseInt(y * dotgrid.grid.height) + dotgrid.grid.height
+          x: parseInt(x * 15) + 15,
+          y: parseInt(y * 15) + 15
         }, is_step ? 2.5 : 1.5, color)
       }
     }
@@ -251,10 +258,8 @@ function Renderer (dotgrid) {
     this.context.restore()
   }
 
-  this.drawRender = function () {
-    let img = new Image()
-    img.src = dotgrid.manager.svg64()
-    this.context.drawImage(img, 0, 0, this.el.width, this.el.height)
+  this.drawRender = function (render) {
+    this.context.drawImage(render, 0, 0, this.el.width, this.el.height)
   }
 
   function isEqual (a, b) { return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }
