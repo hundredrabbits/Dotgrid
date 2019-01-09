@@ -1,6 +1,6 @@
 'use strict'
 
-function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
+function Dotgrid (width, height) {
   this.controller = null
 
   const defaultTheme = { background: '#eee', f_high: '#000', f_med: '#999', f_low: '#ccc', f_inv: '#000', b_high: '#000', b_med: '#888', b_low: '#aaa', b_inv: '#ffb545' }
@@ -8,10 +8,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
   this.theme = new Theme(defaultTheme)
   this.history = new History()
 
-  this.grid_x = grid_x
-  this.grid_y = grid_y
-  this.block_x = block_x
-  this.block_y = block_y
+  this.grid = {x:20,y:20}
 
   // ISU
 
@@ -121,11 +118,11 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
       console.log('No window')
     }
 
-    this.grid_x = size.width / 15
-    this.grid_y = size.height / 15
+    this.grid.x = size.width / 15
+    this.grid.y = size.height / 15
 
-    this.grid_width = this.tool.settings.size.width / this.grid_x
-    this.grid_height = this.tool.settings.size.height / this.grid_y
+    this.grid_width = this.tool.settings.size.width / this.grid.x
+    this.grid_height = this.tool.settings.size.height / this.grid.y
 
     DOTGRID.renderer.resize(size)
 
@@ -170,11 +167,11 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     DOTGRID.tool.settings.size.width = size.width
     DOTGRID.tool.settings.size.height = size.height
 
-    DOTGRID.grid_x = size.width / 15
-    DOTGRID.grid_y = size.height / 15
+    DOTGRID.grid.x = size.width / 15
+    DOTGRID.grid.y = size.height / 15
 
-    DOTGRID.grid_width = DOTGRID.tool.settings.size.width / DOTGRID.grid_x
-    DOTGRID.grid_height = DOTGRID.tool.settings.size.height / DOTGRID.grid_y
+    DOTGRID.grid_width = DOTGRID.tool.settings.size.width / DOTGRID.grid.x
+    DOTGRID.grid_height = DOTGRID.tool.settings.size.height / DOTGRID.grid.y
 
     DOTGRID.renderer.resize(size)
 
@@ -263,4 +260,4 @@ function isEqual (a, b) { return a && b && a.x == b.x && a.y == b.y }
 function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 function step (v, s) { return Math.round(v / s) * s }
 
-const DOTGRID = new Dotgrid(300, 300, 20, 20, 4, 4)
+const DOTGRID = new Dotgrid(300, 300)

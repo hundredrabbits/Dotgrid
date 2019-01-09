@@ -93,12 +93,12 @@ function Renderer (dotgrid) {
 
     const cursor = { x: parseInt(dotgrid.cursor.pos.x / dotgrid.grid_width), y: parseInt(dotgrid.cursor.pos.y / dotgrid.grid_width) }
 
-    for (let x = dotgrid.grid_x - 1; x >= 0; x--) {
-      for (let y = dotgrid.grid_y; y >= 0; y--) {
-        let is_step = x % dotgrid.block_x == 0 && y % dotgrid.block_y == 0
+    for (let x = dotgrid.grid.x - 1; x >= 0; x--) {
+      for (let y = dotgrid.grid.y; y >= 0; y--) {
+        let is_step = x % 4 == 0 && y % 4 == 0
         // Color
         let color = is_step ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low
-        if ((y == 0 || y == dotgrid.grid_y) && cursor.x == x + 1) { color = dotgrid.theme.active.b_high } else if ((x == 0 || x == dotgrid.grid_x - 1) && cursor.y == y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x == x + 1 && cursor.y == y + 1) { color = dotgrid.theme.active.b_high }
+        if ((y == 0 || y == dotgrid.grid.y) && cursor.x == x + 1) { color = dotgrid.theme.active.b_high } else if ((x == 0 || x == dotgrid.grid.x - 1) && cursor.y == y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x == x + 1 && cursor.y == y + 1) { color = dotgrid.theme.active.b_high }
 
         this.drawMarker({
           x: parseInt(x * dotgrid.grid_width) + dotgrid.grid_width,
