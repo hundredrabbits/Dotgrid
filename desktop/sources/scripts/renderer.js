@@ -254,7 +254,7 @@ function Renderer (dotgrid) {
   this.drawRender = function () {
     let img = new Image()
     img.src = dotgrid.manager.svg64()
-    this.context.drawImage(img, 0, 0, this.el.width - 30, this.el.height - 30)
+    this.context.drawImage(img, 0, 0, this.el.width, this.el.height)
   }
 
   function isEqual (a, b) { return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }
