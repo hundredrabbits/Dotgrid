@@ -2,7 +2,7 @@
 
 function Tool (dotgrid) {
   this.index = 0
-  this.settings = { size: { width: 300, height: 300 } }
+  this.settings = { size: { width: 300, height: 300 }, crest: false }
   this.layers = [[], [], []]
   this.styles = [
     { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },
@@ -196,6 +196,12 @@ function Tool (dotgrid) {
     } else {
       console.warn('Unknown', type)
     }
+    dotgrid.interface.update(true)
+    dotgrid.renderer.update()
+  }
+
+  this.toggleCrest = function () {
+    this.settings.crest = this.settings.crest !== true
     dotgrid.interface.update(true)
     dotgrid.renderer.update()
   }
