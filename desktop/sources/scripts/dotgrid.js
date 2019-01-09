@@ -52,7 +52,7 @@ function Dotgrid (width, height) {
   // File
 
   this.new = function () {
-    this.set_zoom(1.0)
+    this.setZoom(1.0)
     this.setSize({ width: 300, height: 300 })
     this.history.push(this.tool.layers)
     this.clear()
@@ -70,32 +70,6 @@ function Dotgrid (width, height) {
       this.tool.replace(JSON.parse(data.toString().trim()))
       this.renderer.update()
     })
-  }
-
-  function grab (base64, name) {
-    const link = document.createElement('a')
-    link.setAttribute('href', base64)
-    link.setAttribute('download', name)
-    link.dispatchEvent(new MouseEvent(`click`, { bubbles: true, cancelable: true, view: window }))
-  }
-
-  this.save = function () {
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to save'); return }
-
-    this.manager.toGRID(grab)
-  }
-
-  this.export = function () {
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to export'); return }
-
-    this.manager.toSVG(grab)
-  }
-
-  this.render = function () {
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to render'); return }
-
-    const size = { width: DOTGRID.tool.settings.size.width * 2, height: DOTGRID.tool.settings.size.height * 2 }
-    this.manager.toPNG(size, grab)
   }
 
   // Basics
@@ -125,7 +99,7 @@ function Dotgrid (width, height) {
     this.renderer.update()
   }
 
-  this.set_zoom = function (scale) {
+  this.setZoom = function (scale) {
     this.setSize({ width: this.tool.settings.size.width, height: this.tool.settings.size.height }, true, scale)
 
     try {

@@ -17,7 +17,7 @@ function Cursor () {
   }
 
   this.down = function (e) {
-    this.pos = this.pos_from_event(e)
+    this.pos = this.atEvent(e)
 
     // Translation
     if (DOTGRID.tool.vertexAt(this.pos)) {
@@ -32,7 +32,7 @@ function Cursor () {
   this.last_pos = { x: 0, y: 0 }
 
   this.move = function (e) {
-    this.pos = this.pos_from_event(e)
+    this.pos = this.atEvent(e)
 
     // Translation
     if (this.translation) {
@@ -50,7 +50,7 @@ function Cursor () {
   }
 
   this.up = function (e) {
-    this.pos = this.pos_from_event(e)
+    this.pos = this.atEvent(e)
 
     if (this.translation && !is_equal(this.translation.from, this.translation.to)) {
       if (this.translation.layer === true) { DOTGRID.tool.translateLayer(this.translation.from, this.translation.to) } else if (this.translation.copy) { DOTGRID.tool.translateCopy(this.translation.from, this.translation.to) } else if (this.translation.multi) { DOTGRID.tool.translateMulti(this.translation.from, this.translation.to) } else { DOTGRID.tool.translate(this.translation.from, this.translation.to) }
@@ -67,7 +67,7 @@ function Cursor () {
   }
 
   this.alt = function (e) {
-    this.pos = this.pos_from_event(e)
+    this.pos = this.atEvent(e)
 
     DOTGRID.tool.removeSegmentsAt(this.pos)
     e.preventDefault()
@@ -77,18 +77,18 @@ function Cursor () {
 
   // Position Mods
 
-  this.pos_from_event = function (e) {
-    return this.pos_snap(this.pos_relative({ x: e.clientX, y: e.clientY }))
+  this.atEvent = function (e) {
+    return this.snapPos(this.relativePos({ x: e.clientX, y: e.clientY }))
   }
 
-  this.pos_relative = function (pos) {
+  this.relativePos = function (pos) {
     return {
       x: pos.x - DOTGRID.renderer.el.offsetLeft,
       y: pos.y - DOTGRID.renderer.el.offsetTop
     }
   }
 
-  this.pos_snap = function (pos) {
+  this.snapPos = function (pos) {
     return {
       x: clamp(step(pos.x, 15), 15, DOTGRID.tool.settings.size.width),
       y: clamp(step(pos.y, 15), 15, DOTGRID.tool.settings.size.height + 15)
