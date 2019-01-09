@@ -1,7 +1,17 @@
 'use strict'
 
 function Dotgrid (width, height) {
-  const defaultTheme = { background: '#eee', f_high: '#000', f_med: '#999', f_low: '#ccc', f_inv: '#000', b_high: '#000', b_med: '#888', b_low: '#aaa', b_inv: '#ffb545' }
+  const defaultTheme = {
+    background: '#eee',
+    f_high: '#000',
+    f_med: '#999',
+    f_low: '#ccc',
+    f_inv: '#000',
+    b_high: '#000',
+    b_med: '#888',
+    b_low: '#aaa',
+    b_inv: '#ffb545'
+  }
 
   // ISU
 
@@ -47,6 +57,19 @@ function Dotgrid (width, height) {
     DOTGRID.manager.update()
     DOTGRID.interface.update()
     DOTGRID.renderer.update()
+  }
+
+  this.clear = function () {
+    this.history.clear()
+    this.tool.reset()
+    this.reset()
+    this.renderer.update()
+    this.interface.update(true)
+  }
+
+  this.reset = function () {
+    this.tool.clear()
+    this.update()
   }
 
   // File
@@ -133,19 +156,6 @@ function Dotgrid (width, height) {
 
   // Draw
 
-  this.reset = function () {
-    this.tool.clear()
-    this.update()
-  }
-
-  this.clear = function () {
-    this.history.clear()
-    this.tool.reset()
-    this.reset()
-    this.renderer.update()
-    this.interface.update(true)
-  }
-
   this.resize = function () {
     const size = { width: step(window.innerWidth - 90, 15), height: step(window.innerHeight - 120, 15) }
 
@@ -162,6 +172,8 @@ function Dotgrid (width, height) {
 
     document.title = `Dotgrid — ${size.width}x${size.height}`
   }
+
+  // Events
 
   this.drag = function (e) {
     e.preventDefault()

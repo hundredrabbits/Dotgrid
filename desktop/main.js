@@ -51,11 +51,11 @@ app.inspect = function () {
   app.win.toggleDevTools()
 }
 
-app.toggle_fullscreen = function () {
+app.toggleFullscreen = function () {
   app.win.setFullScreen(!app.win.isFullScreen())
 }
 
-app.toggle_visible = function () {
+app.toggleVisible = function () {
   if (process.platform == 'win32') {
     if (!app.win.isMinimized()) { app.win.minimize() } else { app.win.restore() }
   } else {

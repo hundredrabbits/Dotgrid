@@ -206,7 +206,7 @@ function Tool (dotgrid) {
 
   this.source = function (type) {
     if (type == 'grid') { dotgrid.renderer.toggle() }
-    if (type == 'screen') { app.toggle_fullscreen() }
+    if (type == 'screen') { app.toggleFullscreen() }
 
     if (type == 'open') { dotgrid.open() }
     if (type == 'save') { dotgrid.save() }

@@ -4,20 +4,20 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Generics -->
     <script type="text/javascript" src="scripts/lib/theme.js"></script>
-    <script type="text/javascript" src="scripts/lib/controller.js"></script>
     <script type="text/javascript" src="scripts/lib/history.js"></script>
-
+    <script type="text/javascript" src="scripts/lib/controller.js"></script>
+    <!-- Dotgrid -->
     <script type="text/javascript" src="scripts/dotgrid.js"></script>
-    <script type="text/javascript" src="scripts/cursor.js"></script>
-    <script type="text/javascript" src="scripts/guide.js"></script>
+    <script type="text/javascript" src="scripts/manager.js"></script>
     <script type="text/javascript" src="scripts/renderer.js"></script>
+    <script type="text/javascript" src="scripts/cursor.js"></script>
     <script type="text/javascript" src="scripts/interface.js"></script>
     <script type="text/javascript" src="scripts/tool.js"></script>
     <script type="text/javascript" src="scripts/generator.js"></script>
-
     <script type="text/javascript" src="scripts/picker.js"></script>
-
+    <!-- Styles -->
     <link rel="stylesheet" type="text/css" href="links/reset.css"/>
     <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
     <link rel="stylesheet" type="text/css" href="links/main.css"/>
@@ -35,8 +35,8 @@
         DOTGRID.controller = new Controller();
 
         DOTGRID.controller.add("default","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
-        DOTGRID.controller.add("default","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
-        DOTGRID.controller.add("default","*","Hide",() => { app.toggle_visible(); },"CmdOrCtrl+H");
+        DOTGRID.controller.add("default","*","Fullscreen",() => { app.toggleFullscreen(); },"CmdOrCtrl+Enter");
+        DOTGRID.controller.add("default","*","Hide",() => { app.toggleVisible(); },"CmdOrCtrl+H");
         DOTGRID.controller.add("default","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
         DOTGRID.controller.add("default","*","Reset",() => { DOTGRID.reset(); DOTGRID.theme.reset(); },"CmdOrCtrl+Backspace");
         DOTGRID.controller.add("default","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
@@ -94,8 +94,8 @@
         DOTGRID.controller.add("default","Theme","Download Themes..",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Themes'); })
 
         DOTGRID.controller.add("picker","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
-        DOTGRID.controller.add("picker","*","Fullscreen",() => { app.toggle_fullscreen(); },"CmdOrCtrl+Enter");
-        DOTGRID.controller.add("picker","*","Hide",() => { app.toggle_visible(); },"CmdOrCtrl+H");
+        DOTGRID.controller.add("picker","*","Fullscreen",() => { app.toggleFullscreen(); },"CmdOrCtrl+Enter");
+        DOTGRID.controller.add("picker","*","Hide",() => { app.toggleVisible(); },"CmdOrCtrl+H");
         DOTGRID.controller.add("picker","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
         DOTGRID.controller.add("picker","*","Documentation",() => { DOTGRID.controller.docs(); },"CmdOrCtrl+Esc");
         DOTGRID.controller.add("picker","*","Reset",() => { DOTGRID.reset(); DOTGRID.theme.reset(); },"CmdOrCtrl+Backspace");
