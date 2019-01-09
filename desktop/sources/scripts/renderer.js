@@ -63,14 +63,14 @@ function Renderer (dotgrid) {
   this.drawMirror = function () {
     if (!this.showExtras) { return }
 
-    if (dotgrid.tool.style().mirror_style === 0) { return }
+    if (dotgrid.tool.style().mirror_style === 0 && dotgrid.tool.settings.crest === false) { return }
 
     const middle = { x: dotgrid.tool.settings.size.width + 15, y: dotgrid.tool.settings.size.height + (this.scale * 15) }
 
-    if (dotgrid.tool.style().mirror_style === 1 || dotgrid.tool.style().mirror_style === 3) {
+    if (dotgrid.tool.style().mirror_style === 1 || dotgrid.tool.style().mirror_style === 3 || dotgrid.tool.settings.crest === true) {
       this.drawRule({ x: middle.x, y: 15 * this.scale }, { x: middle.x, y: (dotgrid.tool.settings.size.height + 15) * this.scale })
     }
-    if (dotgrid.tool.style().mirror_style === 2 || dotgrid.tool.style().mirror_style === 3) {
+    if (dotgrid.tool.style().mirror_style === 2 || dotgrid.tool.style().mirror_style === 3 || dotgrid.tool.settings.crest === true) {
       this.drawRule({ x: 15 * this.scale, y: middle.y }, { x: (dotgrid.tool.settings.size.width + 15) * this.scale, y: middle.y })
     }
   }
