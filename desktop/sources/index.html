@@ -70,6 +70,7 @@
         DOTGRID.controller.add("default","Effect","Thinner",() => { DOTGRID.tool.toggle("thickness",-1) },"{");
         DOTGRID.controller.add("default","Effect","Thicker +5",() => { DOTGRID.tool.toggle("thickness",5) },"]");
         DOTGRID.controller.add("default","Effect","Thinner -5",() => { DOTGRID.tool.toggle("thickness",-5) },"[");
+        DOTGRID.controller.add("default","Effect","Toggle Crest",() => { DOTGRID.tool.toggleCrest(); }, "CmdOrCtrl+K");
 
         DOTGRID.controller.add("default","Manual","Add Point",() => { DOTGRID.tool.addVertex(DOTGRID.cursor.pos); DOTGRID.renderer.update() },"Enter");
         DOTGRID.controller.add("default","Manual","Move Up",() => { DOTGRID.cursor.pos.y -= 15; DOTGRID.renderer.update() },"Up");

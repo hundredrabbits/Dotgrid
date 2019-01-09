@@ -144,18 +144,6 @@ function Dotgrid (width, height) {
     this.renderer.update()
   }
 
-  this.setZoom = function (scale) {
-    this.setSize({ width: this.tool.settings.size.width, height: this.tool.settings.size.height }, true, scale)
-
-    try {
-      webFrame.setZoomFactor(scale)
-    } catch (err) {
-      console.log('Cannot zoom')
-    }
-  }
-
-  // Draw
-
   this.resize = function () {
     const size = { width: step(window.innerWidth - 90, 15), height: step(window.innerHeight - 120, 15) }
 
@@ -171,6 +159,16 @@ function Dotgrid (width, height) {
     this.renderer.resize(size)
 
     document.title = `Dotgrid — ${size.width}x${size.height}`
+  }
+
+  this.setZoom = function (scale) {
+    this.setSize({ width: this.tool.settings.size.width, height: this.tool.settings.size.height }, true, scale)
+
+    try {
+      webFrame.setZoomFactor(scale)
+    } catch (err) {
+      console.log('Cannot zoom')
+    }
   }
 
   // Events

@@ -28,16 +28,22 @@ function Manager (dotgrid) {
     const paths = DOTGRID.tool.paths()
 
     for (const id in this.layers) {
-      const style = styles[id]
-      const path = paths[id]
-      const layer = this.layers[id]
+      let style = styles[id]
+      let path = paths[id]
+      let layer = this.layers[id]
+      // Easter Egg
+      if (DOTGRID.tool.settings.crest === true) {
+        style = styles[0]
+        path = paths[0]
+        layer.setAttribute('transform', `rotate(${parseInt(id) * 120} ${(DOTGRID.tool.settings.size.width / 2) + 7.5} ${(DOTGRID.tool.settings.size.height / 2) + 15})`)
+      }
+
       layer.style.strokeWidth = style.thickness
       layer.style.strokeLinecap = style.strokeLinecap
       layer.style.strokeLinejoin = style.strokeLinejoin
       layer.style.stroke = style.color
       layer.style.fill = style.fill
-      layer.style.transform = style.transform
-      layer.setAttribute('d', paths[id])
+      layer.setAttribute('d', path)
     }
   }
 
