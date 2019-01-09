@@ -43,34 +43,39 @@ DOTGRID.Renderer = function () {
   }
 
   this.svg64 = function () {
-    this.update()
     let xml = new XMLSerializer().serializeToString(this.el)
     let svg64 = btoa(xml)
     let b64Start = 'data:image/svg+xml;base64,'
     return b64Start + svg64
   }
 
+  // Exporters
+
   this.toPNG = function (size = DOTGRID.tool.settings.size, callback) {
+    this.update()
+
     let image64 = this.svg64()
     let img = new Image()
     let canvas = document.createElement('canvas')
     canvas.width = (size.width) * 2
     canvas.height = (size.height) * 2
-    let ctx = canvas.getContext('2d')
     img.onload = function () {
-      ctx.drawImage(img, 0, 0, (size.width) * 2, (size.height) * 2)
-      let data = canvas.toDataURL('image/png')
-      callback(data, 'export.png')
+      canvas.getContext('2d').drawImage(img, 0, 0, (size.width) * 2, (size.height) * 2)
+      callback(canvas.toDataURL('image/png'), 'export.png')
     }
     img.src = image64
   }
 
   this.toSVG = function (callback) {
+    this.update()
+
     const image64 = this.svg64()
     callback(image64, 'export.svg')
   }
 
   this.toGRID = function (callback) {
+    this.update()
+
     const text = DOTGRID.tool.export()
     const file = new Blob([text], { type: 'text/plain' })
     callback(URL.createObjectURL(file), 'export.grid')
