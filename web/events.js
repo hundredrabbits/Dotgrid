@@ -10,6 +10,7 @@ document.onkeyup = (e) =>
   if((e.ctrlKey || e.metaKey) && ch == "s"){ DOTGRID.save(); e.preventDefault(); return; }
   if((e.ctrlKey || e.metaKey) && ch == "r"){ DOTGRID.render(); e.preventDefault(); return; }
   if((e.ctrlKey || e.metaKey) && ch == "e"){ DOTGRID.export(); e.preventDefault(); return; }
+  if((e.ctrlKey || e.metaKey) && ch == "k"){ DOTGRID.tool.toggleCrest(); e.preventDefault(); return; }
 
   if(ch == "backspace" && e.ctrlKey){ DOTGRID.theme.reset(); e.preventDefault(); }
   if(ch == "backspace"){ DOTGRID.tool.removeSegment(); e.preventDefault(); }
