@@ -24,6 +24,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
     this.cursor = new this.Cursor()
     host.appendChild(this.guide.el)
 
+    this.renderer.install()
     this.interface.install(host)
     this.theme.install(host, this.update)
   }
@@ -113,7 +114,7 @@ function Dotgrid (width, height, grid_x, grid_y, block_x, block_y) {
 
     try {
       const win = require('electron').remote.getCurrentWindow()
-      win.setSize((size.width + 100) * scale, (size.height + 100 + (ui ? 10 : 0)) * scale, true)
+      win.setSize((size.width + 100) * scale, (size.height + 100) * scale, true)
     } catch (err) {
       console.log('No window')
     }

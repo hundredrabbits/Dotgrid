@@ -55,7 +55,7 @@ DOTGRID.Guide = function () {
   }
 
   this.resize = function (size) {
-    const offset = 15
+    const offset = 0
     this.el.width = (size.width + offset) * this.scale
     this.el.height = (size.height + (offset * 2)) * this.scale
     this.el.style.width = (size.width + offset) + 'px'
