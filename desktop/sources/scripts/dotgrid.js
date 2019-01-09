@@ -8,7 +8,7 @@ function Dotgrid (width, height) {
   this.theme = new Theme(defaultTheme)
   this.history = new History()
 
-  this.grid = {x:20,y:20}
+  this.grid = { x: 20, y: 20, width: 0, height: 0 }
 
   // ISU
 
@@ -118,16 +118,16 @@ function Dotgrid (width, height) {
       console.log('No window')
     }
 
-    this.grid.x = size.width / 15
-    this.grid.y = size.height / 15
+    this.grid = {
+      x: size.width / 15,
+      y: size.height / 15,
+      width: this.tool.settings.size.width / size.width / 15,
+      height: this.tool.settings.size.height / size.height / 15
+    }
 
-    this.grid_width = this.tool.settings.size.width / this.grid.x
-    this.grid_height = this.tool.settings.size.height / this.grid.y
-
-    DOTGRID.renderer.resize(size)
-
+    this.renderer.resize(size)
     this.interface.update()
-    DOTGRID.renderer.update()
+    this.renderer.update()
   }
 
   this.set_zoom = function (scale) {
@@ -151,29 +151,31 @@ function Dotgrid (width, height) {
     this.history.clear()
     this.tool.reset()
     this.reset()
-    DOTGRID.renderer.update()
-    DOTGRID.interface.update(true)
+    this.renderer.update()
+    this.interface.update(true)
   }
 
   this.resize = function () {
     const size = { width: step(window.innerWidth - 90, 15), height: step(window.innerHeight - 120, 15) }
 
-    if (size.width == DOTGRID.tool.settings.size.width && size.height == DOTGRID.tool.settings.size.height) {
+    if (size.width == this.tool.settings.size.width && size.height == this.tool.settings.size.height) {
       return
     }
 
     console.log(`Resized: ${size.width}x${size.height}`)
 
-    DOTGRID.tool.settings.size.width = size.width
-    DOTGRID.tool.settings.size.height = size.height
+    this.tool.settings.size.width = size.width
+    this.tool.settings.size.height = size.height
 
-    DOTGRID.grid.x = size.width / 15
-    DOTGRID.grid.y = size.height / 15
+    this.grid = {
+      x: size.width / 15,
+      y: size.height / 15
+    }
 
-    DOTGRID.grid_width = DOTGRID.tool.settings.size.width / DOTGRID.grid.x
-    DOTGRID.grid_height = DOTGRID.tool.settings.size.height / DOTGRID.grid.y
+    this.grid.width = this.tool.settings.size.width / this.grid.x
+    this.grid.height = this.tool.settings.size.height / this.grid.y
 
-    DOTGRID.renderer.resize(size)
+    this.renderer.resize(size)
 
     document.title = `Dotgrid — ${size.width}x${size.height}`
   }

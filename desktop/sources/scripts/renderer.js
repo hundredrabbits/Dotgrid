@@ -60,13 +60,13 @@ function Renderer (dotgrid) {
 
     if (dotgrid.tool.style().mirror_style === 0) { return }
 
-    const middle = { x: dotgrid.tool.settings.size.width + (dotgrid.grid_width), y: dotgrid.tool.settings.size.height + (this.scale * dotgrid.grid_height) }
+    const middle = { x: dotgrid.tool.settings.size.width + (dotgrid.grid.width), y: dotgrid.tool.settings.size.height + (this.scale * dotgrid.grid.height) }
 
     if (dotgrid.tool.style().mirror_style === 1 || dotgrid.tool.style().mirror_style === 3) {
-      this.drawRule({ x: middle.x, y: dotgrid.grid_height * this.scale }, { x: middle.x, y: (dotgrid.tool.settings.size.height + dotgrid.grid_height) * this.scale })
+      this.drawRule({ x: middle.x, y: dotgrid.grid.height * this.scale }, { x: middle.x, y: (dotgrid.tool.settings.size.height + dotgrid.grid.height) * this.scale })
     }
     if (dotgrid.tool.style().mirror_style === 2 || dotgrid.tool.style().mirror_style === 3) {
-      this.drawRule({ x: dotgrid.grid_width * this.scale, y: middle.y }, { x: (dotgrid.tool.settings.size.width + dotgrid.grid_width) * this.scale, y: middle.y })
+      this.drawRule({ x: dotgrid.grid.width * this.scale, y: middle.y }, { x: (dotgrid.tool.settings.size.width + dotgrid.grid.width) * this.scale, y: middle.y })
     }
   }
 
@@ -91,7 +91,7 @@ function Renderer (dotgrid) {
   this.drawGrid = function () {
     if (!this.showExtras) { return }
 
-    const cursor = { x: parseInt(dotgrid.cursor.pos.x / dotgrid.grid_width), y: parseInt(dotgrid.cursor.pos.y / dotgrid.grid_width) }
+    const cursor = { x: parseInt(dotgrid.cursor.pos.x / dotgrid.grid.width), y: parseInt(dotgrid.cursor.pos.y / dotgrid.grid.width) }
 
     for (let x = dotgrid.grid.x - 1; x >= 0; x--) {
       for (let y = dotgrid.grid.y; y >= 0; y--) {
@@ -101,8 +101,8 @@ function Renderer (dotgrid) {
         if ((y == 0 || y == dotgrid.grid.y) && cursor.x == x + 1) { color = dotgrid.theme.active.b_high } else if ((x == 0 || x == dotgrid.grid.x - 1) && cursor.y == y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x == x + 1 && cursor.y == y + 1) { color = dotgrid.theme.active.b_high }
 
         this.drawMarker({
-          x: parseInt(x * dotgrid.grid_width) + dotgrid.grid_width,
-          y: parseInt(y * dotgrid.grid_height) + dotgrid.grid_height
+          x: parseInt(x * dotgrid.grid.width) + dotgrid.grid.width,
+          y: parseInt(y * dotgrid.grid.height) + dotgrid.grid.height
         }, is_step ? 2.5 : 1.5, color)
       }
     }
