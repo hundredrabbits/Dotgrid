@@ -23,8 +23,8 @@ function Renderer (dotgrid) {
 
     this.drawMirror()
     this.drawRulers()
-    this.drawRender() //
     this.drawGrid()
+    this.drawRender() //
     this.drawVertices()
     this.drawHandles()
     this.drawTranslation()
@@ -255,13 +255,13 @@ function Renderer (dotgrid) {
   this.drawRender = function () {
     let img = new Image()
     img.src = dotgrid.manager.svg64()
-    this.context.drawImage(img, 0, 0, this.el.width, this.el.height)
+    this.context.drawImage(img, 0, 0, this.el.width - 30, this.el.height - 30)
   }
 
   this.drawDebug = function () {
     this.context.strokeRect(0, 0, this.el.width, this.el.height)
-    this.context.strokeRect(this.el.width / 2, 0, this.el.width, this.el.height)
-    this.context.strokeRect(0, this.el.height / 2, this.el.width, this.el.height)
+    this.context.strokeRect((this.el.width / 2) + 15, 0, this.el.width, this.el.height)
+    this.context.strokeRect(0, (this.el.height / 2) + 15, this.el.width, this.el.height)
   }
 
   function isEqual (a, b) { return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }

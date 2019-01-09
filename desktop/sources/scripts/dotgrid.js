@@ -1,18 +1,15 @@
 'use strict'
 
 function Dotgrid (width, height) {
-  this.controller = null
-
   const defaultTheme = { background: '#eee', f_high: '#000', f_med: '#999', f_low: '#ccc', f_inv: '#000', b_high: '#000', b_med: '#888', b_low: '#aaa', b_inv: '#ffb545' }
-
-  this.theme = new Theme(defaultTheme)
-  this.history = new History()
 
   this.grid = { x: 20, y: 20, width: 0, height: 0 }
 
   // ISU
 
   this.install = function (host) {
+    this.theme = new Theme(defaultTheme)
+    this.history = new History()
     this.manager = new Manager(this)
     this.renderer = new Renderer(this)
     this.tool = new Tool(this)
@@ -121,8 +118,8 @@ function Dotgrid (width, height) {
     this.grid = {
       x: size.width / 15,
       y: size.height / 15,
-      width: this.tool.settings.size.width / size.width / 15,
-      height: this.tool.settings.size.height / size.height / 15
+      width: 15,
+      height: 15
     }
 
     this.renderer.resize(size)
@@ -169,11 +166,10 @@ function Dotgrid (width, height) {
 
     this.grid = {
       x: size.width / 15,
-      y: size.height / 15
+      y: size.height / 15,
+      width: 15,
+      height: 15
     }
-
-    this.grid.width = this.tool.settings.size.width / this.grid.x
-    this.grid.height = this.tool.settings.size.height / this.grid.y
 
     this.renderer.resize(size)
 
