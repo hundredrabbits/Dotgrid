@@ -1,6 +1,6 @@
 'use strict'
 
-DOTGRID.Cursor = function () {
+function Cursor () {
   this.pos = { x: 0, y: 0 }
   this.translation = null
   this.operation = null
