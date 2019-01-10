@@ -23,6 +23,7 @@ function Tool (dotgrid) {
   }
 
   this.reset = function () {
+    this.settings.crest = false
     this.styles[0].mirror_style = 0
     this.styles[1].mirror_style = 0
     this.styles[2].mirror_style = 0
@@ -354,6 +355,9 @@ function Tool (dotgrid) {
 
   this.selectLayer = function (id) {
     this.index = clamp(id, 0, 2)
+    
+    if (this.index !== 0) { this.settings.crest = false }
+
     this.clear()
     dotgrid.renderer.update()
     dotgrid.interface.update(true)
