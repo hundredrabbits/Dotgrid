@@ -11,7 +11,7 @@ function Generator (layer, style) {
       const seg = l[k1]
       for (const k2 in seg.vertices) {
         if (mirror == 1 || mirror == 3) { seg.vertices[k2].x = (DOTGRID.tool.settings.size.width) - seg.vertices[k2].x + 15 }
-        if (mirror == 2 || mirror == 3) { seg.vertices[k2].y = (DOTGRID.tool.settings.size.height) - seg.vertices[k2].y + 30 }
+        if (mirror == 2 || mirror == 3) { seg.vertices[k2].y = (DOTGRID.tool.settings.size.height) - seg.vertices[k2].y + 15 }
 
         // Offset
         seg.vertices[k2].x += offset.x
