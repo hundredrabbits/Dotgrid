@@ -6,7 +6,7 @@
 
 ## Guide
 
-View the [guide](https://100r.co/blog.html#dotgrid).
+View the [guide](https://100r.co/pages/dotgrid.html#introduction).
 
 ## Electron Build
 
