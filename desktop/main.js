@@ -8,9 +8,9 @@ let isShown = true
 app.on('ready', () => {
   app.win = new BrowserWindow({
     width: 405,
-    height: 420,
+    height: 430,
     minWidth: 405,
-    minHeight: 420,
+    minHeight: 430,
     webPreferences: { zoomFactor: 1.0 },
     backgroundColor: '#000',
     frame: false,

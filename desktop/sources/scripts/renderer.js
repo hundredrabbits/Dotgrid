@@ -100,7 +100,7 @@ function Renderer (dotgrid) {
     const markers = dotgrid.getSize().markers
 
     for (let x = markers.w - 1; x >= 0; x--) {
-      for (let y = markers.h; y >= 0; y--) {
+      for (let y = markers.h - 1; y >= 0; y--) {
         let is_step = x % 4 == 0 && y % 4 == 0
         // Color
         let color = is_step ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low

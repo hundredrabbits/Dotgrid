@@ -76,7 +76,7 @@ function Dotgrid (width, height) {
 
   this.new = function () {
     this.setZoom(1.0)
-    this.setSize({ width: 300, height: 300 })
+    this.setSize({ width: 300, height: 325 })
     this.history.push(this.tool.layers)
     this.clear()
   }
