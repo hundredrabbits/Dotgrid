@@ -35,7 +35,7 @@ function Manager (dotgrid) {
       if (DOTGRID.tool.settings.crest === true) {
         style = styles[0]
         path = paths[0]
-        layer.setAttribute('transform', `rotate(${parseInt(id) * 120} ${(DOTGRID.tool.settings.size.width / 2) + 7.5} ${(DOTGRID.tool.settings.size.height / 2) + 15})`)
+        layer.setAttribute('transform', `rotate(${parseInt(id) * 120} ${(DOTGRID.tool.settings.size.width / 2) + 7.5} ${(DOTGRID.tool.settings.size.height / 2) + 7.5})`)
       }
 
       layer.style.strokeWidth = style.thickness
