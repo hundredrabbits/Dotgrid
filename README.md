@@ -16,6 +16,15 @@ npm install
 npm start
 ```
 
+## UDP Controls
+
+Dotgrid can be controlled by UDP via the port `49160`. It expects messages of 6 characters.
+
+- **layer** `0/1/2`
+- **type** `l/a/r/c`
+- **from** `0-z``0-z`
+- **to** `0-z``0-z`
+
 ## Extras
 
 - This application supports the [Ecosystem Theme](https://github.com/hundredrabbits/Themes).

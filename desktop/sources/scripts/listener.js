@@ -18,6 +18,8 @@ function Listener (dotgrid) {
   }
 
   function operate (data) {
+    if(!dotgrid.tool.layers[data.layer]){ return }
+    dotgrid.tool.index = data.layer
     dotgrid.tool.addSegment(data.type, [data.from, data.to])
     dotgrid.renderer.update()
   }
