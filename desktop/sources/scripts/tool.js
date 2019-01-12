@@ -355,7 +355,7 @@ function Tool (dotgrid) {
 
   this.selectLayer = function (id) {
     this.index = clamp(id, 0, 2)
-    
+
     if (this.index !== 0) { this.settings.crest = false }
 
     this.clear()

@@ -24,6 +24,7 @@ function Dotgrid (width, height) {
     this.interface = new Interface(this)
     this.picker = new Picker(this)
     this.cursor = new Cursor(this)
+    this.listener = new Listener(this)
 
     host.appendChild(this.renderer.el)
 
