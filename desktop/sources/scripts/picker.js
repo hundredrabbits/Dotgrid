@@ -4,16 +4,16 @@ function Picker (dotgrid) {
   this.memory = ''
   this.el = document.createElement('div')
   this.el.id = 'picker'
-  this.is_active = false
+  this.isActive = false
   this.input = document.createElement('input')
   this.input.id = 'picker_input'
 
   this.el.appendChild(this.input)
 
   this.start = function () {
-    if (this.is_active) { return }
+    if (this.isActive) { return }
 
-    this.is_active = true
+    this.isActive = true
 
     this.input.setAttribute('placeholder', `${DOTGRID.tool.style().color.replace('#', '').trim()}`)
     this.input.setAttribute('maxlength', 6)
@@ -26,7 +26,7 @@ function Picker (dotgrid) {
   }
 
   this.update = function () {
-    if (!this.is_active) { return }
+    if (!this.isActive) { return }
     if (!is_color(this.input.value)) { return }
 
     const hex = `#${this.input.value}`
@@ -36,9 +36,9 @@ function Picker (dotgrid) {
   }
 
   this.stop = function () {
-    if (!this.is_active) { return }
+    if (!this.isActive) { return }
 
-    this.is_active = false
+    this.isActive = false
 
     DOTGRID.interface.el.className = ''
     this.input.blur()

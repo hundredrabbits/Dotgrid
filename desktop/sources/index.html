@@ -84,12 +84,13 @@
         DOTGRID.controller.add("default","Layers","Foreground",() => { DOTGRID.tool.selectLayer(0) },"CmdOrCtrl+1");
         DOTGRID.controller.add("default","Layers","Middleground",() => { DOTGRID.tool.selectLayer(1) },"CmdOrCtrl+2");
         DOTGRID.controller.add("default","Layers","Background",() => { DOTGRID.tool.selectLayer(2) },"CmdOrCtrl+3");
-        DOTGRID.controller.add("default","Layers","Next Layer",() => { DOTGRID.tool.selectNextLayer() },"Tab");
-        DOTGRID.controller.add("default","Layers","Prev Layer",() => { DOTGRID.tool.selectPrevLayer() },"Shift+Tab");
+        DOTGRID.controller.add("default","Layers","Next Layer",() => { DOTGRID.tool.selectNextLayer() });
+        DOTGRID.controller.add("default","Layers","Prev Layer",() => { DOTGRID.tool.selectPrevLayer() });
         DOTGRID.controller.add("default","Layers","Merge Layers",() => { DOTGRID.tool.merge() },"M");
 
         DOTGRID.controller.add("default","View","Color Picker",() => { DOTGRID.picker.start(); },"G");
         DOTGRID.controller.add("default","View","Toggle Grid",() => { DOTGRID.renderer.toggle(); },"H");
+        DOTGRID.controller.add("default","View","Toggle Interface",() => { DOTGRID.interface.toggle(); },"Tab");
 
         DOTGRID.controller.add("default","Theme","Open Theme",() => { DOTGRID.theme.open(); },"CmdOrCtrl+Shift+o")
         DOTGRID.controller.add("default","Theme","Reset Theme",() => { DOTGRID.theme.reset(); },"CmdOrCtrl+Shift+Backspace")

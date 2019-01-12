@@ -7,7 +7,7 @@ function Interface (dotgrid) {
   this.el.appendChild(this.menu_el = document.createElement('div'))
   this.menu_el.id = 'menu'
 
-  this.is_visible = true
+  this.isVisible = true
   this.zoom = false
 
   this.install = function (host) {
@@ -142,7 +142,14 @@ function Interface (dotgrid) {
   }
 
   this.toggle = function () {
-    this.is_visible = !this.is_visible
-    this.el.className = this.is_visible ? 'visible' : 'hidden'
+    this.isVisible = !this.isVisible
+    this.el.className = this.isVisible ? 'visible' : 'hidden'
+  }
+
+  document.onkeydown = function (e) {
+    if (e.key === 'Tab') {
+      DOTGRID.interface.toggle()
+      e.preventDefault()
+    }
   }
 }
