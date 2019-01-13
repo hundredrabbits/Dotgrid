@@ -24,8 +24,7 @@ function Listener (dotgrid) {
   function operate (data) {
     if (!data) { return }
     if (!dotgrid.tool.layers[data.layer]) { return }
-    dotgrid.tool.index = data.layer
-    dotgrid.tool.addSegment(data.type, [data.from, data.to])
+    dotgrid.tool.addSegment(data.type, [data.from, data.to], data.layer)
   }
 
   function draw () {

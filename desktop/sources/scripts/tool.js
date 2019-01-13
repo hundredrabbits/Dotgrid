@@ -153,12 +153,12 @@ function Tool (dotgrid) {
     return null
   }
 
-  this.addSegment = function (type, vertices) {
+  this.addSegment = function (type, vertices, index = this.index) {
     let append_target = this.canAppend({ type: type, vertices: vertices })
     if (append_target) {
-      this.layer()[append_target].vertices = this.layer()[append_target].vertices.concat(vertices)
+      this.layer(index)[append_target].vertices = this.layer(index)[append_target].vertices.concat(vertices)
     } else {
-      this.layer().push({ type: type, vertices: vertices })
+      this.layer(index).push({ type: type, vertices: vertices })
     }
   }
 
@@ -346,11 +346,11 @@ function Tool (dotgrid) {
 
   // Layers
 
-  this.layer = function () {
-    if (!this.layers[this.index]) {
-      this.layers[this.index] = []
+  this.layer = function (index = this.index) {
+    if (!this.layers[index]) {
+      this.layers[index] = []
     }
-    return this.layers[this.index]
+    return this.layers[index]
   }
 
   this.selectLayer = function (id) {
