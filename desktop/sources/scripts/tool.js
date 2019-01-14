@@ -154,7 +154,9 @@ function Tool (dotgrid) {
   }
 
   this.addSegment = function (type, vertices, index = this.index) {
-    let append_target = this.canAppend({ type: type, vertices: vertices })
+    console.log(this.layer(index))
+
+    let append_target = this.canAppend({ type: type, vertices: vertices }, index)
     if (append_target) {
       this.layer(index)[append_target].vertices = this.layer(index)[append_target].vertices.concat(vertices)
     } else {
@@ -221,9 +223,9 @@ function Tool (dotgrid) {
     if (type == 'export') { dotgrid.export() }
   }
 
-  this.canAppend = function (content) {
-    for (const id in this.layer()) {
-      let stroke = this.layer()[id]
+  this.canAppend = function (content, index = this.index) {
+    for (const id in this.layer(index)) {
+      let stroke = this.layer(index)[id]
       if (stroke.type != content.type) { continue }
       if (!stroke.vertices) { continue }
       if (!stroke.vertices[stroke.vertices.length - 1]) { continue }
