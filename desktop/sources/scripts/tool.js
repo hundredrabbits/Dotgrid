@@ -154,8 +154,6 @@ function Tool (dotgrid) {
   }
 
   this.addSegment = function (type, vertices, index = this.index) {
-    console.log(this.layer(index))
-
     let append_target = this.canAppend({ type: type, vertices: vertices }, index)
     if (append_target) {
       this.layer(index)[append_target].vertices = this.layer(index)[append_target].vertices.concat(vertices)

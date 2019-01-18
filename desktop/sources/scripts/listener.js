@@ -32,11 +32,14 @@ function Listener (dotgrid) {
   }
 
   function parse (msg) {
-    if (msg.length < 2) { return }
+    if (msg === '') {
+      return draw()
+    }
+    if (['0', '1', '2'].indexOf(msg) > -1) {
+      return clear()
+    }
     const layer = parseInt(msg.substr(0, 1))
     const type = { 'l': 'line', 'c': 'arc_c', 'r': 'arc_r', '*': 'draw' }[msg.substr(1, 1).toLowerCase()]
-    if (!type) { clear(); return }
-    if (type === 'draw') { draw(); return }
     const from = { x: base36(msg.substr(2, 1)), y: base36(msg.substr(3, 1)) }
     const to = { x: base36(msg.substr(4, 1)), y: base36(msg.substr(5, 1)) }
     return { layer: layer, type: type, from: from, to: to }
@@ -49,7 +52,6 @@ function Listener (dotgrid) {
   // Server
 
   this.server.on('message', (msg, rinfo) => {
-    // console.log(`Server received UDP message:\n ${msg} from ${rinfo.address}:${rinfo.port}`)
     operate(parse(`${msg}`))
   })
 
