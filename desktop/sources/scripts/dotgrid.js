@@ -200,8 +200,8 @@ function Dotgrid (width, height) {
     if (e.target !== this.picker.input) {
       e.clipboardData.setData('text/source', DOTGRID.tool.export(DOTGRID.tool.layer()))
       e.clipboardData.setData('text/plain', DOTGRID.tool.path())
-      e.clipboardData.setData('text/html', DOTGRID.manager.svg_el.outerHTML)
-      e.clipboardData.setData('text/svg+xml', DOTGRID.manager.svg_el.outerHTML)
+      e.clipboardData.setData('text/html', DOTGRID.manager.el.outerHTML)
+      e.clipboardData.setData('text/svg+xml', DOTGRID.manager.el.outerHTML)
       e.preventDefault()
     }
 
@@ -214,8 +214,8 @@ function Dotgrid (width, height) {
     if (e.target !== this.picker.input) {
       e.clipboardData.setData('text/source', DOTGRID.tool.export(DOTGRID.tool.layer()))
       e.clipboardData.setData('text/plain', DOTGRID.tool.export(DOTGRID.tool.layer()))
-      e.clipboardData.setData('text/html', DOTGRID.manager.svg_el.outerHTML)
-      e.clipboardData.setData('text/svg+xml', DOTGRID.manager.svg_el.outerHTML)
+      e.clipboardData.setData('text/html', DOTGRID.manager.el.outerHTML)
+      e.clipboardData.setData('text/svg+xml', DOTGRID.manager.el.outerHTML)
       DOTGRID.tool.layers[DOTGRID.tool.index] = []
       e.preventDefault()
     }
