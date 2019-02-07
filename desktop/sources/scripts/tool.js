@@ -2,7 +2,7 @@
 
 function Tool (dotgrid) {
   this.index = 0
-  this.settings = { size: { width: 300, height: 300 }, crest: false }
+  this.settings = { size: { width: 0, height: 0 }, crest: false }
   this.layers = [[], [], []]
   this.styles = [
     { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },

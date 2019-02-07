@@ -1,6 +1,6 @@
 'use strict'
 
-function Dotgrid (width, height) {
+function Dotgrid () {
   const defaultTheme = {
     background: '#eee',
     f_high: '#000',
@@ -77,7 +77,6 @@ function Dotgrid (width, height) {
 
   this.new = function () {
     this.setZoom(1.0)
-    this.setSize({ width: 300, height: 325 })
     this.history.push(this.tool.layers)
     this.clear()
   }
@@ -127,7 +126,7 @@ function Dotgrid (width, height) {
     }
   }
 
-  this.setSize = function (size = { width: 300, height: 300 }, ui = true, scale = 1) {
+  this.setSize = function (size = { width: 600, height: 300 }, ui = true, scale = 1) {
     size = { width: clamp(step(size.width, 15), 105, 1080), height: clamp(step(size.height, 15), 120, 1080) }
 
     this.tool.settings.size.width = size.width
@@ -135,7 +134,7 @@ function Dotgrid (width, height) {
 
     try {
       const win = require('electron').remote.getCurrentWindow()
-      win.setSize((size.width + 100) * scale, (size.height + 100) * scale, true)
+      win.setSize((size.width + 100) * scale, (size.height + 100) * scale, false)
     } catch (err) {
       console.log('No window')
     }
@@ -148,11 +147,11 @@ function Dotgrid (width, height) {
   this.resize = function () {
     const size = { width: step(window.innerWidth - 90, 15), height: step(window.innerHeight - 120, 15) }
 
-    if (size.width == this.tool.settings.size.width && size.height == this.tool.settings.size.height) {
+    if (size.width === this.tool.settings.size.width && size.height === this.tool.settings.size.height) {
       return
     }
 
-    console.log(`Resized: ${size.width}x${size.height}`)
+    console.log(`Resized to: ${size.width}x${size.height}`)
 
     this.tool.settings.size.width = size.width
     this.tool.settings.size.height = size.height
@@ -163,8 +162,6 @@ function Dotgrid (width, height) {
   }
 
   this.setZoom = function (scale) {
-    this.setSize({ width: this.tool.settings.size.width, height: this.tool.settings.size.height }, true, scale)
-
     try {
       webFrame.setZoomFactor(scale)
     } catch (err) {
@@ -256,4 +253,4 @@ function isEqual (a, b) { return a && b && a.x == b.x && a.y == b.y }
 function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 function step (v, s) { return Math.round(v / s) * s }
 
-const DOTGRID = new Dotgrid(300, 300)
+const DOTGRID = new Dotgrid()

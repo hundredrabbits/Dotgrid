@@ -52,7 +52,7 @@ function Cursor () {
   this.up = function (e) {
     this.pos = this.atEvent(e)
 
-    if (this.translation && !is_equal(this.translation.from, this.translation.to)) {
+    if (this.translation && !isEqual(this.translation.from, this.translation.to)) {
       if (this.translation.layer === true) { DOTGRID.tool.translateLayer(this.translation.from, this.translation.to) } else if (this.translation.copy) { DOTGRID.tool.translateCopy(this.translation.from, this.translation.to) } else if (this.translation.multi) { DOTGRID.tool.translateMulti(this.translation.from, this.translation.to) } else { DOTGRID.tool.translate(this.translation.from, this.translation.to) }
     } else if (e.target.id == 'guide') {
       DOTGRID.tool.addVertex({ x: this.pos.x, y: this.pos.y })
@@ -95,5 +95,5 @@ function Cursor () {
     }
   }
 
-  function is_equal (a, b) { return a.x == b.x && a.y == b.y }
+  function isEqual (a, b) { return a.x == b.x && a.y == b.y }
 }

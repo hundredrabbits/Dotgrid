@@ -1,25 +1,27 @@
-const { app, BrowserWindow, webFrame, Menu, dialog } = require('electron')
+const { app, BrowserWindow, webFrame, Menu } = require('electron')
 const path = require('path')
 const url = require('url')
 const shell = require('electron').shell
 
 let isShown = true
 
+app.win = null
+
 app.on('ready', () => {
   app.win = new BrowserWindow({
-    width: 405,
+    width: 700,
     height: 430,
-    minWidth: 405,
-    minHeight: 430,
-    webPreferences: { zoomFactor: 1.0 },
-    backgroundColor: '#000',
-    frame: false,
-    autoHideMenuBar: true,
-    icon: __dirname + '/icon.ico'
+    minWidth: 320,
+    minHeight: 320,
+    resizable: true,
+    icon: __dirname + '/icon.ico',
+    frame: process.platform === 'win32',
+    skipTaskbar: process.platform !== 'win32',
+    autoHideMenuBar: process.platform !== 'win32'
   })
 
   app.win.loadURL(`file://${__dirname}/sources/index.html`)
-  // app.inspect();
+  // app.inspect()
 
   app.win.on('closed', () => {
     win = null
@@ -56,14 +58,14 @@ app.toggleFullscreen = function () {
 }
 
 app.toggleVisible = function () {
-  if (process.platform == 'win32') {
+  if (process.platform === 'win32') {
     if (!app.win.isMinimized()) { app.win.minimize() } else { app.win.restore() }
   } else {
     if (isShown && !app.win.isFullScreen()) { app.win.hide() } else { app.win.show() }
   }
 }
 
-app.inject_menu = function (menu) {
+app.injectMenu = function (menu) {
   try {
     Menu.setApplicationMenu(Menu.buildFromTemplate(menu))
   } catch (err) {
