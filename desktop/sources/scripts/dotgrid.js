@@ -126,7 +126,7 @@ function Dotgrid () {
     }
   }
 
-  this.setSize = function (size = { width: 600, height: 300 }, ui = true, scale = 1) {
+  this.setSize = function (size = { width: 600, height: 300 }, ui = true, scale = window.devicePixelRatio) {
     size = { width: clamp(step(size.width, 15), 105, 1080), height: clamp(step(size.height, 15), 120, 1080) }
 
     this.tool.settings.size.width = size.width
@@ -159,6 +159,17 @@ function Dotgrid () {
     this.renderer.resize(size)
 
     document.title = `Dotgrid — ${size.width}x${size.height}`
+  }
+
+  this.modZoom = function (mod = 0, set = false) {
+    try {
+      const { webFrame } = require('electron')
+      const currentZoomFactor = webFrame.getZoomFactor()
+      webFrame.setZoomFactor(set ? mod : currentZoomFactor + mod)
+      console.log(window.devicePixelRatio)
+    } catch (err) {
+      console.log('Cannot zoom')
+    }
   }
 
   this.setZoom = function (scale) {

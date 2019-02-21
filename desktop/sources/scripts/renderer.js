@@ -10,7 +10,7 @@ function Renderer (dotgrid) {
   this.context = this.el.getContext('2d')
   this.showExtras = true
 
-  this.scale = 2
+  this.scale = window.devicePixelRatio
 
   this.start = function () {
     this.update()

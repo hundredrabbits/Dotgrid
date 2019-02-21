@@ -28,7 +28,7 @@
   <body>
     <script>
         'use strict'
-
+        
         const webFrame = require('electron').webFrame
         const {dialog,app} = require('electron').remote;
         const fs = require('fs');
@@ -88,6 +88,9 @@
         DOTGRID.controller.add("default","Layers","Prev Layer",() => { DOTGRID.tool.selectPrevLayer() });
         DOTGRID.controller.add("default","Layers","Merge Layers",() => { DOTGRID.tool.merge() },"M");
 
+        DOTGRID.controller.add("default","View","Zoom In",() => { DOTGRID.modZoom(0.25) },"CmdOrCtrl+=")
+        DOTGRID.controller.add("default","View","Zoom Out",() => { DOTGRID.modZoom(-0.25) },"CmdOrCtrl+-")
+        DOTGRID.controller.add("default","View","Zoom Reset",() => { DOTGRID.modZoom(1,true) },"CmdOrCtrl+0")
         DOTGRID.controller.add("default","View","Color Picker",() => { DOTGRID.picker.start(); },"G");
         DOTGRID.controller.add("default","View","Toggle Grid",() => { DOTGRID.renderer.toggle(); },"H");
         DOTGRID.controller.add("default","View","Toggle Interface",() => { DOTGRID.interface.toggle(); },"Tab");

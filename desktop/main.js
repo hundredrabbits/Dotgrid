@@ -16,9 +16,10 @@ app.on('ready', () => {
     backgroundColor: '#000',
     resizable: true,
     icon: __dirname + '/icon.ico',
-    frame: process.platform === 'win32',
-    skipTaskbar: process.platform !== 'win32',
-    autoHideMenuBar: process.platform !== 'win32'
+    resizable: true,
+    frame: process.platform !== 'darwin',
+    skipTaskbar: process.platform === 'darwin',
+    autoHideMenuBar: process.platform === 'darwin'
   })
 
   app.win.loadURL(`file://${__dirname}/sources/index.html`)
