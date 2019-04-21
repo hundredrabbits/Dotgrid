@@ -32,7 +32,7 @@
   "dependencies": {},
   "standard": {
     "globals": [
-      "DOTGRID"
+      "dotgrid"
     ]
   }
 }

@@ -15,14 +15,14 @@ function Picker (dotgrid) {
 
     this.isActive = true
 
-    this.input.setAttribute('placeholder', `${DOTGRID.tool.style().color.replace('#', '').trim()}`)
+    this.input.setAttribute('placeholder', `${dotgrid.tool.style().color.replace('#', '').trim()}`)
     this.input.setAttribute('maxlength', 6)
 
-    DOTGRID.interface.el.className = 'picker'
+    dotgrid.interface.el.className = 'picker'
     this.input.focus()
     this.input.value = ''
 
-    try { DOTGRID.controller.set('picker') } catch (err) { }
+    try { dotgrid.controller.set('picker') } catch (err) { }
   }
 
   this.update = function () {
@@ -40,13 +40,13 @@ function Picker (dotgrid) {
 
     this.isActive = false
 
-    DOTGRID.interface.el.className = ''
+    dotgrid.interface.el.className = ''
     this.input.blur()
     this.input.value = ''
 
-    try { DOTGRID.controller.set() } catch (err) { console.log('No controller') }
+    try { dotgrid.controller.set() } catch (err) { console.log('No controller') }
 
-    setTimeout(() => { DOTGRID.interface.update(true); DOTGRID.renderer.update() }, 250)
+    setTimeout(() => { dotgrid.interface.update(true); dotgrid.renderer.update() }, 250)
   }
 
   this.validate = function () {
@@ -54,8 +54,8 @@ function Picker (dotgrid) {
 
     const hex = `#${this.input.value}`
 
-    DOTGRID.tool.style().color = hex
-    DOTGRID.tool.style().fill = DOTGRID.tool.style().fill !== 'none' ? hex : 'none'
+    dotgrid.tool.style().color = hex
+    dotgrid.tool.style().fill = dotgrid.tool.style().fill !== 'none' ? hex : 'none'
 
     this.stop()
   }
@@ -95,6 +95,6 @@ function Picker (dotgrid) {
     return re.test(val)
   }
 
-  this.input.onkeydown = function (event) { DOTGRID.picker.listen(event, true) }
-  this.input.onkeyup = function (event) { DOTGRID.picker.listen(event) }
+  this.input.onkeydown = function (event) { dotgrid.picker.listen(event, true) }
+  this.input.onkeyup = function (event) { dotgrid.picker.listen(event) }
 }

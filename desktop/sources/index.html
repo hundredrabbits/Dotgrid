@@ -11,6 +11,7 @@
     <!-- Dotgrid -->
     <script type="text/javascript" src="scripts/dotgrid.js"></script>
     <script type="text/javascript" src="scripts/manager.js"></script>
+    <script type="text/javascript" src="scripts/source.js"></script>
     <script type="text/javascript" src="scripts/renderer.js"></script>
     <script type="text/javascript" src="scripts/cursor.js"></script>
     <script type="text/javascript" src="scripts/interface.js"></script>
@@ -33,94 +34,97 @@
         const {dialog,app} = require('electron').remote;
         const fs = require('fs');
         
-        DOTGRID.controller = new Controller();
+        const dotgrid = new Dotgrid()
+        
+        dotgrid.controller = new Controller();
 
-        DOTGRID.controller.add("default","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
-        DOTGRID.controller.add("default","*","Fullscreen",() => { app.toggleFullscreen(); },"CmdOrCtrl+Enter");
-        DOTGRID.controller.add("default","*","Hide",() => { app.toggleVisible(); },"CmdOrCtrl+H");
-        DOTGRID.controller.add("default","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
-        DOTGRID.controller.add("default","*","Reset",() => { DOTGRID.reset(); DOTGRID.theme.reset(); },"CmdOrCtrl+Backspace");
-        DOTGRID.controller.add("default","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
+        dotgrid.controller.add("default","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
+        dotgrid.controller.add("default","*","Fullscreen",() => { app.toggleFullscreen(); },"CmdOrCtrl+Enter");
+        dotgrid.controller.add("default","*","Hide",() => { app.toggleVisible(); },"CmdOrCtrl+H");
+        dotgrid.controller.add("default","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
+        dotgrid.controller.add("default","*","Reset",() => { dotgrid.reset(); dotgrid.theme.reset(); },"CmdOrCtrl+Backspace");
+        dotgrid.controller.add("default","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
 
-        DOTGRID.controller.add("default","File","New",() => { DOTGRID.new(); },"CmdOrCtrl+N");
-        DOTGRID.controller.add("default","File","Open",() => { DOTGRID.open(); },"CmdOrCtrl+O");
-        DOTGRID.controller.add("default","File","Save(.grid)",() => { DOTGRID.save(); },"CmdOrCtrl+S");
-        DOTGRID.controller.add("default","File","Render(.png)",() => { DOTGRID.render(); },"CmdOrCtrl+R");
-        DOTGRID.controller.add("default","File","Export(.svg)",() => { DOTGRID.export(); },"CmdOrCtrl+E");
+        dotgrid.controller.add("default","File","New",() => { dotgrid.source.new(); },"CmdOrCtrl+N");
+        dotgrid.controller.add("default","File","Open",() => { dotgrid.source.open(); },"CmdOrCtrl+O");
+        dotgrid.controller.add("default","File","Save(.grid)",() => { dotgrid.source.save(); },"CmdOrCtrl+S");
+        dotgrid.controller.add("default","File","Render(.png)",() => { dotgrid.source.render(); },"CmdOrCtrl+R");
+        dotgrid.controller.add("default","File","Export(.svg)",() => { dotgrid.source.export(); },"CmdOrCtrl+E");
 
-        DOTGRID.controller.add_role("default","Edit","copy");
-        DOTGRID.controller.add_role("default","Edit","cut");
-        DOTGRID.controller.add_role("default","Edit","paste");
-        DOTGRID.controller.add("default","Edit","Undo",() => { DOTGRID.tool.undo() },"CmdOrCtrl+Z");
-        DOTGRID.controller.add("default","Edit","Redo",() => { DOTGRID.tool.redo() },"CmdOrCtrl+Shift+Z");
+        dotgrid.controller.addRole("default","Edit","copy");
+        dotgrid.controller.addRole("default","Edit","cut");
+        dotgrid.controller.addRole("default","Edit","paste");
+        dotgrid.controller.add("default","Edit","Undo",() => { dotgrid.tool.undo() },"CmdOrCtrl+Z");
+        dotgrid.controller.add("default","Edit","Redo",() => { dotgrid.tool.redo() },"CmdOrCtrl+Shift+Z");
 
-        DOTGRID.controller.add("default","Stroke","Line",() => { DOTGRID.tool.cast("line"); },"A");
-        DOTGRID.controller.add("default","Stroke","Arc",() => { DOTGRID.tool.cast("arc_c"); },"S"); // 0,1
-        DOTGRID.controller.add("default","Stroke","Arc Rev",() => { DOTGRID.tool.cast("arc_r")},"D"); // 0,0
-        DOTGRID.controller.add("default","Stroke","Bezier",() => { DOTGRID.tool.cast("bezier") },"F");
-        DOTGRID.controller.add("default","Stroke","Close",() => { DOTGRID.tool.cast("close") },"Z");
-        DOTGRID.controller.add("default","Stroke","Arc(full)",() => { DOTGRID.tool.cast("arc_c_full"); },"T"); // 1,1
-        DOTGRID.controller.add("default","Stroke","Arc Rev(full)",() => { DOTGRID.tool.cast("arc_r_full")},"Y"); // 1,0
-        DOTGRID.controller.add("default","Stroke","Clear Selection",() => { DOTGRID.tool.clear(); },"Escape");
+        dotgrid.controller.add("default","Stroke","Line",() => { dotgrid.tool.cast("line"); },"A");
+        dotgrid.controller.add("default","Stroke","Arc",() => { dotgrid.tool.cast("arc_c"); },"S"); // 0,1
+        dotgrid.controller.add("default","Stroke","Arc Rev",() => { dotgrid.tool.cast("arc_r")},"D"); // 0,0
+        dotgrid.controller.add("default","Stroke","Bezier",() => { dotgrid.tool.cast("bezier") },"F");
+        dotgrid.controller.add("default","Stroke","Close",() => { dotgrid.tool.cast("close") },"Z");
+        dotgrid.controller.add("default","Stroke","Arc(full)",() => { dotgrid.tool.cast("arc_c_full"); },"T"); // 1,1
+        dotgrid.controller.add("default","Stroke","Arc Rev(full)",() => { dotgrid.tool.cast("arc_r_full")},"Y"); // 1,0
+        dotgrid.controller.add("default","Stroke","Clear Selection",() => { dotgrid.tool.clear(); },"Escape");
 
-        DOTGRID.controller.add("default","Effect","Linecap",() => { DOTGRID.tool.toggle("linecap"); },"Q");
-        DOTGRID.controller.add("default","Effect","Linejoin",() => { DOTGRID.tool.toggle("linejoin"); },"W");
-        DOTGRID.controller.add("default","Effect","Mirror",() => { DOTGRID.tool.toggle("mirror"); },"E");
-        DOTGRID.controller.add("default","Effect","Fill",() => { DOTGRID.tool.toggle("fill"); },"R");
-        DOTGRID.controller.add("default","Effect","Thicker",() => { DOTGRID.tool.toggle("thickness",1) },"}");
-        DOTGRID.controller.add("default","Effect","Thinner",() => { DOTGRID.tool.toggle("thickness",-1) },"{");
-        DOTGRID.controller.add("default","Effect","Thicker +5",() => { DOTGRID.tool.toggle("thickness",5) },"]");
-        DOTGRID.controller.add("default","Effect","Thinner -5",() => { DOTGRID.tool.toggle("thickness",-5) },"[");
-        DOTGRID.controller.add("default","Effect","Toggle Crest",() => { DOTGRID.tool.toggleCrest(); }, "CmdOrCtrl+K");
+        dotgrid.controller.add("default","Effect","Linecap",() => { dotgrid.tool.toggle("linecap"); },"Q");
+        dotgrid.controller.add("default","Effect","Linejoin",() => { dotgrid.tool.toggle("linejoin"); },"W");
+        dotgrid.controller.add("default","Effect","Mirror",() => { dotgrid.tool.toggle("mirror"); },"E");
+        dotgrid.controller.add("default","Effect","Fill",() => { dotgrid.tool.toggle("fill"); },"R");
+        dotgrid.controller.add("default","Effect","Thicker",() => { dotgrid.tool.toggle("thickness",1) },"}");
+        dotgrid.controller.add("default","Effect","Thinner",() => { dotgrid.tool.toggle("thickness",-1) },"{");
+        dotgrid.controller.add("default","Effect","Thicker +5",() => { dotgrid.tool.toggle("thickness",5) },"]");
+        dotgrid.controller.add("default","Effect","Thinner -5",() => { dotgrid.tool.toggle("thickness",-5) },"[");
+        dotgrid.controller.add("default","Effect","Toggle Crest",() => { dotgrid.tool.toggleCrest(); }, "CmdOrCtrl+K");
 
-        DOTGRID.controller.add("default","Manual","Add Point",() => { DOTGRID.tool.addVertex(DOTGRID.cursor.pos); DOTGRID.renderer.update() },"Enter");
-        DOTGRID.controller.add("default","Manual","Move Up",() => { DOTGRID.cursor.pos.y -= 15; DOTGRID.renderer.update() },"Up");
-        DOTGRID.controller.add("default","Manual","Move Right",() => { DOTGRID.cursor.pos.x += 15; DOTGRID.renderer.update() },"Right");
-        DOTGRID.controller.add("default","Manual","Move Down",() => { DOTGRID.cursor.pos.y += 15; DOTGRID.renderer.update() },"Down");
-        DOTGRID.controller.add("default","Manual","Move Left",() => { DOTGRID.cursor.pos.x -= 15; DOTGRID.renderer.update() },"Left");
-        DOTGRID.controller.add("default","Manual","Remove Point",() => { DOTGRID.tool.removeSegmentsAt(DOTGRID.cursor.pos); },"Shift+Backspace");
-        DOTGRID.controller.add("default","Manual","Remove Segment",() => { DOTGRID.tool.removeSegment(); },"Backspace");
+        dotgrid.controller.add("default","Manual","Add Point",() => { dotgrid.tool.addVertex(dotgrid.cursor.pos); dotgrid.renderer.update() },"Enter");
+        dotgrid.controller.add("default","Manual","Move Up",() => { dotgrid.cursor.pos.y -= 15; dotgrid.renderer.update() },"Up");
+        dotgrid.controller.add("default","Manual","Move Right",() => { dotgrid.cursor.pos.x += 15; dotgrid.renderer.update() },"Right");
+        dotgrid.controller.add("default","Manual","Move Down",() => { dotgrid.cursor.pos.y += 15; dotgrid.renderer.update() },"Down");
+        dotgrid.controller.add("default","Manual","Move Left",() => { dotgrid.cursor.pos.x -= 15; dotgrid.renderer.update() },"Left");
+        dotgrid.controller.add("default","Manual","Remove Point",() => { dotgrid.tool.removeSegmentsAt(dotgrid.cursor.pos); },"Shift+Backspace");
+        dotgrid.controller.add("default","Manual","Remove Segment",() => { dotgrid.tool.removeSegment(); },"Backspace");
 
-        DOTGRID.controller.add("default","Layers","Foreground",() => { DOTGRID.tool.selectLayer(0) },"CmdOrCtrl+1");
-        DOTGRID.controller.add("default","Layers","Middleground",() => { DOTGRID.tool.selectLayer(1) },"CmdOrCtrl+2");
-        DOTGRID.controller.add("default","Layers","Background",() => { DOTGRID.tool.selectLayer(2) },"CmdOrCtrl+3");
-        DOTGRID.controller.add("default","Layers","Next Layer",() => { DOTGRID.tool.selectNextLayer() });
-        DOTGRID.controller.add("default","Layers","Prev Layer",() => { DOTGRID.tool.selectPrevLayer() });
-        DOTGRID.controller.add("default","Layers","Merge Layers",() => { DOTGRID.tool.merge() },"M");
+        dotgrid.controller.add("default","Layers","Foreground",() => { dotgrid.tool.selectLayer(0) },"CmdOrCtrl+1");
+        dotgrid.controller.add("default","Layers","Middleground",() => { dotgrid.tool.selectLayer(1) },"CmdOrCtrl+2");
+        dotgrid.controller.add("default","Layers","Background",() => { dotgrid.tool.selectLayer(2) },"CmdOrCtrl+3");
+        dotgrid.controller.add("default","Layers","Next Layer",() => { dotgrid.tool.selectNextLayer() });
+        dotgrid.controller.add("default","Layers","Prev Layer",() => { dotgrid.tool.selectPrevLayer() });
+        dotgrid.controller.add("default","Layers","Merge Layers",() => { dotgrid.tool.merge() },"M");
 
-        DOTGRID.controller.add("default","View","Zoom In",() => { DOTGRID.modZoom(0.25) },"CmdOrCtrl+=")
-        DOTGRID.controller.add("default","View","Zoom Out",() => { DOTGRID.modZoom(-0.25) },"CmdOrCtrl+-")
-        DOTGRID.controller.add("default","View","Zoom Reset",() => { DOTGRID.modZoom(1,true) },"CmdOrCtrl+0")
-        DOTGRID.controller.add("default","View","Color Picker",() => { DOTGRID.picker.start(); },"G");
-        DOTGRID.controller.add("default","View","Toggle Grid",() => { DOTGRID.renderer.toggle(); },"H");
-        DOTGRID.controller.add("default","View","Toggle Interface",() => { DOTGRID.interface.toggle(); },"Tab");
+        dotgrid.controller.add("default","View","Zoom In",() => { dotgrid.modZoom(0.25) },"CmdOrCtrl+=")
+        dotgrid.controller.add("default","View","Zoom Out",() => { dotgrid.modZoom(-0.25) },"CmdOrCtrl+-")
+        dotgrid.controller.add("default","View","Zoom Reset",() => { dotgrid.modZoom(1,true) },"CmdOrCtrl+0")
+        dotgrid.controller.add("default","View","Color Picker",() => { dotgrid.picker.start(); },"G");
+        dotgrid.controller.add("default","View","Toggle Grid",() => { dotgrid.renderer.toggle(); },"H");
+        dotgrid.controller.add("default","View","Toggle Interface",() => { dotgrid.interface.toggle(); },"Tab");
 
-        DOTGRID.controller.add("default","Theme","Open Theme",() => { DOTGRID.theme.open(); },"CmdOrCtrl+Shift+o")
-        DOTGRID.controller.add("default","Theme","Reset Theme",() => { DOTGRID.theme.reset(); },"CmdOrCtrl+Shift+Backspace")
-        DOTGRID.controller.add("default","Theme","Download Themes..",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Themes'); })
+        dotgrid.controller.add("default","Theme","Open Theme",() => { dotgrid.theme.open(); },"CmdOrCtrl+Shift+o")
+        dotgrid.controller.add("default","Theme","Reset Theme",() => { dotgrid.theme.reset(); },"CmdOrCtrl+Shift+Backspace")
+        dotgrid.controller.add("default","Theme","Download Themes..",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Themes'); })
 
-        DOTGRID.controller.add("picker","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
-        DOTGRID.controller.add("picker","*","Fullscreen",() => { app.toggleFullscreen(); },"CmdOrCtrl+Enter");
-        DOTGRID.controller.add("picker","*","Hide",() => { app.toggleVisible(); },"CmdOrCtrl+H");
-        DOTGRID.controller.add("picker","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
-        DOTGRID.controller.add("picker","*","Documentation",() => { DOTGRID.controller.docs(); },"CmdOrCtrl+Esc");
-        DOTGRID.controller.add("picker","*","Reset",() => { DOTGRID.reset(); DOTGRID.theme.reset(); },"CmdOrCtrl+Backspace");
-        DOTGRID.controller.add("picker","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
+        dotgrid.controller.add("picker","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
+        dotgrid.controller.add("picker","*","Fullscreen",() => { app.toggleFullscreen(); },"CmdOrCtrl+Enter");
+        dotgrid.controller.add("picker","*","Hide",() => { app.toggleVisible(); },"CmdOrCtrl+H");
+        dotgrid.controller.add("picker","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
+        dotgrid.controller.add("picker","*","Documentation",() => { dotgrid.controller.docs(); },"CmdOrCtrl+Esc");
+        dotgrid.controller.add("picker","*","Reset",() => { dotgrid.reset(); dotgrid.theme.reset(); },"CmdOrCtrl+Backspace");
+        dotgrid.controller.add("picker","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
 
-        DOTGRID.controller.add_role("picker","Edit","undo");
-        DOTGRID.controller.add_role("picker","Edit","redo");
-        DOTGRID.controller.add_role("picker","Edit","cut");
-        DOTGRID.controller.add_role("picker","Edit","copy");
-        DOTGRID.controller.add_role("picker","Edit","paste");
-        DOTGRID.controller.add_role("picker","Edit","delete");
-        DOTGRID.controller.add_role("picker","Edit","selectall");
+        dotgrid.controller.addRole("picker","Edit","undo");
+        dotgrid.controller.addRole("picker","Edit","redo");
+        dotgrid.controller.addRole("picker","Edit","cut");
+        dotgrid.controller.addRole("picker","Edit","copy");
+        dotgrid.controller.addRole("picker","Edit","paste");
+        dotgrid.controller.addRole("picker","Edit","delete");
+        dotgrid.controller.addRole("picker","Edit","selectall");
 
-        DOTGRID.controller.add("picker","Mode","Stop Picker Mode",() => { DOTGRID.picker.stop(); },"Escape");
+        dotgrid.controller.add("picker","Mode","Stop Picker Mode",() => { dotgrid.picker.stop(); },"Escape");
 
-        DOTGRID.controller.commit();
+        dotgrid.controller.commit();
 
-        DOTGRID.install(document.body);
-        DOTGRID.start();
+        dotgrid.install(document.body);
+
+        window.addEventListener('load', () => { dotgrid.start(); })
       </script>
   </body>
 </html>

@@ -51,10 +51,10 @@ function Interface (dotgrid) {
         <svg 
           id="option_${name}" 
           title="${name.capitalize()}" 
-          onmouseout="DOTGRID.interface.out('${type}','${name}')" 
-          onmouseup="DOTGRID.interface.up('${type}','${name}')" 
-          onmousedown="DOTGRID.interface.down('${type}','${name}')" 
-          onmouseover="DOTGRID.interface.over('${type}','${name}')" 
+          onmouseout="dotgrid.interface.out('${type}','${name}')" 
+          onmouseup="dotgrid.interface.up('${type}','${name}')" 
+          onmousedown="dotgrid.interface.down('${type}','${name}')" 
+          onmouseover="dotgrid.interface.over('${type}','${name}')" 
           viewBox="0 0 300 300" 
           class="icon ${type}">
           <path id="${name}_path" class="icon_path" d="${tool.icon}"/>${name === 'depth' ? `<path class="icon_path inactive" d=""/>` : ''}
@@ -148,7 +148,7 @@ function Interface (dotgrid) {
 
   document.onkeydown = function (e) {
     if (e.key === 'Tab') {
-      DOTGRID.interface.toggle()
+      dotgrid.interface.toggle()
       e.preventDefault()
     }
   }

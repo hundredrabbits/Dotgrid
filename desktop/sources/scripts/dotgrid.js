@@ -18,6 +18,8 @@ function Dotgrid () {
   this.install = function (host) {
     this.theme = new Theme(defaultTheme)
     this.history = new History()
+
+    this.source = new Source(this)
     this.manager = new Manager(this)
     this.renderer = new Renderer(this)
     this.tool = new Tool(this)
@@ -39,25 +41,25 @@ function Dotgrid () {
     this.renderer.start()
     this.interface.start()
 
-    document.addEventListener('mousedown', function (e) { DOTGRID.cursor.down(e) }, false)
-    document.addEventListener('mousemove', function (e) { DOTGRID.cursor.move(e) }, false)
-    document.addEventListener('contextmenu', function (e) { DOTGRID.cursor.alt(e) }, false)
-    document.addEventListener('mouseup', function (e) { DOTGRID.cursor.up(e) }, false)
-    document.addEventListener('copy', function (e) { DOTGRID.copy(e) }, false)
-    document.addEventListener('cut', function (e) { DOTGRID.cut(e) }, false)
-    document.addEventListener('paste', function (e) { DOTGRID.paste(e) }, false)
-    window.addEventListener('drop', DOTGRID.drag)
+    document.addEventListener('mousedown', function (e) { dotgrid.cursor.down(e) }, false)
+    document.addEventListener('mousemove', function (e) { dotgrid.cursor.move(e) }, false)
+    document.addEventListener('contextmenu', function (e) { dotgrid.cursor.alt(e) }, false)
+    document.addEventListener('mouseup', function (e) { dotgrid.cursor.up(e) }, false)
+    document.addEventListener('copy', function (e) { dotgrid.copy(e) }, false)
+    document.addEventListener('cut', function (e) { dotgrid.cut(e) }, false)
+    document.addEventListener('paste', function (e) { dotgrid.paste(e) }, false)
+    window.addEventListener('drop', dotgrid.drag)
 
-    this.new()
+    this.source.new()
 
     setTimeout(() => { document.body.className += ' ready' }, 250)
   }
 
   this.update = function () {
-    DOTGRID.resize()
-    DOTGRID.manager.update()
-    DOTGRID.interface.update()
-    DOTGRID.renderer.update()
+    this.resize()
+    this.manager.update()
+    this.interface.update()
+    this.renderer.update()
   }
 
   this.clear = function () {
@@ -71,50 +73,6 @@ function Dotgrid () {
   this.reset = function () {
     this.tool.clear()
     this.update()
-  }
-
-  // File
-
-  this.new = function () {
-    this.setZoom(1.0)
-    this.history.push(this.tool.layers)
-    this.clear()
-  }
-
-  this.open = function () {
-    if (!dialog) { return }
-
-    const paths = dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: 'Dotgrid Image', extensions: ['dot', 'grid'] }] })
-
-    if (!paths) { console.warn('Nothing to load'); return }
-
-    fs.readFile(paths[0], 'utf-8', (err, data) => {
-      if (err) { alert('An error ocurred reading the file :' + err.message); return }
-      this.tool.replace(JSON.parse(data.toString().trim()))
-      this.renderer.update()
-    })
-  }
-
-  this.save = function () {
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to save'); return }
-    this.manager.toGRID(grab)
-  }
-
-  this.export = function () {
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to export'); return }
-    this.manager.toSVG(grab)
-  }
-
-  this.render = function () {
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to render'); return }
-    this.manager.toPNG({ width: DOTGRID.tool.settings.size.width * 2, height: DOTGRID.tool.settings.size.height * 2 }, grab)
-  }
-
-  function grab (base64, name) {
-    const link = document.createElement('a')
-    link.setAttribute('href', base64)
-    link.setAttribute('download', name)
-    link.dispatchEvent(new MouseEvent(`click`, { bubbles: true, cancelable: true, view: window }))
   }
 
   // Basics
@@ -131,6 +89,8 @@ function Dotgrid () {
 
     this.tool.settings.size.width = size.width
     this.tool.settings.size.height = size.height
+
+    console.log(this.tool.settings.size)
 
     try {
       const win = require('electron').remote.getCurrentWindow()
@@ -196,39 +156,39 @@ function Dotgrid () {
     reader.onload = function (e) {
       const data = e.target && e.target.result ? e.target.result : ''
       if (data && !isJson(data)) { return }
-      DOTGRID.tool.replace(JSON.parse(`${data}`))
-      DOTGRID.renderer.update()
+      dotgrid.tool.replace(JSON.parse(`${data}`))
+      dotgrid.renderer.update()
     }
     reader.readAsText(file)
   }
 
   this.copy = function (e) {
-    DOTGRID.renderer.update()
+    dotgrid.renderer.update()
 
     if (e.target !== this.picker.input) {
-      e.clipboardData.setData('text/source', DOTGRID.tool.export(DOTGRID.tool.layer()))
-      e.clipboardData.setData('text/plain', DOTGRID.tool.path())
-      e.clipboardData.setData('text/html', DOTGRID.manager.el.outerHTML)
-      e.clipboardData.setData('text/svg+xml', DOTGRID.manager.el.outerHTML)
+      e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()))
+      e.clipboardData.setData('text/plain', dotgrid.tool.path())
+      e.clipboardData.setData('text/html', dotgrid.manager.el.outerHTML)
+      e.clipboardData.setData('text/svg+xml', dotgrid.manager.el.outerHTML)
       e.preventDefault()
     }
 
-    DOTGRID.renderer.update()
+    dotgrid.renderer.update()
   }
 
   this.cut = function (e) {
-    DOTGRID.renderer.update()
+    dotgrid.renderer.update()
 
     if (e.target !== this.picker.input) {
-      e.clipboardData.setData('text/source', DOTGRID.tool.export(DOTGRID.tool.layer()))
-      e.clipboardData.setData('text/plain', DOTGRID.tool.export(DOTGRID.tool.layer()))
-      e.clipboardData.setData('text/html', DOTGRID.manager.el.outerHTML)
-      e.clipboardData.setData('text/svg+xml', DOTGRID.manager.el.outerHTML)
-      DOTGRID.tool.layers[DOTGRID.tool.index] = []
+      e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()))
+      e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()))
+      e.clipboardData.setData('text/html', dotgrid.manager.el.outerHTML)
+      e.clipboardData.setData('text/svg+xml', dotgrid.manager.el.outerHTML)
+      dotgrid.tool.layers[dotgrid.tool.index] = []
       e.preventDefault()
     }
 
-    DOTGRID.renderer.update()
+    dotgrid.renderer.update()
   }
 
   this.paste = function (e) {
@@ -236,17 +196,17 @@ function Dotgrid () {
       let data = e.clipboardData.getData('text/source')
       if (isJson(data)) {
         data = JSON.parse(data.trim())
-        DOTGRID.tool.import(data)
+        dotgrid.tool.import(data)
       }
       e.preventDefault()
     }
 
-    DOTGRID.renderer.update()
+    dotgrid.renderer.update()
   }
 }
 
 window.addEventListener('resize', function (e) {
-  DOTGRID.update()
+  dotgrid.update()
 }, false)
 
 window.addEventListener('dragover', function (e) {
@@ -263,5 +223,3 @@ function isJson (text) { try { JSON.parse(text); return true } catch (error) { r
 function isEqual (a, b) { return a && b && a.x === b.x && a.y === b.y }
 function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 function step (v, s) { return Math.round(v / s) * s }
-
-const DOTGRID = new Dotgrid()

@@ -20,12 +20,12 @@ function Cursor () {
     this.pos = this.atEvent(e)
 
     // Translation
-    if (DOTGRID.tool.vertexAt(this.pos)) {
+    if (dotgrid.tool.vertexAt(this.pos)) {
       this.translate(this.pos, this.pos, e.shiftKey, e.ctrlKey || e.metaKey, e.altKey)
     }
 
-    DOTGRID.renderer.update()
-    DOTGRID.interface.update()
+    dotgrid.renderer.update()
+    dotgrid.interface.update()
     e.preventDefault()
   }
 
@@ -40,10 +40,10 @@ function Cursor () {
     }
 
     if (this.last_pos.x !== this.pos.x || this.last_pos.y !== this.pos.y) {
-      DOTGRID.renderer.update()
+      dotgrid.renderer.update()
     }
 
-    DOTGRID.interface.update()
+    dotgrid.interface.update()
     e.preventDefault()
 
     this.last_pos = this.pos
@@ -53,26 +53,26 @@ function Cursor () {
     this.pos = this.atEvent(e)
 
     if (this.translation && !isEqual(this.translation.from, this.translation.to)) {
-      if (this.translation.layer === true) { DOTGRID.tool.translateLayer(this.translation.from, this.translation.to) } else if (this.translation.copy) { DOTGRID.tool.translateCopy(this.translation.from, this.translation.to) } else if (this.translation.multi) { DOTGRID.tool.translateMulti(this.translation.from, this.translation.to) } else { DOTGRID.tool.translate(this.translation.from, this.translation.to) }
+      if (this.translation.layer === true) { dotgrid.tool.translateLayer(this.translation.from, this.translation.to) } else if (this.translation.copy) { dotgrid.tool.translateCopy(this.translation.from, this.translation.to) } else if (this.translation.multi) { dotgrid.tool.translateMulti(this.translation.from, this.translation.to) } else { dotgrid.tool.translate(this.translation.from, this.translation.to) }
     } else if (e.target.id === 'guide') {
-      DOTGRID.tool.addVertex({ x: this.pos.x, y: this.pos.y })
-      DOTGRID.picker.stop()
+      dotgrid.tool.addVertex({ x: this.pos.x, y: this.pos.y })
+      dotgrid.picker.stop()
     }
 
     this.translate()
 
-    DOTGRID.interface.update()
-    DOTGRID.renderer.update()
+    dotgrid.interface.update()
+    dotgrid.renderer.update()
     e.preventDefault()
   }
 
   this.alt = function (e) {
     this.pos = this.atEvent(e)
 
-    DOTGRID.tool.removeSegmentsAt(this.pos)
+    dotgrid.tool.removeSegmentsAt(this.pos)
     e.preventDefault()
 
-    setTimeout(() => { DOTGRID.tool.clear() }, 150)
+    setTimeout(() => { dotgrid.tool.clear() }, 150)
   }
 
   // Position Mods
@@ -83,15 +83,15 @@ function Cursor () {
 
   this.relativePos = function (pos) {
     return {
-      x: pos.x - DOTGRID.renderer.el.offsetLeft,
-      y: pos.y - DOTGRID.renderer.el.offsetTop
+      x: pos.x - dotgrid.renderer.el.offsetLeft,
+      y: pos.y - dotgrid.renderer.el.offsetTop
     }
   }
 
   this.snapPos = function (pos) {
     return {
-      x: clamp(step(pos.x, 15), 15, DOTGRID.tool.settings.size.width),
-      y: clamp(step(pos.y, 15), 15, DOTGRID.tool.settings.size.height)
+      x: clamp(step(pos.x, 15), 15, dotgrid.tool.settings.size.width),
+      y: clamp(step(pos.y, 15), 15, dotgrid.tool.settings.size.height)
     }
   }
 

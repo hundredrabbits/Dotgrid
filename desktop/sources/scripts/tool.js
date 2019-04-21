@@ -78,7 +78,7 @@ function Tool (dotgrid) {
       dot.settings.size = { width: dot.settings.width, height: dot.settings.height }
     }
     if (this.settings && (this.settings.size.width !== dot.settings.size.width || this.settings.size.height !== dot.settings.size.height)) {
-      dotgrid.setSize({ width: dot.settings.size.width / 15, height: dot.settings.size.height / 15 })
+      dotgrid.setSize({ width: dot.settings.size.width, height: dot.settings.size.height })
     }
 
     this.layers = dot.layers
