@@ -10,7 +10,7 @@ function Renderer (dotgrid) {
   this.context = this.el.getContext('2d')
   this.showExtras = true
 
-  this.scale = 2 //window.devicePixelRatio
+  this.scale = 2 // window.devicePixelRatio
 
   this.start = function () {
     this.update()
@@ -101,10 +101,10 @@ function Renderer (dotgrid) {
 
     for (let x = markers.w - 1; x >= 0; x--) {
       for (let y = markers.h - 1; y >= 0; y--) {
-        let is_step = x % 4 == 0 && y % 4 == 0
+        let is_step = x % 4 === 0 && y % 4 === 0
         // Color
         let color = is_step ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low
-        if ((y == 0 || y == markers.h) && cursor.x == x + 1) { color = dotgrid.theme.active.b_high } else if ((x == 0 || x == markers.w - 1) && cursor.y == y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x == x + 1 && cursor.y == y + 1) { color = dotgrid.theme.active.b_high }
+        if ((y === 0 || y === markers.h) && cursor.x === x + 1) { color = dotgrid.theme.active.b_high } else if ((x === 0 || x === markers.w - 1) && cursor.y === y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x === x + 1 && cursor.y === y + 1) { color = dotgrid.theme.active.b_high }
 
         this.drawMarker({
           x: parseInt(x * 15) + 15,
@@ -129,7 +129,7 @@ function Renderer (dotgrid) {
     let operation = dotgrid.cursor.operation && dotgrid.cursor.operation.cast ? dotgrid.cursor.operation.cast : null
 
     if (!dotgrid.tool.canCast(operation)) { return }
-    if (operation == 'close') { return }
+    if (operation === 'close') { return }
 
     let path = new Generator([{ vertices: dotgrid.tool.vertices, type: operation }]).toString({ x: 0, y: 0 }, 2)
     let style = {
@@ -205,7 +205,7 @@ function Renderer (dotgrid) {
     this.context.lineCap = style.strokeLinecap
     this.context.lineJoin = style.strokeLinejoin
 
-    if (style.fill && style.fill != 'none') {
+    if (style.fill && style.fill !== 'none') {
       this.context.fillStyle = style.color
       this.context.fill(p)
     }
@@ -262,6 +262,6 @@ function Renderer (dotgrid) {
     this.context.drawImage(render, 0, 0, this.el.width, this.el.height)
   }
 
-  function isEqual (a, b) { return a && b && Math.abs(a.x) == Math.abs(b.x) && Math.abs(a.y) == Math.abs(b.y) }
+  function isEqual (a, b) { return a && b && Math.abs(a.x) === Math.abs(b.x) && Math.abs(a.y) === Math.abs(b.y) }
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 }

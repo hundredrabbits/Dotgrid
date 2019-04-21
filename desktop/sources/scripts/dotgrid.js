@@ -260,7 +260,7 @@ String.prototype.capitalize = function () {
 }
 
 function isJson (text) { try { JSON.parse(text); return true } catch (error) { return false } }
-function isEqual (a, b) { return a && b && a.x == b.x && a.y == b.y }
+function isEqual (a, b) { return a && b && a.x === b.x && a.y === b.y }
 function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 function step (v, s) { return Math.round(v / s) * s }
 

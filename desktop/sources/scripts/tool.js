@@ -72,13 +72,13 @@ function Tool (dotgrid) {
   }
 
   this.replace = function (dot) {
-    if (!dot.layers || dot.layers.length != 3) { console.warn('Incompatible version'); return }
+    if (!dot.layers || dot.layers.length !== 3) { console.warn('Incompatible version'); return }
 
     if (dot.settings.width && dot.settings.height) {
       dot.settings.size = { width: dot.settings.width, height: dot.settings.height }
     }
-    if (this.settings && (this.settings.size.width != dot.settings.size.width || this.settings.size.height != dot.settings.size.height)) {
-      dotgrid.setSize({ width: dot.settings.size.width, height: dot.settings.size.height })
+    if (this.settings && (this.settings.size.width !== dot.settings.size.width || this.settings.size.height !== dot.settings.size.height)) {
+      dotgrid.setSize({ width: dot.settings.size.width / 15, height: dot.settings.size.height / 15 })
     }
 
     this.layers = dot.layers
@@ -107,7 +107,7 @@ function Tool (dotgrid) {
       let segment = this.layer()[segmentId]
       for (const vertexId in segment.vertices) {
         let vertex = segment.vertices[vertexId]
-        if (Math.abs(pos.x) == Math.abs(vertex.x) && Math.abs(pos.y) == Math.abs(vertex.y)) {
+        if (Math.abs(pos.x) === Math.abs(vertex.x) && Math.abs(pos.y) === Math.abs(vertex.y)) {
           segment.vertices.splice(vertexId, 1)
         }
       }
@@ -126,7 +126,7 @@ function Tool (dotgrid) {
       let segment = source[segmentId]
       for (const vertexId in segment.vertices) {
         let vertex = segment.vertices[vertexId]
-        if (vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)) {
+        if (vertex.x === Math.abs(pos.x) && vertex.y === Math.abs(pos.y)) {
           return segment
         }
       }
@@ -145,7 +145,7 @@ function Tool (dotgrid) {
       let segment = this.layer()[segmentId]
       for (const vertexId in segment.vertices) {
         let vertex = segment.vertices[vertexId]
-        if (vertex.x == Math.abs(pos.x) && vertex.y == Math.abs(pos.y)) {
+        if (vertex.x === Math.abs(pos.x) && vertex.y === Math.abs(pos.y)) {
           return vertex
         }
       }
@@ -180,19 +180,19 @@ function Tool (dotgrid) {
   this.i = { linecap: 0, linejoin: 0, thickness: 5 }
 
   this.toggle = function (type, mod = 1) {
-    if (type == 'linecap') {
+    if (type === 'linecap') {
       let a = ['butt', 'square', 'round']
       this.i.linecap += mod
       this.style().strokeLinecap = a[this.i.linecap % a.length]
-    } else if (type == 'linejoin') {
+    } else if (type === 'linejoin') {
       let a = ['miter', 'round', 'bevel']
       this.i.linejoin += mod
       this.style().strokeLinejoin = a[this.i.linejoin % a.length]
-    } else if (type == 'fill') {
-      this.style().fill = this.style().fill == 'none' ? this.style().color : 'none'
-    } else if (type == 'thickness') {
+    } else if (type === 'fill') {
+      this.style().fill = this.style().fill === 'none' ? this.style().color : 'none'
+    } else if (type === 'thickness') {
       this.style().thickness = clamp(this.style().thickness + mod, 1, 100)
-    } else if (type == 'mirror') {
+    } else if (type === 'mirror') {
       this.style().mirror_style = this.style().mirror_style > 2 ? 0 : this.style().mirror_style + 1
     } else {
       console.warn('Unknown', type)
@@ -212,23 +212,23 @@ function Tool (dotgrid) {
   }
 
   this.source = function (type) {
-    if (type == 'grid') { dotgrid.renderer.toggle() }
-    if (type == 'screen') { app.toggleFullscreen() }
+    if (type === 'grid') { dotgrid.renderer.toggle() }
+    if (type === 'screen') { app.toggleFullscreen() }
 
-    if (type == 'open') { dotgrid.open() }
-    if (type == 'save') { dotgrid.save() }
-    if (type == 'render') { dotgrid.render() }
-    if (type == 'export') { dotgrid.export() }
+    if (type === 'open') { dotgrid.open() }
+    if (type === 'save') { dotgrid.save() }
+    if (type === 'render') { dotgrid.render() }
+    if (type === 'export') { dotgrid.export() }
   }
 
   this.canAppend = function (content, index = this.index) {
     for (const id in this.layer(index)) {
       let stroke = this.layer(index)[id]
-      if (stroke.type != content.type) { continue }
+      if (stroke.type !== content.type) { continue }
       if (!stroke.vertices) { continue }
       if (!stroke.vertices[stroke.vertices.length - 1]) { continue }
-      if (stroke.vertices[stroke.vertices.length - 1].x != content.vertices[0].x) { continue }
-      if (stroke.vertices[stroke.vertices.length - 1].y != content.vertices[0].y) { continue }
+      if (stroke.vertices[stroke.vertices.length - 1].x !== content.vertices[0].x) { continue }
+      if (stroke.vertices[stroke.vertices.length - 1].y !== content.vertices[0].y) { continue }
       return id
     }
     return false
@@ -237,14 +237,14 @@ function Tool (dotgrid) {
   this.canCast = function (type) {
     if (!type) { return false }
     // Cannot cast close twice
-    if (type == 'close') {
+    if (type === 'close') {
       let prev = this.layer()[this.layer().length - 1]
-      if (!prev || prev.type == 'close') {
+      if (!prev || prev.type === 'close') {
         return false
       }
     }
-    if (type == 'bezier') {
-      if (this.vertices.length != 3 && this.vertices.length != 5 && this.vertices.length != 7 && this.vertices.length != 9) {
+    if (type === 'bezier') {
+      if (this.vertices.length !== 3 && this.vertices.length !== 5 && this.vertices.length !== 7 && this.vertices.length !== 9) {
         return false
       }
     }
@@ -268,7 +268,7 @@ function Tool (dotgrid) {
       let segment = this.layer()[segmentId]
       for (const vertexId in segment.vertices) {
         let vertex = segment.vertices[vertexId]
-        if (vertex.x == Math.abs(a.x) && vertex.y == Math.abs(a.y)) {
+        if (vertex.x === Math.abs(a.x) && vertex.y === Math.abs(a.y)) {
           segment.vertices[vertexId] = { x: Math.abs(b.x), y: Math.abs(b.y) }
         }
       }

@@ -6,7 +6,7 @@ function Cursor () {
   this.operation = null
 
   this.translate = function (from = null, to = null, multi = false, copy = false, layer = false) {
-    if ((from || to) && this.translation == null) { this.translation = { multi: multi, copy: copy, layer: layer } }
+    if ((from || to) && this.translation === null) { this.translation = { multi: multi, copy: copy, layer: layer } }
 
     if (from) { this.translation.from = from }
     if (to) { this.translation.to = to }
@@ -39,7 +39,7 @@ function Cursor () {
       this.translate(null, this.pos)
     }
 
-    if (this.last_pos.x != this.pos.x || this.last_pos.y != this.pos.y) {
+    if (this.last_pos.x !== this.pos.x || this.last_pos.y !== this.pos.y) {
       DOTGRID.renderer.update()
     }
 
@@ -54,7 +54,7 @@ function Cursor () {
 
     if (this.translation && !isEqual(this.translation.from, this.translation.to)) {
       if (this.translation.layer === true) { DOTGRID.tool.translateLayer(this.translation.from, this.translation.to) } else if (this.translation.copy) { DOTGRID.tool.translateCopy(this.translation.from, this.translation.to) } else if (this.translation.multi) { DOTGRID.tool.translateMulti(this.translation.from, this.translation.to) } else { DOTGRID.tool.translate(this.translation.from, this.translation.to) }
-    } else if (e.target.id == 'guide') {
+    } else if (e.target.id === 'guide') {
       DOTGRID.tool.addVertex({ x: this.pos.x, y: this.pos.y })
       DOTGRID.picker.stop()
     }
@@ -95,5 +95,5 @@ function Cursor () {
     }
   }
 
-  function isEqual (a, b) { return a.x == b.x && a.y == b.y }
+  function isEqual (a, b) { return a.x === b.x && a.y === b.y }
 }

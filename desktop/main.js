@@ -17,6 +17,7 @@ app.on('ready', () => {
     resizable: true,
     icon: __dirname + '/icon.ico',
     resizable: true,
+    webPreferences: { zoomFactor: 1.0 },
     frame: process.platform !== 'darwin',
     skipTaskbar: process.platform === 'darwin',
     autoHideMenuBar: process.platform === 'darwin'

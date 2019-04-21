@@ -55,7 +55,7 @@ function Picker (dotgrid) {
     const hex = `#${this.input.value}`
 
     DOTGRID.tool.style().color = hex
-    DOTGRID.tool.style().fill = DOTGRID.tool.style().fill != 'none' ? hex : 'none'
+    DOTGRID.tool.style().fill = DOTGRID.tool.style().fill !== 'none' ? hex : 'none'
 
     this.stop()
   }
@@ -66,13 +66,13 @@ function Picker (dotgrid) {
       return
     }
 
-    if (e.key == 'Enter') {
+    if (e.key === 'Enter') {
       this.validate()
       e.preventDefault()
       return
     }
 
-    if (e.key == 'Escape') {
+    if (e.key === 'Escape') {
       this.stop()
       e.preventDefault()
       return
@@ -82,7 +82,7 @@ function Picker (dotgrid) {
   }
 
   function is_color (val) {
-    if (val.length != 3 && val.length != 6) {
+    if (val.length !== 3 && val.length !== 6) {
       return false
     }
 

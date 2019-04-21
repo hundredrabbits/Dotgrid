@@ -10,8 +10,8 @@ function Generator (layer, style) {
     for (const k1 in l) {
       const seg = l[k1]
       for (const k2 in seg.vertices) {
-        if (mirror == 1 || mirror == 3) { seg.vertices[k2].x = (DOTGRID.tool.settings.size.width) - seg.vertices[k2].x + 15 }
-        if (mirror == 2 || mirror == 3) { seg.vertices[k2].y = (DOTGRID.tool.settings.size.height) - seg.vertices[k2].y + 15 }
+        if (mirror === 1 || mirror === 3) { seg.vertices[k2].x = (DOTGRID.tool.settings.size.width) - seg.vertices[k2].x + 15 }
+        if (mirror === 2 || mirror === 3) { seg.vertices[k2].y = (DOTGRID.tool.settings.size.height) - seg.vertices[k2].y + 15 }
 
         // Offset
         seg.vertices[k2].x += offset.x
@@ -38,35 +38,35 @@ function Generator (layer, style) {
     for (const id in vertices) {
       if (skip > 0) { skip -= 1; continue }
 
-      let vertex = vertices[id]
+      let vertex = vertices[parseInt(id)]
       let next = vertices[parseInt(id) + 1]
       let afterNext = vertices[parseInt(id) + 2]
 
-      if (id == 0 && !prev || id == 0 && prev && (prev.x != vertex.x || prev.y != vertex.y)) {
+      if (parseInt(id) === 0 && !prev || parseInt(id) === 0 && prev && (prev.x !== vertex.x || prev.y !== vertex.y)) {
         html += `M${vertex.x},${vertex.y} `
       }
 
-      if (type == 'line') {
+      if (type === 'line') {
         html += this._line(vertex)
-      } else if (type == 'arc_c') {
+      } else if (type === 'arc_c') {
         let clock = mirror > 0 && mirror < 3 ? '0,0' : '0,1'
         html += this._arc(vertex, next, clock)
-      } else if (type == 'arc_r') {
+      } else if (type === 'arc_r') {
         let clock = mirror > 0 && mirror < 3 ? '0,1' : '0,0'
         html += this._arc(vertex, next, clock)
-      } else if (type == 'arc_c_full') {
+      } else if (type === 'arc_c_full') {
         let clock = mirror > 0 ? '1,0' : '1,1'
         html += this._arc(vertex, next, clock)
-      } else if (type == 'arc_r_full') {
+      } else if (type === 'arc_r_full') {
         let clock = mirror > 0 ? '1,1' : '1,0'
         html += this._arc(vertex, next, clock)
-      } else if (type == 'bezier') {
+      } else if (type === 'bezier') {
         html += this._bezier(next, afterNext)
         skip = 1
       }
     }
 
-    if (segment.type == 'close') {
+    if (segment.type === 'close') {
       html += 'Z '
     }
 
@@ -95,7 +95,7 @@ function Generator (layer, style) {
     let s = ''
     let prev = null
     for (const id in layer) {
-      const seg = layer[id]
+      const seg = layer[parseInt(id)]
       s += `${this.render(prev, seg, mirror)}`
       prev = seg.vertices ? seg.vertices[seg.vertices.length - 1] : null
     }
@@ -105,7 +105,7 @@ function Generator (layer, style) {
   this.toString = function (offset = { x: 0, y: 0 }, scale = 1, mirror = this.style && this.style.mirror_style ? this.style.mirror_style : 0) {
     let s = this.convert(operate(this.layer, offset, scale))
 
-    if (mirror == 1 || mirror == 2 || mirror == 3) {
+    if (mirror === 1 || mirror === 2 || mirror === 3) {
       s += this.convert(operate(this.layer, offset, scale, mirror), mirror)
     }
 

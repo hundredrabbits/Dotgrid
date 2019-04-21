@@ -43,6 +43,7 @@ function Manager (dotgrid) {
       layer.style.strokeLinejoin = style.strokeLinejoin
       layer.style.stroke = style.color
       layer.style.fill = style.fill
+
       layer.setAttribute('d', path)
     }
   }
