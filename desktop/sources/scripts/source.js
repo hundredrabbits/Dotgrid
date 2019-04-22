@@ -1,10 +1,13 @@
 'use strict'
 
 function Source (dotgrid) {
+  this.path = null
+
   this.new = function () {
     dotgrid.setZoom(1.0)
     dotgrid.history.push(dotgrid.tool.layers)
     dotgrid.clear()
+    this.path = null
   }
 
   this.open = function () {
@@ -23,13 +26,29 @@ function Source (dotgrid) {
   this.load = function (path, data) {
     if (!path || isJson(data) === false) { return }
     const parsed = JSON.parse(`${data}`)
-    console.log(path)
     dotgrid.tool.replace(parsed)
+    this.path = path
   }
 
   this.save = function () {
     if (dotgrid.tool.length() < 1) { console.warn('Nothing to save'); return }
-    dotgrid.manager.toGRID(grab)
+
+    if (this.canWrite() === true) {
+      this.write(this.path, dotgrid.tool.export())
+    } else {
+      dotgrid.manager.toGRID(grab)
+    }
+  }
+
+  this.canWrite = function () {
+    return fs && fs.existsSync(this.path)
+  }
+
+  this.write = function (path, data) {
+    console.log('Source', 'Writing ' + path)
+    fs.writeFile(path, data, (err) => {
+      if (err) { alert('An error ocurred updating the file' + err.message); console.warn(err) }
+    })
   }
 
   this.export = function () {
