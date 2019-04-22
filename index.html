@@ -30,6 +30,7 @@
     <script type="text/javascript" src="desktop/sources/scripts/tool.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/generator.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/picker.js"></script>
+    <script type="text/javascript" src="desktop/sources/scripts//source.js"></script>
     <!-- Web Specific -->
     <script type="text/javascript" src="web/events.js"></script>
     <!-- Styles -->
@@ -44,8 +45,11 @@
       'use strict';
       function Listener(){}
       const dialog = null;
-      DOTGRID.install(document.body);
-      DOTGRID.start();
+
+      const dotgrid = new Dotgrid()
+      dotgrid.install(document.body);
+
+      window.addEventListener('load', () => { dotgrid.start(); })
     </script>
   </body>
 </html>

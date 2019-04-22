@@ -19,23 +19,23 @@ function Manager (dotgrid) {
   }
 
   this.update = function () {
-    this.el.setAttribute('width', (DOTGRID.tool.settings.size.width + 15) + 'px')
-    this.el.setAttribute('height', (DOTGRID.tool.settings.size.height + 15) + 'px')
-    this.el.style.width = (DOTGRID.tool.settings.size.width + 15)
-    this.el.style.height = DOTGRID.tool.settings.size.height + 15
+    this.el.setAttribute('width', (dotgrid.tool.settings.size.width) + 'px')
+    this.el.setAttribute('height', (dotgrid.tool.settings.size.height) + 'px')
+    this.el.style.width = (dotgrid.tool.settings.size.width)
+    this.el.style.height = dotgrid.tool.settings.size.height
 
-    const styles = DOTGRID.tool.styles
-    const paths = DOTGRID.tool.paths()
+    const styles = dotgrid.tool.styles
+    const paths = dotgrid.tool.paths()
 
     for (const id in this.layers) {
       let style = styles[id]
       let path = paths[id]
       let layer = this.layers[id]
       // Easter Egg
-      if (DOTGRID.tool.settings.crest === true) {
+      if (dotgrid.tool.settings.crest === true) {
         style = styles[0]
         path = paths[0]
-        layer.setAttribute('transform', `rotate(${parseInt(id) * 120} ${(DOTGRID.tool.settings.size.width / 2) + 7.5} ${(DOTGRID.tool.settings.size.height / 2) + 7.5})`)
+        layer.setAttribute('transform', `rotate(${parseInt(id) * 120} ${(dotgrid.tool.settings.size.width / 2) + 7.5} ${(dotgrid.tool.settings.size.height / 2) + 7.5})`)
       }
 
       layer.style.strokeWidth = style.thickness
@@ -57,7 +57,7 @@ function Manager (dotgrid) {
 
   // Exporters
 
-  this.toPNG = function (size = DOTGRID.tool.settings.size, callback) {
+  this.toPNG = function (size = dotgrid.tool.settings.size, callback) {
     this.update()
 
     let image64 = this.svg64()
@@ -82,7 +82,7 @@ function Manager (dotgrid) {
   this.toGRID = function (callback) {
     this.update()
 
-    const text = DOTGRID.tool.export()
+    const text = dotgrid.tool.export()
     const file = new Blob([text], { type: 'text/plain' })
     callback(URL.createObjectURL(file), 'export.grid')
   }

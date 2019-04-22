@@ -17,6 +17,7 @@ function Renderer (dotgrid) {
   }
 
   this.update = function (force = false) {
+    this.resize()
     dotgrid.manager.update()
     let render = new Image()
     render.onload = () => {
@@ -48,14 +49,18 @@ function Renderer (dotgrid) {
     dotgrid.interface.update(true)
   }
 
-  this.resize = function (size) {
-    const pad = 15
-    this.el.width = (size.width + pad) * this.scale
-    this.el.height = (size.height + pad) * this.scale
-    this.el.style.width = (size.width + pad) + 'px'
-    this.el.style.height = (size.height + pad) + 'px'
-
-    this.update()
+  this.resize = function () {
+    const _target = dotgrid.getPaddedSize()
+    const _current = { width: this.el.width / this.scale, height: this.el.height / this.scale }
+    const offset = sizeOffset(_target, _current)
+    if (offset.width === 0 && offset.height === 0) {
+      return
+    }
+    console.log('Renderer', `Require resize: ${printSize(_target)}, from ${printSize(_current)}`)
+    this.el.width = (_target.width) * this.scale
+    this.el.height = (_target.height) * this.scale
+    this.el.style.width = (_target.width) + 'px'
+    this.el.style.height = (_target.height) + 'px'
   }
 
   // Collections
@@ -97,19 +102,17 @@ function Renderer (dotgrid) {
     if (!this.showExtras) { return }
 
     const cursor = { x: parseInt(dotgrid.cursor.pos.x / 15), y: parseInt(dotgrid.cursor.pos.y / 15) }
-    const markers = dotgrid.getSize().markers
+    const markers = { w: parseInt(dotgrid.tool.settings.size.width / 15), h: parseInt(dotgrid.tool.settings.size.height / 15) }
 
     for (let x = markers.w - 1; x >= 0; x--) {
       for (let y = markers.h - 1; y >= 0; y--) {
-        let is_step = x % 4 === 0 && y % 4 === 0
-        // Color
-        let color = is_step ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low
-        if ((y === 0 || y === markers.h) && cursor.x === x + 1) { color = dotgrid.theme.active.b_high } else if ((x === 0 || x === markers.w - 1) && cursor.y === y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x === x + 1 && cursor.y === y + 1) { color = dotgrid.theme.active.b_high }
-
+        let isStep = x % 4 === 0 && y % 4 === 0
+        // Don't draw margins
+        if (x === 0 || y === 0) { continue }
         this.drawMarker({
-          x: parseInt(x * 15) + 15,
-          y: parseInt(y * 15) + 15
-        }, is_step ? 2.5 : 1.5, color)
+          x: parseInt(x * 15),
+          y: parseInt(y * 15)
+        }, isStep ? 2.5 : 1.5, isStep ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low)
       }
     }
   }
@@ -262,6 +265,8 @@ function Renderer (dotgrid) {
     this.context.drawImage(render, 0, 0, this.el.width, this.el.height)
   }
 
+  function printSize (size) { return `${size.width}x${size.height}` }
+  function sizeOffset (a, b) { return { width: a.width - b.width, height: a.height - b.height } }
   function isEqual (a, b) { return a && b && Math.abs(a.x) === Math.abs(b.x) && Math.abs(a.y) === Math.abs(b.y) }
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 }

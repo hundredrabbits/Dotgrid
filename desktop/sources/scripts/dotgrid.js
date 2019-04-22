@@ -16,8 +16,11 @@ function Dotgrid () {
   // ISU
 
   this.install = function (host) {
+    console.info('Dotgrid', 'Installing..')
     this.theme = new Theme(defaultTheme)
     this.history = new History()
+
+    this.source = new Source(this)
     this.manager = new Manager(this)
     this.renderer = new Renderer(this)
     this.tool = new Tool(this)
@@ -30,34 +33,38 @@ function Dotgrid () {
 
     this.manager.install()
     this.interface.install(host)
-    this.theme.install(host, this.update)
+    this.theme.install(host, () => { this.update() })
   }
 
   this.start = function () {
+    console.info('Dotgrid', 'Starting..')
     this.theme.start()
     this.tool.start()
     this.renderer.start()
     this.interface.start()
 
-    document.addEventListener('mousedown', function (e) { DOTGRID.cursor.down(e) }, false)
-    document.addEventListener('mousemove', function (e) { DOTGRID.cursor.move(e) }, false)
-    document.addEventListener('contextmenu', function (e) { DOTGRID.cursor.alt(e) }, false)
-    document.addEventListener('mouseup', function (e) { DOTGRID.cursor.up(e) }, false)
-    document.addEventListener('copy', function (e) { DOTGRID.copy(e) }, false)
-    document.addEventListener('cut', function (e) { DOTGRID.cut(e) }, false)
-    document.addEventListener('paste', function (e) { DOTGRID.paste(e) }, false)
-    window.addEventListener('drop', DOTGRID.drag)
+    // Add events
+    document.addEventListener('mousedown', function (e) { dotgrid.cursor.down(e) }, false)
+    document.addEventListener('mousemove', function (e) { dotgrid.cursor.move(e) }, false)
+    document.addEventListener('contextmenu', function (e) { dotgrid.cursor.alt(e) }, false)
+    document.addEventListener('mouseup', function (e) { dotgrid.cursor.up(e) }, false)
+    document.addEventListener('copy', function (e) { dotgrid.copy(e) }, false)
+    document.addEventListener('cut', function (e) { dotgrid.cut(e) }, false)
+    document.addEventListener('paste', function (e) { dotgrid.paste(e) }, false)
+    window.addEventListener('resize', function (e) { dotgrid.onResize() }, false)
+    window.addEventListener('dragover', function (e) { e.stopPropagation(); e.preventDefault(); e.dataTransfer.dropEffect = 'copy' })
+    window.addEventListener('drop', dotgrid.drag)
 
-    this.new()
+    this.source.new()
+    this.onResize()
 
     setTimeout(() => { document.body.className += ' ready' }, 250)
   }
 
   this.update = function () {
-    DOTGRID.resize()
-    DOTGRID.manager.update()
-    DOTGRID.interface.update()
-    DOTGRID.renderer.update()
+    this.manager.update()
+    this.interface.update()
+    this.renderer.update()
   }
 
   this.clear = function () {
@@ -73,93 +80,7 @@ function Dotgrid () {
     this.update()
   }
 
-  // File
-
-  this.new = function () {
-    this.setZoom(1.0)
-    this.history.push(this.tool.layers)
-    this.clear()
-  }
-
-  this.open = function () {
-    if (!dialog) { return }
-
-    const paths = dialog.showOpenDialog({ properties: ['openFile'], filters: [{ name: 'Dotgrid Image', extensions: ['dot', 'grid'] }] })
-
-    if (!paths) { console.warn('Nothing to load'); return }
-
-    fs.readFile(paths[0], 'utf-8', (err, data) => {
-      if (err) { alert('An error ocurred reading the file :' + err.message); return }
-      this.tool.replace(JSON.parse(data.toString().trim()))
-      this.renderer.update()
-    })
-  }
-
-  this.save = function () {
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to save'); return }
-    this.manager.toGRID(grab)
-  }
-
-  this.export = function () {
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to export'); return }
-    this.manager.toSVG(grab)
-  }
-
-  this.render = function () {
-    if (DOTGRID.tool.length() < 1) { console.warn('Nothing to render'); return }
-    this.manager.toPNG({ width: DOTGRID.tool.settings.size.width * 2, height: DOTGRID.tool.settings.size.height * 2 }, grab)
-  }
-
-  function grab (base64, name) {
-    const link = document.createElement('a')
-    link.setAttribute('href', base64)
-    link.setAttribute('download', name)
-    link.dispatchEvent(new MouseEvent(`click`, { bubbles: true, cancelable: true, view: window }))
-  }
-
-  // Basics
-
-  this.getSize = function () {
-    return { markers: {
-      w: parseInt(this.tool.settings.size.width / 15),
-      h: parseInt(this.tool.settings.size.height / 15) }
-    }
-  }
-
-  this.setSize = function (size = { width: 600, height: 300 }, ui = true, scale = window.devicePixelRatio) {
-    size = { width: clamp(step(size.width, 15), 105, 1080), height: clamp(step(size.height, 15), 120, 1080) }
-
-    this.tool.settings.size.width = size.width
-    this.tool.settings.size.height = size.height
-
-    try {
-      const win = require('electron').remote.getCurrentWindow()
-      win.setSize((size.width + 100) * scale, (size.height + 100) * scale, false)
-    } catch (err) {
-      console.log('No window')
-    }
-
-    this.renderer.resize(size)
-    this.interface.update()
-    this.renderer.update()
-  }
-
-  this.resize = function () {
-    const size = { width: step(window.innerWidth - 90, 15), height: step(window.innerHeight - 120, 15) }
-
-    if (size.width === this.tool.settings.size.width && size.height === this.tool.settings.size.height) {
-      return
-    }
-
-    console.log(`Resized to: ${size.width}x${size.height}`)
-
-    this.tool.settings.size.width = size.width
-    this.tool.settings.size.height = size.height
-
-    this.renderer.resize(size)
-
-    document.title = `Dotgrid — ${size.width}x${size.height}`
-  }
+  // Methods
 
   this.modZoom = function (mod = 0, set = false) {
     try {
@@ -180,6 +101,69 @@ function Dotgrid () {
     }
   }
 
+  // Resize Tools
+
+  this.fitSize = function () {
+    if (this.requireResize() === false) { return }
+    console.log('Dotgrid', `Will resize to: ${printSize(this.getRequiredSize())}`)
+    this.setWindowSize(this.getRequiredSize())
+    this.update()
+  }
+
+  this.setWindowSize = function (size) {
+    console.log('Dotgrid', `Resizing to ${printSize(size)}`)
+    const win = require('electron').remote.getCurrentWindow()
+    win.setSize(size.width, size.height, false)
+    document.title = `Dotgrid — ${size.width}x${size.height}`
+    this.update()
+  }
+
+  this.getPadding = function () {
+    return { x: 60, y: 90 }
+  }
+
+  this.getWindowSize = function () {
+    return { width: window.innerWidth, height: window.innerHeight }
+  }
+
+  this.getProjectSize = function () {
+    return this.tool.settings.size
+  }
+
+  this.getPaddedSize = function () {
+    const rect = this.getWindowSize()
+    const pad = this.getPadding()
+    return { width: step(rect.width - pad.x, 15), height: step(rect.height - pad.y, 15) }
+  }
+
+  this.getRequiredSize = function () {
+    const rect = this.getProjectSize()
+    const pad = this.getPadding()
+    return { width: step(rect.width, 15) + pad.x, height: step(rect.height, 15) + pad.y }
+  }
+
+  this.requireResize = function () {
+    const _window = this.getWindowSize()
+    const _required = this.getRequiredSize()
+    const offset = sizeOffset(_window, _required)
+    if (offset.width !== 0 || offset.height !== 0) {
+      console.log(`Dotgrid`, `Require ${printSize(_required)}, but window is ${printSize(_window)}(${printSize(offset)})`)
+      return true
+    }
+    return false
+  }
+
+  this.onResize = function () {
+    const _project = this.getProjectSize()
+    const _padded = this.getPaddedSize()
+    const offset = sizeOffset(_padded, _project)
+    if (offset.width !== 0 || offset.height !== 0) {
+      console.log(`Dotgrid`, `Resize project to ${printSize(_padded)}`)
+      this.tool.settings.size = _padded
+    }
+    this.update()
+  }
+
   // Events
 
   this.drag = function (e) {
@@ -195,40 +179,39 @@ function Dotgrid () {
 
     reader.onload = function (e) {
       const data = e.target && e.target.result ? e.target.result : ''
-      if (data && !isJson(data)) { return }
-      DOTGRID.tool.replace(JSON.parse(`${data}`))
-      DOTGRID.renderer.update()
+      dotgrid.source.load(filename, data)
+      dotgrid.fitSize()
     }
     reader.readAsText(file)
   }
 
   this.copy = function (e) {
-    DOTGRID.renderer.update()
+    dotgrid.renderer.update()
 
     if (e.target !== this.picker.input) {
-      e.clipboardData.setData('text/source', DOTGRID.tool.export(DOTGRID.tool.layer()))
-      e.clipboardData.setData('text/plain', DOTGRID.tool.path())
-      e.clipboardData.setData('text/html', DOTGRID.manager.el.outerHTML)
-      e.clipboardData.setData('text/svg+xml', DOTGRID.manager.el.outerHTML)
+      e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()))
+      e.clipboardData.setData('text/plain', dotgrid.tool.path())
+      e.clipboardData.setData('text/html', dotgrid.manager.el.outerHTML)
+      e.clipboardData.setData('text/svg+xml', dotgrid.manager.el.outerHTML)
       e.preventDefault()
     }
 
-    DOTGRID.renderer.update()
+    dotgrid.renderer.update()
   }
 
   this.cut = function (e) {
-    DOTGRID.renderer.update()
+    dotgrid.renderer.update()
 
     if (e.target !== this.picker.input) {
-      e.clipboardData.setData('text/source', DOTGRID.tool.export(DOTGRID.tool.layer()))
-      e.clipboardData.setData('text/plain', DOTGRID.tool.export(DOTGRID.tool.layer()))
-      e.clipboardData.setData('text/html', DOTGRID.manager.el.outerHTML)
-      e.clipboardData.setData('text/svg+xml', DOTGRID.manager.el.outerHTML)
-      DOTGRID.tool.layers[DOTGRID.tool.index] = []
+      e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()))
+      e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()))
+      e.clipboardData.setData('text/html', dotgrid.manager.el.outerHTML)
+      e.clipboardData.setData('text/svg+xml', dotgrid.manager.el.outerHTML)
+      dotgrid.tool.layers[dotgrid.tool.index] = []
       e.preventDefault()
     }
 
-    DOTGRID.renderer.update()
+    dotgrid.renderer.update()
   }
 
   this.paste = function (e) {
@@ -236,32 +219,22 @@ function Dotgrid () {
       let data = e.clipboardData.getData('text/source')
       if (isJson(data)) {
         data = JSON.parse(data.trim())
-        DOTGRID.tool.import(data)
+        dotgrid.tool.import(data)
       }
       e.preventDefault()
     }
 
-    DOTGRID.renderer.update()
+    dotgrid.renderer.update()
   }
 }
-
-window.addEventListener('resize', function (e) {
-  DOTGRID.update()
-}, false)
-
-window.addEventListener('dragover', function (e) {
-  e.stopPropagation()
-  e.preventDefault()
-  e.dataTransfer.dropEffect = 'copy'
-})
 
 String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
 }
 
+function sizeOffset (a, b) { return { width: a.width - b.width, height: a.height - b.height } }
+function printSize (size) { return `${size.width}x${size.height}` }
 function isJson (text) { try { JSON.parse(text); return true } catch (error) { return false } }
 function isEqual (a, b) { return a && b && a.x === b.x && a.y === b.y }
 function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 function step (v, s) { return Math.round(v / s) * s }
-
-const DOTGRID = new Dotgrid()

@@ -2,13 +2,13 @@ body { padding: 0px; font-family: 'input_mono_regular'; -webkit-user-select: non
 
 /* Core */
 
-#guide { position: absolute;width: 300px;height: 300px; transition: opacity 150ms; -webkit-app-region: no-drag; border-radius: 3px}
+#guide { position: absolute;width: 300px;height: 300px; transition: opacity 150ms; -webkit-app-region: no-drag; border-radius: 3px;}
 #render { display: none }
 #vector { z-index: 1000;position: relative;width:300px; height:300px; }
 
 /* Interface */
 
-#interface { font-size: 11px;line-height: 30px;text-transform: uppercase;-webkit-app-region: no-drag; transition: all 150ms; width: 100%; position:fixed; bottom:30px; left:40px; height:30px; max-width:calc(100vw - 85px); overflow: hidden;}
+#interface { font-size: 11px;line-height: 30px;text-transform: uppercase;-webkit-app-region: no-drag; transition: all 150ms; width: 100%; position:fixed; bottom:30px; left:40px; height:30px; max-width:calc(100vw - 75px); overflow: hidden;}
 #interface.hidden { bottom:10px !important;opacity: 0 !important }
 #interface.visible { bottom:30px !important; opacity: 1 !important}
 #interface #menu { opacity: 1; position: absolute; top:0px; transition: all 250ms; z-index: 900; overflow: hidden; height:30px; width:100%;}

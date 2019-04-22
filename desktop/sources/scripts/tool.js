@@ -2,7 +2,7 @@
 
 function Tool (dotgrid) {
   this.index = 0
-  this.settings = { size: { width: 0, height: 0 }, crest: false }
+  this.settings = { size: { width: 600, height: 300 }, crest: false }
   this.layers = [[], [], []]
   this.styles = [
     { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },
@@ -77,15 +77,13 @@ function Tool (dotgrid) {
     if (dot.settings.width && dot.settings.height) {
       dot.settings.size = { width: dot.settings.width, height: dot.settings.height }
     }
-    if (this.settings && (this.settings.size.width !== dot.settings.size.width || this.settings.size.height !== dot.settings.size.height)) {
-      dotgrid.setSize({ width: dot.settings.size.width / 15, height: dot.settings.size.height / 15 })
-    }
 
     this.layers = dot.layers
     this.styles = dot.styles
     this.settings = dot.settings
 
     this.clear()
+    dotgrid.fitSize()
     dotgrid.renderer.update()
     dotgrid.interface.update(true)
     dotgrid.history.push(this.layers)
@@ -215,10 +213,10 @@ function Tool (dotgrid) {
     if (type === 'grid') { dotgrid.renderer.toggle() }
     if (type === 'screen') { app.toggleFullscreen() }
 
-    if (type === 'open') { dotgrid.open() }
-    if (type === 'save') { dotgrid.save() }
-    if (type === 'render') { dotgrid.render() }
-    if (type === 'export') { dotgrid.export() }
+    if (type === 'open') { dotgrid.source.open() }
+    if (type === 'save') { dotgrid.source.save() }
+    if (type === 'render') { dotgrid.source.render() }
+    if (type === 'export') { dotgrid.source.export() }
   }
 
   this.canAppend = function (content, index = this.index) {
