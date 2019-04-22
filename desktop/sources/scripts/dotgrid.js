@@ -16,6 +16,7 @@ function Dotgrid () {
   // ISU
 
   this.install = function (host) {
+    console.info('Dotgrid', 'Installing..')
     this.theme = new Theme(defaultTheme)
     this.history = new History()
 
@@ -32,15 +33,17 @@ function Dotgrid () {
 
     this.manager.install()
     this.interface.install(host)
-    this.theme.install(host, this.update)
+    this.theme.install(host, () => { this.update() })
   }
 
   this.start = function () {
+    console.info('Dotgrid', 'Starting..')
     this.theme.start()
     this.tool.start()
     this.renderer.start()
     this.interface.start()
 
+    // Add events
     document.addEventListener('mousedown', function (e) { dotgrid.cursor.down(e) }, false)
     document.addEventListener('mousemove', function (e) { dotgrid.cursor.move(e) }, false)
     document.addEventListener('contextmenu', function (e) { dotgrid.cursor.alt(e) }, false)
@@ -48,6 +51,8 @@ function Dotgrid () {
     document.addEventListener('copy', function (e) { dotgrid.copy(e) }, false)
     document.addEventListener('cut', function (e) { dotgrid.cut(e) }, false)
     document.addEventListener('paste', function (e) { dotgrid.paste(e) }, false)
+    window.addEventListener('resize', function (e) { dotgrid.update() }, false)
+    window.addEventListener('dragover', function (e) { e.stopPropagation(); e.preventDefault(); e.dataTransfer.dropEffect = 'copy' })
     window.addEventListener('drop', dotgrid.drag)
 
     this.source.new()
@@ -56,7 +61,6 @@ function Dotgrid () {
   }
 
   this.update = function () {
-    this.resize()
     this.manager.update()
     this.interface.update()
     this.renderer.update()
@@ -104,21 +108,43 @@ function Dotgrid () {
     this.renderer.update()
   }
 
-  this.resize = function () {
-    const size = { width: step(window.innerWidth - 90, 15), height: step(window.innerHeight - 120, 15) }
+  this.fitSize = function(){
+    if (this.requireResize() === false) { return }
+    console.log('Dotgrid', `Will resize to: ${printSize(this.getRequiredSize())}`)
+    this.setWindowSize(this.getPaddedSize())
+  }
 
-    if (size.width === this.tool.settings.size.width && size.height === this.tool.settings.size.height) {
-      return
-    }
-
-    console.log(`Resized to: ${size.width}x${size.height}`)
-
-    this.tool.settings.size.width = size.width
-    this.tool.settings.size.height = size.height
-
-    this.renderer.resize(size)
-
+  this.setWindowSize = function (size) {
     document.title = `Dotgrid — ${size.width}x${size.height}`
+    const win = require('electron').remote.getCurrentWindow()
+    win.setSize(size.width, size.height, false)
+  }
+
+  this.getWindowSize = function () {
+    return { width: window.innerWidth, height: window.innerHeight }
+  }
+
+  this.getProjectSize = function () {
+    return this.tool.settings.size
+  }
+
+  this.getPaddedSize = function () {
+    return { width: this.getWindowSize().width - 90, height: this.getWindowSize().height - 120 }
+  }
+
+  this.getRequiredSize = function () {
+    return { width: step(this.getProjectSize().width, 15) + 90, height: step(this.getProjectSize().height, 15) + 120 }
+  }
+
+  this.requireResize = function () {
+    const _padded = this.getPaddedSize()
+    const _required = this.getRequiredSize()
+    const offset = { width: _padded.width - _required.width, height: _padded.height - _required.height }
+    if (offset.width !== 0 || offset.height !== 0) {
+      console.log(`Dotgrid`, `Require ${printSize(_required)}, but padded is ${printSize(_padded)}(${printSize(offset)})`)
+      return true
+    }
+    return false
   }
 
   this.modZoom = function (mod = 0, set = false) {
@@ -157,7 +183,7 @@ function Dotgrid () {
       const data = e.target && e.target.result ? e.target.result : ''
       if (data && !isJson(data)) { return }
       dotgrid.tool.replace(JSON.parse(`${data}`))
-      dotgrid.renderer.update()
+      dotgrid.fitSize()
     }
     reader.readAsText(file)
   }
@@ -205,20 +231,11 @@ function Dotgrid () {
   }
 }
 
-window.addEventListener('resize', function (e) {
-  dotgrid.update()
-}, false)
-
-window.addEventListener('dragover', function (e) {
-  e.stopPropagation()
-  e.preventDefault()
-  e.dataTransfer.dropEffect = 'copy'
-})
-
 String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
 }
 
+function printSize (size) { return `${size.width}x${size.height}` }
 function isJson (text) { try { JSON.parse(text); return true } catch (error) { return false } }
 function isEqual (a, b) { return a && b && a.x === b.x && a.y === b.y }
 function clamp (v, min, max) { return v < min ? min : v > max ? max : v }

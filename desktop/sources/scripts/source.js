@@ -17,7 +17,6 @@ function Source (dotgrid) {
     fs.readFile(paths[0], 'utf-8', (err, data) => {
       if (err) { alert('An error ocurred reading the file :' + err.message); return }
       dotgrid.tool.replace(JSON.parse(data.toString().trim()))
-      dotgrid.renderer.update()
     })
   }
 

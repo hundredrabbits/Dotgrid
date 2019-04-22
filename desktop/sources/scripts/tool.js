@@ -2,7 +2,7 @@
 
 function Tool (dotgrid) {
   this.index = 0
-  this.settings = { size: { width: 0, height: 0 }, crest: false }
+  this.settings = { size: { width: 600, height: 300 }, crest: false }
   this.layers = [[], [], []]
   this.styles = [
     { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },
@@ -77,15 +77,13 @@ function Tool (dotgrid) {
     if (dot.settings.width && dot.settings.height) {
       dot.settings.size = { width: dot.settings.width, height: dot.settings.height }
     }
-    if (this.settings && (this.settings.size.width !== dot.settings.size.width || this.settings.size.height !== dot.settings.size.height)) {
-      dotgrid.setSize({ width: dot.settings.size.width, height: dot.settings.size.height })
-    }
 
     this.layers = dot.layers
     this.styles = dot.styles
     this.settings = dot.settings
 
     this.clear()
+    dotgrid.fitSize()
     dotgrid.renderer.update()
     dotgrid.interface.update(true)
     dotgrid.history.push(this.layers)
