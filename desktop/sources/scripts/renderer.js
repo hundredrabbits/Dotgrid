@@ -97,7 +97,7 @@ function Renderer (dotgrid) {
     if (!this.showExtras) { return }
 
     const cursor = { x: parseInt(dotgrid.cursor.pos.x / 15), y: parseInt(dotgrid.cursor.pos.y / 15) }
-    const markers = dotgrid.getSize().markers
+    const markers = { w: parseInt(dotgrid.tool.settings.size.width / 15), h: parseInt(dotgrid.tool.settings.size.height / 15) }
 
     for (let x = markers.w - 1; x >= 0; x--) {
       for (let y = markers.h - 1; y >= 0; y--) {

@@ -51,7 +51,7 @@ function Dotgrid () {
     document.addEventListener('copy', function (e) { dotgrid.copy(e) }, false)
     document.addEventListener('cut', function (e) { dotgrid.cut(e) }, false)
     document.addEventListener('paste', function (e) { dotgrid.paste(e) }, false)
-    window.addEventListener('resize', function (e) { dotgrid.update() }, false)
+    window.addEventListener('resize', function (e) { dotgrid.onResize() }, false)
     window.addEventListener('dragover', function (e) { e.stopPropagation(); e.preventDefault(); e.dataTransfer.dropEffect = 'copy' })
     window.addEventListener('drop', dotgrid.drag)
 
@@ -79,34 +79,28 @@ function Dotgrid () {
     this.update()
   }
 
-  // Basics
+  // Methods
 
-  this.getSize = function () {
-    return { markers: {
-      w: parseInt(this.tool.settings.size.width / 15),
-      h: parseInt(this.tool.settings.size.height / 15) }
-    }
-  }
-
-  this.setSize = function (size = { width: 600, height: 300 }, ui = true, scale = window.devicePixelRatio) {
-    size = { width: clamp(step(size.width, 15), 105, 1080), height: clamp(step(size.height, 15), 120, 1080) }
-
-    this.tool.settings.size.width = size.width
-    this.tool.settings.size.height = size.height
-
-    console.log(this.tool.settings.size)
-
+  this.modZoom = function (mod = 0, set = false) {
     try {
-      const win = require('electron').remote.getCurrentWindow()
-      win.setSize((size.width + 100) * scale, (size.height + 100) * scale, false)
+      const { webFrame } = require('electron')
+      const currentZoomFactor = webFrame.getZoomFactor()
+      webFrame.setZoomFactor(set ? mod : currentZoomFactor + mod)
+      console.log(window.devicePixelRatio)
     } catch (err) {
-      console.log('No window')
+      console.log('Cannot zoom')
     }
-
-    this.renderer.resize(size)
-    this.interface.update()
-    this.renderer.update()
   }
+
+  this.setZoom = function (scale) {
+    try {
+      webFrame.setZoomFactor(scale)
+    } catch (err) {
+      console.log('Cannot zoom')
+    }
+  }
+
+  // Resize Tools
 
   this.fitSize = function () {
     if (this.requireResize() === false) { return }
@@ -116,9 +110,14 @@ function Dotgrid () {
 
   this.setWindowSize = function (size) {
     console.log('Dotgrid', `Resizing to ${printSize(size)}`)
-    document.title = `Dotgrid — ${size.width}x${size.height}`
     const win = require('electron').remote.getCurrentWindow()
     win.setSize(size.width, size.height, false)
+    document.title = `Dotgrid — ${size.width}x${size.height}`
+    this.update()
+  }
+
+  this.getPadding = function () {
+    return { x: 90, y: 120 }
   }
 
   this.getWindowSize = function () {
@@ -129,14 +128,10 @@ function Dotgrid () {
     return this.tool.settings.size
   }
 
-  this.getPadding = function () {
-    return { x: 90, y: 120 }
-  }
-
   this.getPaddedSize = function () {
     const rect = this.getWindowSize()
     const pad = this.getPadding()
-    return { width: rect.width - pad.x, height: rect.height - pad.y }
+    return { width: step(rect.width - pad.x, 15), height: step(rect.height - pad.y, 15) }
   }
 
   this.getRequiredSize = function () {
@@ -156,23 +151,15 @@ function Dotgrid () {
     return false
   }
 
-  this.modZoom = function (mod = 0, set = false) {
-    try {
-      const { webFrame } = require('electron')
-      const currentZoomFactor = webFrame.getZoomFactor()
-      webFrame.setZoomFactor(set ? mod : currentZoomFactor + mod)
-      console.log(window.devicePixelRatio)
-    } catch (err) {
-      console.log('Cannot zoom')
+  this.onResize = function () {
+    const _project = this.getProjectSize()
+    const _padded = this.getPaddedSize()
+    const offset = { width: _padded.width - _project.width, height: _padded.height - _project.height }
+    if (offset.width !== 0 || offset.height !== 0) {
+      console.log(`Dotgrid`, `Resize project to ${printSize(_padded)}`)
+      this.tool.settings.size = _padded
     }
-  }
-
-  this.setZoom = function (scale) {
-    try {
-      webFrame.setZoomFactor(scale)
-    } catch (err) {
-      console.log('Cannot zoom')
-    }
+    this.update()
   }
 
   // Events
