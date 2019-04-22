@@ -108,13 +108,14 @@ function Dotgrid () {
     this.renderer.update()
   }
 
-  this.fitSize = function(){
+  this.fitSize = function () {
     if (this.requireResize() === false) { return }
     console.log('Dotgrid', `Will resize to: ${printSize(this.getRequiredSize())}`)
-    this.setWindowSize(this.getPaddedSize())
+    this.setWindowSize(this.getRequiredSize())
   }
 
   this.setWindowSize = function (size) {
+    console.log('Dotgrid', `Resizing to ${printSize(size)}`)
     document.title = `Dotgrid — ${size.width}x${size.height}`
     const win = require('electron').remote.getCurrentWindow()
     win.setSize(size.width, size.height, false)
@@ -128,20 +129,28 @@ function Dotgrid () {
     return this.tool.settings.size
   }
 
+  this.getPadding = function () {
+    return { x: 90, y: 120 }
+  }
+
   this.getPaddedSize = function () {
-    return { width: this.getWindowSize().width - 90, height: this.getWindowSize().height - 120 }
+    const rect = this.getWindowSize()
+    const pad = this.getPadding()
+    return { width: rect.width - pad.x, height: rect.height - pad.y }
   }
 
   this.getRequiredSize = function () {
-    return { width: step(this.getProjectSize().width, 15) + 90, height: step(this.getProjectSize().height, 15) + 120 }
+    const rect = this.getProjectSize()
+    const pad = this.getPadding()
+    return { width: step(rect.width, 15) + pad.x, height: step(rect.height, 15) + pad.y }
   }
 
   this.requireResize = function () {
-    const _padded = this.getPaddedSize()
+    const _window = this.getWindowSize()
     const _required = this.getRequiredSize()
-    const offset = { width: _padded.width - _required.width, height: _padded.height - _required.height }
+    const offset = { width: _window.width - _required.width, height: _window.height - _required.height }
     if (offset.width !== 0 || offset.height !== 0) {
-      console.log(`Dotgrid`, `Require ${printSize(_required)}, but padded is ${printSize(_padded)}(${printSize(offset)})`)
+      console.log(`Dotgrid`, `Require ${printSize(_required)}, but window is ${printSize(_window)}(${printSize(offset)})`)
       return true
     }
     return false
