@@ -10,8 +10,8 @@ function Generator (layer, style) {
     for (const k1 in l) {
       const seg = l[k1]
       for (const k2 in seg.vertices) {
-        if (mirror === 1 || mirror === 3) { seg.vertices[k2].x = (dotgrid.tool.settings.size.width) - seg.vertices[k2].x + 15 }
-        if (mirror === 2 || mirror === 3) { seg.vertices[k2].y = (dotgrid.tool.settings.size.height) - seg.vertices[k2].y + 15 }
+        if (mirror === 1 || mirror === 3) { seg.vertices[k2].x = (dotgrid.tool.settings.size.width) - seg.vertices[k2].x }
+        if (mirror === 2 || mirror === 3) { seg.vertices[k2].y = (dotgrid.tool.settings.size.height) - seg.vertices[k2].y }
 
         // Offset
         seg.vertices[k2].x += offset.x

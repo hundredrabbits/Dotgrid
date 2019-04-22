@@ -51,13 +51,12 @@ function Renderer (dotgrid) {
 
   this.resize = function () {
     const _target = dotgrid.getPaddedSize()
-    const _current = {width:this.el.width/this.scale,height:this.el.height/this.scale}
-    const offset = sizeOffset(_target,_current)
-    if(offset.width === 0 && offset.height === 0){
+    const _current = { width: this.el.width / this.scale, height: this.el.height / this.scale }
+    const offset = sizeOffset(_target, _current)
+    if (offset.width === 0 && offset.height === 0) {
       return
     }
-    console.log('Renderer',`Require resize: ${printSize(_target)}, from ${printSize(_current)}`)
-    // const pad = 15
+    console.log('Renderer', `Require resize: ${printSize(_target)}, from ${printSize(_current)}`)
     this.el.width = (_target.width) * this.scale
     this.el.height = (_target.height) * this.scale
     this.el.style.width = (_target.width) + 'px'
@@ -107,15 +106,18 @@ function Renderer (dotgrid) {
 
     for (let x = markers.w - 1; x >= 0; x--) {
       for (let y = markers.h - 1; y >= 0; y--) {
-        let is_step = x % 4 === 0 && y % 4 === 0
+        let isStep = x % 4 === 0 && y % 4 === 0
+
+        // Don't draw margins
+        if (x === 0 || y === 0) { continue }
         // Color
-        let color = is_step ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low
+        let color = isStep ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low
         if ((y === 0 || y === markers.h) && cursor.x === x + 1) { color = dotgrid.theme.active.b_high } else if ((x === 0 || x === markers.w - 1) && cursor.y === y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x === x + 1 && cursor.y === y + 1) { color = dotgrid.theme.active.b_high }
 
         this.drawMarker({
-          x: parseInt(x * 15) + 15,
-          y: parseInt(y * 15) + 15
-        }, is_step ? 2.5 : 1.5, color)
+          x: parseInt(x * 15),
+          y: parseInt(y * 15)
+        }, isStep ? 2.5 : 1.5, color)
       }
     }
   }
@@ -269,7 +271,7 @@ function Renderer (dotgrid) {
   }
 
   function printSize (size) { return `${size.width}x${size.height}` }
-  function sizeOffset(a,b){ return { width: a.width - b.width, height: a.height - b.height } }
+  function sizeOffset (a, b) { return { width: a.width - b.width, height: a.height - b.height } }
   function isEqual (a, b) { return a && b && Math.abs(a.x) === Math.abs(b.x) && Math.abs(a.y) === Math.abs(b.y) }
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 }

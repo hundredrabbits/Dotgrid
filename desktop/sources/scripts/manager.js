@@ -19,10 +19,10 @@ function Manager (dotgrid) {
   }
 
   this.update = function () {
-    this.el.setAttribute('width', (dotgrid.tool.settings.size.width + 15) + 'px')
-    this.el.setAttribute('height', (dotgrid.tool.settings.size.height + 15) + 'px')
-    this.el.style.width = (dotgrid.tool.settings.size.width + 15)
-    this.el.style.height = dotgrid.tool.settings.size.height + 15
+    this.el.setAttribute('width', (dotgrid.tool.settings.size.width) + 'px')
+    this.el.setAttribute('height', (dotgrid.tool.settings.size.height) + 'px')
+    this.el.style.width = (dotgrid.tool.settings.size.width)
+    this.el.style.height = dotgrid.tool.settings.size.height
 
     const styles = dotgrid.tool.styles
     const paths = dotgrid.tool.paths()

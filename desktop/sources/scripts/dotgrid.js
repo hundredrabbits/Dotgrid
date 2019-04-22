@@ -117,7 +117,7 @@ function Dotgrid () {
   }
 
   this.getPadding = function () {
-    return { x: 60, y: 120 }
+    return { x: 60, y: 90 }
   }
 
   this.getWindowSize = function () {
