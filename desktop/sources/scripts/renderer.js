@@ -107,17 +107,12 @@ function Renderer (dotgrid) {
     for (let x = markers.w - 1; x >= 0; x--) {
       for (let y = markers.h - 1; y >= 0; y--) {
         let isStep = x % 4 === 0 && y % 4 === 0
-
         // Don't draw margins
         if (x === 0 || y === 0) { continue }
-        // Color
-        let color = isStep ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low
-        if ((y === 0 || y === markers.h) && cursor.x === x + 1) { color = dotgrid.theme.active.b_high } else if ((x === 0 || x === markers.w - 1) && cursor.y === y + 1) { color = dotgrid.theme.active.b_high } else if (cursor.x === x + 1 && cursor.y === y + 1) { color = dotgrid.theme.active.b_high }
-
         this.drawMarker({
           x: parseInt(x * 15),
           y: parseInt(y * 15)
-        }, isStep ? 2.5 : 1.5, color)
+        }, isStep ? 2.5 : 1.5, isStep ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low)
       }
     }
   }

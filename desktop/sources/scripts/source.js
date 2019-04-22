@@ -16,8 +16,15 @@ function Source (dotgrid) {
 
     fs.readFile(paths[0], 'utf-8', (err, data) => {
       if (err) { alert('An error ocurred reading the file :' + err.message); return }
-      dotgrid.tool.replace(JSON.parse(data.toString().trim()))
+      this.load(paths[0], data)
     })
+  }
+
+  this.load = function (path, data) {
+    if (!path || isJson(data) === false) { return }
+    const parsed = JSON.parse(`${data}`)
+    console.log(path)
+    dotgrid.tool.replace(parsed)
   }
 
   this.save = function () {
@@ -41,4 +48,6 @@ function Source (dotgrid) {
     link.setAttribute('download', name)
     link.dispatchEvent(new MouseEvent(`click`, { bubbles: true, cancelable: true, view: window }))
   }
+
+  function isJson (text) { try { JSON.parse(text); return true } catch (error) { return false } }
 }

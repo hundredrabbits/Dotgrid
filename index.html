@@ -30,9 +30,9 @@
     <script type="text/javascript" src="desktop/sources/scripts/tool.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/generator.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/picker.js"></script>
+    <script type="text/javascript" src="desktop/sources/scripts//source.js"></script>
     <!-- Web Specific -->
     <script type="text/javascript" src="web/events.js"></script>
-    <script type="text/javascript" src="web/source.js"></script>
     <!-- Styles -->
     <link rel="stylesheet" type="text/css" href="desktop/sources/links/reset.css"/>
     <link rel="stylesheet" type="text/css" href="desktop/sources/links/fonts.css"/>
@@ -45,8 +45,11 @@
       'use strict';
       function Listener(){}
       const dialog = null;
+
+      const dotgrid = new Dotgrid()
       dotgrid.install(document.body);
-      dotgrid.start();
+
+      window.addEventListener('load', () => { dotgrid.start(); })
     </script>
   </body>
 </html>

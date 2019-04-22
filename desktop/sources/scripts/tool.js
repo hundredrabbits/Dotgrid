@@ -213,10 +213,10 @@ function Tool (dotgrid) {
     if (type === 'grid') { dotgrid.renderer.toggle() }
     if (type === 'screen') { app.toggleFullscreen() }
 
-    if (type === 'open') { dotgrid.open() }
-    if (type === 'save') { dotgrid.save() }
-    if (type === 'render') { dotgrid.render() }
-    if (type === 'export') { dotgrid.export() }
+    if (type === 'open') { dotgrid.source.open() }
+    if (type === 'save') { dotgrid.source.save() }
+    if (type === 'render') { dotgrid.source.render() }
+    if (type === 'export') { dotgrid.source.export() }
   }
 
   this.canAppend = function (content, index = this.index) {

@@ -56,6 +56,7 @@ function Dotgrid () {
     window.addEventListener('drop', dotgrid.drag)
 
     this.source.new()
+    this.onResize()
 
     setTimeout(() => { document.body.className += ' ready' }, 250)
   }
@@ -106,6 +107,7 @@ function Dotgrid () {
     if (this.requireResize() === false) { return }
     console.log('Dotgrid', `Will resize to: ${printSize(this.getRequiredSize())}`)
     this.setWindowSize(this.getRequiredSize())
+    this.update()
   }
 
   this.setWindowSize = function (size) {
@@ -177,8 +179,7 @@ function Dotgrid () {
 
     reader.onload = function (e) {
       const data = e.target && e.target.result ? e.target.result : ''
-      if (data && !isJson(data)) { return }
-      dotgrid.tool.replace(JSON.parse(`${data}`))
+      dotgrid.source.load(filename, data)
       dotgrid.fitSize()
     }
     reader.readAsText(file)
