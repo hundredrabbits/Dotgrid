@@ -17,6 +17,7 @@ function Renderer (dotgrid) {
   }
 
   this.update = function (force = false) {
+    this.resize()
     dotgrid.manager.update()
     let render = new Image()
     render.onload = () => {
@@ -48,14 +49,19 @@ function Renderer (dotgrid) {
     dotgrid.interface.update(true)
   }
 
-  this.resize = function (size) {
-    const pad = 15
-    this.el.width = (size.width + pad) * this.scale
-    this.el.height = (size.height + pad) * this.scale
-    this.el.style.width = (size.width + pad) + 'px'
-    this.el.style.height = (size.height + pad) + 'px'
-
-    this.update()
+  this.resize = function () {
+    const _target = dotgrid.getPaddedSize()
+    const _current = {width:this.el.width/this.scale,height:this.el.height/this.scale}
+    const offset = sizeOffset(_target,_current)
+    if(offset.width === 0 && offset.height === 0){
+      return
+    }
+    console.log('Renderer',`Require resize: ${printSize(_target)}, from ${printSize(_current)}`)
+    // const pad = 15
+    this.el.width = (_target.width) * this.scale
+    this.el.height = (_target.height) * this.scale
+    this.el.style.width = (_target.width) + 'px'
+    this.el.style.height = (_target.height) + 'px'
   }
 
   // Collections
@@ -262,6 +268,8 @@ function Renderer (dotgrid) {
     this.context.drawImage(render, 0, 0, this.el.width, this.el.height)
   }
 
+  function printSize (size) { return `${size.width}x${size.height}` }
+  function sizeOffset(a,b){ return { width: a.width - b.width, height: a.height - b.height } }
   function isEqual (a, b) { return a && b && Math.abs(a.x) === Math.abs(b.x) && Math.abs(a.y) === Math.abs(b.y) }
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 }

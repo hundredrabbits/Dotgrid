@@ -117,7 +117,7 @@ function Dotgrid () {
   }
 
   this.getPadding = function () {
-    return { x: 90, y: 120 }
+    return { x: 60, y: 120 }
   }
 
   this.getWindowSize = function () {
@@ -143,7 +143,7 @@ function Dotgrid () {
   this.requireResize = function () {
     const _window = this.getWindowSize()
     const _required = this.getRequiredSize()
-    const offset = { width: _window.width - _required.width, height: _window.height - _required.height }
+    const offset = sizeOffset(_window, _required)
     if (offset.width !== 0 || offset.height !== 0) {
       console.log(`Dotgrid`, `Require ${printSize(_required)}, but window is ${printSize(_window)}(${printSize(offset)})`)
       return true
@@ -154,7 +154,7 @@ function Dotgrid () {
   this.onResize = function () {
     const _project = this.getProjectSize()
     const _padded = this.getPaddedSize()
-    const offset = { width: _padded.width - _project.width, height: _padded.height - _project.height }
+    const offset = sizeOffset(_padded, _project)
     if (offset.width !== 0 || offset.height !== 0) {
       console.log(`Dotgrid`, `Resize project to ${printSize(_padded)}`)
       this.tool.settings.size = _padded
@@ -231,6 +231,7 @@ String.prototype.capitalize = function () {
   return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
 }
 
+function sizeOffset (a, b) { return { width: a.width - b.width, height: a.height - b.height } }
 function printSize (size) { return `${size.width}x${size.height}` }
 function isJson (text) { try { JSON.parse(text); return true } catch (error) { return false } }
 function isEqual (a, b) { return a && b && a.x === b.x && a.y === b.y }
