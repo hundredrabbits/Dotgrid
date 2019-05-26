@@ -70,7 +70,7 @@ function Renderer (dotgrid) {
 
     if (dotgrid.tool.style().mirror_style === 0 && dotgrid.tool.settings.crest === false) { return }
 
-    const middle = { x: dotgrid.tool.settings.size.width + 15, y: dotgrid.tool.settings.size.height + 15 }
+    const middle = { x: dotgrid.tool.settings.size.width, y: dotgrid.tool.settings.size.height }
 
     if (dotgrid.tool.style().mirror_style === 1 || dotgrid.tool.style().mirror_style === 3 || dotgrid.tool.settings.crest === true) {
       this.drawRule({ x: middle.x, y: 15 * this.scale }, { x: middle.x, y: (dotgrid.tool.settings.size.height) * this.scale })
