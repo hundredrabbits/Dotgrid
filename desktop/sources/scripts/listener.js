@@ -28,11 +28,11 @@ function Listener (dotgrid) {
   }
 
   function draw () {
-    dotgrid.renderer.update()
+    dotgrid.renderer.update(true)
   }
 
   function parse (msg) {
-    if (msg === '') {
+    if (msg === '' || msg === '*') {
       return draw()
     }
     if (['0', '1', '2'].indexOf(msg) > -1) {
@@ -65,5 +65,5 @@ function Listener (dotgrid) {
     server.close()
   })
 
-  this.server.bind(49160)
+  this.server.bind(49161)
 }

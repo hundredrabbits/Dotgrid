@@ -18,7 +18,7 @@ npm start
 
 ## UDP Controls
 
-Dotgrid can be controlled by UDP via the port `49160`. It expects messages up to 6 characters.
+Dotgrid can be controlled by UDP via the port `49161`. It expects messages up to 6 characters.
 
 - **layer** `0/1/2`
 - **type** `l/c/r/z` (`l`:line, `c`:clock-wise arc, `r`: cc-wise arc, `z`: close, `.`:clear, `*`: draw)
