@@ -1,5 +1,7 @@
 # Dotgrid
 
+<img src="https://raw.githubusercontent.com/hundredrabbits/100r.co/master/media/content/characters/dotgrid.hello.png" width="300"/>
+
 [Dotgrid](http://wiki.xxiivv.com/dotgrid) is a simple vector drawing application that works directly [in the browser](https://hundredrabbits.github.io/Dotgrid/).
 
 <img src='https://raw.githubusercontent.com/hundredrabbits/Dotgrid/master/PREVIEW.jpg' width="600"/>
