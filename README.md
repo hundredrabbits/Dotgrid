@@ -2,7 +2,11 @@
 
 <img src="https://raw.githubusercontent.com/hundredrabbits/100r.co/master/media/content/characters/dotgrid.hello.png" width="300"/>
 
-[Dotgrid](http://wiki.xxiivv.com/dotgrid) is a simple vector drawing application that works directly [in the browser](https://hundredrabbits.github.io/Dotgrid/).
+Dotgrid is a <strong>grid-based vector drawing software</strong> designed to create logos, icons and type. It supports layers, the full SVG specs and additional effects such as mirroring and radial drawing. Dotgrid exports to both PNG and SVG files.
+  
+The <a href="http://github.com/hundredrabbits/Orca" target="_blank" rel="noreferrer" class="external ">application</a> was initially created for internal use, and later made available as a free and <a href="https://github.com/hundredrabbits/Dotgrid" target="_blank" rel="noreferrer" class="external ">open source</a> software.
+
+Learn more by reading the <a href="https://github.com/Hundredrabbits/Dotgrid" target="_blank" rel="noreferrer" class="external ">manual</a>, or have a look at a <a href="https://www.youtube.com/watch?v=Xt1zYHhpypk" target="_blank" rel="noreferrer" class="external ">tutorial video</a>. If you need <b>help</b>, visit the <a href="https://hundredrabbits.itch.io/dotgrid/community" target="_blank" rel="noreferrer" class="external ">Community</a>.
 
 <img src='https://raw.githubusercontent.com/hundredrabbits/Dotgrid/master/PREVIEW.jpg' width="600"/>
 
