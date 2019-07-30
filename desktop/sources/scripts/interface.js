@@ -53,7 +53,7 @@ function Interface (dotgrid) {
           title="${name.capitalize()}" 
           onmouseout="dotgrid.interface.out('${type}','${name}')" 
           onmouseup="dotgrid.interface.up('${type}','${name}')" 
-          onmousedown="dotgrid.interface.down('${type}','${name}')" 
+          onmousedown="dotgrid.interface.down('${type}','${name}', event)" 
           onmouseover="dotgrid.interface.over('${type}','${name}')" 
           viewBox="0 0 300 300" 
           class="icon ${type}">
@@ -87,10 +87,10 @@ function Interface (dotgrid) {
     dotgrid.renderer.update(true)
   }
 
-  this.down = function (type, name) {
+  this.down = function (type, name, event) {
     if (!dotgrid.tool[type]) { console.warn(`Unknown option(type): ${type}.${name}`, dotgrid.tool); return }
-
-    dotgrid.tool[type](name)
+    const mod = event.button == 2 ? -1 : 1;
+    dotgrid.tool[type](name, mod)
     this.update(true)
     dotgrid.renderer.update(true)
   }
