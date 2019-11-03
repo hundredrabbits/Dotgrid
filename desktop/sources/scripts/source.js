@@ -65,7 +65,7 @@ function Source (dotgrid) {
     const link = document.createElement('a')
     link.setAttribute('href', base64)
     link.setAttribute('download', name)
-    link.dispatchEvent(new MouseEvent(`click`, { bubbles: true, cancelable: true, view: window }))
+    link.dispatchEvent(new MouseEvent('click', { bubbles: true, cancelable: true, view: window }))
   }
 
   function isJson (text) { try { JSON.parse(text); return true } catch (error) { return false } }

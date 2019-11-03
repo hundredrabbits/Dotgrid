@@ -102,9 +102,9 @@ function Tool (dotgrid) {
 
   this.removeSegmentsAt = function (pos) {
     for (const segmentId in this.layer()) {
-      let segment = this.layer()[segmentId]
+      const segment = this.layer()[segmentId]
       for (const vertexId in segment.vertices) {
-        let vertex = segment.vertices[vertexId]
+        const vertex = segment.vertices[vertexId]
         if (Math.abs(pos.x) === Math.abs(vertex.x) && Math.abs(pos.y) === Math.abs(vertex.y)) {
           segment.vertices.splice(vertexId, 1)
         }
@@ -119,11 +119,11 @@ function Tool (dotgrid) {
   }
 
   this.selectSegmentAt = function (pos, source = this.layer()) {
-    let target_segment = null
+    const target_segment = null
     for (const segmentId in source) {
-      let segment = source[segmentId]
+      const segment = source[segmentId]
       for (const vertexId in segment.vertices) {
-        let vertex = segment.vertices[vertexId]
+        const vertex = segment.vertices[vertexId]
         if (vertex.x === Math.abs(pos.x) && vertex.y === Math.abs(pos.y)) {
           return segment
         }
@@ -140,9 +140,9 @@ function Tool (dotgrid) {
 
   this.vertexAt = function (pos) {
     for (const segmentId in this.layer()) {
-      let segment = this.layer()[segmentId]
+      const segment = this.layer()[segmentId]
       for (const vertexId in segment.vertices) {
-        let vertex = segment.vertices[vertexId]
+        const vertex = segment.vertices[vertexId]
         if (vertex.x === Math.abs(pos.x) && vertex.y === Math.abs(pos.y)) {
           return vertex
         }
@@ -152,7 +152,7 @@ function Tool (dotgrid) {
   }
 
   this.addSegment = function (type, vertices, index = this.index) {
-    let append_target = this.canAppend({ type: type, vertices: vertices }, index)
+    const append_target = this.canAppend({ type: type, vertices: vertices }, index)
     if (append_target) {
       this.layer(index)[append_target].vertices = this.layer(index)[append_target].vertices.concat(vertices)
     } else {
@@ -179,11 +179,11 @@ function Tool (dotgrid) {
 
   this.toggle = function (type, mod = 1) {
     if (type === 'linecap') {
-      let a = ['butt', 'square', 'round']
+      const a = ['butt', 'square', 'round']
       this.i.linecap += mod
       this.style().strokeLinecap = a[this.i.linecap % a.length]
     } else if (type === 'linejoin') {
-      let a = ['miter', 'round', 'bevel']
+      const a = ['miter', 'round', 'bevel']
       this.i.linejoin += mod
       this.style().strokeLinejoin = a[this.i.linejoin % a.length]
     } else if (type === 'fill') {
@@ -221,7 +221,7 @@ function Tool (dotgrid) {
 
   this.canAppend = function (content, index = this.index) {
     for (const id in this.layer(index)) {
-      let stroke = this.layer(index)[id]
+      const stroke = this.layer(index)[id]
       if (stroke.type !== content.type) { continue }
       if (!stroke.vertices) { continue }
       if (!stroke.vertices[stroke.vertices.length - 1]) { continue }
@@ -236,7 +236,7 @@ function Tool (dotgrid) {
     if (!type) { return false }
     // Cannot cast close twice
     if (type === 'close') {
-      let prev = this.layer()[this.layer().length - 1]
+      const prev = this.layer()[this.layer().length - 1]
       if (!prev || prev.type === 'close') {
         return false
       }
@@ -250,9 +250,9 @@ function Tool (dotgrid) {
   }
 
   this.paths = function () {
-    let l1 = new Generator(dotgrid.tool.layers[0], dotgrid.tool.styles[0]).toString({ x: 0, y: 0 }, 1)
-    let l2 = new Generator(dotgrid.tool.layers[1], dotgrid.tool.styles[1]).toString({ x: 0, y: 0 }, 1)
-    let l3 = new Generator(dotgrid.tool.layers[2], dotgrid.tool.styles[2]).toString({ x: 0, y: 0 }, 1)
+    const l1 = new Generator(dotgrid.tool.layers[0], dotgrid.tool.styles[0]).toString({ x: 0, y: 0 }, 1)
+    const l2 = new Generator(dotgrid.tool.layers[1], dotgrid.tool.styles[1]).toString({ x: 0, y: 0 }, 1)
+    const l3 = new Generator(dotgrid.tool.layers[2], dotgrid.tool.styles[2]).toString({ x: 0, y: 0 }, 1)
 
     return [l1, l2, l3]
   }
@@ -263,9 +263,9 @@ function Tool (dotgrid) {
 
   this.translate = function (a, b) {
     for (const segmentId in this.layer()) {
-      let segment = this.layer()[segmentId]
+      const segment = this.layer()[segmentId]
       for (const vertexId in segment.vertices) {
-        let vertex = segment.vertices[vertexId]
+        const vertex = segment.vertices[vertexId]
         if (vertex.x === Math.abs(a.x) && vertex.y === Math.abs(a.y)) {
           segment.vertices[vertexId] = { x: Math.abs(b.x), y: Math.abs(b.y) }
         }
@@ -283,7 +283,7 @@ function Tool (dotgrid) {
     if (!segment) { return }
 
     for (const vertexId in segment.vertices) {
-      let vertex = segment.vertices[vertexId]
+      const vertex = segment.vertices[vertexId]
       segment.vertices[vertexId] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
     }
 
@@ -295,9 +295,9 @@ function Tool (dotgrid) {
   this.translateLayer = function (a, b) {
     const offset = { x: a.x - b.x, y: a.y - b.y }
     for (const segmentId in this.layer()) {
-      let segment = this.layer()[segmentId]
+      const segment = this.layer()[segmentId]
       for (const vertexId in segment.vertices) {
-        let vertex = segment.vertices[vertexId]
+        const vertex = segment.vertices[vertexId]
         segment.vertices[vertexId] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
       }
     }
@@ -313,7 +313,7 @@ function Tool (dotgrid) {
     if (!segment) { return }
 
     for (const vertexId in segment.vertices) {
-      let vertex = segment.vertices[vertexId]
+      const vertex = segment.vertices[vertexId]
       segment.vertices[vertexId] = { x: vertex.x - offset.x, y: vertex.y - offset.y }
     }
     this.layer().push(segment)

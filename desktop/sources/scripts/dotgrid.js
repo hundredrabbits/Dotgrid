@@ -1,23 +1,28 @@
 'use strict'
 
-function Dotgrid () {
-  const defaultTheme = {
-    background: '#eee',
-    f_high: '#000',
-    f_med: '#999',
-    f_low: '#ccc',
-    f_inv: '#000',
-    b_high: '#000',
-    b_med: '#888',
-    b_low: '#aaa',
-    b_inv: '#ffb545'
-  }
+/* global Acels */
+/* global Theme */
+/* global Source */
+/* global History */
 
+/* global Manager */
+/* global Renderer */
+/* global Tool */
+/* global Interface */
+/* global Picker */
+/* global Cursor */
+
+/* global webFrame */
+/* global FileReader */
+
+function Dotgrid () {
   // ISU
 
   this.install = function (host) {
     console.info('Dotgrid', 'Installing..')
-    this.theme = new Theme(defaultTheme)
+
+    this.acels = new Acels()
+    this.theme = new Theme()
     this.history = new History()
 
     this.source = new Source(this)
@@ -27,33 +32,72 @@ function Dotgrid () {
     this.interface = new Interface(this)
     this.picker = new Picker(this)
     this.cursor = new Cursor(this)
-    this.listener = new Listener(this)
 
     host.appendChild(this.renderer.el)
+
+    // Add events
+    document.addEventListener('mousedown', (e) => { this.cursor.down(e) }, false)
+    document.addEventListener('mousemove', (e) => { this.cursor.move(e) }, false)
+    document.addEventListener('contextmenu', (e) => { this.cursor.alt(e) }, false)
+    document.addEventListener('mouseup', (e) => { this.cursor.up(e) }, false)
+    document.addEventListener('copy', (e) => { this.copy(e) }, false)
+    document.addEventListener('cut', (e) => { this.cut(e) }, false)
+    document.addEventListener('paste', (e) => { this.paste(e) }, false)
+    window.addEventListener('resize', (e) => { this.onResize() }, false)
+    window.addEventListener('dragover', (e) => { e.stopPropagation(); e.preventDefault(); e.dataTransfer.dropEffect = 'copy' })
+    window.addEventListener('drop', this.drag)
+
+    this.acels.set('File', 'New', 'CmdOrCtrl+N', () => { this.source.new() })
+    this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.save('export.grid', this.commander._input.value, 'text/plain') })
+    this.acels.set('File', 'Export Image', 'CmdOrCtrl+E', () => { this.source.download('export.png', this.surface.el.toDataURL('image/png', 1.0), 'image/png') })
+    this.acels.set('File', 'Open', 'CmdOrCtrl+O', () => { this.source.open('grid', this.whenOpen) })
+    this.acels.set('File', 'Revert', 'CmdOrCtrl+W', () => { this.source.revert() })
+    this.acels.set('History', 'Undo', 'CmdOrCtrl+Z', () => { this.history.undo() })
+    this.acels.set('History', 'Redo', 'CmdOrCtrl+Shift+Z', () => { this.history.redo() })
+    this.acels.set('Stroke', 'Line', 'A', () => { this.tool.cast('line') })
+    this.acels.set('Stroke', 'Arc', 'S', () => { this.tool.cast('arc_c') })
+    this.acels.set('Stroke', 'Arc Rev', 'D', () => { this.tool.cast('arc_r') })
+    this.acels.set('Stroke', 'Bezier', 'F', () => { this.tool.cast('bezier') })
+    this.acels.set('Stroke', 'Close', 'Z', () => { this.tool.cast('close') })
+    this.acels.set('Stroke', 'Arc(full)', 'T', () => { this.tool.cast('arc_c_full') })
+    this.acels.set('Stroke', 'Arc Rev(full)', 'Y', () => { this.tool.cast('arc_r_full') })
+    this.acels.set('Stroke', 'Clear Selection', 'Escape', () => { this.tool.clear() })
+    this.acels.set('Effect', 'Linecap', 'Q', () => { this.tool.toggle('linecap') })
+    this.acels.set('Effect', 'Linejoin', 'W', () => { this.tool.toggle('linejoin') })
+    this.acels.set('Effect', 'Mirror', 'E', () => { this.tool.toggle('mirror') })
+    this.acels.set('Effect', 'Fill', 'R', () => { this.tool.toggle('fill') })
+    this.acels.set('Effect', 'Thicker', '}', () => { this.tool.toggle('thickness', 1) })
+    this.acels.set('Effect', 'Thinner', '{', () => { this.tool.toggle('thickness', -1) })
+    this.acels.set('Effect', 'Thicker +5', ']', () => { this.tool.toggle('thickness', 5) })
+    this.acels.set('Effect', 'Thinner -5', '[', () => { this.tool.toggle('thickness', -5) })
+    this.acels.set('Manual', 'Add Point', 'Enter', () => { this.tool.addVertex(this.cursor.pos); this.renderer.update() })
+    this.acels.set('Manual', 'Move Up', 'Up', () => { this.cursor.pos.y -= 15; this.renderer.update() })
+    this.acels.set('Manual', 'Move Right', 'Right', () => { this.cursor.pos.x += 15; this.renderer.update() })
+    this.acels.set('Manual', 'Move Down', 'Down', () => { this.cursor.pos.y += 15; this.renderer.update() })
+    this.acels.set('Manual', 'Move Left', 'Left', () => { this.cursor.pos.x -= 15; this.renderer.update() })
+    this.acels.set('Manual', 'Remove Point', 'Shift+Backspace', () => { this.tool.removeSegmentsAt(this.cursor.pos) })
+    this.acels.set('Manual', 'Remove Segment', 'Backspace', () => { this.tool.removeSegment() })
+    this.acels.set('Layers', 'Foreground', 'CmdOrCtrl+1', () => { this.tool.selectLayer(0) })
+    this.acels.set('Layers', 'Middleground', 'CmdOrCtrl+2', () => { this.tool.selectLayer(1) })
+    this.acels.set('Layers', 'Background', 'CmdOrCtrl+3', () => { this.tool.selectLayer(2) })
+    this.acels.set('Layers', 'Merge Layers', 'CmdOrCtrl+M', () => { this.tool.merge() })
+    this.acels.set('View', 'Color Picker', 'G', () => { this.picker.start() })
+    this.acels.set('View', 'Toggle Grid', 'H', () => { this.renderer.toggle() })
+    this.acels.install(window)
 
     this.manager.install()
     this.interface.install(host)
     this.theme.install(host, () => { this.update() })
   }
 
-  this.start = function () {
-    console.info('Dotgrid', 'Starting..')
+  this.start = () => {
+    console.log('Ronin', 'Starting..')
+    console.info(`${this.acels}`)
+
     this.theme.start()
     this.tool.start()
     this.renderer.start()
     this.interface.start()
-
-    // Add events
-    document.addEventListener('mousedown', function (e) { dotgrid.cursor.down(e) }, false)
-    document.addEventListener('mousemove', function (e) { dotgrid.cursor.move(e) }, false)
-    document.addEventListener('contextmenu', function (e) { dotgrid.cursor.alt(e) }, false)
-    document.addEventListener('mouseup', function (e) { dotgrid.cursor.up(e) }, false)
-    document.addEventListener('copy', function (e) { dotgrid.copy(e) }, false)
-    document.addEventListener('cut', function (e) { dotgrid.cut(e) }, false)
-    document.addEventListener('paste', function (e) { dotgrid.paste(e) }, false)
-    window.addEventListener('resize', function (e) { dotgrid.onResize() }, false)
-    window.addEventListener('dragover', function (e) { e.stopPropagation(); e.preventDefault(); e.dataTransfer.dropEffect = 'copy' })
-    window.addEventListener('drop', dotgrid.drag)
 
     this.source.new()
     this.onResize()
@@ -61,13 +105,13 @@ function Dotgrid () {
     setTimeout(() => { document.body.className += ' ready' }, 250)
   }
 
-  this.update = function () {
+  this.update = () => {
     this.manager.update()
     this.interface.update()
     this.renderer.update()
   }
 
-  this.clear = function () {
+  this.clear = () => {
     this.history.clear()
     this.tool.reset()
     this.reset()
@@ -75,7 +119,7 @@ function Dotgrid () {
     this.interface.update(true)
   }
 
-  this.reset = function () {
+  this.reset = () => {
     this.tool.clear()
     this.update()
   }
@@ -103,7 +147,7 @@ function Dotgrid () {
 
   // Resize Tools
 
-  this.fitSize = function () {
+  this.fitSize = () => {
     if (this.requireResize() === false) { return }
     console.log('Dotgrid', `Will resize to: ${printSize(this.getRequiredSize())}`)
     this.setWindowSize(this.getRequiredSize())
@@ -118,47 +162,47 @@ function Dotgrid () {
     this.update()
   }
 
-  this.getPadding = function () {
+  this.getPadding = () => {
     return { x: 60, y: 90 }
   }
 
-  this.getWindowSize = function () {
+  this.getWindowSize = () => {
     return { width: window.innerWidth, height: window.innerHeight }
   }
 
-  this.getProjectSize = function () {
+  this.getProjectSize = () => {
     return this.tool.settings.size
   }
 
-  this.getPaddedSize = function () {
+  this.getPaddedSize = () => {
     const rect = this.getWindowSize()
     const pad = this.getPadding()
     return { width: step(rect.width - pad.x, 15), height: step(rect.height - pad.y, 15) }
   }
 
-  this.getRequiredSize = function () {
+  this.getRequiredSize = () => {
     const rect = this.getProjectSize()
     const pad = this.getPadding()
     return { width: step(rect.width, 15) + pad.x, height: step(rect.height, 15) + pad.y }
   }
 
-  this.requireResize = function () {
+  this.requireResize = () => {
     const _window = this.getWindowSize()
     const _required = this.getRequiredSize()
     const offset = sizeOffset(_window, _required)
     if (offset.width !== 0 || offset.height !== 0) {
-      console.log(`Dotgrid`, `Require ${printSize(_required)}, but window is ${printSize(_window)}(${printSize(offset)})`)
+      console.log('Dotgrid', `Require ${printSize(_required)}, but window is ${printSize(_window)}(${printSize(offset)})`)
       return true
     }
     return false
   }
 
-  this.onResize = function () {
+  this.onResize = () => {
     const _project = this.getProjectSize()
     const _padded = this.getPaddedSize()
     const offset = sizeOffset(_padded, _project)
     if (offset.width !== 0 || offset.height !== 0) {
-      console.log(`Dotgrid`, `Resize project to ${printSize(_padded)}`)
+      console.log('Dotgrid', `Resize project to ${printSize(_padded)}`)
       this.tool.settings.size = _padded
     }
     this.update()
@@ -179,39 +223,39 @@ function Dotgrid () {
 
     reader.onload = function (e) {
       const data = e.target && e.target.result ? e.target.result : ''
-      dotgrid.source.load(filename, data)
-      dotgrid.fitSize()
+      this.source.load(filename, data)
+      this.fitSize()
     }
     reader.readAsText(file)
   }
 
   this.copy = function (e) {
-    dotgrid.renderer.update()
+    this.renderer.update()
 
     if (e.target !== this.picker.input) {
-      e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()))
-      e.clipboardData.setData('text/plain', dotgrid.tool.path())
-      e.clipboardData.setData('text/html', dotgrid.manager.el.outerHTML)
-      e.clipboardData.setData('text/svg+xml', dotgrid.manager.el.outerHTML)
+      e.clipboardData.setData('text/source', this.tool.export(this.tool.layer()))
+      e.clipboardData.setData('text/plain', this.tool.path())
+      e.clipboardData.setData('text/html', this.manager.el.outerHTML)
+      e.clipboardData.setData('text/svg+xml', this.manager.el.outerHTML)
       e.preventDefault()
     }
 
-    dotgrid.renderer.update()
+    this.renderer.update()
   }
 
   this.cut = function (e) {
-    dotgrid.renderer.update()
+    this.renderer.update()
 
     if (e.target !== this.picker.input) {
-      e.clipboardData.setData('text/source', dotgrid.tool.export(dotgrid.tool.layer()))
-      e.clipboardData.setData('text/plain', dotgrid.tool.export(dotgrid.tool.layer()))
-      e.clipboardData.setData('text/html', dotgrid.manager.el.outerHTML)
-      e.clipboardData.setData('text/svg+xml', dotgrid.manager.el.outerHTML)
-      dotgrid.tool.layers[dotgrid.tool.index] = []
+      e.clipboardData.setData('text/source', this.tool.export(this.tool.layer()))
+      e.clipboardData.setData('text/plain', this.tool.export(this.tool.layer()))
+      e.clipboardData.setData('text/html', this.manager.el.outerHTML)
+      e.clipboardData.setData('text/svg+xml', this.manager.el.outerHTML)
+      this.tool.layers[this.tool.index] = []
       e.preventDefault()
     }
 
-    dotgrid.renderer.update()
+    this.renderer.update()
   }
 
   this.paste = function (e) {
@@ -219,12 +263,12 @@ function Dotgrid () {
       let data = e.clipboardData.getData('text/source')
       if (isJson(data)) {
         data = JSON.parse(data.trim())
-        dotgrid.tool.import(data)
+        this.tool.import(data)
       }
       e.preventDefault()
     }
 
-    dotgrid.renderer.update()
+    this.renderer.update()
   }
 }
 

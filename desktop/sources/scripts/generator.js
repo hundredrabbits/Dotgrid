@@ -38,9 +38,9 @@ function Generator (layer, style) {
     for (const id in vertices) {
       if (skip > 0) { skip -= 1; continue }
 
-      let vertex = vertices[parseInt(id)]
-      let next = vertices[parseInt(id) + 1]
-      let afterNext = vertices[parseInt(id) + 2]
+      const vertex = vertices[parseInt(id)]
+      const next = vertices[parseInt(id) + 1]
+      const afterNext = vertices[parseInt(id) + 2]
 
       if (parseInt(id) === 0 && !prev || parseInt(id) === 0 && prev && (prev.x !== vertex.x || prev.y !== vertex.y)) {
         html += `M${vertex.x},${vertex.y} `
@@ -49,16 +49,16 @@ function Generator (layer, style) {
       if (type === 'line') {
         html += this._line(vertex)
       } else if (type === 'arc_c') {
-        let clock = mirror > 0 && mirror < 3 ? '0,0' : '0,1'
+        const clock = mirror > 0 && mirror < 3 ? '0,0' : '0,1'
         html += this._arc(vertex, next, clock)
       } else if (type === 'arc_r') {
-        let clock = mirror > 0 && mirror < 3 ? '0,1' : '0,0'
+        const clock = mirror > 0 && mirror < 3 ? '0,1' : '0,0'
         html += this._arc(vertex, next, clock)
       } else if (type === 'arc_c_full') {
-        let clock = mirror > 0 ? '1,0' : '1,1'
+        const clock = mirror > 0 ? '1,0' : '1,1'
         html += this._arc(vertex, next, clock)
       } else if (type === 'arc_r_full') {
-        let clock = mirror > 0 ? '1,1' : '1,0'
+        const clock = mirror > 0 ? '1,1' : '1,0'
         html += this._arc(vertex, next, clock)
       } else if (type === 'bezier') {
         html += this._bezier(next, afterNext)

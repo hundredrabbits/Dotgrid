@@ -30,7 +30,7 @@ function Manager (dotgrid) {
     for (const id in this.layers) {
       let style = styles[id]
       let path = paths[id]
-      let layer = this.layers[id]
+      const layer = this.layers[id]
       // Easter Egg
       if (dotgrid.tool.settings.crest === true) {
         style = styles[0]
@@ -49,9 +49,9 @@ function Manager (dotgrid) {
   }
 
   this.svg64 = function () {
-    let xml = new XMLSerializer().serializeToString(this.el)
-    let svg64 = btoa(xml)
-    let b64Start = 'data:image/svg+xml;base64,'
+    const xml = new XMLSerializer().serializeToString(this.el)
+    const svg64 = btoa(xml)
+    const b64Start = 'data:image/svg+xml;base64,'
     return b64Start + svg64
   }
 
@@ -60,9 +60,9 @@ function Manager (dotgrid) {
   this.toPNG = function (size = dotgrid.tool.settings.size, callback) {
     this.update()
 
-    let image64 = this.svg64()
-    let img = new Image()
-    let canvas = document.createElement('canvas')
+    const image64 = this.svg64()
+    const img = new Image()
+    const canvas = document.createElement('canvas')
     canvas.width = (size.width) * 2
     canvas.height = (size.height) * 2
     img.onload = function () {

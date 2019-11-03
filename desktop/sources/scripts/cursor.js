@@ -1,6 +1,6 @@
 'use strict'
 
-function Cursor () {
+function Cursor (dotgrid) {
   this.pos = { x: 0, y: 0 }
   this.translation = null
   this.operation = null
@@ -96,4 +96,6 @@ function Cursor () {
   }
 
   function isEqual (a, b) { return a.x === b.x && a.y === b.y }
+  function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
+  function step (v, s) { return Math.round(v / s) * s }
 }

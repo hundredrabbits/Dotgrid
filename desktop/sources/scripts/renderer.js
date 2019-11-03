@@ -19,7 +19,7 @@ function Renderer (dotgrid) {
   this.update = function (force = false) {
     this.resize()
     dotgrid.manager.update()
-    let render = new Image()
+    const render = new Image()
     render.onload = () => {
       this.draw(render)
     }
@@ -106,7 +106,7 @@ function Renderer (dotgrid) {
 
     for (let x = markers.w - 1; x >= 0; x--) {
       for (let y = markers.h - 1; y >= 0; y--) {
-        let isStep = x % 4 === 0 && y % 4 === 0
+        const isStep = x % 4 === 0 && y % 4 === 0
         // Don't draw margins
         if (x === 0 || y === 0) { continue }
         this.drawMarker({
@@ -129,13 +129,13 @@ function Renderer (dotgrid) {
   }
 
   this.drawPreview = function () {
-    let operation = dotgrid.cursor.operation && dotgrid.cursor.operation.cast ? dotgrid.cursor.operation.cast : null
+    const operation = dotgrid.cursor.operation && dotgrid.cursor.operation.cast ? dotgrid.cursor.operation.cast : null
 
     if (!dotgrid.tool.canCast(operation)) { return }
     if (operation === 'close') { return }
 
-    let path = new Generator([{ vertices: dotgrid.tool.vertices, type: operation }]).toString({ x: 0, y: 0 }, 2)
-    let style = {
+    const path = new Generator([{ vertices: dotgrid.tool.vertices, type: operation }]).toString({ x: 0, y: 0 }, 2)
+    const style = {
       color: dotgrid.theme.active.f_med,
       thickness: 2,
       strokeLinecap: 'round',
@@ -201,7 +201,7 @@ function Renderer (dotgrid) {
   }
 
   this.drawPath = function (path, style) {
-    let p = new Path2D(path)
+    const p = new Path2D(path)
 
     this.context.strokeStyle = style.color
     this.context.lineWidth = style.thickness * this.scale

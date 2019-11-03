@@ -16,7 +16,7 @@ function Interface (dotgrid) {
 
   this.start = function (host) {
     let html = ''
-    let options = {
+    const options = {
       cast: {
         line: { key: 'A', icon: 'M60,60 L240,240' },
         arc_c: { key: 'S', icon: 'M60,60 A180,180 0 0,1 240,240' },
@@ -57,7 +57,7 @@ function Interface (dotgrid) {
           onmouseover="dotgrid.interface.over('${type}','${name}')" 
           viewBox="0 0 300 300" 
           class="icon ${type}">
-          <path id="${name}_path" class="icon_path" d="${tool.icon}"/>${name === 'depth' ? `<path class="icon_path inactive" d=""/>` : ''}
+          <path id="${name}_path" class="icon_path" d="${tool.icon}"/>${name === 'depth' ? '<path class="icon_path inactive" d=""/>' : ''}
           <rect ar="${name}" width="300" height="300" opacity="0">
             <title>${name.capitalize()}${tool.key ? '(' + tool.key + ')' : ''}</title>
           </rect>
@@ -89,7 +89,7 @@ function Interface (dotgrid) {
 
   this.down = function (type, name, event) {
     if (!dotgrid.tool[type]) { console.warn(`Unknown option(type): ${type}.${name}`, dotgrid.tool); return }
-    const mod = event.button == 2 ? -1 : 1;
+    const mod = event.button === 2 ? -1 : 1
     dotgrid.tool[type](name, mod)
     this.update(true)
     dotgrid.renderer.update(true)
@@ -101,7 +101,7 @@ function Interface (dotgrid) {
     if (this.prev_operation === dotgrid.cursor.operation && force === false) { return }
 
     let multiVertices = null
-    let segments = dotgrid.tool.layer()
+    const segments = dotgrid.tool.layer()
     const sumSegments = dotgrid.tool.length()
 
     for (const i in segments) {

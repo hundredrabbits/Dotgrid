@@ -18,6 +18,9 @@ function Picker (dotgrid) {
     this.input.setAttribute('placeholder', `${dotgrid.tool.style().color.replace('#', '').trim()}`)
     this.input.setAttribute('maxlength', 6)
 
+    this.input.addEventListener('keydown', this.onKeyDown, false)
+    this.input.addEventListener('keyup', this.onKeyUp, false)
+
     dotgrid.interface.el.className = 'picker'
     this.input.focus()
     this.input.value = ''
@@ -27,7 +30,7 @@ function Picker (dotgrid) {
 
   this.update = function () {
     if (!this.isActive) { return }
-    if (!is_color(this.input.value)) { return }
+    if (!isColor(this.input.value)) { return }
 
     const hex = `#${this.input.value}`
 
@@ -50,7 +53,7 @@ function Picker (dotgrid) {
   }
 
   this.validate = function () {
-    if (!is_color(this.input.value)) { return }
+    if (!isColor(this.input.value)) { return }
 
     const hex = `#${this.input.value}`
 
@@ -60,28 +63,7 @@ function Picker (dotgrid) {
     this.stop()
   }
 
-  this.listen = function (e, is_down = false) {
-    if (is_down && !isColorChar(e.key)) {
-      e.preventDefault()
-      return
-    }
-
-    if (e.key === 'Enter') {
-      this.validate()
-      e.preventDefault()
-      return
-    }
-
-    if (e.key === 'Escape') {
-      this.stop()
-      e.preventDefault()
-      return
-    }
-
-    this.update()
-  }
-
-  function is_color (val) {
+  function isColor (val) {
     if (val.length !== 3 && val.length !== 6) {
       return false
     }
@@ -90,11 +72,22 @@ function Picker (dotgrid) {
     return re.test(val)
   }
 
-  function isColorChar (val) {
-    const re = /[0-9A-Fa-f]/g
-    return re.test(val)
+  this.onKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      this.validate()
+      e.preventDefault()
+      return
+    }
+    if (e.key === 'Escape') {
+      this.stop()
+      e.preventDefault()
+      return
+    }
+    e.stopPropagation()
   }
 
-  this.input.onkeydown = function (event) { dotgrid.picker.listen(event, true) }
-  this.input.onkeyup = function (event) { dotgrid.picker.listen(event) }
+  this.onKeyUp = (e) => {
+    e.stopPropagation()
+    this.update()
+  }
 }
