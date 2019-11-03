@@ -86,4 +86,8 @@ function Manager (dotgrid) {
     const file = new Blob([text], { type: 'text/plain' })
     callback(URL.createObjectURL(file), 'export.grid')
   }
+
+  this.toString = () => {
+    return new XMLSerializer().serializeToString(this.el)
+  }
 }
