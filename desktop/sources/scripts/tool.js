@@ -206,9 +206,9 @@ function Tool (dotgrid) {
   this.source = function (type) {
     if (type === 'grid') { dotgrid.renderer.toggle() }
     if (type === 'open') { dotgrid.source.open('grid', dotgrid.whenOpen) }
-    if (type === 'save') { dotgrid.source.save('export.grid', dotgrid.tool.export(), 'text/plain') }
-    if (type === 'export') { dotgrid.source.download('export.svg', dotgrid.manager.toString(), 'image/svg+xml') }
-    if (type === 'render') { dotgrid.manager.toPNG(dotgrid.tool.settings.size, (dataUrl) => { dotgrid.source.download('export.png', dataUrl, 'image/png') }) }
+    if (type === 'save') { dotgrid.source.download('dotgrid','grid', dotgrid.tool.export(), 'text/plain') }
+    if (type === 'export') { dotgrid.source.download('dotgrid','svg', dotgrid.manager.toString(), 'image/svg+xml') }
+    if (type === 'render') { dotgrid.manager.toPNG(dotgrid.tool.settings.size, (dataUrl) => { dotgrid.source.download('dotgrid','png', dataUrl, 'image/png') }) }
   }
 
   this.canAppend = function (content, index = this.index) {

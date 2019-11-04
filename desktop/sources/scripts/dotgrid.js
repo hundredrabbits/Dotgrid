@@ -21,8 +21,8 @@ function Dotgrid () {
     this.acels = new Acels()
     this.theme = new Theme()
     this.history = new History()
+    this.source = new Source()
 
-    this.source = new Source(this)
     this.manager = new Manager(this)
     this.renderer = new Renderer(this)
     this.tool = new Tool(this)
@@ -44,9 +44,9 @@ function Dotgrid () {
     window.addEventListener('drop', this.onDrop)
 
     this.acels.set('File', 'New', 'CmdOrCtrl+N', () => { this.source.new() })
-    this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.save('export.grid', this.tool.export(), 'text/plain') })
-    this.acels.set('File', 'Export Vector', 'CmdOrCtrl+E', () => { this.source.download('export.svg', this.manager.toString(), 'image/svg+xml') })
-    this.acels.set('File', 'Export Image', 'CmdOrCtrl+Shift+E', () => { this.manager.toPNG(this.tool.settings.size, (dataUrl) => { this.source.download('export.png', dataUrl, 'image/png') }) })
+    this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.download('dotgrid','grid' , this.tool.export(), 'text/plain') })
+    this.acels.set('File', 'Export Vector', 'CmdOrCtrl+E', () => { this.source.download('dotgrid','svg', this.manager.toString(), 'image/svg+xml') })
+    this.acels.set('File', 'Export Image', 'CmdOrCtrl+Shift+E', () => { this.manager.toPNG(this.tool.settings.size, (dataUrl) => { this.source.download('dotgrid','png', dataUrl, 'image/png') }) })
     this.acels.set('File', 'Open', 'CmdOrCtrl+O', () => { this.source.open('grid', this.whenOpen) })
     this.acels.set('File', 'Revert', 'CmdOrCtrl+W', () => { this.source.revert() })
     this.acels.set('History', 'Undo', 'CmdOrCtrl+Z', () => { this.history.undo() })
