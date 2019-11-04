@@ -11,10 +11,10 @@ app.win = null
 
 app.on('ready', () => {
   app.win = new BrowserWindow({
-    width: 660,
-    height: 390,
-    minWidth: 320,
-    minHeight: 320,
+    width: 780,
+    height: 462,
+    minWidth: 380,
+    minHeight: 360,
     backgroundColor: '#000',
     icon: path.join(__dirname, { darwin: 'icon.icns', linux: 'icon.png', win32: 'icon.ico' }[process.platform] || 'icon.ico'),
     resizable: true,
@@ -25,7 +25,7 @@ app.on('ready', () => {
   })
 
   app.win.loadURL(`file://${__dirname}/sources/index.html`)
-  app.inspect()
+  // app.inspect()
 
   app.win.on('closed', () => {
     app.quit()
