@@ -12,12 +12,9 @@
 /* global Picker */
 /* global Cursor */
 
-/* global webFrame */
 /* global FileReader */
 
 function Dotgrid () {
-  // ISU
-
   this.install = function (host) {
     console.info('Dotgrid', 'Installing..')
 
@@ -35,7 +32,6 @@ function Dotgrid () {
 
     host.appendChild(this.renderer.el)
 
-    // Add events
     document.addEventListener('mousedown', (e) => { this.cursor.down(e) }, false)
     document.addEventListener('mousemove', (e) => { this.cursor.move(e) }, false)
     document.addEventListener('contextmenu', (e) => { this.cursor.alt(e) }, false)
@@ -45,11 +41,12 @@ function Dotgrid () {
     document.addEventListener('paste', (e) => { this.paste(e) }, false)
     window.addEventListener('resize', (e) => { this.onResize() }, false)
     window.addEventListener('dragover', (e) => { e.stopPropagation(); e.preventDefault(); e.dataTransfer.dropEffect = 'copy' })
-    window.addEventListener('drop', this.drag)
+    window.addEventListener('drop', this.onDrop)
 
     this.acels.set('File', 'New', 'CmdOrCtrl+N', () => { this.source.new() })
     this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.save('export.grid', this.tool.export(), 'text/plain') })
     this.acels.set('File', 'Export Vector', 'CmdOrCtrl+E', () => { this.source.download('export.svg', this.manager.toString(), 'image/svg+xml') })
+    this.acels.set('File', 'Export Image', 'CmdOrCtrl+Shift+E', () => { this.manager.toPNG(this.tool.settings.size, (dataUrl) => { this.source.download('export.png', dataUrl, 'image/png') }) })
     this.acels.set('File', 'Open', 'CmdOrCtrl+O', () => { this.source.open('grid', this.whenOpen) })
     this.acels.set('File', 'Revert', 'CmdOrCtrl+W', () => { this.source.revert() })
     this.acels.set('History', 'Undo', 'CmdOrCtrl+Z', () => { this.history.undo() })
@@ -91,7 +88,7 @@ function Dotgrid () {
   }
 
   this.start = () => {
-    console.log('Ronin', 'Starting..')
+    console.log('Dotgrid', 'Starting..')
     console.info(`${this.acels}`)
 
     this.theme.start()
@@ -124,25 +121,8 @@ function Dotgrid () {
     this.update()
   }
 
-  // Methods
-
-  this.modZoom = function (mod = 0, set = false) {
-    try {
-      const { webFrame } = require('electron')
-      const currentZoomFactor = webFrame.getZoomFactor()
-      webFrame.setZoomFactor(set ? mod : currentZoomFactor + mod)
-      console.log(window.devicePixelRatio)
-    } catch (err) {
-      console.log('Cannot zoom')
-    }
-  }
-
-  this.setZoom = function (scale) {
-    try {
-      webFrame.setZoomFactor(scale)
-    } catch (err) {
-      console.log('Cannot zoom')
-    }
+  this.whenOpen = (data) => {
+    this.tool.replace(JSON.parse(data))
   }
 
   // Resize Tools
@@ -229,6 +209,16 @@ function Dotgrid () {
     reader.readAsText(file)
   }
 
+  this.onDrop = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    const file = e.dataTransfer.files[0]
+
+    if (file.name.indexOf('.grid') > -1) {
+      this.source.load(e.dataTransfer.files[0], this.whenOpen)
+    }
+  }
+
   this.copy = function (e) {
     this.renderer.update()
 
@@ -270,15 +260,8 @@ function Dotgrid () {
 
     this.renderer.update()
   }
+  function sizeOffset (a, b) { return { width: a.width - b.width, height: a.height - b.height } }
+  function printSize (size) { return `${size.width}x${size.height}` }
+  function isJson (text) { try { JSON.parse(text); return true } catch (error) { return false } }
+  function step (v, s) { return Math.round(v / s) * s }
 }
-
-String.prototype.capitalize = function () {
-  return this.charAt(0).toUpperCase() + this.slice(1).toLowerCase()
-}
-
-function sizeOffset (a, b) { return { width: a.width - b.width, height: a.height - b.height } }
-function printSize (size) { return `${size.width}x${size.height}` }
-function isJson (text) { try { JSON.parse(text); return true } catch (error) { return false } }
-function isEqual (a, b) { return a && b && a.x === b.x && a.y === b.y }
-function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
-function step (v, s) { return Math.round(v / s) * s }

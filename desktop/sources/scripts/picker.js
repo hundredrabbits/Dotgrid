@@ -73,6 +73,7 @@ function Picker (dotgrid) {
   }
 
   this.onKeyDown = (e) => {
+    e.stopPropagation()
     if (e.key === 'Enter') {
       this.validate()
       e.preventDefault()
@@ -81,9 +82,7 @@ function Picker (dotgrid) {
     if (e.key === 'Escape') {
       this.stop()
       e.preventDefault()
-      return
     }
-    e.stopPropagation()
   }
 
   this.onKeyUp = (e) => {

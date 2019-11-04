@@ -1,8 +1,10 @@
 'use strict'
 
+/* global Generator */
+
 function Tool (dotgrid) {
   this.index = 0
-  this.settings = { size: { width: 600, height: 300 }, crest: false }
+  this.settings = { size: { width: 600, height: 300 } }
   this.layers = [[], [], []]
   this.styles = [
     { thickness: 10, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },
@@ -23,7 +25,6 @@ function Tool (dotgrid) {
   }
 
   this.reset = function () {
-    this.settings.crest = false
     this.styles[0].mirror_style = 0
     this.styles[1].mirror_style = 0
     this.styles[2].mirror_style = 0
@@ -119,7 +120,6 @@ function Tool (dotgrid) {
   }
 
   this.selectSegmentAt = function (pos, source = this.layer()) {
-    const target_segment = null
     for (const segmentId in source) {
       const segment = source[segmentId]
       for (const vertexId in segment.vertices) {
@@ -152,9 +152,9 @@ function Tool (dotgrid) {
   }
 
   this.addSegment = function (type, vertices, index = this.index) {
-    const append_target = this.canAppend({ type: type, vertices: vertices }, index)
-    if (append_target) {
-      this.layer(index)[append_target].vertices = this.layer(index)[append_target].vertices.concat(vertices)
+    const appendTarget = this.canAppend({ type: type, vertices: vertices }, index)
+    if (appendTarget) {
+      this.layer(index)[appendTarget].vertices = this.layer(index)[appendTarget].vertices.concat(vertices)
     } else {
       this.layer(index).push({ type: type, vertices: vertices })
     }
@@ -199,24 +199,16 @@ function Tool (dotgrid) {
     dotgrid.renderer.update()
   }
 
-  this.toggleCrest = function () {
-    this.settings.crest = this.settings.crest !== true
-    dotgrid.interface.update(true)
-    dotgrid.renderer.update()
-  }
-
   this.misc = function (type) {
     dotgrid.picker.start()
   }
 
   this.source = function (type) {
     if (type === 'grid') { dotgrid.renderer.toggle() }
-    if (type === 'screen') { app.toggleFullscreen() }
-
-    if (type === 'open') { dotgrid.source.open() }
-    if (type === 'save') { dotgrid.source.save() }
-    if (type === 'render') { dotgrid.source.render() }
-    if (type === 'export') { dotgrid.source.export() }
+    if (type === 'open') { dotgrid.source.open('grid', dotgrid.whenOpen) }
+    if (type === 'save') { dotgrid.source.save('export.grid', dotgrid.tool.export(), 'text/plain') }
+    if (type === 'export') { dotgrid.source.download('export.svg', dotgrid.manager.toString(), 'image/svg+xml') }
+    if (type === 'render') { dotgrid.manager.toPNG(dotgrid.tool.settings.size, (dataUrl) => { dotgrid.source.download('export.png', dataUrl, 'image/png') }) }
   }
 
   this.canAppend = function (content, index = this.index) {
@@ -353,9 +345,6 @@ function Tool (dotgrid) {
 
   this.selectLayer = function (id) {
     this.index = clamp(id, 0, 2)
-
-    if (this.index !== 0) { this.settings.crest = false }
-
     this.clear()
     dotgrid.renderer.update()
     dotgrid.interface.update(true)

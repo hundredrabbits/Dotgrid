@@ -50,7 +50,7 @@ function Interface (dotgrid) {
         html += `
         <svg 
           id="option_${name}" 
-          title="${name.capitalize()}" 
+          title="${capitalize(name)}" 
           onmouseout="dotgrid.interface.out('${type}','${name}')" 
           onmouseup="dotgrid.interface.up('${type}','${name}')" 
           onmousedown="dotgrid.interface.down('${type}','${name}', event)" 
@@ -59,7 +59,7 @@ function Interface (dotgrid) {
           class="icon ${type}">
           <path id="${name}_path" class="icon_path" d="${tool.icon}"/>${name === 'depth' ? '<path class="icon_path inactive" d=""/>' : ''}
           <rect ar="${name}" width="300" height="300" opacity="0">
-            <title>${name.capitalize()}${tool.key ? '(' + tool.key + ')' : ''}</title>
+            <title>${capitalize(name)}${tool.key ? '(' + tool.key + ')' : ''}</title>
           </rect>
         </svg>`
       }
@@ -151,5 +151,9 @@ function Interface (dotgrid) {
       dotgrid.interface.toggle()
       e.preventDefault()
     }
+  }
+
+  function capitalize (str) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
   }
 }

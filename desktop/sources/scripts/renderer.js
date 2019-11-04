@@ -1,5 +1,9 @@
 'use strict'
 
+/* global Image */
+/* global Path2D */
+/* global Generator */
+
 function Renderer (dotgrid) {
   this.el = document.createElement('canvas')
   this.el.id = 'guide'
@@ -68,14 +72,14 @@ function Renderer (dotgrid) {
   this.drawMirror = function () {
     if (!this.showExtras) { return }
 
-    if (dotgrid.tool.style().mirror_style === 0 && dotgrid.tool.settings.crest === false) { return }
+    if (dotgrid.tool.style().mirror_style === 0) { return }
 
     const middle = { x: dotgrid.tool.settings.size.width, y: dotgrid.tool.settings.size.height }
 
-    if (dotgrid.tool.style().mirror_style === 1 || dotgrid.tool.style().mirror_style === 3 || dotgrid.tool.settings.crest === true) {
+    if (dotgrid.tool.style().mirror_style === 1 || dotgrid.tool.style().mirror_style === 3) {
       this.drawRule({ x: middle.x, y: 15 * this.scale }, { x: middle.x, y: (dotgrid.tool.settings.size.height) * this.scale })
     }
-    if (dotgrid.tool.style().mirror_style === 2 || dotgrid.tool.style().mirror_style === 3 || dotgrid.tool.settings.crest === true) {
+    if (dotgrid.tool.style().mirror_style === 2 || dotgrid.tool.style().mirror_style === 3) {
       this.drawRule({ x: 15 * this.scale, y: middle.y }, { x: (dotgrid.tool.settings.size.width) * this.scale, y: middle.y })
     }
   }
@@ -101,7 +105,6 @@ function Renderer (dotgrid) {
   this.drawGrid = function () {
     if (!this.showExtras) { return }
 
-    const cursor = { x: parseInt(dotgrid.cursor.pos.x / 15), y: parseInt(dotgrid.cursor.pos.y / 15) }
     const markers = { w: parseInt(dotgrid.tool.settings.size.width / 15), h: parseInt(dotgrid.tool.settings.size.height / 15) }
 
     for (let x = markers.w - 1; x >= 0; x--) {
@@ -267,6 +270,5 @@ function Renderer (dotgrid) {
 
   function printSize (size) { return `${size.width}x${size.height}` }
   function sizeOffset (a, b) { return { width: a.width - b.width, height: a.height - b.height } }
-  function isEqual (a, b) { return a && b && Math.abs(a.x) === Math.abs(b.x) && Math.abs(a.y) === Math.abs(b.y) }
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
 }

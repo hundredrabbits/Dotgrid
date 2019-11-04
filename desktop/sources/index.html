@@ -4,127 +4,53 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <!-- Twitter -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:site" content="@neauoire">
+    <meta name="twitter:title" content="Dotgrid">
+    <meta name="twitter:description" content="A minimalist vector graphics tool.">
+    <meta name="twitter:creator" content="@neauoire">
+    <meta name="twitter:image" content="https://hundredrabbits.github.io/Dotgrid/media/services/meta.jpg">
+    <!-- Facebook -->
+    <meta property="og:title" content="Dotgrid" />
+    <meta property="og:type" content="article" />
+    <meta property="og:url" content="http://wiki.xxiivv.com/Dotgrid" />
+    <meta property="og:image" content="https://hundredrabbits.github.io/Dotgrid/media/services/meta.jpg" />
+    <meta property="og:description" content="A minimalist vector graphics tool." /> 
+    <meta property="og:site_name" content="Dotgrid" />
     <!-- Generics -->
+    <script type="text/javascript" src="scripts/lib/acels.js"></script>
     <script type="text/javascript" src="scripts/lib/theme.js"></script>
     <script type="text/javascript" src="scripts/lib/history.js"></script>
-    <script type="text/javascript" src="scripts/lib/controller.js"></script>
+    <script type="text/javascript" src="scripts/lib/source.js"></script>
     <!-- Dotgrid -->
     <script type="text/javascript" src="scripts/dotgrid.js"></script>
     <script type="text/javascript" src="scripts/manager.js"></script>
-    <script type="text/javascript" src="scripts/source.js"></script>
     <script type="text/javascript" src="scripts/renderer.js"></script>
     <script type="text/javascript" src="scripts/cursor.js"></script>
     <script type="text/javascript" src="scripts/interface.js"></script>
     <script type="text/javascript" src="scripts/tool.js"></script>
     <script type="text/javascript" src="scripts/generator.js"></script>
     <script type="text/javascript" src="scripts/picker.js"></script>
-    <script type="text/javascript" src="scripts/listener.js"></script>
     <!-- Styles -->
     <link rel="stylesheet" type="text/css" href="links/reset.css"/>
     <link rel="stylesheet" type="text/css" href="links/fonts.css"/>
     <link rel="stylesheet" type="text/css" href="links/main.css"/>
     <link rel="stylesheet" type="text/css" href="links/theme.css"/>
-    <title>Dotgrid(Icon)</title>
+    <title>Dotgrid</title>
   </head>
-  <body>
+  <body class='web'>
     <script>
-        'use strict'
-        
-        const webFrame = require('electron').webFrame
-        const {dialog,app} = require('electron').remote;
-        const fs = require('fs');
-        
-        const dotgrid = new Dotgrid()
-        
-        dotgrid.controller = new Controller();
+      'use strict'
 
-        dotgrid.controller.add("default","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
-        dotgrid.controller.add("default","*","Fullscreen",() => { app.toggleFullscreen(); },"CmdOrCtrl+Enter");
-        dotgrid.controller.add("default","*","Hide",() => { app.toggleVisible(); },"CmdOrCtrl+H");
-        dotgrid.controller.add("default","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
-        dotgrid.controller.add("default","*","Reset",() => { dotgrid.reset(); dotgrid.theme.reset(); },"CmdOrCtrl+Backspace");
-        dotgrid.controller.add("default","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
+      const dotgrid = new Dotgrid()
 
-        dotgrid.controller.add("default","File","New",() => { dotgrid.source.new(); },"CmdOrCtrl+N");
-        dotgrid.controller.add("default","File","Open",() => { dotgrid.source.open(); },"CmdOrCtrl+O");
-        dotgrid.controller.add("default","File","Save(.grid)",() => { dotgrid.source.save(); },"CmdOrCtrl+S");
-        dotgrid.controller.add("default","File","Render(.png)",() => { dotgrid.source.render(); },"CmdOrCtrl+R");
-        dotgrid.controller.add("default","File","Export(.svg)",() => { dotgrid.source.export(); },"CmdOrCtrl+E");
+      dotgrid.install(document.body)
 
-        dotgrid.controller.addRole("default","Edit","copy");
-        dotgrid.controller.addRole("default","Edit","cut");
-        dotgrid.controller.addRole("default","Edit","paste");
-        dotgrid.controller.add("default","Edit","Undo",() => { dotgrid.tool.undo() },"CmdOrCtrl+Z");
-        dotgrid.controller.add("default","Edit","Redo",() => { dotgrid.tool.redo() },"CmdOrCtrl+Shift+Z");
-
-        dotgrid.controller.add("default","Stroke","Line",() => { dotgrid.tool.cast("line"); },"A");
-        dotgrid.controller.add("default","Stroke","Arc",() => { dotgrid.tool.cast("arc_c"); },"S"); // 0,1
-        dotgrid.controller.add("default","Stroke","Arc Rev",() => { dotgrid.tool.cast("arc_r")},"D"); // 0,0
-        dotgrid.controller.add("default","Stroke","Bezier",() => { dotgrid.tool.cast("bezier") },"F");
-        dotgrid.controller.add("default","Stroke","Close",() => { dotgrid.tool.cast("close") },"Z");
-        dotgrid.controller.add("default","Stroke","Arc(full)",() => { dotgrid.tool.cast("arc_c_full"); },"T"); // 1,1
-        dotgrid.controller.add("default","Stroke","Arc Rev(full)",() => { dotgrid.tool.cast("arc_r_full")},"Y"); // 1,0
-        dotgrid.controller.add("default","Stroke","Clear Selection",() => { dotgrid.tool.clear(); },"Escape");
-
-        dotgrid.controller.add("default","Effect","Linecap",() => { dotgrid.tool.toggle("linecap"); },"Q");
-        dotgrid.controller.add("default","Effect","Linejoin",() => { dotgrid.tool.toggle("linejoin"); },"W");
-        dotgrid.controller.add("default","Effect","Mirror",() => { dotgrid.tool.toggle("mirror"); },"E");
-        dotgrid.controller.add("default","Effect","Fill",() => { dotgrid.tool.toggle("fill"); },"R");
-        dotgrid.controller.add("default","Effect","Thicker",() => { dotgrid.tool.toggle("thickness",1) },"}");
-        dotgrid.controller.add("default","Effect","Thinner",() => { dotgrid.tool.toggle("thickness",-1) },"{");
-        dotgrid.controller.add("default","Effect","Thicker +5",() => { dotgrid.tool.toggle("thickness",5) },"]");
-        dotgrid.controller.add("default","Effect","Thinner -5",() => { dotgrid.tool.toggle("thickness",-5) },"[");
-        dotgrid.controller.add("default","Effect","Toggle Crest",() => { dotgrid.tool.toggleCrest(); }, "CmdOrCtrl+K");
-
-        dotgrid.controller.add("default","Manual","Add Point",() => { dotgrid.tool.addVertex(dotgrid.cursor.pos); dotgrid.renderer.update() },"Enter");
-        dotgrid.controller.add("default","Manual","Move Up",() => { dotgrid.cursor.pos.y -= 15; dotgrid.renderer.update() },"Up");
-        dotgrid.controller.add("default","Manual","Move Right",() => { dotgrid.cursor.pos.x += 15; dotgrid.renderer.update() },"Right");
-        dotgrid.controller.add("default","Manual","Move Down",() => { dotgrid.cursor.pos.y += 15; dotgrid.renderer.update() },"Down");
-        dotgrid.controller.add("default","Manual","Move Left",() => { dotgrid.cursor.pos.x -= 15; dotgrid.renderer.update() },"Left");
-        dotgrid.controller.add("default","Manual","Remove Point",() => { dotgrid.tool.removeSegmentsAt(dotgrid.cursor.pos); },"Shift+Backspace");
-        dotgrid.controller.add("default","Manual","Remove Segment",() => { dotgrid.tool.removeSegment(); },"Backspace");
-
-        dotgrid.controller.add("default","Layers","Foreground",() => { dotgrid.tool.selectLayer(0) },"CmdOrCtrl+1");
-        dotgrid.controller.add("default","Layers","Middleground",() => { dotgrid.tool.selectLayer(1) },"CmdOrCtrl+2");
-        dotgrid.controller.add("default","Layers","Background",() => { dotgrid.tool.selectLayer(2) },"CmdOrCtrl+3");
-        dotgrid.controller.add("default","Layers","Next Layer",() => { dotgrid.tool.selectNextLayer() });
-        dotgrid.controller.add("default","Layers","Prev Layer",() => { dotgrid.tool.selectPrevLayer() });
-        dotgrid.controller.add("default","Layers","Merge Layers",() => { dotgrid.tool.merge() },"M");
-
-        dotgrid.controller.add("default","View","Zoom In",() => { dotgrid.modZoom(0.25) },"CmdOrCtrl+=")
-        dotgrid.controller.add("default","View","Zoom Out",() => { dotgrid.modZoom(-0.25) },"CmdOrCtrl+-")
-        dotgrid.controller.add("default","View","Zoom Reset",() => { dotgrid.modZoom(1,true) },"CmdOrCtrl+0")
-        dotgrid.controller.add("default","View","Color Picker",() => { dotgrid.picker.start(); },"G");
-        dotgrid.controller.add("default","View","Toggle Grid",() => { dotgrid.renderer.toggle(); },"H");
-        dotgrid.controller.add("default","View","Toggle Interface",() => { dotgrid.interface.toggle(); },"Tab");
-
-        dotgrid.controller.add("default","Theme","Open Theme",() => { dotgrid.theme.open(); },"CmdOrCtrl+Shift+o")
-        dotgrid.controller.add("default","Theme","Reset Theme",() => { dotgrid.theme.reset(); },"CmdOrCtrl+Shift+Backspace")
-        dotgrid.controller.add("default","Theme","Download Themes..",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Themes'); })
-
-        dotgrid.controller.add("picker","*","About",() => { require('electron').shell.openExternal('https://github.com/hundredrabbits/Dotgrid'); },"CmdOrCtrl+,");
-        dotgrid.controller.add("picker","*","Fullscreen",() => { app.toggleFullscreen(); },"CmdOrCtrl+Enter");
-        dotgrid.controller.add("picker","*","Hide",() => { app.toggleVisible(); },"CmdOrCtrl+H");
-        dotgrid.controller.add("picker","*","Inspect",() => { app.inspect(); },"CmdOrCtrl+.");
-        dotgrid.controller.add("picker","*","Documentation",() => { dotgrid.controller.docs(); },"CmdOrCtrl+Esc");
-        dotgrid.controller.add("picker","*","Reset",() => { dotgrid.reset(); dotgrid.theme.reset(); },"CmdOrCtrl+Backspace");
-        dotgrid.controller.add("picker","*","Quit",() => { app.exit(); },"CmdOrCtrl+Q");
-
-        dotgrid.controller.addRole("picker","Edit","undo");
-        dotgrid.controller.addRole("picker","Edit","redo");
-        dotgrid.controller.addRole("picker","Edit","cut");
-        dotgrid.controller.addRole("picker","Edit","copy");
-        dotgrid.controller.addRole("picker","Edit","paste");
-        dotgrid.controller.addRole("picker","Edit","delete");
-        dotgrid.controller.addRole("picker","Edit","selectall");
-
-        dotgrid.controller.add("picker","Mode","Stop Picker Mode",() => { dotgrid.picker.stop(); },"Escape");
-
-        dotgrid.controller.commit();
-
-        dotgrid.install(document.body);
-
-        window.addEventListener('load', () => { dotgrid.start(); })
-      </script>
+      window.addEventListener('load', () => { 
+        dotgrid.start()
+        dotgrid.acels.inject('Dotgrid')
+      })
+    </script>
   </body>
 </html>

@@ -1,7 +1,9 @@
-const { app, BrowserWindow, webFrame, Menu } = require('electron')
+'use strict'
+
+/* global createWindow */
+
+const { app, BrowserWindow, Menu } = require('electron')
 const path = require('path')
-const url = require('url')
-const shell = require('electron').shell
 
 let isShown = true
 
@@ -23,10 +25,9 @@ app.on('ready', () => {
   })
 
   app.win.loadURL(`file://${__dirname}/sources/index.html`)
-  // app.inspect()
+  app.inspect()
 
   app.win.on('closed', () => {
-    win = null
     app.quit()
   })
 

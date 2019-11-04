@@ -1,6 +1,9 @@
 'use strict'
 
-// Manages the SVG file
+/* global XMLSerializer */
+/* global btoa */
+/* global Image */
+/* global Blob */
 
 function Manager (dotgrid) {
   // Create SVG parts
@@ -28,15 +31,9 @@ function Manager (dotgrid) {
     const paths = dotgrid.tool.paths()
 
     for (const id in this.layers) {
-      let style = styles[id]
-      let path = paths[id]
+      const style = styles[id]
+      const path = paths[id]
       const layer = this.layers[id]
-      // Easter Egg
-      if (dotgrid.tool.settings.crest === true) {
-        style = styles[0]
-        path = paths[0]
-        layer.setAttribute('transform', `rotate(${parseInt(id) * 120} ${(dotgrid.tool.settings.size.width / 2) + 7.5} ${(dotgrid.tool.settings.size.height / 2) + 7.5})`)
-      }
 
       layer.style.strokeWidth = style.thickness
       layer.style.strokeLinecap = style.strokeLinecap
@@ -67,7 +64,7 @@ function Manager (dotgrid) {
     canvas.height = (size.height) * 2
     img.onload = function () {
       canvas.getContext('2d').drawImage(img, 0, 0, (size.width) * 2, (size.height) * 2)
-      callback(canvas.toDataURL('image/png'), 'export.png')
+      callback(canvas.toDataURL('image/png'))
     }
     img.src = image64
   }

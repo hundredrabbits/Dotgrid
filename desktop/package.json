@@ -20,7 +20,21 @@
     "push": "npm run build ; npm run push_theme ; npm run push_osx ; npm run push_linux ; npm run push_win ; npm run clean ; npm run push_status"
   },
   "devDependencies": {
-    "electron": "^5.0.6",
-    "electron-packager": "^13.1.1"
+    "electron": "^7.0.0",
+    "electron-packager": "^14.0.6"
+  },
+  "standard": {
+    "globals": [
+      "localStorage",
+      "DOMParser",
+      "onMessage",
+      "postMessage",
+      "FileReader",
+      "performance",
+      "Worker"
+    ],
+    "ignore": [
+      "/node_modules/*"
+    ]
   }
 }

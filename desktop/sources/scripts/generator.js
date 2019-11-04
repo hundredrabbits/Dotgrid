@@ -1,5 +1,7 @@
 'use strict'
 
+/* global dotgrid */
+
 function Generator (layer, style) {
   this.layer = layer
   this.style = style
@@ -12,15 +14,12 @@ function Generator (layer, style) {
       for (const k2 in seg.vertices) {
         if (mirror === 1 || mirror === 3) { seg.vertices[k2].x = (dotgrid.tool.settings.size.width) - seg.vertices[k2].x }
         if (mirror === 2 || mirror === 3) { seg.vertices[k2].y = (dotgrid.tool.settings.size.height) - seg.vertices[k2].y }
-
         // Offset
         seg.vertices[k2].x += offset.x
         seg.vertices[k2].y += offset.y
-
         // Rotate
         const center = { x: (dotgrid.tool.settings.size.width / 2) + offset.x + (7.5), y: (dotgrid.tool.settings.size.height / 2) + offset.y + 30 }
         seg.vertices[k2] = rotatePoint(seg.vertices[k2], center, angle)
-
         // Scale
         seg.vertices[k2].x *= scale
         seg.vertices[k2].y *= scale
@@ -42,7 +41,9 @@ function Generator (layer, style) {
       const next = vertices[parseInt(id) + 1]
       const afterNext = vertices[parseInt(id) + 2]
 
-      if (parseInt(id) === 0 && !prev || parseInt(id) === 0 && prev && (prev.x !== vertex.x || prev.y !== vertex.y)) {
+      if (parseInt(id) === 0 && !prev) {
+        html += `M${vertex.x},${vertex.y} `
+      } else if (parseInt(id) === 0 && prev && (prev.x !== vertex.x || prev.y !== vertex.y)) {
         html += `M${vertex.x},${vertex.y} `
       }
 
