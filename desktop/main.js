@@ -60,6 +60,10 @@ app.toggleFullscreen = function () {
   app.win.setFullScreen(!app.win.isFullScreen())
 }
 
+app.toggleMenubar = function () {
+  app.win.setMenuBarVisibility(!app.win.isMenuBarVisible())
+}
+
 app.toggleVisible = function () {
   if (process.platform === 'win32') {
     if (!app.win.isMinimized()) { app.win.minimize() } else { app.win.restore() }

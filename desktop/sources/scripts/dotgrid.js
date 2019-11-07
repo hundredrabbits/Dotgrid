@@ -44,10 +44,10 @@ function Dotgrid () {
     window.addEventListener('drop', this.onDrop)
 
     this.acels.set('File', 'New', 'CmdOrCtrl+N', () => { this.source.new() })
-    this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.download('dotgrid','grid' , this.tool.export(), 'text/plain') })
-    this.acels.set('File', 'Export Vector', 'CmdOrCtrl+E', () => { this.source.download('dotgrid','svg', this.manager.toString(), 'image/svg+xml') })
-    this.acels.set('File', 'Export Image', 'CmdOrCtrl+Shift+E', () => { this.manager.toPNG(this.tool.settings.size, (dataUrl) => { this.source.download('dotgrid','png', dataUrl, 'image/png') }) })
     this.acels.set('File', 'Open', 'CmdOrCtrl+O', () => { this.source.open('grid', this.whenOpen) })
+    this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.write('dotgrid','grid' , this.tool.export(), 'text/plain') })
+    this.acels.set('File', 'Export Vector', 'CmdOrCtrl+E', () => { this.source.write('dotgrid','svg', this.manager.toString(), 'image/svg+xml') })
+    this.acels.set('File', 'Export Image', 'CmdOrCtrl+Shift+E', () => { this.manager.toPNG(this.tool.settings.size, (dataUrl) => { this.source.download('dotgrid','png', dataUrl, 'image/png') }) })    
     this.acels.set('File', 'Revert', 'CmdOrCtrl+W', () => { this.source.revert() })
     this.acels.set('History', 'Undo', 'CmdOrCtrl+Z', () => { this.history.undo() })
     this.acels.set('History', 'Redo', 'CmdOrCtrl+Shift+Z', () => { this.history.redo() })
@@ -121,7 +121,8 @@ function Dotgrid () {
     this.update()
   }
 
-  this.whenOpen = (data) => {
+  this.whenOpen = (file,data) => {
+    console.log(data)
     this.tool.replace(JSON.parse(data))
   }
 
@@ -130,15 +131,6 @@ function Dotgrid () {
   this.fitSize = () => {
     if (this.requireResize() === false) { return }
     console.log('Dotgrid', `Will resize to: ${printSize(this.getRequiredSize())}`)
-    this.setWindowSize(this.getRequiredSize())
-    this.update()
-  }
-
-  this.setWindowSize = function (size) {
-    console.log('Dotgrid', `Resizing to ${printSize(size)}`)
-    const win = require('electron').remote.getCurrentWindow()
-    win.setSize(size.width, size.height, false)
-    document.title = `Dotgrid — ${size.width}x${size.height}`
     this.update()
   }
 
