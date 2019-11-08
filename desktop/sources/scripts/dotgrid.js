@@ -18,10 +18,10 @@ function Dotgrid () {
   this.install = function (host) {
     console.info('Dotgrid', 'Installing..')
 
-    this.acels = new Acels()
-    this.theme = new Theme()
-    this.history = new History()
-    this.source = new Source()
+    this.acels = new Acels(this)
+    this.theme = new Theme(this)
+    this.history = new History(this)
+    this.source = new Source(this)
 
     this.manager = new Manager(this)
     this.renderer = new Renderer(this)
@@ -45,9 +45,9 @@ function Dotgrid () {
 
     this.acels.set('File', 'New', 'CmdOrCtrl+N', () => { this.source.new() })
     this.acels.set('File', 'Open', 'CmdOrCtrl+O', () => { this.source.open('grid', this.whenOpen) })
-    this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.write('dotgrid','grid' , this.tool.export(), 'text/plain') })
-    this.acels.set('File', 'Export Vector', 'CmdOrCtrl+E', () => { this.source.write('dotgrid','svg', this.manager.toString(), 'image/svg+xml') })
-    this.acels.set('File', 'Export Image', 'CmdOrCtrl+Shift+E', () => { this.manager.toPNG(this.tool.settings.size, (dataUrl) => { this.source.download('dotgrid','png', dataUrl, 'image/png') }) })    
+    this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.write('dotgrid', 'grid', this.tool.export(), 'text/plain') })
+    this.acels.set('File', 'Export Vector', 'CmdOrCtrl+E', () => { this.source.write('dotgrid', 'svg', this.manager.toString(), 'image/svg+xml') })
+    this.acels.set('File', 'Export Image', 'CmdOrCtrl+Shift+E', () => { this.manager.toPNG(this.tool.settings.size, (dataUrl) => { this.source.download('dotgrid', 'png', dataUrl, 'image/png') }) })
     this.acels.set('File', 'Revert', 'CmdOrCtrl+W', () => { this.source.revert() })
     this.acels.set('History', 'Undo', 'CmdOrCtrl+Z', () => { this.history.undo() })
     this.acels.set('History', 'Redo', 'CmdOrCtrl+Shift+Z', () => { this.history.redo() })
@@ -81,6 +81,7 @@ function Dotgrid () {
     this.acels.set('View', 'Color Picker', 'G', () => { this.picker.start() })
     this.acels.set('View', 'Toggle Grid', 'H', () => { this.renderer.toggle() })
     this.acels.install(window)
+    this.acels.pipe(this)
 
     this.manager.install()
     this.interface.install(host)
@@ -121,9 +122,9 @@ function Dotgrid () {
     this.update()
   }
 
-  this.whenOpen = (file,data) => {
-    console.log(data)
+  this.whenOpen = (file, data) => {
     this.tool.replace(JSON.parse(data))
+    this.onResize()
   }
 
   // Resize Tools
@@ -207,7 +208,7 @@ function Dotgrid () {
     const file = e.dataTransfer.files[0]
 
     if (file.name.indexOf('.grid') > -1) {
-      this.source.load(e.dataTransfer.files[0], this.whenOpen)
+      this.source.read(e.dataTransfer.files[0], this.whenOpen)
     }
   }
 
@@ -252,6 +253,13 @@ function Dotgrid () {
 
     this.renderer.update()
   }
+
+  this.onKeyDown = (e) => {
+  }
+
+  this.onKeyUp = (e) => {
+  }
+
   function sizeOffset (a, b) { return { width: a.width - b.width, height: a.height - b.height } }
   function printSize (size) { return `${size.width}x${size.height}` }
   function isJson (text) { try { JSON.parse(text); return true } catch (error) { return false } }

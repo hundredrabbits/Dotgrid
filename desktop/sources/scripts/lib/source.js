@@ -3,7 +3,7 @@
 /* global FileReader */
 /* global MouseEvent */
 
-function Source () {
+function Source (client) {
   this.cache = {}
 
   this.install = () => {
@@ -56,10 +56,6 @@ function Source () {
   this.saveAs = (name, ext, content, type = 'text/plain', callback) => {
     console.log('Source', 'Save new file..')
     this.write(name, ext, content, type, callback)
-  }
-
-  this.revert = () => {
-
   }
 
   // I/O
