@@ -10,16 +10,19 @@ function Theme (client) {
 
   this.active = {}
   this.default = {
-    background: '#eee',
-    f_high: '#000',
-    f_med: '#999',
-    f_low: '#ccc',
-    f_inv: '#000',
-    b_high: '#000',
-    b_med: '#888',
-    b_low: '#aaa',
+    background: '#eeeeee',
+    f_high: '#000000',
+    f_med: '#666666',
+    f_low: '#888888',
+    f_inv: '#000000',
+    b_high: '#ffffff',
+    b_med: '#cccccc',
+    b_low: '#dddddd',
     b_inv: '#ffb545'
   }
+
+  // Callbacks
+  this.onLoad = () => {}
 
   this.install = (host = document.body) => {
     window.addEventListener('dragover', this.drag)
@@ -67,10 +70,20 @@ function Theme (client) {
     }`
     localStorage.setItem('theme', JSON.stringify(theme))
     this.active = theme
+    if (this.onLoad) {
+      this.onLoad(data)
+    }
   }
 
   this.reset = () => {
     this.load(this.default)
+  }
+
+  this.set = (key, val) => {
+    if (!val) { return }
+    const hex = (`${val}`.substr(0, 1) !== '#' ? '#' : '') + `${val}`
+    if (!isColor(hex)) { console.warn('Theme', `${hex} is not a valid color.`); return }
+    this.active[key] = hex
   }
 
   this.read = (key) => {
@@ -141,6 +154,10 @@ function Theme (client) {
     if (!json.b_low) { return false }
     if (!json.b_inv) { return false }
     return true
+  }
+
+  function isColor (hex) {
+    return /^#([0-9A-F]{3}){1,2}$/i.test(hex)
   }
 
   function isJson (text) {
