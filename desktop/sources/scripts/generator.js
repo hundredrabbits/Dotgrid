@@ -1,6 +1,6 @@
 'use strict'
 
-/* global dotgrid */
+/* global client */
 
 function Generator (layer, style) {
   this.layer = layer
@@ -12,13 +12,13 @@ function Generator (layer, style) {
     for (const k1 in l) {
       const seg = l[k1]
       for (const k2 in seg.vertices) {
-        if (mirror === 1 || mirror === 3) { seg.vertices[k2].x = (dotgrid.tool.settings.size.width) - seg.vertices[k2].x }
-        if (mirror === 2 || mirror === 3) { seg.vertices[k2].y = (dotgrid.tool.settings.size.height) - seg.vertices[k2].y }
+        if (mirror === 1 || mirror === 3) { seg.vertices[k2].x = (client.tool.settings.size.width) - seg.vertices[k2].x }
+        if (mirror === 2 || mirror === 3) { seg.vertices[k2].y = (client.tool.settings.size.height) - seg.vertices[k2].y }
         // Offset
         seg.vertices[k2].x += offset.x
         seg.vertices[k2].y += offset.y
         // Rotate
-        const center = { x: (dotgrid.tool.settings.size.width / 2) + offset.x + (7.5), y: (dotgrid.tool.settings.size.height / 2) + offset.y + 30 }
+        const center = { x: (client.tool.settings.size.width / 2) + offset.x + (7.5), y: (client.tool.settings.size.height / 2) + offset.y + 30 }
         seg.vertices[k2] = rotatePoint(seg.vertices[k2], center, angle)
         // Scale
         seg.vertices[k2].x *= scale

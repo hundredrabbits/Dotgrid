@@ -1,6 +1,6 @@
 'use strict'
 
-function Interface (dotgrid) {
+function Interface (client) {
   this.el = document.createElement('div')
   this.el.id = 'interface'
 
@@ -51,10 +51,10 @@ function Interface (dotgrid) {
         <svg 
           id="option_${name}" 
           title="${capitalize(name)}" 
-          onmouseout="dotgrid.interface.out('${type}','${name}')" 
-          onmouseup="dotgrid.interface.up('${type}','${name}')" 
-          onmousedown="dotgrid.interface.down('${type}','${name}', event)" 
-          onmouseover="dotgrid.interface.over('${type}','${name}')" 
+          onmouseout="client.interface.out('${type}','${name}')" 
+          onmouseup="client.interface.up('${type}','${name}')" 
+          onmousedown="client.interface.down('${type}','${name}', event)" 
+          onmouseover="client.interface.over('${type}','${name}')" 
           viewBox="0 0 300 300" 
           class="icon ${type}">
           <path id="${name}_path" class="icon_path" d="${tool.icon}"/>${name === 'depth' ? '<path class="icon_path inactive" d=""/>' : ''}
@@ -65,63 +65,63 @@ function Interface (dotgrid) {
       }
     }
     this.menu_el.innerHTML = html
-    this.menu_el.appendChild(dotgrid.picker.el)
+    this.menu_el.appendChild(client.picker.el)
   }
 
   this.over = function (type, name) {
-    dotgrid.cursor.operation = {}
-    dotgrid.cursor.operation[type] = name
+    client.cursor.operation = {}
+    client.cursor.operation[type] = name
     this.update(true)
-    dotgrid.renderer.update(true)
+    client.renderer.update(true)
   }
 
   this.out = function (type, name) {
-    dotgrid.cursor.operation = ''
-    dotgrid.renderer.update(true)
+    client.cursor.operation = ''
+    client.renderer.update(true)
   }
 
   this.up = function (type, name) {
-    if (!dotgrid.tool[type]) { console.warn(`Unknown option(type): ${type}.${name}`, dotgrid.tool); return }
+    if (!client.tool[type]) { console.warn(`Unknown option(type): ${type}.${name}`, client.tool); return }
 
     this.update(true)
-    dotgrid.renderer.update(true)
+    client.renderer.update(true)
   }
 
   this.down = function (type, name, event) {
-    if (!dotgrid.tool[type]) { console.warn(`Unknown option(type): ${type}.${name}`, dotgrid.tool); return }
+    if (!client.tool[type]) { console.warn(`Unknown option(type): ${type}.${name}`, client.tool); return }
     const mod = event.button === 2 ? -1 : 1
-    dotgrid.tool[type](name, mod)
+    client.tool[type](name, mod)
     this.update(true)
-    dotgrid.renderer.update(true)
+    client.renderer.update(true)
   }
 
   this.prev_operation = null
 
   this.update = function (force = false, id) {
-    if (this.prev_operation === dotgrid.cursor.operation && force === false) { return }
+    if (this.prev_operation === client.cursor.operation && force === false) { return }
 
     let multiVertices = null
-    const segments = dotgrid.tool.layer()
-    const sumSegments = dotgrid.tool.length()
+    const segments = client.tool.layer()
+    const sumSegments = client.tool.length()
 
     for (const i in segments) {
       if (segments[i].vertices.length > 2) { multiVertices = true; break }
     }
 
-    document.getElementById('option_line').className.baseVal = !dotgrid.tool.canCast('line') ? 'icon inactive' : 'icon'
-    document.getElementById('option_arc_c').className.baseVal = !dotgrid.tool.canCast('arc_c') ? 'icon inactive' : 'icon'
-    document.getElementById('option_arc_r').className.baseVal = !dotgrid.tool.canCast('arc_r') ? 'icon inactive' : 'icon'
-    document.getElementById('option_bezier').className.baseVal = !dotgrid.tool.canCast('bezier') ? 'icon inactive' : 'icon'
-    document.getElementById('option_close').className.baseVal = !dotgrid.tool.canCast('close') ? 'icon inactive' : 'icon'
+    document.getElementById('option_line').className.baseVal = !client.tool.canCast('line') ? 'icon inactive' : 'icon'
+    document.getElementById('option_arc_c').className.baseVal = !client.tool.canCast('arc_c') ? 'icon inactive' : 'icon'
+    document.getElementById('option_arc_r').className.baseVal = !client.tool.canCast('arc_r') ? 'icon inactive' : 'icon'
+    document.getElementById('option_bezier').className.baseVal = !client.tool.canCast('bezier') ? 'icon inactive' : 'icon'
+    document.getElementById('option_close').className.baseVal = !client.tool.canCast('close') ? 'icon inactive' : 'icon'
 
-    document.getElementById('option_thickness').className.baseVal = dotgrid.tool.layer().length < 1 ? 'icon inactive' : 'icon'
-    document.getElementById('option_linecap').className.baseVal = dotgrid.tool.layer().length < 1 ? 'icon inactive' : 'icon'
-    document.getElementById('option_linejoin').className.baseVal = dotgrid.tool.layer().length < 1 || !multiVertices ? 'icon inactive' : 'icon'
-    document.getElementById('option_mirror').className.baseVal = dotgrid.tool.layer().length < 1 ? 'icon inactive' : 'icon'
-    document.getElementById('option_fill').className.baseVal = dotgrid.tool.layer().length < 1 ? 'icon inactive' : 'icon'
+    document.getElementById('option_thickness').className.baseVal = client.tool.layer().length < 1 ? 'icon inactive' : 'icon'
+    document.getElementById('option_linecap').className.baseVal = client.tool.layer().length < 1 ? 'icon inactive' : 'icon'
+    document.getElementById('option_linejoin').className.baseVal = client.tool.layer().length < 1 || !multiVertices ? 'icon inactive' : 'icon'
+    document.getElementById('option_mirror').className.baseVal = client.tool.layer().length < 1 ? 'icon inactive' : 'icon'
+    document.getElementById('option_fill').className.baseVal = client.tool.layer().length < 1 ? 'icon inactive' : 'icon'
 
-    document.getElementById('option_color').children[0].style.fill = dotgrid.tool.style().color
-    document.getElementById('option_color').children[0].style.stroke = dotgrid.tool.style().color
+    document.getElementById('option_color').children[0].style.fill = client.tool.style().color
+    document.getElementById('option_color').children[0].style.stroke = client.tool.style().color
     document.getElementById('option_color').className.baseVal = 'icon'
 
     // Source
@@ -130,15 +130,15 @@ function Interface (dotgrid) {
     document.getElementById('option_export').className.baseVal = sumSegments < 1 ? 'icon inactive source' : 'icon source'
     document.getElementById('option_render').className.baseVal = sumSegments < 1 ? 'icon inactive source' : 'icon source'
 
-    document.getElementById('option_grid').className.baseVal = dotgrid.renderer.showExtras ? 'icon inactive source' : 'icon source'
+    document.getElementById('option_grid').className.baseVal = client.renderer.showExtras ? 'icon inactive source' : 'icon source'
 
     // Grid
-    if (dotgrid.renderer.showExtras) { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 Q155,65 245,155 M155,125 A30,30 0 0,1 185,155 A30,30 0 0,1 155,185 A30,30 0 0,1 125,155 A30,30 0 0,1 155,125 ') } else { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 ') }
+    if (client.renderer.showExtras) { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 Q155,65 245,155 M155,125 A30,30 0 0,1 185,155 A30,30 0 0,1 155,185 A30,30 0 0,1 125,155 A30,30 0 0,1 155,125 ') } else { document.getElementById('grid_path').setAttribute('d', 'M65,155 Q155,245 245,155 M65,155 ') }
 
     // Mirror
-    if (dotgrid.tool.style().mirror_style === 0) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210') } else if (dotgrid.tool.style().mirror_style === 1) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L240,240 M180,120 L210,90 M120,180 L90,210') } else if (dotgrid.tool.style().mirror_style === 2) { document.getElementById('mirror_path').setAttribute('d', 'M210,90 L210,90 L90,210 M60,60 L60,60 L120,120 M180,180 L180,180 L240,240') } else if (dotgrid.tool.style().mirror_style === 3) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L60,60 L120,120 L180,120 L210,90 M240,240 L240,240 L180,180 L120,180 L90,210') } else if (dotgrid.tool.style().mirror_style === 4) { document.getElementById('mirror_path').setAttribute('d', 'M120,120 L120,120 L120,120 L180,120 M120,150 L120,150 L180,150 M120,180 L120,180 L180,180 L180,180 L180,180 L240,240 M120,210 L120,210 L180,210 M120,90 L120,90 L180,90 M60,60 L60,60 L120,120  ') }
+    if (client.tool.style().mirror_style === 0) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210') } else if (client.tool.style().mirror_style === 1) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L240,240 M180,120 L210,90 M120,180 L90,210') } else if (client.tool.style().mirror_style === 2) { document.getElementById('mirror_path').setAttribute('d', 'M210,90 L210,90 L90,210 M60,60 L60,60 L120,120 M180,180 L180,180 L240,240') } else if (client.tool.style().mirror_style === 3) { document.getElementById('mirror_path').setAttribute('d', 'M60,60 L60,60 L120,120 L180,120 L210,90 M240,240 L240,240 L180,180 L120,180 L90,210') } else if (client.tool.style().mirror_style === 4) { document.getElementById('mirror_path').setAttribute('d', 'M120,120 L120,120 L120,120 L180,120 M120,150 L120,150 L180,150 M120,180 L120,180 L180,180 L180,180 L180,180 L240,240 M120,210 L120,210 L180,210 M120,90 L120,90 L180,90 M60,60 L60,60 L120,120  ') }
 
-    this.prev_operation = dotgrid.cursor.operation
+    this.prev_operation = client.cursor.operation
   }
 
   this.toggle = function () {
@@ -148,7 +148,7 @@ function Interface (dotgrid) {
 
   document.onkeydown = function (e) {
     if (e.key === 'Tab') {
-      dotgrid.interface.toggle()
+      client.interface.toggle()
       e.preventDefault()
     }
   }

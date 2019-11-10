@@ -5,7 +5,7 @@
 /* global Image */
 /* global Blob */
 
-function Manager (dotgrid) {
+function Manager (client) {
   // Create SVG parts
   this.el = document.createElementNS('http://www.w3.org/2000/svg', 'svg')
   this.el.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
@@ -22,13 +22,13 @@ function Manager (dotgrid) {
   }
 
   this.update = function () {
-    this.el.setAttribute('width', (dotgrid.tool.settings.size.width) + 'px')
-    this.el.setAttribute('height', (dotgrid.tool.settings.size.height) + 'px')
-    this.el.style.width = (dotgrid.tool.settings.size.width)
-    this.el.style.height = dotgrid.tool.settings.size.height
+    this.el.setAttribute('width', (client.tool.settings.size.width) + 'px')
+    this.el.setAttribute('height', (client.tool.settings.size.height) + 'px')
+    this.el.style.width = (client.tool.settings.size.width)
+    this.el.style.height = client.tool.settings.size.height
 
-    const styles = dotgrid.tool.styles
-    const paths = dotgrid.tool.paths()
+    const styles = client.tool.styles
+    const paths = client.tool.paths()
 
     for (const id in this.layers) {
       const style = styles[id]
@@ -54,7 +54,7 @@ function Manager (dotgrid) {
 
   // Exporters
 
-  this.toPNG = function (size = dotgrid.tool.settings.size, callback) {
+  this.toPNG = function (size = client.tool.settings.size, callback) {
     this.update()
 
     const image64 = this.svg64()
@@ -79,7 +79,7 @@ function Manager (dotgrid) {
   this.toGRID = function (callback) {
     this.update()
 
-    const text = dotgrid.tool.export()
+    const text = client.tool.export()
     const file = new Blob([text], { type: 'text/plain' })
     callback(URL.createObjectURL(file), 'export.grid')
   }

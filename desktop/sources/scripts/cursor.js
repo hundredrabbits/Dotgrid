@@ -1,6 +1,6 @@
 'use strict'
 
-function Cursor (dotgrid) {
+function Cursor (client) {
   this.pos = { x: 0, y: 0 }
   this.lastPos = { x: 0, y: 0 }
   this.translation = null
@@ -17,11 +17,11 @@ function Cursor (dotgrid) {
 
   this.down = function (e) {
     this.pos = this.atEvent(e)
-    if (dotgrid.tool.vertexAt(this.pos)) {
+    if (client.tool.vertexAt(this.pos)) {
       this.translate(this.pos, this.pos, e.shiftKey, e.ctrlKey || e.metaKey, e.altKey)
     }
-    dotgrid.renderer.update()
-    dotgrid.interface.update()
+    client.renderer.update()
+    client.interface.update()
     e.preventDefault()
   }
 
@@ -31,9 +31,9 @@ function Cursor (dotgrid) {
       this.translate(null, this.pos)
     }
     if (this.lastPos.x !== this.pos.x || this.lastPos.y !== this.pos.y) {
-      dotgrid.renderer.update()
+      client.renderer.update()
     }
-    dotgrid.interface.update()
+    client.interface.update()
     this.lastPos = this.pos
     e.preventDefault()
   }
@@ -41,23 +41,23 @@ function Cursor (dotgrid) {
   this.up = function (e) {
     this.pos = this.atEvent(e)
     if (this.translation && !isEqual(this.translation.from, this.translation.to)) {
-      if (this.translation.layer === true) { dotgrid.tool.translateLayer(this.translation.from, this.translation.to) } else if (this.translation.copy) { dotgrid.tool.translateCopy(this.translation.from, this.translation.to) } else if (this.translation.multi) { dotgrid.tool.translateMulti(this.translation.from, this.translation.to) } else { dotgrid.tool.translate(this.translation.from, this.translation.to) }
+      if (this.translation.layer === true) { client.tool.translateLayer(this.translation.from, this.translation.to) } else if (this.translation.copy) { client.tool.translateCopy(this.translation.from, this.translation.to) } else if (this.translation.multi) { client.tool.translateMulti(this.translation.from, this.translation.to) } else { client.tool.translate(this.translation.from, this.translation.to) }
     } else if (e.target.id === 'guide') {
-      dotgrid.tool.addVertex({ x: this.pos.x, y: this.pos.y })
-      dotgrid.picker.stop()
+      client.tool.addVertex({ x: this.pos.x, y: this.pos.y })
+      client.picker.stop()
     }
     this.translate()
-    dotgrid.interface.update()
-    dotgrid.renderer.update()
+    client.interface.update()
+    client.renderer.update()
     e.preventDefault()
   }
 
   this.alt = function (e) {
     this.pos = this.atEvent(e)
-    dotgrid.tool.removeSegmentsAt(this.pos)
+    client.tool.removeSegmentsAt(this.pos)
     e.preventDefault()
     setTimeout(() => {
-      dotgrid.tool.clear()
+      client.tool.clear()
     }, 150)
   }
 
@@ -67,15 +67,15 @@ function Cursor (dotgrid) {
 
   this.relativePos = function (pos) {
     return {
-      x: pos.x - dotgrid.renderer.el.offsetLeft,
-      y: pos.y - dotgrid.renderer.el.offsetTop
+      x: pos.x - client.renderer.el.offsetLeft,
+      y: pos.y - client.renderer.el.offsetTop
     }
   }
 
   this.snapPos = function (pos) {
     return {
-      x: clamp(step(pos.x, 15), 15, dotgrid.tool.settings.size.width - 15),
-      y: clamp(step(pos.y, 15), 15, dotgrid.tool.settings.size.height - 15)
+      x: clamp(step(pos.x, 15), 15, client.tool.settings.size.width - 15),
+      y: clamp(step(pos.y, 15), 15, client.tool.settings.size.height - 15)
     }
   }
 

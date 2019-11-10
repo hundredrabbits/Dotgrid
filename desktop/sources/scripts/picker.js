@@ -1,6 +1,6 @@
 'use strict'
 
-function Picker (dotgrid) {
+function Picker (client) {
   this.memory = ''
   this.el = document.createElement('div')
   this.el.id = 'picker'
@@ -15,17 +15,17 @@ function Picker (dotgrid) {
 
     this.isActive = true
 
-    this.input.setAttribute('placeholder', `${dotgrid.tool.style().color.replace('#', '').trim()}`)
+    this.input.setAttribute('placeholder', `${client.tool.style().color.replace('#', '').trim()}`)
     this.input.setAttribute('maxlength', 6)
 
     this.input.addEventListener('keydown', this.onKeyDown, false)
     this.input.addEventListener('keyup', this.onKeyUp, false)
 
-    dotgrid.interface.el.className = 'picker'
+    client.interface.el.className = 'picker'
     this.input.focus()
     this.input.value = ''
 
-    try { dotgrid.controller.set('picker') } catch (err) { }
+    try { client.controller.set('picker') } catch (err) { }
   }
 
   this.update = function () {
@@ -43,13 +43,13 @@ function Picker (dotgrid) {
 
     this.isActive = false
 
-    dotgrid.interface.el.className = ''
+    client.interface.el.className = ''
     this.input.blur()
     this.input.value = ''
 
-    try { dotgrid.controller.set() } catch (err) { console.log('No controller') }
+    try { client.controller.set() } catch (err) { console.log('No controller') }
 
-    setTimeout(() => { dotgrid.interface.update(true); dotgrid.renderer.update() }, 250)
+    setTimeout(() => { client.interface.update(true); client.renderer.update() }, 250)
   }
 
   this.validate = function () {
@@ -57,8 +57,8 @@ function Picker (dotgrid) {
 
     const hex = `#${this.input.value}`
 
-    dotgrid.tool.style().color = hex
-    dotgrid.tool.style().fill = dotgrid.tool.style().fill !== 'none' ? hex : 'none'
+    client.tool.style().color = hex
+    client.tool.style().fill = client.tool.style().fill !== 'none' ? hex : 'none'
 
     this.stop()
   }

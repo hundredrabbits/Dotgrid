@@ -14,9 +14,9 @@
 
 /* global FileReader */
 
-function Dotgrid () {
+function Client () {
   this.install = function (host) {
-    console.info('Dotgrid', 'Installing..')
+    console.info('Client', 'Installing..')
 
     this.acels = new Acels(this)
     this.theme = new Theme(this)
@@ -48,7 +48,6 @@ function Dotgrid () {
     this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.write('dotgrid', 'grid', this.tool.export(), 'text/plain') })
     this.acels.set('File', 'Export Vector', 'CmdOrCtrl+E', () => { this.source.write('dotgrid', 'svg', this.manager.toString(), 'image/svg+xml') })
     this.acels.set('File', 'Export Image', 'CmdOrCtrl+Shift+E', () => { this.manager.toPNG(this.tool.settings.size, (dataUrl) => { this.source.download('dotgrid', 'png', dataUrl, 'image/png') }) })
-    this.acels.set('File', 'Revert', 'CmdOrCtrl+W', () => { this.source.revert() })
     this.acels.set('History', 'Undo', 'CmdOrCtrl+Z', () => { this.history.undo() })
     this.acels.set('History', 'Redo', 'CmdOrCtrl+Shift+Z', () => { this.history.redo() })
     this.acels.set('Stroke', 'Line', 'A', () => { this.tool.cast('line') })
@@ -89,7 +88,7 @@ function Dotgrid () {
   }
 
   this.start = () => {
-    console.log('Dotgrid', 'Starting..')
+    console.log('Client', 'Starting..')
     console.info(`${this.acels}`)
 
     this.theme.start()
@@ -131,7 +130,7 @@ function Dotgrid () {
 
   this.fitSize = () => {
     if (this.requireResize() === false) { return }
-    console.log('Dotgrid', `Will resize to: ${printSize(this.getRequiredSize())}`)
+    console.log('Client', `Will resize to: ${printSize(this.getRequiredSize())}`)
     this.update()
   }
 
@@ -164,7 +163,7 @@ function Dotgrid () {
     const _required = this.getRequiredSize()
     const offset = sizeOffset(_window, _required)
     if (offset.width !== 0 || offset.height !== 0) {
-      console.log('Dotgrid', `Require ${printSize(_required)}, but window is ${printSize(_window)}(${printSize(offset)})`)
+      console.log('Client', `Require ${printSize(_required)}, but window is ${printSize(_window)}(${printSize(offset)})`)
       return true
     }
     return false
@@ -175,7 +174,7 @@ function Dotgrid () {
     const _padded = this.getPaddedSize()
     const offset = sizeOffset(_padded, _project)
     if (offset.width !== 0 || offset.height !== 0) {
-      console.log('Dotgrid', `Resize project to ${printSize(_padded)}`)
+      console.log('Client', `Resize project to ${printSize(_padded)}`)
       this.tool.settings.size = _padded
     }
     this.update()
@@ -190,7 +189,7 @@ function Dotgrid () {
     const file = e.dataTransfer.files[0]
     const filename = file.path ? file.path : file.name ? file.name : ''
 
-    if (filename.indexOf('.grid') < 0) { console.warn('Dotgrid', 'Not a .grid file'); return }
+    if (filename.indexOf('.grid') < 0) { console.warn('Client', 'Not a .grid file'); return }
 
     const reader = new FileReader()
 

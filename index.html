@@ -24,7 +24,7 @@
     <script type="text/javascript" src="desktop/sources/scripts/lib/history.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/lib/source.js"></script>
     <!-- Dotgrid -->
-    <script type="text/javascript" src="desktop/sources/scripts/dotgrid.js"></script>
+    <script type="text/javascript" src="desktop/sources/scripts/client.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/manager.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/renderer.js"></script>
     <script type="text/javascript" src="desktop/sources/scripts/cursor.js"></script>
@@ -43,12 +43,12 @@
     <script>
       'use strict'
 
-      const dotgrid = new Dotgrid()
+      const client = new Client()
 
-      dotgrid.install(document.body)
+      client.install(document.body)
 
       window.addEventListener('load', () => { 
-        dotgrid.start()
+        client.start()
       })
     </script>
   </body>

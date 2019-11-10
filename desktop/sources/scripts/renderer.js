@@ -4,7 +4,7 @@
 /* global Path2D */
 /* global Generator */
 
-function Renderer (dotgrid) {
+function Renderer (client) {
   this.el = document.createElement('canvas')
   this.el.id = 'guide'
   this.el.width = 640
@@ -22,19 +22,19 @@ function Renderer (dotgrid) {
 
   this.update = function (force = false) {
     this.resize()
-    dotgrid.manager.update()
+    client.manager.update()
     const render = new Image()
     render.onload = () => {
       this.draw(render)
     }
-    render.src = dotgrid.manager.svg64()
+    render.src = client.manager.svg64()
   }
 
   this.draw = function (render) {
     this.clear()
     this.drawMirror()
-    this.drawRulers()
     this.drawGrid()
+    this.drawRulers()
     this.drawRender(render) //
     this.drawVertices()
     this.drawHandles()
@@ -50,11 +50,11 @@ function Renderer (dotgrid) {
   this.toggle = function () {
     this.showExtras = !this.showExtras
     this.update()
-    dotgrid.interface.update(true)
+    client.interface.update(true)
   }
 
   this.resize = function () {
-    const _target = dotgrid.getPaddedSize()
+    const _target = client.getPaddedSize()
     const _current = { width: this.el.width / this.scale, height: this.el.height / this.scale }
     const offset = sizeOffset(_target, _current)
     if (offset.width === 0 && offset.height === 0) {
@@ -72,23 +72,23 @@ function Renderer (dotgrid) {
   this.drawMirror = function () {
     if (!this.showExtras) { return }
 
-    if (dotgrid.tool.style().mirror_style === 0) { return }
+    if (client.tool.style().mirror_style === 0) { return }
 
-    const middle = { x: dotgrid.tool.settings.size.width, y: dotgrid.tool.settings.size.height }
+    const middle = { x: client.tool.settings.size.width, y: client.tool.settings.size.height }
 
-    if (dotgrid.tool.style().mirror_style === 1 || dotgrid.tool.style().mirror_style === 3) {
-      this.drawRule({ x: middle.x, y: 15 * this.scale }, { x: middle.x, y: (dotgrid.tool.settings.size.height) * this.scale })
+    if (client.tool.style().mirror_style === 1 || client.tool.style().mirror_style === 3) {
+      this.drawRule({ x: middle.x, y: 15 * this.scale }, { x: middle.x, y: (client.tool.settings.size.height) * this.scale })
     }
-    if (dotgrid.tool.style().mirror_style === 2 || dotgrid.tool.style().mirror_style === 3) {
-      this.drawRule({ x: 15 * this.scale, y: middle.y }, { x: (dotgrid.tool.settings.size.width) * this.scale, y: middle.y })
+    if (client.tool.style().mirror_style === 2 || client.tool.style().mirror_style === 3) {
+      this.drawRule({ x: 15 * this.scale, y: middle.y }, { x: (client.tool.settings.size.width) * this.scale, y: middle.y })
     }
   }
 
   this.drawHandles = function () {
     if (!this.showExtras) { return }
 
-    for (const segmentId in dotgrid.tool.layer()) {
-      const segment = dotgrid.tool.layer()[segmentId]
+    for (const segmentId in client.tool.layer()) {
+      const segment = client.tool.layer()[segmentId]
       for (const vertexId in segment.vertices) {
         const vertex = segment.vertices[vertexId]
         this.drawHandle(vertex)
@@ -97,15 +97,15 @@ function Renderer (dotgrid) {
   }
 
   this.drawVertices = function () {
-    for (const id in dotgrid.tool.vertices) {
-      this.drawVertex(dotgrid.tool.vertices[id])
+    for (const id in client.tool.vertices) {
+      this.drawVertex(client.tool.vertices[id])
     }
   }
 
   this.drawGrid = function () {
     if (!this.showExtras) { return }
 
-    const markers = { w: parseInt(dotgrid.tool.settings.size.width / 15), h: parseInt(dotgrid.tool.settings.size.height / 15) }
+    const markers = { w: parseInt(client.tool.settings.size.width / 15), h: parseInt(client.tool.settings.size.height / 15) }
 
     for (let x = markers.w - 1; x >= 0; x--) {
       for (let y = markers.h - 1; y >= 0; y--) {
@@ -115,31 +115,31 @@ function Renderer (dotgrid) {
         this.drawMarker({
           x: parseInt(x * 15),
           y: parseInt(y * 15)
-        }, isStep ? 2.5 : 1.5, isStep ? dotgrid.theme.active.b_med : dotgrid.theme.active.b_low)
+        }, isStep ? 2.5 : 1.5, client.theme.active.b_med)
       }
     }
   }
 
   this.drawRulers = function () {
-    if (!dotgrid.cursor.translation) { return }
+    if (!client.cursor.translation) { return }
 
-    const pos = dotgrid.cursor.translation.to
-    const bottom = (dotgrid.tool.settings.size.height * this.scale)
-    const right = (dotgrid.tool.settings.size.width * this.scale)
+    const pos = client.cursor.translation.to
+    const bottom = (client.tool.settings.size.height * this.scale)
+    const right = (client.tool.settings.size.width * this.scale)
 
     this.drawRule({ x: pos.x * this.scale, y: 0 }, { x: pos.x * this.scale, y: bottom })
     this.drawRule({ x: 0, y: pos.y * this.scale }, { x: right, y: pos.y * this.scale })
   }
 
   this.drawPreview = function () {
-    const operation = dotgrid.cursor.operation && dotgrid.cursor.operation.cast ? dotgrid.cursor.operation.cast : null
+    const operation = client.cursor.operation && client.cursor.operation.cast ? client.cursor.operation.cast : null
 
-    if (!dotgrid.tool.canCast(operation)) { return }
+    if (!client.tool.canCast(operation)) { return }
     if (operation === 'close') { return }
 
-    const path = new Generator([{ vertices: dotgrid.tool.vertices, type: operation }]).toString({ x: 0, y: 0 }, 2)
+    const path = new Generator([{ vertices: client.tool.vertices, type: operation }]).toString({ x: 0, y: 0 }, 2)
     const style = {
-      color: dotgrid.theme.active.f_med,
+      color: client.theme.active.f_med,
       thickness: 2,
       strokeLinecap: 'round',
       strokeLinejoin: 'round',
@@ -163,7 +163,7 @@ function Renderer (dotgrid) {
     this.context.beginPath()
     this.context.lineWidth = 2
     this.context.arc((pos.x * this.scale), (pos.y * this.scale), radius, 0, 2 * Math.PI, false)
-    this.context.fillStyle = dotgrid.theme.active.f_med
+    this.context.fillStyle = client.theme.active.f_low
     this.context.fill()
     this.context.closePath()
   }
@@ -174,31 +174,20 @@ function Renderer (dotgrid) {
     this.context.lineTo(to.x, to.y)
     this.context.lineCap = 'round'
     this.context.lineWidth = 3
-    this.context.strokeStyle = dotgrid.theme.active.b_low
+    this.context.strokeStyle = client.theme.active.b_low
     this.context.stroke()
     this.context.closePath()
   }
 
   this.drawHandle = function (pos, radius = 6) {
     this.context.beginPath()
-    this.context.lineWidth = 3
-    this.context.lineCap = 'round'
     this.context.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), radius + 3, 0, 2 * Math.PI, false)
-    this.context.fillStyle = dotgrid.theme.active.f_high
-    this.context.fill()
-    this.context.strokeStyle = dotgrid.theme.active.f_high
-    this.context.stroke()
-    this.context.closePath()
-
-    this.context.beginPath()
-    this.context.arc((pos.x * this.scale), (pos.y * this.scale), radius, 0, 2 * Math.PI, false)
-    this.context.fillStyle = dotgrid.theme.active.f_low
+    this.context.fillStyle = client.theme.active.f_high
     this.context.fill()
     this.context.closePath()
-
     this.context.beginPath()
     this.context.arc((pos.x * this.scale), (pos.y * this.scale), radius - 3, 0, 2 * Math.PI, false)
-    this.context.fillStyle = dotgrid.theme.active.f_high
+    this.context.fillStyle = client.theme.active.b_low
     this.context.fill()
     this.context.closePath()
   }
@@ -224,16 +213,16 @@ function Renderer (dotgrid) {
   }
 
   this.drawTranslation = function () {
-    if (!dotgrid.cursor.translation) { return }
+    if (!client.cursor.translation) { return }
 
     this.context.save()
 
     this.context.beginPath()
-    this.context.moveTo((dotgrid.cursor.translation.from.x * this.scale), (dotgrid.cursor.translation.from.y * this.scale))
-    this.context.lineTo((dotgrid.cursor.translation.to.x * this.scale), (dotgrid.cursor.translation.to.y * this.scale))
+    this.context.moveTo((client.cursor.translation.from.x * this.scale), (client.cursor.translation.from.y * this.scale))
+    this.context.lineTo((client.cursor.translation.to.x * this.scale), (client.cursor.translation.to.y * this.scale))
     this.context.lineCap = 'round'
     this.context.lineWidth = 5
-    this.context.strokeStyle = dotgrid.cursor.translation.multi === true ? dotgrid.theme.active.b_inv : dotgrid.cursor.translation.copy === true ? dotgrid.theme.active.f_med : dotgrid.theme.active.f_low
+    this.context.strokeStyle = client.cursor.translation.multi === true ? client.theme.active.b_inv : client.cursor.translation.copy === true ? client.theme.active.f_med : client.theme.active.f_low
     this.context.setLineDash([5, 10])
     this.context.stroke()
     this.context.closePath()
@@ -242,14 +231,14 @@ function Renderer (dotgrid) {
     this.context.restore()
   }
 
-  this.drawCursor = function (pos = dotgrid.cursor.pos, radius = dotgrid.tool.style().thickness - 1) {
+  this.drawCursor = function (pos = client.cursor.pos, radius = client.tool.style().thickness - 1) {
     this.context.save()
 
     this.context.beginPath()
     this.context.lineWidth = 3
     this.context.lineCap = 'round'
     this.context.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), 5, 0, 2 * Math.PI, false)
-    this.context.strokeStyle = dotgrid.theme.active.background
+    this.context.strokeStyle = client.theme.active.background
     this.context.stroke()
     this.context.closePath()
 
@@ -257,7 +246,7 @@ function Renderer (dotgrid) {
     this.context.lineWidth = 3
     this.context.lineCap = 'round'
     this.context.arc(Math.abs(pos.x * -this.scale), Math.abs(pos.y * this.scale), clamp(radius, 5, 100), 0, 2 * Math.PI, false)
-    this.context.strokeStyle = dotgrid.theme.active.f_med
+    this.context.strokeStyle = client.theme.active.f_med
     this.context.stroke()
     this.context.closePath()
 
