@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron . --disable-gpu",
     "fix": "standard --fix",
     "clean": "rm -r ~/Documents/Dotgrid-darwin-x64/ ; rm -r ~/Documents/Dotgrid-linux-x64/ ; rm -r ~/Documents/Dotgrid-win32-x64/ ; echo 'cleaned build location'",
     "build_osx": "electron-packager . Dotgrid --platform=darwin --arch=x64 --out ~/Documents/ --overwrite --icon=icon.icns ; echo 'Built for OSX'",
@@ -17,8 +17,8 @@
     "push": "npm run build ; npm run push_osx ; npm run push_linux ; npm run push_win ; npm run clean ; npm run status"
   },
   "devDependencies": {
-    "electron": "^7.0.0",
-    "electron-packager": "^14.0.6"
+    "electron": "^7.1.4",
+    "electron-packager": "^14.1.1"
   },
   "standard": {
     "globals": [
