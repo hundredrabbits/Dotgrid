@@ -206,9 +206,9 @@ function Tool (client) {
   this.source = function (type) {
     if (type === 'grid') { client.renderer.toggle() }
     if (type === 'open') { client.source.open('grid', client.whenOpen) }
-    if (type === 'save') { client.source.download('dotgrid', 'grid', client.tool.export(), 'text/plain') }
-    if (type === 'export') { client.source.download('dotgrid', 'svg', client.manager.toString(), 'image/svg+xml') }
-    if (type === 'render') { client.manager.toPNG(client.tool.settings.size, (dataUrl) => { client.source.download('dotgrid', 'png', dataUrl, 'image/png') }) }
+    if (type === 'save') { client.source.write('dotgrid', 'grid', client.tool.export(), 'text/plain') }
+    if (type === 'export') { client.source.write('dotgrid', 'svg', client.manager.toString(), 'image/svg+xml') }
+    if (type === 'render') { client.manager.toPNG(client.tool.settings.size, (dataUrl) => { client.source.write('dotgrid', 'png', dataUrl, 'image/png') }) }
   }
 
   this.canAppend = function (content, index = this.index) {
