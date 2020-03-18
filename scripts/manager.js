@@ -112,21 +112,6 @@ function Manager (client) {
     img.src = image64
   }
 
-  this.toSVG = function (callback) {
-    this.update()
-
-    const image64 = this.svg64()
-    callback(image64, 'export.svg')
-  }
-
-  this.toGRID = function (callback) {
-    this.update()
-
-    const text = client.tool.export()
-    const file = new Blob([text], { type: 'text/plain' })
-    callback(URL.createObjectURL(file), 'export.grid')
-  }
-
   this.toString = () => {
     const viewBox = this.minimalViewBox();
     if (viewBox !== '') {
