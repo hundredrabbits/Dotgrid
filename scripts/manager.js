@@ -45,6 +45,49 @@ function Manager (client) {
     }
   }
 
+  this.minimalViewBox = function () {
+    const styles = client.tool.styles
+    const paths = client.tool.paths()
+
+    var xMin = null
+    var yMin = null
+    var xMax = null
+    var yMax = null
+    for (const id in this.layers) {
+      const style = styles[id]
+      const canOvershoot = style.strokeLinejoin === 'miter' || style.strokeLinecap === 'square'
+      const offset = canOvershoot ? style.thickness : style.thickness / 2
+
+      const path = paths[id]
+      const matches = path.match(/\d+,\d+/g)
+      console.log(matches)
+      if (matches === null) { continue }
+
+      const coordinates = matches.map(p => p.split(/,/))
+      const xs = coordinates.map(p => p[0]);
+      const ys = coordinates.map(p => p[1]);
+      const xMinOfLayer = Math.min(...xs) - offset
+      const yMinOfLayer = Math.min(...ys) - offset
+      const xMaxOfLayer = Math.max(...xs) + offset
+      const yMaxOfLayer = Math.max(...ys) + offset
+
+      console.log(xMinOfLayer)
+      console.log(yMinOfLayer)
+      console.log(xMaxOfLayer)
+      console.log(yMaxOfLayer)
+
+      if (xMin === null || xMinOfLayer < xMin) { xMin = xMinOfLayer }
+      if (yMin === null || yMinOfLayer < yMin) { yMin = yMinOfLayer }
+      if (xMax === null || xMaxOfLayer > xMax) { xMax = xMaxOfLayer }
+      if (yMax === null || yMaxOfLayer > yMax) { yMax = yMaxOfLayer }
+    }
+    if (xMin === null || yMin === null || xMax === null || yMax === null) { return '' }
+
+    const viewBox = xMin + ' ' + yMin + ' ' + (xMax - xMin) + ' ' + (yMax - yMin)
+    console.log(viewBox)
+    return viewBox
+  }
+
   this.svg64 = function () {
     const xml = new XMLSerializer().serializeToString(this.el)
     const svg64 = btoa(xml)
@@ -85,6 +128,23 @@ function Manager (client) {
   }
 
   this.toString = () => {
-    return new XMLSerializer().serializeToString(this.el)
+    const viewBox = this.minimalViewBox();
+    if (viewBox !== '') {
+      this.el.setAttribute('width', viewBox.split(/ /)[2] + 'px')
+      this.el.removeAttribute('height')
+      this.el.style.width = null
+      this.el.style.height = null
+      this.el.setAttribute('viewBox', this.minimalViewBox())
+    }
+    const serialized = new XMLSerializer().serializeToString(this.el)
+    if (viewBox !== '') {
+      this.el.setAttribute('width', (client.tool.settings.size.width) + 'px')
+      this.el.setAttribute('height', (client.tool.settings.size.height) + 'px')
+      this.el.style.width = client.tool.settings.size.width
+      this.el.style.height = client.tool.settings.size.height
+      this.el.removeAttribute('viewBox')
+    }
+
+    return serialized
   }
 }
