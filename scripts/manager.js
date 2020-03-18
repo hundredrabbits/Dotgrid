@@ -60,7 +60,6 @@ function Manager (client) {
 
       const path = paths[id]
       const matches = path.match(/\d+,\d+/g)
-      console.log(matches)
       if (matches === null) { continue }
 
       const coordinates = matches.map(p => p.split(/,/))
@@ -71,11 +70,6 @@ function Manager (client) {
       const xMaxOfLayer = Math.max(...xs) + offset
       const yMaxOfLayer = Math.max(...ys) + offset
 
-      console.log(xMinOfLayer)
-      console.log(yMinOfLayer)
-      console.log(xMaxOfLayer)
-      console.log(yMaxOfLayer)
-
       if (xMin === null || xMinOfLayer < xMin) { xMin = xMinOfLayer }
       if (yMin === null || yMinOfLayer < yMin) { yMin = yMinOfLayer }
       if (xMax === null || xMaxOfLayer > xMax) { xMax = xMaxOfLayer }
@@ -83,9 +77,7 @@ function Manager (client) {
     }
     if (xMin === null || yMin === null || xMax === null || yMax === null) { return '' }
 
-    const viewBox = xMin + ' ' + yMin + ' ' + (xMax - xMin) + ' ' + (yMax - yMin)
-    console.log(viewBox)
-    return viewBox
+    return xMin + ' ' + yMin + ' ' + (xMax - xMin) + ' ' + (yMax - yMin)
   }
 
   this.svg64 = function () {
