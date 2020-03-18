@@ -24,7 +24,7 @@ function Manager (client) {
   this.update = function () {
     this.el.setAttribute('width', (client.tool.settings.size.width) + 'px')
     this.el.setAttribute('height', (client.tool.settings.size.height) + 'px')
-    this.el.style.width = (client.tool.settings.size.width)
+    this.el.style.width = client.tool.settings.size.width
     this.el.style.height = client.tool.settings.size.height
 
     const styles = client.tool.styles
