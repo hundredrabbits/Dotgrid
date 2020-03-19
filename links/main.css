@@ -35,7 +35,7 @@ body { padding: 0px; font-family:"input_mono_regular",courier,monospace; -webkit
 #interface #menu svg.icon#option_color { opacity: 1.0; z-index:1001; position: relative; }
 #interface #menu svg.icon#option_color:hover { opacity: 0.8 }
 
-#interface #picker { position: absolute; line-height: 20px; z-index: 0; width: 30px; opacity: 0; transition: all 250ms; font-size: 11px; border-radius: 3px; left: 200px; top: 0px; text-transform: uppercase; height:20px; padding:5px 0px;left:280px; overflow:hidden;}
+#interface #picker { position: absolute; line-height: 20px; z-index: 0; width: 30px; opacity: 0; transition: all 250ms; font-size: 11px; border-radius: 3px; left: 200px; top: 0px; text-transform: uppercase; height:20px; padding:5px 0px;left:310px; overflow:hidden;}
 #interface #picker:before { content:"#"; position: absolute; left:10px; opacity: 0; transition: opacity 500ms}
 #interface #picker input { background:transparent; position: absolute; left: 20px; height: 20px; width: 60px; line-height: 20px; opacity: 0; transition: opacity 500ms; text-transform: uppercase;}
 #interface #color_path { transition: all 500ms; }
@@ -47,6 +47,7 @@ body { padding: 0px; font-family:"input_mono_regular",courier,monospace; -webkit
 #interface.picker #option_thickness { opacity: 0 !important }
 #interface.picker #option_mirror { opacity: 0 !important }
 #interface.picker #option_fill { opacity: 0 !important }
+#interface.picker #option_mask { opacity: 0 !important }
 
 /* Web Specific */
 

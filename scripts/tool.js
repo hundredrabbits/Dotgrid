@@ -191,6 +191,8 @@ function Tool (client) {
       this.style().strokeLinejoin = a[this.i.linejoin % a.length]
     } else if (type === 'fill') {
       this.style().fill = this.style().fill === 'none' ? this.style().color : 'none'
+    } else if (type === 'mask') {
+      this.style().mask = !this.style().mask
     } else if (type === 'thickness') {
       this.style().thickness = clamp(this.style().thickness + mod, 1, 100)
     } else if (type === 'mirror') {
