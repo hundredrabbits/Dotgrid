@@ -2,10 +2,10 @@
 
 function History () {
   this.index = 0
-  this.a = []
+  this.a = [[[], [], []]]
 
   this.clear = function () {
-    this.a = []
+    this.a = [[[], [], []]]
     this.index = 0
   }
 
