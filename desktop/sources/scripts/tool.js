@@ -96,6 +96,7 @@ function Tool (client) {
     if (this.vertices.length > 0) { this.clear(); return }
 
     this.layer().pop()
+    client.history.push(this.layers)
     this.clear()
     client.renderer.update()
     client.interface.update(true)
@@ -114,6 +115,7 @@ function Tool (client) {
         this.layers[this.index].splice(segmentId, 1)
       }
     }
+    client.history.push(this.layers)
     this.clear()
     client.renderer.update()
     client.interface.update(true)
