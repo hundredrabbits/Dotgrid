@@ -23,6 +23,7 @@ function Client () {
     this.history = new History(this)
     this.source = new Source(this)
 
+    this.listener = new Listener(this)
     this.manager = new Manager(this)
     this.renderer = new Renderer(this)
     this.tool = new Tool(this)
