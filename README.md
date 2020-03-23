@@ -12,7 +12,7 @@ Learn more by reading the <a href="https://github.com/Hundredrabbits/Dotgrid" ta
 
 ## Guide
 
-View the [guide](https://100r.co/pages/dotgrid.html#introduction).
+View the [guide](https://100r.co/site/dotgrid.html).
 
 ## Electron Build
 
