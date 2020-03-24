@@ -403,7 +403,7 @@ function Client () {
     this.acels.set('∷', 'Toggle Menubar', 'Tab', () => { this.acels.toggle() })
     this.acels.set('∷', 'Open Theme', 'CmdOrCtrl+Shift+O', () => { this.theme.open() })
     this.acels.set('∷', 'Reset Theme', 'CmdOrCtrl+Backspace', () => { this.theme.reset() })
-    this.acels.set('File', 'New', 'CmdOrCtrl+N', () => { this.source.new() })
+    this.acels.set('File', 'New', 'CmdOrCtrl+N', () => { this.tool.erase(); this.update(); this.source.new() })
     this.acels.set('File', 'Open', 'CmdOrCtrl+O', () => { this.source.open('grid', this.whenOpen) })
     this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.write('dotgrid', 'grid', this.tool.export(), 'text/plain') })
     this.acels.set('File', 'Export Vector', 'CmdOrCtrl+E', () => { this.source.write('dotgrid', 'svg', this.manager.toString(), 'image/svg+xml') })
