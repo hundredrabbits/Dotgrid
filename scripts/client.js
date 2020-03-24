@@ -105,7 +105,7 @@ function Client () {
 
     this.interface.update(true) // force an update
 
-    setTimeout(() => { document.body.className += ' ready'; }, 250)
+    setTimeout(() => { document.body.className += ' ready' }, 250)
   }
 
   this.update = () => {
