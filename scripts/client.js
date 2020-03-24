@@ -103,7 +103,9 @@ function Client () {
     this.source.new()
     this.onResize()
 
-    setTimeout(() => { document.body.className += ' ready' }, 250)
+    this.interface.update(true) // force an update
+
+    setTimeout(() => { document.body.className += ' ready'; }, 250)
   }
 
   this.update = () => {

@@ -10,13 +10,7 @@ function Interface (client) {
   this.isVisible = true
   this.zoom = false
 
-  this.install = function (host) {
-    host.appendChild(this.el)
-  }
-
-  this.start = function (host) {
-    let html = ''
-    const options = {
+  const options = {
       cast: {
         line: { key: 'A', icon: 'M60,60 L240,240' },
         arc_c: { key: 'S', icon: 'M60,60 A180,180 0 0,1 240,240' },
@@ -42,6 +36,13 @@ function Interface (client) {
         grid: { key: 'H', icon: 'M65,155 Q155,245 245,155 M65,155 Q155,65 245,155 M155,125 A30,30 0 0,1 185,155 A30,30 0 0,1 155,185 A30,30 0 0,1 125,155 A30,30 0 0,1 155,125 ' }
       }
     }
+
+  this.install = function (host) {
+    host.appendChild(this.el)
+  }
+
+  this.start = function (host) {
+    let html = ''
 
     for (const type in options) {
       const tools = options[type]

@@ -229,7 +229,6 @@ function Tool (client) {
     // Cannot cast close twice
     if (type === 'close') {
       const prev = this.layer()[this.layer().length - 1]
-      console.log(this.vertices.length)
       if (!prev || prev.type === 'close' || this.vertices.length !== 0) {
         return false
       }
