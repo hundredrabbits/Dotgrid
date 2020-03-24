@@ -43,6 +43,9 @@ function Client () {
     window.addEventListener('dragover', (e) => { e.stopPropagation(); e.preventDefault(); e.dataTransfer.dropEffect = 'copy' })
     window.addEventListener('drop', this.onDrop)
 
+    this.acels.set('∷', 'Toggle Menubar', 'Tab', () => { this.acels.toggle() })
+    this.acels.set('∷', 'Open Theme', 'CmdOrCtrl+Shift+O', () => { this.theme.open() })
+    this.acels.set('∷', 'Reset Theme', 'CmdOrCtrl+Backspace', () => { this.theme.reset() })
     this.acels.set('File', 'New', 'CmdOrCtrl+N', () => { this.source.new() })
     this.acels.set('File', 'Open', 'CmdOrCtrl+O', () => { this.source.open('grid', this.whenOpen) })
     this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.write('dotgrid', 'grid', this.tool.export(), 'text/plain') })
@@ -79,12 +82,12 @@ function Client () {
     this.acels.set('Layers', 'Merge Layers', 'CmdOrCtrl+M', () => { this.tool.merge() })
     this.acels.set('View', 'Color Picker', 'G', () => { this.picker.start() })
     this.acels.set('View', 'Toggle Grid', 'H', () => { this.renderer.toggle() })
-    this.acels.install(window)
-    this.acels.pipe(this)
+    this.acels.route(this)
 
     this.manager.install()
     this.interface.install(host)
     this.theme.install(host, () => { this.update() })
+    this.acels.install(host)
   }
 
   this.start = () => {
@@ -92,6 +95,7 @@ function Client () {
     console.info(`${this.acels}`)
 
     this.theme.start()
+    this.acels.start()
     this.tool.start()
     this.renderer.start()
     this.interface.start()
