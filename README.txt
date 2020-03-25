@@ -23,8 +23,15 @@ File     Open             ^O
 File     Save             ^S
 File     Export Vector    ^E
 File     Export Image     ^Shift+E
-History  Undo             ^Z
-History  Redo             ^Shift+Z
+Edit     Undo             ^Z
+Edit     Redo             ^Shift+Z
+View     Color Picker     G
+View     Toggle Grid      H
+View     Toggle Tools     ^H
+Layers   Foreground       ^1
+Layers   Middleground     ^2
+Layers   Background       ^3
+Layers   Merge Layers     ^M
 Stroke   Line             A
 Stroke   Arc              S
 Stroke   Arc Rev          D
@@ -33,27 +40,21 @@ Stroke   Close            Z
 Stroke   Arc(full)        T
 Stroke   Arc Rev(full)    Y
 Stroke   Clear Selection  Escape
-Effect   Linecap          Q
-Effect   Linejoin         W
-Effect   Mirror           E
-Effect   Fill             R
-Effect   Thicker          }
-Effect   Thinner          {
-Effect   Thicker +5       ]
-Effect   Thinner -5       [
-Manual   Add Point        Enter
-Manual   Move Up          Up
-Manual   Move Right       Right
-Manual   Move Down        Down
-Manual   Move Left        Left
-Manual   Remove Point     Shift+Backspace
-Manual   Remove Segment   Backspace
-Layers   Foreground       ^1
-Layers   Middleground     ^2
-Layers   Background       ^3
-Layers   Merge Layers     ^M
-View     Color Picker     G
-View     Toggle Grid      H
+Stroke   Erase Segment    Backspace
+Control  Add Point        Enter
+Control  Move Up          Up
+Control  Move Right       Right
+Control  Move Down        Down
+Control  Move Left        Left
+Control  Remove Point     X
+Style    Linecap          Q
+Style    Linejoin         W
+Style    Mirror           E
+Style    Fill             R
+Style    Thicker          }
+Style    Thinner          {
+Style    Thicker +5       ]
+Style    Thinner -5       [
 
 Extras
 

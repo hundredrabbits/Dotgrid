@@ -159,13 +159,6 @@ function Interface (client) {
     this.el.className = this.isVisible ? 'visible' : 'hidden'
   }
 
-  document.onkeydown = function (e) {
-    if (e.key === 'Tab') {
-      client.interface.toggle()
-      e.preventDefault()
-    }
-  }
-
   function capitalize (str) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
   }

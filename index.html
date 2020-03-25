@@ -59,7 +59,7 @@ function Acels (client) {
     return h
   }
   this.convert = (event) => {
-    const accelerator = event.key === ' ' ? 'Space' : event.key.substr(0, 1).toUpperCase() + event.key.substr(1)
+    const accelerator = event.key === ' ' ? 'Space' : capitalize(event.key.replace('Arrow', ''))
     if ((event.ctrlKey || event.metaKey) && event.shiftKey) {
       return `CmdOrCtrl+Shift+${accelerator}`
     }
@@ -113,6 +113,7 @@ function Acels (client) {
   this.toggle = () => {
     this.el.className = this.el.className === 'hidden' ? '' : 'hidden'
   }
+  function capitalize (s) { return s.substr(0, 1).toUpperCase() + s.substr(1) }
 }
 'use strict'
 function History () {
@@ -408,8 +409,15 @@ function Client () {
     this.acels.set('File', 'Save', 'CmdOrCtrl+S', () => { this.source.write('dotgrid', 'grid', this.tool.export(), 'text/plain') })
     this.acels.set('File', 'Export Vector', 'CmdOrCtrl+E', () => { this.source.write('dotgrid', 'svg', this.manager.toString(), 'image/svg+xml') })
     this.acels.set('File', 'Export Image', 'CmdOrCtrl+Shift+E', () => { this.manager.toPNG(this.tool.settings.size, (dataUrl) => { this.source.write('dotgrid', 'png', dataUrl, 'image/png') }) })
-    this.acels.set('History', 'Undo', 'CmdOrCtrl+Z', () => { this.tool.undo() })
-    this.acels.set('History', 'Redo', 'CmdOrCtrl+Shift+Z', () => { this.tool.redo() })
+    this.acels.set('Edit', 'Undo', 'CmdOrCtrl+Z', () => { this.tool.undo() })
+    this.acels.set('Edit', 'Redo', 'CmdOrCtrl+Shift+Z', () => { this.tool.redo() })
+    this.acels.set('View', 'Color Picker', 'G', () => { this.picker.start() })
+    this.acels.set('View', 'Toggle Grid', 'H', () => { this.renderer.toggle() })
+    this.acels.set('View', 'Toggle Tools', 'CmdOrCtrl+H', () => { this.interface.toggle() })
+    this.acels.set('Layers', 'Foreground', 'CmdOrCtrl+1', () => { this.tool.selectLayer(0) })
+    this.acels.set('Layers', 'Middleground', 'CmdOrCtrl+2', () => { this.tool.selectLayer(1) })
+    this.acels.set('Layers', 'Background', 'CmdOrCtrl+3', () => { this.tool.selectLayer(2) })
+    this.acels.set('Layers', 'Merge Layers', 'CmdOrCtrl+M', () => { this.tool.merge() })
     this.acels.set('Stroke', 'Line', 'A', () => { this.tool.cast('line') })
     this.acels.set('Stroke', 'Arc', 'S', () => { this.tool.cast('arc_c') })
     this.acels.set('Stroke', 'Arc Rev', 'D', () => { this.tool.cast('arc_r') })
@@ -418,27 +426,21 @@ function Client () {
     this.acels.set('Stroke', 'Arc(full)', 'T', () => { this.tool.cast('arc_c_full') })
     this.acels.set('Stroke', 'Arc Rev(full)', 'Y', () => { this.tool.cast('arc_r_full') })
     this.acels.set('Stroke', 'Clear Selection', 'Escape', () => { this.tool.clear() })
-    this.acels.set('Effect', 'Linecap', 'Q', () => { this.tool.toggle('linecap') })
-    this.acels.set('Effect', 'Linejoin', 'W', () => { this.tool.toggle('linejoin') })
-    this.acels.set('Effect', 'Mirror', 'E', () => { this.tool.toggle('mirror') })
-    this.acels.set('Effect', 'Fill', 'R', () => { this.tool.toggle('fill') })
-    this.acels.set('Effect', 'Thicker', '}', () => { this.tool.toggle('thickness', 1) })
-    this.acels.set('Effect', 'Thinner', '{', () => { this.tool.toggle('thickness', -1) })
-    this.acels.set('Effect', 'Thicker +5', ']', () => { this.tool.toggle('thickness', 5) })
-    this.acels.set('Effect', 'Thinner -5', '[', () => { this.tool.toggle('thickness', -5) })
-    this.acels.set('Manual', 'Add Point', 'Enter', () => { this.tool.addVertex(this.cursor.pos); this.renderer.update() })
-    this.acels.set('Manual', 'Move Up', 'Up', () => { this.cursor.pos.y -= 15; this.renderer.update() })
-    this.acels.set('Manual', 'Move Right', 'Right', () => { this.cursor.pos.x += 15; this.renderer.update() })
-    this.acels.set('Manual', 'Move Down', 'Down', () => { this.cursor.pos.y += 15; this.renderer.update() })
-    this.acels.set('Manual', 'Move Left', 'Left', () => { this.cursor.pos.x -= 15; this.renderer.update() })
-    this.acels.set('Manual', 'Remove Point', 'Shift+Backspace', () => { this.tool.removeSegmentsAt(this.cursor.pos) })
-    this.acels.set('Manual', 'Remove Segment', 'Backspace', () => { this.tool.removeSegment() })
-    this.acels.set('Layers', 'Foreground', 'CmdOrCtrl+1', () => { this.tool.selectLayer(0) })
-    this.acels.set('Layers', 'Middleground', 'CmdOrCtrl+2', () => { this.tool.selectLayer(1) })
-    this.acels.set('Layers', 'Background', 'CmdOrCtrl+3', () => { this.tool.selectLayer(2) })
-    this.acels.set('Layers', 'Merge Layers', 'CmdOrCtrl+M', () => { this.tool.merge() })
-    this.acels.set('View', 'Color Picker', 'G', () => { this.picker.start() })
-    this.acels.set('View', 'Toggle Grid', 'H', () => { this.renderer.toggle() })
+    this.acels.set('Stroke', 'Erase Segment', 'Backspace', () => { this.tool.removeSegment() })
+    this.acels.set('Control', 'Add Point', 'Enter', () => { this.tool.addVertex(this.cursor.pos); this.renderer.update() })
+    this.acels.set('Control', 'Move Up', 'Up', () => { this.cursor.pos.y -= 15; this.renderer.update() })
+    this.acels.set('Control', 'Move Right', 'Right', () => { this.cursor.pos.x += 15; this.renderer.update() })
+    this.acels.set('Control', 'Move Down', 'Down', () => { this.cursor.pos.y += 15; this.renderer.update() })
+    this.acels.set('Control', 'Move Left', 'Left', () => { this.cursor.pos.x -= 15; this.renderer.update() })
+    this.acels.set('Control', 'Remove Point', 'X', () => { this.tool.removeSegmentsAt(this.cursor.pos) })
+    this.acels.set('Style', 'Linecap', 'Q', () => { this.tool.toggle('linecap') })
+    this.acels.set('Style', 'Linejoin', 'W', () => { this.tool.toggle('linejoin') })
+    this.acels.set('Style', 'Mirror', 'E', () => { this.tool.toggle('mirror') })
+    this.acels.set('Style', 'Fill', 'R', () => { this.tool.toggle('fill') })
+    this.acels.set('Style', 'Thicker', '}', () => { this.tool.toggle('thickness', 1) })
+    this.acels.set('Style', 'Thinner', '{', () => { this.tool.toggle('thickness', -1) })
+    this.acels.set('Style', 'Thicker +5', ']', () => { this.tool.toggle('thickness', 5) })
+    this.acels.set('Style', 'Thinner -5', '[', () => { this.tool.toggle('thickness', -5) })
     this.acels.route(this)
     this.manager.install()
     this.interface.install(host)
@@ -887,12 +889,6 @@ function Interface (client) {
   this.toggle = function () {
     this.isVisible = !this.isVisible
     this.el.className = this.isVisible ? 'visible' : 'hidden'
-  }
-  document.onkeydown = function (e) {
-    if (e.key === 'Tab') {
-      client.interface.toggle()
-      e.preventDefault()
-    }
   }
   function capitalize (str) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
