@@ -20,10 +20,6 @@ function Tool (client) {
     this.styles[2].color = client.theme.active.f_low
   }
 
-  this.erase = function () {
-    this.layers = [[], [], []]
-  }
-
   this.reset = function () {
     this.styles[0].mirror_style = 0
     this.styles[1].mirror_style = 0
@@ -34,6 +30,13 @@ function Tool (client) {
     this.erase()
     this.vertices = []
     this.index = 0
+  }
+
+  this.erase = function () {
+    this.layers = [[], [], []]
+    this.vertices = []
+    client.renderer.update()
+    client.interface.update(true)
   }
 
   this.clear = function () {

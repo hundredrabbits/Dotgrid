@@ -101,6 +101,8 @@ function Client () {
     this.renderer.start()
     this.interface.start()
 
+    this.history.push(this.layers) // initial state
+
     this.source.new()
     this.onResize()
 
