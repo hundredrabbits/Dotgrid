@@ -307,7 +307,7 @@ function Theme (client) {
     if (!isColor(hex)) { console.warn('Theme', `${hex} is not a valid color.`); return }
     this.active[key] = hex
   }
-  this.read = (key) => {
+  this.get = (key) => {
     return this.active[key]
   }
   this.parse = (any) => {
