@@ -13,6 +13,12 @@ and later made available as a free and open source software.
 - Video Tutorial: https://www.youtube.com/watch?v=Xt1zYHhpypk
 - Community: https://hundredrabbits.itch.io/dotgrid/community
 
+Drag
+
+- Hold Shift to drag a segment.
+- Hold Alt to drag all segments.
+- Right-click to delete a vertex.
+
 Controls
 
 ∷        Toggle Menubar   Tab
