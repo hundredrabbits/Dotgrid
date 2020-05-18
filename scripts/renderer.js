@@ -107,17 +107,25 @@ function Renderer (client) {
 
     const markers = { w: parseInt(client.tool.settings.size.width / 15), h: parseInt(client.tool.settings.size.height / 15) }
 
+    this.context.beginPath()
+    this.context.lineWidth = 2
+    this.context.fillStyle = client.theme.active.b_med
     for (let x = markers.w - 1; x >= 0; x--) {
       for (let y = markers.h - 1; y >= 0; y--) {
         const isStep = x % 4 === 0 && y % 4 === 0
         // Don't draw margins
         if (x === 0 || y === 0) { continue }
-        this.drawMarker({
+        const pos = {
           x: parseInt(x * 15),
           y: parseInt(y * 15)
-        }, isStep ? 2.5 : 1.5, client.theme.active.b_med)
+        }
+        const radius = isStep ? 2.5 : 1.5
+        this.context.moveTo(pos.x * this.scale, pos.y * this.scale)
+        this.context.arc(pos.x * this.scale, pos.y * this.scale, radius, 0, 2 * Math.PI, false)
       }
     }
+    this.context.fill()
+    this.context.closePath()
   }
 
   this.drawRulers = function () {
@@ -149,15 +157,6 @@ function Renderer (client) {
   }
 
   // Elements
-
-  this.drawMarker = function (pos, radius = 1, color) {
-    this.context.beginPath()
-    this.context.lineWidth = 2
-    this.context.arc(pos.x * this.scale, pos.y * this.scale, radius, 0, 2 * Math.PI, false)
-    this.context.fillStyle = color
-    this.context.fill()
-    this.context.closePath()
-  }
 
   this.drawVertex = function (pos, radius = 5) {
     this.context.beginPath()
