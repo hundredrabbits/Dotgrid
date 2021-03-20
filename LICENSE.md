@@ -1,4 +1,4 @@
-The Dotgrid source code is under the MIT License.
+The Dotgrid source code is under the **MIT License**.
 
 Copyright (c) 2017 Hundredrabbits
 
@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-The assets and text content are under the BY-NC-SA4.0 License.
+The assets and text content are under the **BY-NC-SA4.0 License**.
 
 You are free to: 
 Share: copy and redistribute the material in any medium or format. 
