@@ -7,9 +7,9 @@ function Tool (client) {
   this.settings = { size: { width: 600, height: 300 } }
   this.layers = [[], [], []]
   this.styles = [
-    { thickness: 15, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },
-    { thickness: 15, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#0f0', fill: 'none', mirror_style: 0, transform: 'rotate(45)' },
-    { thickness: 15, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#00f', fill: 'none', mirror_style: 0, transform: 'rotate(45)' }
+    { thickness: 15, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#f00', fill: 'none', mask: false, mirror_style: 0, transform: 'rotate(45)' },
+    { thickness: 15, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#0f0', fill: 'none', mask: false, mirror_style: 0, transform: 'rotate(45)' },
+    { thickness: 15, strokeLinecap: 'round', strokeLinejoin: 'round', color: '#00f', fill: 'none', mask: false, mirror_style: 0, transform: 'rotate(45)' }
   ]
   this.vertices = []
   this.reqs = { line: 2, arc_c: 2, arc_r: 2, arc_c_full: 2, arc_r_full: 2, bezier: 3, close: 0 }
@@ -191,6 +191,8 @@ function Tool (client) {
       this.style().strokeLinejoin = a[this.i.linejoin % a.length]
     } else if (type === 'fill') {
       this.style().fill = this.style().fill === 'none' ? this.style().color : 'none'
+    } else if (type === 'mask') {
+      this.style().mask = !this.style().mask
     } else if (type === 'thickness') {
       this.style().thickness = clamp(this.style().thickness + mod, 1, 100)
     } else if (type === 'mirror') {

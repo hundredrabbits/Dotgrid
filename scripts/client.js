@@ -79,6 +79,7 @@ function Client () {
     this.acels.set('Style', 'Linejoin', 'W', () => { this.tool.toggle('linejoin') })
     this.acels.set('Style', 'Mirror', 'E', () => { this.tool.toggle('mirror') })
     this.acels.set('Style', 'Fill', 'R', () => { this.tool.toggle('fill') })
+    this.acels.set('Style', 'Mask', 'C', () => { this.tool.toggle('mask') })
     this.acels.set('Style', 'Thicker', '}', () => { this.tool.toggle('thickness', 1) })
     this.acels.set('Style', 'Thinner', '{', () => { this.tool.toggle('thickness', -1) })
     this.acels.set('Style', 'Thicker +5', ']', () => { this.tool.toggle('thickness', 5) })

@@ -37,6 +37,7 @@ function Renderer (client) {
     this.drawRulers()
     this.drawRender(render) //
     this.drawVertices()
+    this.drawMaskPaths()
     this.drawHandles()
     this.drawTranslation()
     this.drawCursor()
@@ -99,6 +100,26 @@ function Renderer (client) {
   this.drawVertices = function () {
     for (const id in client.tool.vertices) {
       this.drawVertex(client.tool.vertices[id])
+    }
+  }
+
+  this.drawMaskPaths = function () {
+    if (client.tool.style().mask) {
+      for (const part of client.tool.layer()) {
+        for (const vertex of part['vertices']) {
+          this.drawVertex(vertex)
+          this.drawCursor(vertex, client.tool.style().thickness)
+        }
+      }
+      const path = new Generator(client.tool.layer(), client.tool.style()).toString({ x: 0, y: 0 }, 2)
+      const style = {
+        color: client.theme.active.f_med,
+        thickness: 2,
+        strokeLinecap: 'round',
+        strokeLinejoin: 'round',
+        strokeLineDash: [5, 15]
+      }
+      this.drawPath(path, style)
     }
   }
 
