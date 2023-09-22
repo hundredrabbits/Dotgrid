@@ -651,12 +651,23 @@ function Cursor (client) {
       y: pos.y - client.renderer.el.offsetTop
     }
   }
-  this.snapPos = function (pos) {
+  this.snapPosSquare = function (pos) {
     return {
       x: clamp(step(pos.x, 15), 15, client.tool.settings.size.width - 15),
       y: clamp(step(pos.y, 15), 15, client.tool.settings.size.height - 15)
     }
   }
+  this.snapPosTriangle = function (pos) {
+    const yScale = 10*Math.sqrt(3);
+    const y = clamp(step(pos.y, yScale), yScale, client.tool.settings.size.height - yScale)
+    const xRow = Math.round((y/yScale)) % 2
+    const xRowShift = (xRow||-1)*5
+    return {
+      x: xRowShift + clamp(step(pos.x, 20), 20, client.tool.settings.size.width - 20),
+      y: y
+    }
+  }
+  this.snapPos = this.snapPosTriangle;
   function isEqual (a, b) { return a.x === b.x && a.y === b.y }
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
   function step (v, s) { return Math.round(v / s) * s }
@@ -1107,12 +1118,8 @@ function Renderer (client) {
       this.drawVertex(client.tool.vertices[id])
     }
   }
-  this.drawGrid = function () {
-    if (!this.showExtras) { return }
-    const markers = { w: parseInt(client.tool.settings.size.width / 15), h: parseInt(client.tool.settings.size.height / 15) }
-    this.context.beginPath()
-    this.context.lineWidth = 2
-    this.context.fillStyle = client.theme.active.b_med
+  this.drawGridPointsSquare = function (width, height) {
+    const markers = { w: parseInt(width / 15), h: parseInt(height / 15) }
     for (let x = markers.w - 1; x >= 0; x--) {
       for (let y = markers.h - 1; y >= 0; y--) {
         const isStep = x % 4 === 0 && y % 4 === 0
@@ -1126,6 +1133,31 @@ function Renderer (client) {
         this.context.arc(pos.x * this.scale, pos.y * this.scale, radius, 0, 2 * Math.PI, false)
       }
     }
+  }
+  this.drawGridPointsTriangle = function (width, height) {
+    const yScale = 10*Math.sqrt(3);
+    const markers = { w: parseInt(width / 20), h: parseInt(height / yScale) }
+    for (let x = markers.w - 1; x >= 0; x--) {
+      for (let y = markers.h - 1; y >= 0; y--) {
+        const isStep = x % 4 === 0 && y % 8 === 0 || x % 4 === 2 && y % 8 === 4
+        if (x === 0 || y === 0) { continue }
+        const pos = {
+          x: (y%2|| -1) * 5 + parseInt(x * 20),
+          y: parseInt(y * yScale)
+        }
+        const radius = isStep ? 2.5 : 1.5
+        this.context.moveTo(pos.x * this.scale, pos.y * this.scale)
+        this.context.arc(pos.x * this.scale, pos.y * this.scale, radius, 0, 2 * Math.PI, false)
+      }
+    }
+  }
+  this.drawGridPoints = this.drawGridPointsTriangle
+  this.drawGrid = function () {
+    if (!this.showExtras) { return }
+    this.context.beginPath()
+    this.context.lineWidth = 2
+    this.context.fillStyle = client.theme.active.b_med
+    this.drawGridPoints(client.tool.settings.size.width, client.tool.settings.size.height)
     this.context.fill()
     this.context.closePath()
   }

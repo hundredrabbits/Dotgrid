@@ -72,12 +72,25 @@ function Cursor (client) {
     }
   }
 
-  this.snapPos = function (pos) {
+  this.snapPosSquare = function (pos) {
     return {
       x: clamp(step(pos.x, 15), 15, client.tool.settings.size.width - 15),
       y: clamp(step(pos.y, 15), 15, client.tool.settings.size.height - 15)
     }
   }
+
+  this.snapPosTriangle = function (pos) {
+    const yScale = 10*Math.sqrt(3);
+    const y = clamp(step(pos.y, yScale), yScale, client.tool.settings.size.height - yScale)
+    const xRow = Math.round((y/yScale)) % 2
+    const xRowShift = (xRow||-1)*5
+    return {
+      x: xRowShift + clamp(step(pos.x, 20), 20, client.tool.settings.size.width - 20),
+      y: y
+    }
+  }
+
+  this.snapPos = this.snapPosTriangle;
 
   function isEqual (a, b) { return a.x === b.x && a.y === b.y }
   function clamp (v, min, max) { return v < min ? min : v > max ? max : v }
