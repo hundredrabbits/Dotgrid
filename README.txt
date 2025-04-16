@@ -65,7 +65,7 @@ Style    Thinner -5       [
 Extras
 
 - Themes: https://github.com/hundredrabbits/Themes
-- Support: https://patreon.com/100
+- Support: https://patreon.com/hundredrabbits
 - Pull Requests are welcome!
 
 Licenses
