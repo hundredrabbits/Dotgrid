@@ -23,7 +23,8 @@ function Interface (client) {
       linejoin: { key: 'W', icon: 'M60,60 L120,120 L180,120  M120,180 L180,180 L240,240' },
       thickness: { key: '', icon: 'M120,90 L120,90 L90,120 L180,210 L210,180 Z M105,105 L105,105 L60,60 M195,195 L195,195 L240,240' },
       mirror: { key: 'E', icon: 'M60,60 L60,60 L120,120 M180,180 L180,180 L240,240 M210,90 L210,90 L180,120 M120,180 L120,180 L90,210' },
-      fill: { key: 'R', icon: 'M60,60 L60,150 L150,150 L240,150 L240,240 Z' }
+      fill: { key: 'R', icon: 'M60,60 L60,150 L150,150 L240,150 L240,240 Z' },
+      mask: { key: 'C', icon: 'M105,180 L105,180 L105,240 L240,240 L240,105 L180,105 L105,105 M105,180 L105,180 L105,105 M60,60 L60,60 L60,150 L150,150 L150,60 Z ' }
     },
     misc: {
       color: { key: 'G', icon: 'M150,60 A90,90 0 0,1 240,150 A-90,90 0 0,1 150,240 A-90,-90 0 0,1 60,150 A90,-90 0 0,1 150,60' }
@@ -138,6 +139,7 @@ function Interface (client) {
     options.toggle.linejoin.el.className.baseVal = client.tool.layer().length < 1 || !multiVertices ? 'icon inactive' : 'icon'
     options.toggle.mirror.el.className.baseVal = client.tool.layer().length < 1 ? 'icon inactive' : 'icon'
     options.toggle.fill.el.className.baseVal = client.tool.layer().length < 1 ? 'icon inactive' : 'icon'
+    options.toggle.mask.el.className.baseVal = client.tool.layer().length < 1 ? 'icon inactive' : 'icon'
     options.misc.color.el.children[0].style.fill = client.tool.style().color
     options.misc.color.el.children[0].style.stroke = client.tool.style().color
     options.misc.color.el.className.baseVal = 'icon'
@@ -148,6 +150,9 @@ function Interface (client) {
 
     // Grid
     document.getElementById('grid_path').setAttribute('d', client.renderer.showExtras ? 'M65,155 Q155,245 245,155 M65,155 Q155,65 245,155 M155,125 A30,30 0 0,1 185,155 A30,30 0 0,1 155,185 A30,30 0 0,1 125,155 A30,30 0 0,1 155,125 ' : 'M65,155 Q155,245 245,155 M65,155 ')
+
+    // Mask
+    if (!client.tool.style().mask) { document.getElementById('mask_path').setAttribute('d', 'M105,180 L105,180 L105,240 L240,240 L240,105 L180,105 L105,105 M105,180 L105,180 L105,105 M60,60 L60,60 L60,150 L150,150 L150,60 Z ') } else { document.getElementById('mask_path').setAttribute('d', 'M105,180 L105,180 L105,240 L240,240 L240,105 L180,105 L180,180 M105,180 L105,180 L180,180 M60,60 L60,60 L60,150 L150,150 L150,60 Z ') }
 
     // Mirror
     document.getElementById('mirror_path').setAttribute('d', mirrorPaths[client.tool.style().mirror_style])
